@@ -8,16 +8,32 @@
   {{OPEN_GRAPH_META}}
   <link rel="preconnect" href="https://img.shields.io" crossorigin />
   <link rel="dns-prefetch" href="https://img.shields.io" />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
   {{CRITICAL_CSS}}
   {{CSS}}
 </head>
 <body class="{{BODY_CLASS}}">
-{{HEADER}}
+{{HEADER}}<header class="cgx-stage cgx-stage--api" aria-labelledby="api-title">
+  <div class="cgx-stage__inner cgx-stage__inner--wide">
+    <div class="cgx-stage__copy">
+      <h1 id="api-title">API reference</h1>
+      <p class="cgx-stage__lede">Every public type in the CodeGlyphX package, generated from its XML documentation and linked to the source on GitHub. Most work starts at one of these entry points; each tile is what it produces.</p>
+    </div>
+    <nav aria-label="Entry points">
+      <ul class="cgx-entries">
+        <li><a class="cgx-entry" href="/api/codeglyphx-qr/"><span class="cgx-entry__plate"><img src="/specimens/qrcode.svg" width="198" height="198" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">QR</code><span class="cgx-entry__summary">Encode, style and save QR codes.</span></a></li>
+        <li><a class="cgx-entry" href="/api/codeglyphx-barcode/"><span class="cgx-entry__plate"><img src="/specimens/code128.svg" width="418" height="80" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">Barcode</code><span class="cgx-entry__summary">Linear symbologies, Code 128 to postal.</span></a></li>
+        <li><a class="cgx-entry" href="/api/codeglyphx-datamatrixcode/"><span class="cgx-entry__plate"><img src="/specimens/datamatrix.svg" width="144" height="144" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">DataMatrixCode</code><span class="cgx-entry__summary">Square and rectangular Data Matrix.</span></a></li>
+        <li><a class="cgx-entry" href="/api/codeglyphx-pdf417code/"><span class="cgx-entry__plate"><img src="/specimens/pdf417.svg" width="564" height="162" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">Pdf417Code</code><span class="cgx-entry__summary">PDF417 and MicroPDF417.</span></a></li>
+        <li><a class="cgx-entry" href="/api/codeglyphx-azteccode/"><span class="cgx-entry__plate"><img src="/specimens/aztec.svg" width="162" height="162" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">AztecCode</code><span class="cgx-entry__summary">Compact and full-range Aztec.</span></a></li>
+        <li><a class="cgx-entry" href="/api/codeglyphx-payloads-qrpayloads/"><span class="cgx-entry__plate"><img src="/specimens/payload-wifi.svg" width="246" height="246" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">QrPayloads</code><span class="cgx-entry__summary">Wi-Fi, contacts, OTP and payments.</span></a></li>
+        <li><a class="cgx-entry" href="/api/codeglyphx-symbolscanner/"><span class="cgx-entry__plate"><img src="/images/art/qr-expressive-waves.png" width="912" height="912" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">SymbolScanner</code><span class="cgx-entry__summary">Find and decode codes in images.</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 <div class="api-layout{{SIDEBAR_CLASS}}">
   <button class="sidebar-toggle" type="button" aria-label="Toggle API navigation">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true">
       <path d="M4 6h16M4 12h16M4 18h16"/>
     </svg>
     <span>API Navigation</span>
@@ -26,7 +42,7 @@
   <aside class="api-sidebar">
 {{SIDEBAR}}
   </aside>
-  <main class="api-content">
+  <main id="main" class="api-content">
 {{MAIN}}
   </main>
 </div>

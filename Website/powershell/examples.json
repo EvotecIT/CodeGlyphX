@@ -1,0 +1,73 @@
+{
+  "examples": [
+    {
+      "id": "asset-labels",
+      "family": "workflow",
+      "title": "Asset labels, checked before printing",
+      "body": "A QR code and a Code 128 tag for every asset, one printable sheet, and a decode pass that proves each label reads back.",
+      "show": [
+        "labels.png"
+      ]
+    },
+    {
+      "id": "wifi",
+      "family": "payloads",
+      "title": "Wi-Fi network",
+      "body": "Phones join the network after one scan."
+    },
+    {
+      "id": "contact",
+      "family": "payloads",
+      "title": "Contact card",
+      "body": "A vCard 4 that saves straight to the address book."
+    },
+    {
+      "id": "otp",
+      "family": "payloads",
+      "title": "Authenticator enrolment",
+      "body": "A TOTP secret for Microsoft Authenticator, Google Authenticator and similar apps."
+    },
+    {
+      "id": "email",
+      "family": "payloads",
+      "title": "Prefilled email",
+      "body": "Opens a message with the recipient, subject and body already filled in."
+    },
+    {
+      "id": "sms",
+      "family": "payloads",
+      "title": "Text message",
+      "body": "Starts an SMS to a number with the message ready to send."
+    },
+    {
+      "id": "calendar",
+      "family": "payloads",
+      "title": "Calendar event",
+      "body": "Adds a maintenance window to the scanning device's calendar."
+    },
+    {
+      "id": "geo",
+      "family": "payloads",
+      "title": "Location",
+      "body": "Opens a map at a coordinate."
+    },
+    {
+      "id": "girocode",
+      "family": "payloads",
+      "title": "SEPA payment",
+      "body": "A GiroCode (EPC QR) that banking apps read as a transfer."
+    },
+    {
+      "id": "barcodes",
+      "family": "barcodes",
+      "title": "Retail, logistics and 2D codes",
+      "body": "Nine symbologies from one command, each read back from the saved file."
+    },
+    {
+      "id": "branded",
+      "family": "styling",
+      "title": "Brand colours and transparency",
+      "body": "Colours, module size and a transparent background for overlays."
+    }
+  ]
+}

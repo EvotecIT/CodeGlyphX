@@ -12,23 +12,36 @@ else
 {
     <div class="card" style="margin-top: 2rem;">
         <h2>Code Example</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
-            Start with this example in your .NET application, then apply the additional styling options you need:
+        <p class="pg-example-intro">
+            @if (IsPowerShell)
+            {
+                <text>Run the same code from PowerShell with the <a href="https://www.powershellgallery.com/packages/ImagePlayground" target="_blank" rel="noopener">ImagePlayground</a> module, which is built on CodeGlyphX:</text>
+            }
+            else
+            {
+                <text>Start with this example in your .NET application, then apply the additional styling options you need:</text>
+            }
         </p>
 
-        <div class="code-tabs">
-            <button class="code-tab @(SelectedPlatform == "Console" ? "active" : "")" @onclick="@(() => SetPlatform("Console"))">Console</button>
-            <button class="code-tab @(SelectedPlatform == "AspNet" ? "active" : "")" @onclick="@(() => SetPlatform("AspNet"))">ASP.NET</button>
-            <button class="code-tab @(SelectedPlatform == "Blazor" ? "active" : "")" @onclick="@(() => SetPlatform("Blazor"))">Blazor</button>
-            <button class="code-tab @(SelectedPlatform == "Maui" ? "active" : "")" @onclick="@(() => SetPlatform("Maui"))">MAUI</button>
+        <div class="code-tabs" role="group" aria-label="Platform">
+            @foreach (var (value, label) in Platforms)
+            {
+                <button type="button" class="code-tab @(SelectedPlatform == value ? "active" : "")" aria-pressed="@(SelectedPlatform == value ? "true" : "false")" @onclick="@(() => SetPlatform(value))">@label</button>
+            }
         </div>
 
-        <div class="code-tabs">
-            <button class="code-tab @(SelectedLanguage == Playground.CodeLanguage.CSharp ? "active" : "")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.CSharp))">C#</button>
-            <button class="code-tab @(SelectedLanguage == Playground.CodeLanguage.Vb ? "active" : "")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.Vb))">VB.NET</button>
-        </div>
+        @if (!IsPowerShell)
+        {
+            <div class="code-tabs" role="group" aria-label="Language">
+                <button type="button" class="code-tab @(SelectedLanguage == Playground.CodeLanguage.CSharp ? "active" : "")" aria-pressed="@(SelectedLanguage == Playground.CodeLanguage.CSharp ? "true" : "false")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.CSharp))">C#</button>
+                <button type="button" class="code-tab @(SelectedLanguage == Playground.CodeLanguage.Vb ? "active" : "")" aria-pressed="@(SelectedLanguage == Playground.CodeLanguage.Vb ? "true" : "false")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.Vb))">VB.NET</button>
+            </div>
+        }
 
-        <pre class="code-block @GetLanguageCssClass()" @key="@_codeBlockKey">@GetPlatformExample()</pre>
+        <figure class="pg-code">
+            <figcaption><i class="pg-code__dot @(IsPowerShell ? "pg-code__dot--ps" : string.Empty)" aria-hidden="true"></i>@GetExampleFileName()</figcaption>
+            <pre class="code-block @GetLanguageCssClass()" @key="@_codeBlockKey">@GetPlatformExample()</pre>
+        </figure>
     </div>
 }
 
@@ -36,8 +49,6 @@ else
     [CascadingParameter]
     public Playground? Host { get; set; }
 
-    private string SelectedPlatform { get; set; } = "Console";
-    private Playground.CodeLanguage SelectedLanguage { get; set; } = Playground.CodeLanguage.CSharp;
     private int _codeBlockKey = 0;
 
     private void SetPlatform(string platform)
@@ -62,6 +73,8 @@ else
     private string GetPlatformExample()
     {
         if (Host is null) return "";
+
+        if (IsPowerShell) return GetPowerShellExample();
 
         var baseCode = Host.GetCodeExample(SelectedLanguage);
 
@@ -238,7 +251,7 @@ else
                 + "    private string _barcodeDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
+                + "        var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.GetNormalizedBarcodeContent() ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
                 + "        _barcodeDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -328,7 +341,7 @@ else
                 + "using CodeGlyphX;" + nl
                 + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
+                + "var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.GetNormalizedBarcodeContent() ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
@@ -367,7 +380,7 @@ else
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"qr/{text}\")>" + nl
                 + "    Public Function GetQrCode(text As String) As IActionResult" + nl
-                + "        Dim png = QR.Render(text, OutputFormat.Png).ToArray()" + nl
+                + "        Dim png = QrCodeEncoder.EncodeText(text).Render(OutputFormat.Png).ToArray()" + nl
                 + "        Return File(png, \"image/png\", \"qrcode.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -422,7 +435,7 @@ else
                 + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = QR.Render(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).ToArray()" + nl
+                + "Dim png = QrCodeEncoder.EncodeText(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\").Render(OutputFormat.Png).ToArray()" + nl
                 + "QrImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -434,7 +447,7 @@ else
                 + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray()" + nl
+                + "Dim png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.GetNormalizedBarcodeContent() ?? "12345") + "\", OutputFormat.Png).ToArray()" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
@@ -461,6 +474,8 @@ else
 
     private string GetLanguageCssClass()
     {
+        if (IsPowerShell) return "language-powershell";
+
         if (Host?.SelectedMode == "Decode")
         {
             return SelectedLanguage == Playground.CodeLanguage.Vb ? "language-vbnet" : "language-csharp";
@@ -474,7 +489,7 @@ else
         return SelectedLanguage == Playground.CodeLanguage.Vb ? "language-vbnet" : "language-csharp";
     }
 
-    private static string EscapeForComment(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    private static string EscapeForComment(string s) => Playground.EscapeString(s);
 
     private static string EscapeForVbString(string s) => s.Replace("\"", "\"\"");
 }

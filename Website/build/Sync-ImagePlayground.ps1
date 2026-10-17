@@ -1,0 +1,127 @@
+#Requires -Version 7.0
+<#
+.SYNOPSIS
+    Snapshots the ImagePlayground QR code and barcode commands for codeglyphx.com.
+
+.DESCRIPTION
+    Reads CmdletsToExport from an ImagePlayground module manifest, groups the CodeGlyphX-powered commands into
+    families and writes Website/data/imageplayground.json. Point it at the same published module version that
+    Render-PowerShellExamples.ps1 runs, so the command list and the examples describe one release.
+
+.EXAMPLE
+    pwsh ./Website/build/Sync-ImagePlayground.ps1
+
+.EXAMPLE
+    pwsh ./Website/build/Sync-ImagePlayground.ps1 -ModulePath D:\Modules\ImagePlayground\3.2.7\ImagePlayground.psd1
+#>
+[CmdletBinding()]
+param(
+    [string] $ModulePath
+)
+
+$ErrorActionPreference = 'Stop'
+$website = Split-Path -Parent $PSScriptRoot
+if (-not $ModulePath) {
+    $installed = Get-Module ImagePlayground -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+    if (-not $installed) { throw 'ImagePlayground is not installed. Run Install-Module ImagePlayground or pass -ModulePath.' }
+    $ModulePath = $installed.Path
+}
+
+$manifest = Import-PowerShellDataFile -LiteralPath $ModulePath
+$cmdlets = @($manifest.CmdletsToExport | Sort-Object -Unique)
+$families = @(
+    [ordered]@{ id = 'qr'; title = 'QR codes'; pattern = '^New-ImageQR(Code|Contact)$'; description = 'QR codes from text, URLs or contact details, with colours and a logo.' }
+    [ordered]@{ id = 'payloads'; title = 'QR payloads'; pattern = '^New-ImageQRCode\w+'; description = 'Wi-Fi, calendar, email, OTP, payments, cryptocurrency, phone, SMS and location payloads.' }
+    [ordered]@{ id = 'barcodes'; title = 'Barcodes'; pattern = '^New-ImageBarCode$'; description = 'EAN, UPC, Code 128, Data Matrix, PDF417 and other linear and 2D symbologies.' }
+    [ordered]@{ id = 'decode'; title = 'Decoding'; pattern = '^Get-Image(QRCode|BarCode)$'; description = 'Read QR codes and barcodes back from image files.' }
+)
+
+$familyResults = foreach ($family in $families) {
+    $names = @($cmdlets | Where-Object { $_ -match $family.pattern })
+    [ordered]@{
+        id = $family.id
+        title = $family.title
+        description = $family.description
+        commandCount = $names.Count
+        commands = $names
+    }
+}
+
+$catalog = [ordered]@{
+    generatedBy = 'Website/build/Sync-ImagePlayground.ps1'
+    module = [ordered]@{
+        name = 'ImagePlayground'
+        version = $manifest.ModuleVersion
+        commandCount = $cmdlets.Count
+        codeGlyphXCommandCount = [int](@($familyResults | ForEach-Object { $_.commandCount }) | Measure-Object -Sum).Sum
+        install = "Install-Module -Name ImagePlayground -MinimumVersion $($manifest.ModuleVersion) -Scope CurrentUser"
+        powerShell = 'Windows PowerShell 5.1 and PowerShell 7+'
+    }
+    families = @($familyResults)
+}
+
+# Validate command help before updating either snapshot so the overview and command reference stay in sync.
+$helpSource = Join-Path (Split-Path -Parent $ModulePath) 'en-US/ImagePlayground-help.xml'
+if (-not (Test-Path -LiteralPath $helpSource -PathType Leaf)) {
+    throw "No command help at $helpSource; refusing to update the ImagePlayground overview without its matching command reference."
+}
+$keep = @($familyResults | ForEach-Object { $_.commands })
+[xml] $maml = Get-Content -LiteralPath $helpSource -Raw
+foreach ($node in @($maml.helpItems.command)) {
+    if ($node.details.name.Trim() -notin $keep) { $null = $maml.helpItems.RemoveChild($node) }
+}
+
+$catalogPath = Join-Path $website 'data/imageplayground.json'
+$helpPath = Join-Path $website 'powershell/imageplayground-help.xml'
+$catalogTempPath = "$catalogPath.$([guid]::NewGuid().ToString('N')).tmp"
+$helpTempPath = "$helpPath.$([guid]::NewGuid().ToString('N')).tmp"
+$catalogJson = $catalog | ConvertTo-Json -Depth 6
+$originalCatalog = $null
+$originalHelp = $null
+$replacedPaths = [System.Collections.Generic.List[string]]::new()
+try {
+    # Stage both snapshots before replacing either one, then restore the original pair if a replacement fails.
+    [System.IO.File]::WriteAllText($catalogTempPath, $catalogJson + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
+    $maml.Save($helpTempPath)
+    if (Test-Path -LiteralPath $catalogPath -PathType Leaf) { $originalCatalog = [System.IO.File]::ReadAllBytes($catalogPath) }
+    if (Test-Path -LiteralPath $helpPath -PathType Leaf) { $originalHelp = [System.IO.File]::ReadAllBytes($helpPath) }
+
+    [System.IO.File]::Move($helpTempPath, $helpPath, $true)
+    $replacedPaths.Add($helpPath)
+    [System.IO.File]::Move($catalogTempPath, $catalogPath, $true)
+    $replacedPaths.Add($catalogPath)
+} catch {
+    $replacementError = $_
+    $rollbackErrors = [System.Collections.Generic.List[string]]::new()
+    for ($index = $replacedPaths.Count - 1; $index -ge 0; $index--) {
+        $path = $replacedPaths[$index]
+        $originalBytes = if ($path -eq $helpPath) { $originalHelp } else { $originalCatalog }
+        $rollbackPath = $null
+        try {
+            if ($null -eq $originalBytes) {
+                Remove-Item -LiteralPath $path -ErrorAction Stop
+            } else {
+                $rollbackPath = "$path.$([guid]::NewGuid().ToString('N')).rollback"
+                [System.IO.File]::WriteAllBytes($rollbackPath, $originalBytes)
+                [System.IO.File]::Move($rollbackPath, $path, $true)
+            }
+        } catch {
+            $rollbackErrors.Add("$path : $($_.Exception.Message)")
+        } finally {
+            if ($rollbackPath) { Remove-Item -LiteralPath $rollbackPath -ErrorAction SilentlyContinue }
+        }
+    }
+    if ($rollbackErrors.Count) {
+        throw "Failed to update both ImagePlayground snapshots: $($replacementError.Exception.Message). Rollback also failed: $($rollbackErrors -join '; ')"
+    }
+    throw $replacementError
+} finally {
+    foreach ($temporaryPath in @($catalogTempPath, $helpTempPath)) {
+        Remove-Item -LiteralPath $temporaryPath -ErrorAction SilentlyContinue
+    }
+}
+
+Write-Host "ImagePlayground $($manifest.ModuleVersion): $($cmdlets.Count) commands, $($catalog.module.codeGlyphXCommandCount) powered by CodeGlyphX -> $catalogPath"
+
+# Command help for the on-site reference (/powershell/commands/), filtered to the commands above.
+Write-Host "Kept help for $(@($maml.helpItems.command).Count) commands -> $helpPath"

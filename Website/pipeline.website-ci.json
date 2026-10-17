@@ -18,13 +18,19 @@
       "maxPages": 4,
       "includePrerelease": true,
       "products": [
-        { "id": "codeglyphx", "name": "CodeGlyphX", "order": 10 }
+        {
+          "id": "codeglyphx",
+          "name": "CodeGlyphX",
+          "order": 10
+        }
       ],
       "assetRules": [
         {
           "product": "codeglyphx",
           "label": "CodeGlyphX",
-          "match": ["*CodeGlyphX*.zip"],
+          "match": [
+            "*CodeGlyphX*.zip"
+          ],
           "kind": "zip"
         }
       ]
@@ -57,6 +63,22 @@
       "clean": true
     },
     {
+      "task": "exec",
+      "id": "export-site-chrome",
+      "dependsOn": "build-site",
+      "command": "dotnet",
+      "argsList": [
+        "run",
+        "build/SiteChrome.cs",
+        "--",
+        "export",
+        "./_site",
+        "./_temp/chrome"
+      ],
+      "workingDirectory": ".",
+      "timeoutSeconds": 300
+    },
+    {
       "task": "dotnet-build",
       "id": "build-library",
       "dependsOn": "build-site",
@@ -79,7 +101,10 @@
     {
       "task": "apidocs",
       "id": "build-apidocs",
-      "dependsOn": "build-library",
+      "dependsOn": [
+        "build-library",
+        "export-site-chrome"
+      ],
       "config": "./site.json",
       "xml": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.xml",
       "assembly": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.dll",
@@ -88,10 +113,14 @@
       "baseUrl": "/api",
       "format": "both",
       "legacyAliasMode": "omit",
-      "css": "/css/app.css,/css/prism-theme.css,/css/api.css",
+      "css": "/css/fonts.css,/css/app.css,/css/prism-theme.css,/css/pages.css,/css/api.css,/css/scrollbars.css",
       "template": "docs",
+      "injectPrism": false,
       "templateDocsIndex": "./themes/codeglyphx/apidocs/docs-index.html",
       "templateDocsType": "./themes/codeglyphx/apidocs/docs-type.html",
+      "headerHtml": "./_temp/chrome/api-header.html",
+      "footerHtml": "./_temp/chrome/footer.html",
+      "suppressWarnings": ["header/footer fragments do not contain {{NAV_LINKS}} or {{NAV_ACTIONS}} placeholders"],
       "injectCriticalCss": true,
       "nav": "./site.json",
       "navContextPath": "/",
@@ -112,11 +141,40 @@
       "coveragePreviewCount": 10
     },
     {
+      "task": "apidocs",
+      "id": "build-powershell-commands",
+      "dependsOn": [
+        "build-library",
+        "export-site-chrome"
+      ],
+      "type": "PowerShell",
+      "config": "./site.json",
+      "help": "./powershell/imageplayground-help.xml",
+      "out": "./_site/powershell/commands",
+      "baseUrl": "/powershell/commands",
+      "title": "ImagePlayground commands for CodeGlyphX",
+      "format": "both",
+      "legacyAliasMode": "omit",
+      "css": "/css/fonts.css,/css/app.css,/css/prism-theme.css,/css/pages.css,/css/api.css,/css/scrollbars.css",
+      "template": "docs",
+      "templateDocsIndex": "./themes/codeglyphx/apidocs/ps-index.html",
+      "templateDocsType": "./themes/codeglyphx/apidocs/docs-type.html",
+      "headerHtml": "./_temp/chrome/ps-header.html",
+      "footerHtml": "./_temp/chrome/footer.html",
+      "suppressWarnings": ["header/footer fragments do not contain {{NAV_LINKS}} or {{NAV_ACTIONS}} placeholders"],
+      "injectCriticalCss": true,
+      "nav": "./site.json",
+      "navContextPath": "/",
+      "injectPrism": false
+    },
+    {
       "task": "xref-merge",
       "id": "merge-xref",
       "dependsOn": "build-apidocs",
       "out": "./data/xrefmap.json",
-      "mapFiles": ["./_site/api/xrefmap.json"],
+      "mapFiles": [
+        "./_site/api/xrefmap.json"
+      ],
       "preferLast": true,
       "maxReferences": 12000,
       "maxDuplicates": 50,
@@ -126,7 +184,7 @@
     {
       "task": "build",
       "id": "build-site-xref-refresh",
-      "dependsOn": "merge-xref",
+      "dependsOn": ["merge-xref", "build-powershell-commands"],
       "config": "./site.json",
       "out": "./_site",
       "clean": false
@@ -171,7 +229,10 @@
       "entriesJson": "./data/sitemap.entries.json",
       "includeNoIndexHtml": false,
       "noDefaultExclude": false,
-      "excludePatterns": ["**/*.scripts.html", "**/*.head.html"],
+      "excludePatterns": [
+        "**/*.scripts.html",
+        "**/*.head.html"
+      ],
       "includeGeneratedHtmlRouteInXml": false,
       "json": true,
       "jsonOut": "./_site/sitemap/index.json",
@@ -183,7 +244,9 @@
       "task": "indexnow",
       "id": "submit-indexnow",
       "dependsOn": "build-sitemap",
-      "modes": ["ci"],
+      "modes": [
+        "ci"
+      ],
       "baseUrl": "https://codeglyphx.com",
       "siteRoot": "./_site",
       "scopeFromBuildUpdated": true,
@@ -197,7 +260,9 @@
       "task": "optimize",
       "id": "optimize-site",
       "dependsOn": "submit-indexnow",
-      "skipModes": ["dev"],
+      "skipModes": [
+        "dev"
+      ],
       "siteRoot": "./_site",
       "config": "./site.json",
       "criticalCss": "./themes/codeglyphx/critical.css",
@@ -206,12 +271,21 @@
       "minifyCss": true,
       "minifyJs": true,
       "optimizeImages": true,
-      "imageExtensions": [".png", ".jpg", ".jpeg", ".webp"],
+      "imageExtensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp"
+      ],
       "imageQuality": 82,
       "imageStripMetadata": true,
       "imageGenerateWebp": true,
       "imagePreferNextGen": true,
-      "imageWidths": [480, 960, 1440],
+      "imageWidths": [
+        480,
+        960,
+        1440
+      ],
       "imageEnhanceTags": true,
       "imageMaxTotalBytes": 70000000,
       "cacheHeaders": true,
@@ -221,17 +295,38 @@
     {
       "task": "overlay",
       "id": "overlay-playground",
-      "dependsOn": ["publish-playground", "optimize-site"],
+      "dependsOn": [
+        "publish-playground",
+        "optimize-site"
+      ],
       "source": "./_temp/playground/wwwroot",
       "destination": "./_site/playground",
-      "clean": true,
-      "include": "**/*, *"
+      "clean": false,
+      "include": "_framework/**, _content/**, css/playground*.css*, CodeGlyphX.Website.styles*"
+    },
+    {
+      "task": "exec",
+      "id": "compose-playground-shell",
+      "dependsOn": "overlay-playground",
+      "command": "dotnet",
+      "argsList": [
+        "run",
+        "build/SiteChrome.cs",
+        "--",
+        "playground",
+        "./_temp/playground/wwwroot/index.html",
+        "./_site/playground/index.html"
+      ],
+      "workingDirectory": ".",
+      "timeoutSeconds": 300
     },
     {
       "task": "verify",
       "id": "verify-ci-final",
-      "dependsOn": "overlay-playground",
-      "modes": ["ci"],
+      "dependsOn": "compose-playground-shell",
+      "modes": [
+        "ci"
+      ],
       "config": "./site.json",
       "baseline": "./.powerforge/verify-baseline.json",
       "failOnNewWarnings": true,
@@ -243,8 +338,13 @@
     {
       "task": "agent-ready",
       "id": "agent-ready",
-      "dependsOn": ["overlay-playground", "verify-ci-final"],
-      "modes": ["ci"],
+      "dependsOn": [
+        "compose-playground-shell",
+        "verify-ci-final"
+      ],
+      "modes": [
+        "ci"
+      ],
       "operation": "prepare",
       "config": "./site.json",
       "siteRoot": "./_site",
@@ -255,7 +355,9 @@
       "task": "audit",
       "id": "audit-agent-content",
       "dependsOn": "agent-ready",
-      "modes": ["ci"],
+      "modes": [
+        "ci"
+      ],
       "siteRoot": "./_site",
       "include": "__agent-content-security-only__.html",
       "checkLinks": false,
@@ -271,11 +373,17 @@
       "checkLinkPurposeConsistency": false,
       "checkMediaEmbeds": false,
       "checkAgentContentSecurity": true,
-      "agentContentFiles": ["llms.txt", "llms-full.txt", "llms.json"],
+      "agentContentFiles": [
+        "llms.txt",
+        "llms-full.txt",
+        "llms.json"
+      ],
       "agentPublicationCatalog": "./_temp/llms-publication-catalog.json",
       "agentPublicationCatalogMaxAgeHours": 24,
       "agentNuGetOwner": "Evotec",
-      "agentRequireOwnerVerification": ["nuget:*"],
+      "agentRequireOwnerVerification": [
+        "nuget:*"
+      ],
       "failOnCategories": "agent-content",
       "summary": true,
       "summaryPath": "./_reports/agent-content-audit.json"

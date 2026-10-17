@@ -25,11 +25,11 @@ else
                 ? string.IsNullOrEmpty(Host.DecodeImageDataUri)
                 : string.IsNullOrEmpty(Host.ImageDataUri);
         }
+        <div class="pg-viewfinder @(Host.IsPreviewUpdating ? "is-updating" : string.Empty)">
         <div class="output-preview @(isEmpty ? "output-preview-empty" : string.Empty)">
             @if (!string.IsNullOrEmpty(Host.ErrorMessage))
             {
-                <div style="text-align: center; color: #ef4444;">
-                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">⚠</p>
+                <div class="pg-preview-message pg-preview-message--error" role="alert">
                     <p>@Host.ErrorMessage</p>
                 </div>
             }
@@ -43,11 +43,16 @@ else
             }
             else
             {
-                <div style="text-align: center; color: var(--text-muted);">
-                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">📱</p>
+                <div class="pg-preview-message">
                     <p>@(Host.SelectedMode == "Decode" ? "Upload an image to decode" : "Enter content to generate a code")</p>
                 </div>
             }
+        </div>
+            <span class="pg-viewfinder__corner pg-viewfinder__corner--tl" aria-hidden="true"></span>
+            <span class="pg-viewfinder__corner pg-viewfinder__corner--tr" aria-hidden="true"></span>
+            <span class="pg-viewfinder__corner pg-viewfinder__corner--bl" aria-hidden="true"></span>
+            <span class="pg-viewfinder__corner pg-viewfinder__corner--br" aria-hidden="true"></span>
+            <span class="pg-viewfinder__scan" aria-hidden="true"></span>
         </div>
 
         @if (Host.SelectedMode == "Generate" && !Host.IsPreviewUpdating && !string.IsNullOrEmpty(Host.ImageDataUri))

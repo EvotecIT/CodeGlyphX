@@ -1,0 +1,312 @@
+{
+  "generatedBy": "Website/build/Render-PowerShellExamples.ps1",
+  "module": {
+    "name": "ImagePlayground",
+    "version": "3.3.0"
+  },
+  "examples": [
+    {
+      "id": "asset-labels",
+      "family": "workflow",
+      "title": "Asset labels, checked before printing",
+      "body": "A QR code and a Code 128 tag for every asset, one printable sheet, and a decode pass that proves each label reads back.",
+      "show": [
+        "labels.png"
+      ],
+      "script": "# Asset tags to label. Replace them with Get-ADComputer, Import-Csv or any list you have.\n$tags = 'EVO-LAP-0142', 'EVO-LAP-0177', 'EVO-DSK-0031', 'EVO-MON-0219'\n\nforeach ($tag in $tags) {\n    New-ImageQRCode -Content \"https://assets.example.com/$tag\" `\n        -FilePath \"$tag.qr.png\" -ForegroundColor '#1e1b4b' -Size 220 -QuietZone 2\n    New-ImageBarCode -Type Code128 -Value $tag -FilePath \"$tag.barcode.png\" -ShowText\n}\n\n# One printable sheet with every QR code.\nNew-ImageMosaic -FilePaths ($tags | ForEach-Object { \"$_.qr.png\" }) `\n    -OutputPath 'labels.png' -Columns 4 -Width 220 -Height 220\n\n# Read every label back before it goes to the printer.\n$tags | ForEach-Object {\n    [pscustomobject]@{\n        Tag     = $_\n        QRCode  = (Get-ImageQRCode -FilePath \"$_.qr.png\").Text\n        Barcode = (Get-ImageBarCode -FilePath \"$_.barcode.png\" -Type Code128).Text\n    }\n} | Format-Table -AutoSize",
+      "console": "Tag          QRCode                                  Barcode\n---          ------                                  -------\nEVO-LAP-0142 https://assets.example.com/EVO-LAP-0142 EVO-LAP-0142\nEVO-LAP-0177 https://assets.example.com/EVO-LAP-0177 EVO-LAP-0177\nEVO-DSK-0031 https://assets.example.com/EVO-DSK-0031 EVO-DSK-0031\nEVO-MON-0219 https://assets.example.com/EVO-MON-0219 EVO-MON-0219",
+      "outputs": [
+        {
+          "file": "EVO-DSK-0031.barcode.png",
+          "url": "/powershell/examples/asset-labels/EVO-DSK-0031.barcode.png",
+          "width": 352,
+          "height": 98
+        },
+        {
+          "file": "EVO-DSK-0031.qr.png",
+          "url": "/powershell/examples/asset-labels/EVO-DSK-0031.qr.png",
+          "width": 185,
+          "height": 185
+        },
+        {
+          "file": "EVO-LAP-0142.barcode.png",
+          "url": "/powershell/examples/asset-labels/EVO-LAP-0142.barcode.png",
+          "width": 352,
+          "height": 98
+        },
+        {
+          "file": "EVO-LAP-0142.qr.png",
+          "url": "/powershell/examples/asset-labels/EVO-LAP-0142.qr.png",
+          "width": 185,
+          "height": 185
+        },
+        {
+          "file": "EVO-LAP-0177.barcode.png",
+          "url": "/powershell/examples/asset-labels/EVO-LAP-0177.barcode.png",
+          "width": 352,
+          "height": 98
+        },
+        {
+          "file": "EVO-LAP-0177.qr.png",
+          "url": "/powershell/examples/asset-labels/EVO-LAP-0177.qr.png",
+          "width": 185,
+          "height": 185
+        },
+        {
+          "file": "EVO-MON-0219.barcode.png",
+          "url": "/powershell/examples/asset-labels/EVO-MON-0219.barcode.png",
+          "width": 352,
+          "height": 98
+        },
+        {
+          "file": "EVO-MON-0219.qr.png",
+          "url": "/powershell/examples/asset-labels/EVO-MON-0219.qr.png",
+          "width": 185,
+          "height": 185
+        },
+        {
+          "file": "labels.png",
+          "url": "/powershell/examples/asset-labels/labels.png",
+          "width": 880,
+          "height": 220
+        }
+      ]
+    },
+    {
+      "id": "wifi",
+      "family": "payloads",
+      "title": "Wi-Fi network",
+      "body": "Phones join the network after one scan.",
+      "show": null,
+      "script": "New-ImageQRCodeWiFi -SSID 'Evotec-Guest' `\n    -Password 'correct-horse-battery' -FilePath 'wifi.png'\n(Get-ImageQRCode -FilePath 'wifi.png').Text",
+      "console": "WIFI:T:WPA;S:Evotec-Guest;P:correct-horse-battery;;",
+      "outputs": [
+        {
+          "file": "wifi.png",
+          "url": "/powershell/examples/wifi/wifi.png",
+          "width": 980,
+          "height": 980
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "family": "payloads",
+      "title": "Contact card",
+      "body": "A vCard 4 that saves straight to the address book.",
+      "show": null,
+      "script": "$card = @{\n    OutputType  = 'VCard4'\n    Firstname   = 'Ava'\n    Lastname    = 'Stone'\n    Org         = 'Evotec'\n    OrgTitle    = 'Service desk lead'\n    MobilePhone = '+48 500 000 000'\n    Email       = 'ava.stone@example.com'\n    Website     = 'https://evotec.xyz'\n}\nNew-ImageQRContact @card -FilePath 'contact.png'\n(Get-ImageQRCode -FilePath 'contact.png').Text",
+      "console": "BEGIN:VCARD\nVERSION:4.0\nN:Stone;Ava;;;\nFN:Ava Stone\nORG:Evotec\nTITLE:Service desk lead\nTEL;TYPE=home,cell;VALUE=uri:tel:+48 500 000 000\nADR;TYPE=home,pref:;;;;;;\nURL:https://evotec.xyz\nEMAIL:ava.stone@example.com\nEND:VCARD",
+      "outputs": [
+        {
+          "file": "contact.png",
+          "url": "/powershell/examples/contact/contact.png",
+          "width": 1540,
+          "height": 1540
+        }
+      ]
+    },
+    {
+      "id": "otp",
+      "family": "payloads",
+      "title": "Authenticator enrolment",
+      "body": "A TOTP secret for Microsoft Authenticator, Google Authenticator and similar apps.",
+      "show": null,
+      "script": "New-ImageQRCodeOtp -Type Totp -SecretBase32 'JBSWY3DPEHPK3PXP' `\n    -Label 'ava.stone@example.com' -Issuer 'Evotec' `\n    -FilePath 'otp.png'\n(Get-ImageQRCode -FilePath 'otp.png').Text",
+      "console": "otpauth://totp/Evotec:ava.stone%40example.com?secret=JBSWY3DPEHPK3PXP&issuer=Evotec",
+      "outputs": [
+        {
+          "file": "otp.png",
+          "url": "/powershell/examples/otp/otp.png",
+          "width": 1060,
+          "height": 1060
+        }
+      ]
+    },
+    {
+      "id": "email",
+      "family": "payloads",
+      "title": "Prefilled email",
+      "body": "Opens a message with the recipient, subject and body already filled in.",
+      "show": null,
+      "script": "New-ImageQRCodeEmail -Email 'helpdesk@example.com' `\n    -Subject 'Printer on floor 3' -Message 'Paper jam in tray 2' `\n    -FilePath 'email.png'\n(Get-ImageQRCode -FilePath 'email.png').Text",
+      "console": "mailto:helpdesk@example.com?subject=Printer%20on%20floor%203&body=Paper%20jam%20in%20tray%202",
+      "outputs": [
+        {
+          "file": "email.png",
+          "url": "/powershell/examples/email/email.png",
+          "width": 1140,
+          "height": 1140
+        }
+      ]
+    },
+    {
+      "id": "sms",
+      "family": "payloads",
+      "title": "Text message",
+      "body": "Starts an SMS to a number with the message ready to send.",
+      "show": null,
+      "script": "New-ImageQRCodeSms -Number '+48500000000' `\n    -Message 'RESTART SRV-APP-04' -FilePath 'sms.png'\n(Get-ImageQRCode -FilePath 'sms.png').Text",
+      "console": "sms:+48500000000?body=RESTART%20SRV-APP-04",
+      "outputs": [
+        {
+          "file": "sms.png",
+          "url": "/powershell/examples/sms/sms.png",
+          "width": 820,
+          "height": 820
+        }
+      ]
+    },
+    {
+      "id": "calendar",
+      "family": "payloads",
+      "title": "Calendar event",
+      "body": "Adds a maintenance window to the scanning device's calendar.",
+      "show": null,
+      "script": "$window = @{\n    Entry    = 'Patch window'\n    Message  = 'Monthly server patching'\n    Location = 'Warsaw datacenter'\n    From     = [datetime]'2026-11-12 22:00'\n    To       = [datetime]'2026-11-13 02:00'\n}\nNew-ImageQRCodeCalendar @window -FilePath 'calendar.png'\n(Get-ImageQRCode -FilePath 'calendar.png').Text",
+      "console": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Patch window\nDESCRIPTION:Monthly server patching\nLOCATION:Warsaw datacenter\nDTSTART:20261112T220000\nDTEND:20261113T020000\nEND:VEVENT\nEND:VCALENDAR",
+      "outputs": [
+        {
+          "file": "calendar.png",
+          "url": "/powershell/examples/calendar/calendar.png",
+          "width": 1460,
+          "height": 1460
+        }
+      ]
+    },
+    {
+      "id": "geo",
+      "family": "payloads",
+      "title": "Location",
+      "body": "Opens a map at a coordinate.",
+      "show": null,
+      "script": "New-ImageQRCodeGeoLocation -Latitude '52.2297' -Longitude '21.0122' `\n    -FilePath 'geo.png'\n(Get-ImageQRCode -FilePath 'geo.png').Text",
+      "console": "geo:52.2297,21.0122",
+      "outputs": [
+        {
+          "file": "geo.png",
+          "url": "/powershell/examples/geo/geo.png",
+          "width": 660,
+          "height": 660
+        }
+      ]
+    },
+    {
+      "id": "girocode",
+      "family": "payloads",
+      "title": "SEPA payment",
+      "body": "A GiroCode (EPC QR) that banking apps read as a transfer.",
+      "show": null,
+      "script": "$payment = @{\n    Iban                  = 'DE89370400440532013000'\n    Bic                   = 'COBADEFFXXX'\n    Name                  = 'Evotec Services'\n    Amount                = 99.99\n    RemittanceInformation = 'Invoice 2026-0042'\n}\nNew-ImageQRCodeGirocode @payment -FilePath 'girocode.png'\n(Get-ImageQRCode -FilePath 'girocode.png').Text",
+      "console": "BCD\n001\n2\nSCT\nCOBADEFFXXX\nEvotec Services\nDE89370400440532013000\nEUR99.99\n\nInvoice 2026-0042",
+      "outputs": [
+        {
+          "file": "girocode.png",
+          "url": "/powershell/examples/girocode/girocode.png",
+          "width": 980,
+          "height": 980
+        }
+      ]
+    },
+    {
+      "id": "barcodes",
+      "family": "barcodes",
+      "title": "Retail, logistics and 2D codes",
+      "body": "Nine symbologies from one command, each read back from the saved file.",
+      "show": null,
+      "script": "$codes = [ordered]@{\n    Ean                       = '5901234123457'\n    UpcA                      = '036000291452'\n    Itf14                     = '15400141288763'\n    Code128                   = 'EVO-2026-0042'\n    Gs1Code128                = '(01)09501101530003'\n    Code93                    = 'CGX-2026'\n    DataMatrix                = 'LOT-2026-0042'\n    Pdf417                    = 'SHIPMENT 2026-0042'\n    Gs1DataBarOmnidirectional = '0950110153000'\n}\n\nforeach ($type in $codes.Keys) {\n    New-ImageBarCode -Type $type -Value $codes[$type] -FilePath \"$type.png\"\n}\n\n# Read each file back, looking only for the format that was written.\n# GS1 values come back without the parentheses.\n$codes.Keys | ForEach-Object {\n    [pscustomobject]@{\n        Type    = $_\n        Encoded = $codes[$_]\n        Decoded = (Get-ImageBarCode -FilePath \"$_.png\" -Type $_).Text\n    }\n} | Format-Table -AutoSize",
+      "console": "Type                      Encoded            Decoded\n----                      -------            -------\nEan                       5901234123457      5901234123457\nUpcA                      036000291452       036000291452\nItf14                     15400141288763     15400141288763\nCode128                   EVO-2026-0042      EVO-2026-0042\nGs1Code128                (01)09501101530003 0109501101530003\nCode93                    CGX-2026           CGX-2026\nDataMatrix                LOT-2026-0042      LOT-2026-0042\nPdf417                    SHIPMENT 2026-0042 SHIPMENT 2026-0042\nGs1DataBarOmnidirectional 0950110153000      0950110153000",
+      "outputs": [
+        {
+          "file": "Code128.png",
+          "url": "/powershell/examples/barcodes/Code128.png",
+          "width": 374,
+          "height": 80
+        },
+        {
+          "file": "Code93.png",
+          "url": "/powershell/examples/barcodes/Code93.png",
+          "width": 258,
+          "height": 80
+        },
+        {
+          "file": "DataMatrix.png",
+          "url": "/powershell/examples/barcodes/DataMatrix.png",
+          "width": 144,
+          "height": 144
+        },
+        {
+          "file": "Ean.png",
+          "url": "/powershell/examples/barcodes/Ean.png",
+          "width": 230,
+          "height": 80
+        },
+        {
+          "file": "Gs1Code128.png",
+          "url": "/powershell/examples/barcodes/Gs1Code128.png",
+          "width": 308,
+          "height": 80
+        },
+        {
+          "file": "Gs1DataBarOmnidirectional.png",
+          "url": "/powershell/examples/barcodes/Gs1DataBarOmnidirectional.png",
+          "width": 232,
+          "height": 80
+        },
+        {
+          "file": "Itf14.png",
+          "url": "/powershell/examples/barcodes/Itf14.png",
+          "width": 310,
+          "height": 80
+        },
+        {
+          "file": "Pdf417.png",
+          "url": "/powershell/examples/barcodes/Pdf417.png",
+          "width": 564,
+          "height": 162
+        },
+        {
+          "file": "UpcA.png",
+          "url": "/powershell/examples/barcodes/UpcA.png",
+          "width": 230,
+          "height": 80
+        }
+      ]
+    },
+    {
+      "id": "branded",
+      "family": "styling",
+      "title": "Brand colours and transparency",
+      "body": "Colours, module size and a transparent background for overlays.",
+      "show": null,
+      "script": "$url = 'https://codeglyphx.com'\n\nNew-ImageQRCode -Content $url -FilePath 'branded.png' `\n    -ForegroundColor '#4c1d95' -BackgroundColor '#f5f3ff' -PixelSize 12\n\n# Shapes and eye colour; high error correction leaves room for styling.\n$style = @{\n    ModuleShape     = 'Rounded'\n    EyeShape        = 'Circle'\n    EyeColor        = '#7c3aed'\n    ForegroundColor = '#1e1b4b'\n    ErrorCorrection = 'H'\n    Size            = 480\n}\nNew-ImageQRCode -Content $url -FilePath 'styled.png' @style\n\nNew-ImageQRCode -Content $url -FilePath 'transparent.png' -Transparent -PixelSize 8\n\n# The file extension picks the format: PNG, JPEG, WebP, SVG or PDF.\nNew-ImageQRCode -Content $url -FilePath 'vector.svg' -ForegroundColor '#4c1d95'\n\nGet-ChildItem *.png | ForEach-Object {\n    [pscustomobject]@{\n        File = $_.Name\n        Size = '{0:N1} KB' -f ($_.Length / 1KB)\n        Text = (Get-ImageQRCode -FilePath $_.FullName).Text\n    }\n} | Format-Table -AutoSize",
+      "console": "File            Size   Text\n----            ----   ----\nbranded.png     0.5 KB https://codeglyphx.com\nstyled.png      3.3 KB https://codeglyphx.com\ntransparent.png 1.2 KB https://codeglyphx.com",
+      "outputs": [
+        {
+          "file": "branded.png",
+          "url": "/powershell/examples/branded/branded.png",
+          "width": 444,
+          "height": 444
+        },
+        {
+          "file": "styled.png",
+          "url": "/powershell/examples/branded/styled.png",
+          "width": 444,
+          "height": 444
+        },
+        {
+          "file": "transparent.png",
+          "url": "/powershell/examples/branded/transparent.png",
+          "width": 296,
+          "height": 296
+        },
+        {
+          "file": "vector.svg",
+          "url": "/powershell/examples/branded/vector.svg",
+          "width": null,
+          "height": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title_html }}</title>
+  {{ description_meta_html }}
+  {{ canonical_html }}
+  {{ head_html }}
+  <script>(function(){let t='auto';try{t=localStorage.getItem('theme')||'auto';}catch(e){}document.documentElement.dataset.theme=t;})();</script>
+  {{ assets.preloads_html }}
+  {{ assets.critical_css_html }}
+  {{ include "theme-tokens" }}
+  {{ extra_css_html }}
+  {{ assets.css_html }}
+  {{ opengraph_html }}
+  {{ structured_data_html }}
+</head>
+<body class="cgx-body-docs cgx-body-docshome{{ if body_class != "" }} {{ body_class }}{{ end }}"{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
+  <div class="page">
+{{ include "header" -}}
+{{~ map = data["docs-map"]; cards = data.visuals.docs.cards; qs = data.visuals.docs.figures.quickstart.items ~}}
+<main id="main" class="cgx-main cgx-main--docs">
+  <header class="cgx-stage" aria-labelledby="docs-title">
+    <div class="cgx-stage__inner">
+      <div class="cgx-stage__copy">
+        <h1 id="docs-title">Documentation</h1>
+        <p class="cgx-stage__lede">Every symbology CodeGlyphX encodes, the payloads phones understand, reading codes from images and the formats it writes. Each guide shows the output it describes, drawn by CodeGlyphX.</p>
+        <div class="cgx-install"><code><span aria-hidden="true">&gt;</span> dotnet add package CodeGlyphX</code><button type="button" class="copy-btn cgx-copy" data-copy="dotnet add package CodeGlyphX">Copy</button></div>
+        <div class="cgx-stage__actions">
+          <a class="cgx-btn cgx-btn--glow" href="/docs/quickstart/">Quick start</a>
+          <a class="cgx-btn cgx-btn--ghost" href="/api/">API reference</a>
+        </div>
+      </div>
+      <figure class="cgx-run" aria-labelledby="cgx-run-caption">
+        <pre class="cgx-run__code"><code><span class="cgx-t">QR</span>.Save(<span class="cgx-s">"Hello, World!"</span>, <span class="cgx-s">"hello.png"</span>);
+<span class="cgx-t">Barcode</span>.Save(<span class="cgx-t">SymbolFormat</span>.Code128, <span class="cgx-s">"PRODUCT-12345"</span>, <span class="cgx-s">"barcode.png"</span>);
+<span class="cgx-t">Barcode</span>.Save(<span class="cgx-t">SymbolFormat</span>.Ean, <span class="cgx-s">"5901234123457"</span>, <span class="cgx-s">"ean.png"</span>);</code></pre>
+        <ul class="cgx-run__out" aria-label="Files written">
+          {{~ for it in qs ~}}
+          <li class="cgx-run__file{{ if for.first }} cgx-run__file--qr{{ end }}">
+            <span class="cgx-run__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" {{ if for.first }}fetchpriority="high" loading="eager"{{ else }}loading="lazy"{{ end }} decoding="async" alt="{{ it.label }}, {{ it.note }}" /></span>
+            <span class="cgx-run__name">{{ it.label }}</span>
+          </li>
+          {{~ end ~}}
+        </ul>
+        <figcaption id="cgx-run-caption" class="cgx-decoded"><span class="cgx-decoded__dot" aria-hidden="true"></span>hello.png decoded by CodeGlyphX <code>{{ qs[0].decoded }}</code></figcaption>
+      </figure>
+    </div>
+  </header>
+
+  <section class="cgx-docmap" aria-labelledby="docmap-title">
+    <div class="cgx-docmap__head">
+      <h2 id="docmap-title">Guides</h2>
+      <div class="cgx-tabs" role="group" aria-label="Show guides" data-cgx-filter-set="[data-cgx-docmap]">
+        {{~ total = 0; for g in map.groups; total = total + g.topics.size; end ~}}
+        <button type="button" class="cgx-tab" aria-pressed="true" data-filter="all"><span class="cgx-tab__key" aria-hidden="true"></span>All <span class="cgx-tab__count">{{ total }}</span></button>
+        {{~ for g in map.groups ~}}<button type="button" class="cgx-tab" aria-pressed="false" data-filter="{{ g.id }}" style="--key: {{ g.key }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ g.title }} <span class="cgx-tab__count">{{ g.topics.size }}</span></button>{{~ end ~}}
+      </div>
+    </div>
+    <div class="cgx-docmap__rows" data-cgx-docmap>
+      {{~ n = 0; for g in map.groups ~}}
+      <section class="cgx-docmap__row" data-family="{{ g.id }}" style="--key: {{ g.key }}" aria-labelledby="docmap-{{ g.id }}">
+        <h3 class="cgx-docmap__rowhead" id="docmap-{{ g.id }}"><span class="cgx-docmap__key" aria-hidden="true"></span>{{ g.title }}<span class="cgx-docmap__count">{{ g.topics.size }} {{ if g.topics.size == 1 }}guide{{ else }}guides{{ end }}</span></h3>
+        <ol class="cgx-docmap__grid">
+          {{~ for t in g.topics; n = n + 1; c = cards[t.card] ~}}
+          <li>
+            <span class="cgx-docmap__plate" aria-hidden="true">{{ if c }}<img src="{{ c.src }}" width="{{ c.w }}" height="{{ c.h }}" loading="lazy" decoding="async" alt="" />{{ end }}</span>
+            <span class="cgx-docmap__body">
+              <span class="cgx-docmap__num">{{ n | math.format "00" }}</span>
+              <a class="cgx-docmap__title" href="{{ t.url }}">{{ t.title }}</a>
+              <span class="cgx-docmap__summary">{{ t.summary }}</span>
+              <code class="cgx-docmap__value" title="Encoded in the code above">{{ t.value }}</code>
+            </span>
+          </li>
+          {{~ end ~}}
+        </ol>
+      </section>
+      {{~ end ~}}
+    </div>
+  </section>
+
+  <section class="cgx-docmap__more" aria-label="About the library">
+    <div class="markdown-body cgx-prose">
+{{ content | regex.replace `<h1[^>]*>[\s\S]*?</h1>` "" }}
+    </div>
+  </section>
+</main>
+{{ include "footer" -}}
+  </div>
+  {{ assets.js_html }}
+  {{ extra_scripts_html }}
+</body>
+</html>

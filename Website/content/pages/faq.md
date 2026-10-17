@@ -3,7 +3,10 @@ title: FAQ - CodeGlyphX
 description: Common questions about CodeGlyphX and QR/barcode generation in .NET.
 slug: faq
 collection: pages
-layout: faq
+layout: page
+meta.heading: Questions and answers
+meta.lede: Frameworks, licensing, dependencies, decoding and output formats. If your question is not here, ask on GitHub or Discord.
+meta.glyph: aztec
 meta.raw_html: true
 meta.data_shortcode: faq
 meta.data_path: faq.sections
@@ -12,7 +15,6 @@ meta.social: true
 meta.social_description: Common questions about CodeGlyphX and QR/barcode generation in .NET.
 meta.structured_data: true
 meta.head_file: faq.head.html
-meta.extra_scripts_file: faq.scripts.html
 meta.breadcrumb_title: FAQ
 canonical: https://codeglyphx.com/faq/
 ---

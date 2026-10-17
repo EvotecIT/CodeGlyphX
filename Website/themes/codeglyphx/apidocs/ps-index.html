@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{TITLE}}</title>
+  {{DESCRIPTION_META}}
+  {{OPEN_GRAPH_META}}
+  <link rel="preconnect" href="https://img.shields.io" crossorigin />
+  <link rel="dns-prefetch" href="https://img.shields.io" />
+  {{CRITICAL_CSS}}
+  {{CSS}}
+</head>
+<body class="{{BODY_CLASS}}">
+{{HEADER}}<header class="cgx-stage cgx-stage--api" aria-labelledby="api-title">
+  <div class="cgx-stage__inner cgx-stage__inner--wide">
+    <div class="cgx-stage__copy">
+      <a class="cgx-pagehead__crumb" href="/powershell/">PowerShell</a>
+      <h1 id="api-title">ImagePlayground commands</h1>
+      <p class="cgx-stage__lede">The CodeGlyphX commands in the ImagePlayground module, generated from its help. Each tile is a file one of them wrote in the <a href="/powershell/">PowerShell examples</a>.</p>
+    </div>
+    <nav aria-label="Most used commands">
+      <ul class="cgx-entries">
+        <li><a class="cgx-entry" href="/powershell/commands/new-imageqrcode/"><span class="cgx-entry__plate"><img src="/powershell/examples/branded/styled.png" width="444" height="444" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">New-ImageQRCode</code><span class="cgx-entry__summary">QR codes with colours, shapes and logos.</span></a></li>
+        <li><a class="cgx-entry" href="/powershell/commands/new-imagebarcode/"><span class="cgx-entry__plate"><img src="/powershell/examples/barcodes/Code128.png" width="374" height="80" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">New-ImageBarCode</code><span class="cgx-entry__summary">Code 128, EAN, Data Matrix, PDF417.</span></a></li>
+        <li><a class="cgx-entry" href="/powershell/commands/new-imageqrcodewifi/"><span class="cgx-entry__plate"><img src="/powershell/examples/wifi/wifi.png" width="980" height="980" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">New-ImageQRCodeWiFi</code><span class="cgx-entry__summary">Join a network by scanning.</span></a></li>
+        <li><a class="cgx-entry" href="/powershell/commands/new-imageqrcontact/"><span class="cgx-entry__plate"><img src="/powershell/examples/contact/contact.png" width="1540" height="1540" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">New-ImageQRContact</code><span class="cgx-entry__summary">A contact card for phones.</span></a></li>
+        <li><a class="cgx-entry" href="/powershell/commands/new-imageqrcodeotp/"><span class="cgx-entry__plate"><img src="/powershell/examples/otp/otp.png" width="1060" height="1060" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">New-ImageQRCodeOTP</code><span class="cgx-entry__summary">Authenticator enrolment codes.</span></a></li>
+        <li><a class="cgx-entry" href="/powershell/commands/get-imageqrcode/"><span class="cgx-entry__plate"><img src="/powershell/examples/asset-labels/EVO-LAP-0142.qr.png" width="185" height="185" loading="lazy" decoding="async" alt="" /></span><code class="cgx-entry__name">Get-ImageQRCode</code><span class="cgx-entry__summary">Read a QR code back from an image.</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="api-layout{{SIDEBAR_CLASS}}">
+  <button class="sidebar-toggle" type="button" aria-label="Toggle API navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true">
+      <path d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+    <span>API Navigation</span>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="api-sidebar">
+{{SIDEBAR}}
+  </aside>
+  <main id="main" class="api-content">
+{{MAIN}}
+  </main>
+</div>
+{{FOOTER}}
+{{DOCS_SCRIPT}}
+</body>
+</html>

@@ -9,6 +9,15 @@ namespace CodeGlyphX.Playground;
 public partial class Playground {
     private const int MaxDecodeImageBytes = 8 * 1024 * 1024;
 
+    /// <summary>Shares the selected image formats with recognition and generated examples.</summary>
+    internal SymbolFormat[] GetSelectedDecodeFormats() => SymbolCapabilities.All
+        .Where(capability => capability.CanScanImages &&
+            (DecodeIncludeAmbiguousFormats || capability.IsDefaultScanFormat) &&
+            (capability.Format is SymbolFormat.QrCode or SymbolFormat.MicroQrCode ? DecodeQr :
+             capability.Family == SymbolFamily.Linear ? DecodeBarcode : DecodeMatrix))
+        .Select(capability => capability.Format)
+        .ToArray();
+
     internal async Task OnDecodeFileChanged(InputFileChangeEventArgs args) {
         _decodeCts?.Cancel();
         _decodeCts = null;
@@ -18,13 +27,7 @@ public partial class Playground {
         var file = args.File;
         if (file is null) return;
 
-        var formats = SymbolCapabilities.All
-            .Where(capability => capability.CanScanImages &&
-                (DecodeIncludeAmbiguousFormats || capability.IsDefaultScanFormat) &&
-                (capability.Format is SymbolFormat.QrCode or SymbolFormat.MicroQrCode ? DecodeQr :
-                 capability.Family == SymbolFamily.Linear ? DecodeBarcode : DecodeMatrix))
-            .Select(capability => capability.Format)
-            .ToArray();
+        var formats = GetSelectedDecodeFormats();
         if (formats.Length == 0) {
             DecodeError = "Choose at least one symbol family to decode.";
             return;

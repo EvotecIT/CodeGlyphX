@@ -1,0 +1,17 @@
+/* Scrollbars that belong to the theme: thin, a track that blends into the surface, and a muted thumb that brightens on hover.
+   light-dark() resolves per element, so the night bands (color-scheme: dark) keep the light thumb in either theme. */
+:root {
+    --cgx-scroll-thumb: light-dark(rgba(71, 85, 105, .3), rgba(196, 190, 224, .28));
+    --cgx-scroll-thumb-hover: light-dark(rgba(109, 40, 217, .55), rgba(167, 139, 250, .65));
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--cgx-scroll-thumb) transparent;
+}
+
+/* Browsers without scrollbar-color support. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 999px; background: var(--cgx-scroll-thumb) padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--cgx-scroll-thumb-hover) padding-box; }

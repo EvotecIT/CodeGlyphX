@@ -1,10 +1,10 @@
-    <section class="benchmark-section" aria-labelledby="{{ session_costs.anchor }}">
-        <h2 id="{{ session_costs.anchor }}">{{ session_costs.title }}</h2>
-        {{ if session_costs.historical }}<p>These measurements retain their original source <code class="comparison-source">{{ session_costs.source }}</code>.</p>{{ end }}
+    <section class="cgx-bench-study" aria-labelledby="{{ session_costs.anchor }}">
+        <h3 id="{{ session_costs.anchor }}">{{ session_costs.title }}</h3>
+        {{ if session_costs.historical }}<p>These measurements retain their original source <code class="cgx-bench-source">{{ session_costs.source }}</code>.</p>{{ end }}
         {{ if session_costs.summary }}
         <p>{{ session_costs.summary }}</p>
         {{ if session_costs.completion_note }}<p>{{ session_costs.completion_note }}</p>{{ end }}
-        <details class="comparison-methods"><summary>Methods and validation</summary>
+        <details class="cgx-disclosure"><summary>Methods and validation</summary>
         {{ end }}
         {{ if session_costs.contracts }}<p>{{ session_costs.contracts }}</p>{{ end }}
         {{ if session_costs.exploration_note }}<p>{{ session_costs.exploration_note }}</p>{{ end }}
@@ -14,13 +14,13 @@
         <p>{{ session_costs.scope }}</p>
         <p>{{ session_costs.history_note }}</p>
         {{ if session_costs.summary }}</details>{{ end }}
-        {{ if session_costs.kernel_costs }}{{ include "shortcodes/component-kernel-cost-table" }}<h3>Complete scans</h3>{{ end }}
+        {{ if session_costs.kernel_costs }}{{ include "shortcodes/component-kernel-cost-table" }}<h4>Complete scans</h4>{{ end }}
         {{ cost_rows = session_costs.costs }}
         {{ cost_caption = "Previous → current · one retained session per binary · every measured outcome included" }}
         {{ cost_region_label = session_costs.title + ": complete scans" }}
         {{ include "shortcodes/decoder-scan-cost-table" }}
         {{ if session_costs.exploratory_costs }}
-        <h3>Exploratory complete scans</h3>
+        <h4>Exploratory complete scans</h4>
         <p>Every exploratory public-scan pass remains separate from the final table, with all priming and measured outcomes retained.</p>
         {{ cost_rows = session_costs.exploratory_costs }}
         {{ cost_caption = "Previous → current · exploratory public scans · every measured outcome included" }}

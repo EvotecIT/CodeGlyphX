@@ -1,0 +1,207 @@
+{
+  "intro": "CodeGlyphX ships features first; ImagePlayground exposes them as commands. This table describes ImagePlayground 3.3.0: rows marked available work from commands alone, partial rows work with the limits noted, and planned rows are in CodeGlyphX but not yet a command.",
+  "tracking": {
+    "title": "Request a command or vote on the roadmap",
+    "url": "https://github.com/EvotecIT/ImagePlayground/issues"
+  },
+  "groups": [
+    {
+      "title": "QR codes",
+      "rows": [
+        {
+          "capability": "QR codes from any text or URL",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "Colours, module size, transparent background and a centre logo",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "PNG, JPEG, SVG and PDF output, chosen by file extension",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode",
+            "New-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Error-correction level, quiet zone and exact output size",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "Module shapes, finder (eye) shapes, eye colour and logo scale",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "Gradients, palettes and canvas backgrounds",
+          "status": "planned",
+          "note": "The styling the playground shows today."
+        },
+        {
+          "capability": "QR artwork: theme presets, procedural patterns and image composition",
+          "status": "planned"
+        },
+        {
+          "capability": "Micro QR and rMQR",
+          "status": "planned",
+          "note": "CodeGlyphX encodes them; no command exposes them yet."
+        },
+        {
+          "capability": "Static scan-readiness report for styled codes",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "title": "Payloads",
+      "rows": [
+        {
+          "capability": "Wi-Fi, contact cards, email, phone and SMS",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeWiFi",
+            "New-ImageQRContact",
+            "New-ImageQRCodeEmail",
+            "New-ImageQRCodePhoneNumber",
+            "New-ImageQRCodeSms"
+          ]
+        },
+        {
+          "capability": "Authenticator secrets, calendar events and locations",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeOtp",
+            "New-ImageQRCodeCalendar",
+            "New-ImageQRCodeGeoLocation"
+          ]
+        },
+        {
+          "capability": "Payments: GiroCode, BezahlCode, Swiss QR bill and Slovenian UPN",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeGirocode",
+            "New-ImageQRCodeBezahlCode",
+            "New-ImageQRCodeSwiss",
+            "New-ImageQRCodeSlovenianUpnQr"
+          ]
+        },
+        {
+          "capability": "Bitcoin, Monero, ShadowSocks and Skype calls",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeBitcoin",
+            "New-ImageQRCodeMonero",
+            "New-ImageQRCodeShadowSocks",
+            "New-ImageQRCodeSkypeCall"
+          ]
+        },
+        {
+          "capability": "UPI and PayPal.Me payments",
+          "status": "planned"
+        },
+        {
+          "capability": "WhatsApp messages, MMS and bookmarks",
+          "status": "planned"
+        },
+        {
+          "capability": "App store links and social profiles (LinkedIn, X, Facebook, TikTok)",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "title": "Barcodes",
+      "rows": [
+        {
+          "capability": "Retail and logistics: EAN, UPC, ITF-14, Code 128 and GS1-128",
+          "status": "available",
+          "commands": [
+            "New-ImageBarCode",
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Industrial linear codes: Code 39, Code 93, Code 11, Codabar, MSI, Plessey, Telepen, 2 of 5 variants, Pharmacode and Code 32",
+          "status": "available",
+          "commands": [
+            "New-ImageBarCode",
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Data Matrix and PDF417",
+          "status": "available",
+          "commands": [
+            "New-ImageBarCode",
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "GS1 DataBar, MicroPDF417 and postal codes (POSTNET, PLANET, Royal Mail, Japan Post, USPS IMb, KIX)",
+          "status": "partial",
+          "commands": [
+            "New-ImageBarCode"
+          ],
+          "note": "They encode today; reading them back with Get-ImageBarCode is not reliable yet."
+        },
+        {
+          "capability": "Aztec, DotCode, Han Xin and the rest of the CodeGlyphX symbology list",
+          "status": "partial",
+          "commands": [
+            "New-ImageBarCode"
+          ],
+          "note": "They encode through -Type, and Aztec images can be read back. Manual Aztec correction and layer settings are not exposed by the command; MaxiCode needs its own renderer."
+        },
+        {
+          "capability": "Bar height, module width, quiet zone, colours and human-readable text",
+          "status": "available",
+          "commands": [
+            "New-ImageBarCode"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Decoding",
+      "rows": [
+        {
+          "capability": "Read a QR code from an image file",
+          "status": "available",
+          "commands": [
+            "Get-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "Read linear and 2D barcodes from an image file",
+          "status": "available",
+          "commands": [
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Format filters and time limits for untrusted images",
+          "status": "available",
+          "commands": [
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Several codes in one image, and decoding from the clipboard or screen",
+          "status": "planned"
+        }
+      ]
+    }
+  ]
+}

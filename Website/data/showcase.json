@@ -1,9 +1,4 @@
 {
-  "hero": {
-    "label": "Built with CodeGlyphX",
-    "title": "Showcase",
-    "description": "See CodeGlyphX in action powering real-world applications."
-  },
   "cards": [
     {
       "id": "informationbox",

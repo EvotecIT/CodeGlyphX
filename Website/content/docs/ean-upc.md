@@ -27,8 +27,11 @@ Barcode.Save(SymbolFormat.Ean, "96385074", "ean8.png");
 Barcode.Save(SymbolFormat.UpcA, "012345678905", "upca.png");
 
 // UPC-E (Compact)
-Barcode.Save(SymbolFormat.UpcE, "01234565", "upce.png");
+Barcode.Save(SymbolFormat.UpcE, "123456", "upce.png");
 ```
+
+
+{{< cgx-figure id="ean-upc" caption="Retail symbols at one module width, each read back by CodeGlyphX. UPC-E takes the six-digit compressed form." >}}
 
 ## Format Guide
 

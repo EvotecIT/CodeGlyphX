@@ -1,0 +1,9 @@
+<section class="cgx-surfaces" aria-label="Ways to use CodeGlyphX">
+  {{~ for s in data.landing.surfaces ~}}
+  <a class="cgx-surface" href="{{ s.url }}">
+    <strong>{{ s.name }}</strong>
+    <span>{{ if s.name == "PowerShell" && data.imageplayground }}ImagePlayground brings {{ data.imageplayground.module.codeGlyphXCommandCount }} CodeGlyphX commands to PowerShell 5.1 and 7.{{ else }}{{ s.body }}{{ end }}</span>
+    <em>{{ s.action }}</em>
+  </a>
+  {{~ end ~}}
+</section>

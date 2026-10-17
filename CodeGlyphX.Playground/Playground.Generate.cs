@@ -289,28 +289,25 @@ public partial class Playground {
                     "UPCA" => SymbolFormat.UpcA,
                     "UPCE" => SymbolFormat.UpcE,
                     "ITF14" => SymbolFormat.Itf14,
+                    "ITF" => SymbolFormat.Itf,
+                    "Code32" => SymbolFormat.Code32,
+                    "Telepen" => SymbolFormat.Telepen,
                     _ => SymbolFormat.Code128
                 };
 
-                string content = BarcodeContent;
+                string content = GetNormalizedBarcodeContent();
 
                 // Special handling for different barcode types
                 if (SelectedBarcodeType == "Code39")
                 {
-                    content = content.ToUpperInvariant();
                     if (!IsValidCode39Content(content))
                     {
                         ErrorMessage = "Code 39 supports uppercase A-Z, digits 0-9, and -. $/+% space";
                         return;
                     }
                 }
-                else if (SelectedBarcodeType == "Code93")
-                {
-                    content = content.ToUpperInvariant();
-                }
                 else if (SelectedBarcodeType == "Code11")
                 {
-                    content = content.ToUpperInvariant();
                     if (!IsValidCode11Content(content))
                     {
                         ErrorMessage = "Code 11 supports digits and '-' only.";
@@ -319,39 +316,11 @@ public partial class Playground {
                 }
                 else if (SelectedBarcodeType == "Plessey")
                 {
-                    content = content.ToUpperInvariant();
                     if (!IsValidHexContent(content))
                     {
                         ErrorMessage = "Plessey supports hex digits only (0-9, A-F).";
                         return;
                     }
-                }
-                else if (SelectedBarcodeType == "EAN")
-                {
-                    content = NormalizeDigits(content);
-                    if (content.Length <= 8) content = content.PadLeft(8, '0');
-                    else if (content.Length < 13) content = content.PadLeft(13, '0');
-                }
-                else if (SelectedBarcodeType == "UPCA")
-                {
-                    content = NormalizeDigits(content).PadLeft(12, '0');
-                }
-                else if (SelectedBarcodeType == "UPCE")
-                {
-                    content = NormalizeDigits(content);
-                    if (content.Length < 6) content = content.PadLeft(6, '0');
-                }
-                else if (SelectedBarcodeType == "ITF14")
-                {
-                    content = NormalizeDigits(content).PadLeft(14, '0');
-                }
-                else if (SelectedBarcodeType == "Codabar")
-                {
-                    content = content.ToUpperInvariant();
-                }
-                else if (SelectedBarcodeType == "MSI")
-                {
-                    content = NormalizeDigits(content);
                 }
 
                 pngBytes = Barcode.Render(barcodeType, content, OutputFormat.Png).ToArray();

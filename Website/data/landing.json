@@ -1,0 +1,150 @@
+{
+  "hero": {
+    "line1": "Encode it. Style it.",
+    "line2": "Scan it back.",
+    "lede": "CodeGlyphX generates and decodes QR codes, Data Matrix, PDF417, Aztec and dozens of barcode formats in pure .NET. Render to PNG, SVG, PDF and more, or turn a QR code into artwork that still scans. No System.Drawing, SkiaSharp or ImageSharp.",
+    "install": "dotnet add package CodeGlyphX",
+    "art": "/images/art/qr-expressive-botanical.png",
+    "artName": "qr-expressive-botanical.png",
+    "thumbs": [
+      "/images/art/qr-expressive-citrus.png",
+      "/images/art/qr-expressive-waves.png",
+      "/images/art/qr-expressive-geometric.png"
+    ],
+    "badges": [
+      "Apache 2.0",
+      "No native dependencies",
+      ".NET Framework 4.7.2 to .NET 10",
+      "Native AOT tested"
+    ]
+  },
+  "surfaces": [
+    {
+      "name": ".NET",
+      "body": "One NuGet package for .NET Framework 4.7.2, .NET Standard 2.0, .NET 8 and .NET 10.",
+      "action": "Read the quickstart",
+      "url": "/docs/"
+    },
+    {
+      "name": "Playground",
+      "body": "Generate, style and decode codes in your browser, running CodeGlyphX in WebAssembly.",
+      "action": "Open the playground",
+      "url": "/playground/"
+    },
+    {
+      "name": "PowerShell",
+      "body": "ImagePlayground brings QR codes, payloads, barcodes and decoding to PowerShell.",
+      "action": "See the PowerShell page",
+      "url": "/powershell/"
+    },
+    {
+      "name": "Windows",
+      "body": "WPF controls and example applications for desktop scanning and generation.",
+      "action": "Download the apps",
+      "url": "/downloads/"
+    },
+    {
+      "name": "API reference",
+      "body": "Public types and members, generated from the library API.",
+      "action": "Browse the API",
+      "url": "/api/"
+    }
+  ],
+  "families": [
+    {
+      "id": "2D",
+      "label": "2D matrix"
+    },
+    {
+      "id": "Linear",
+      "label": "Linear"
+    },
+    {
+      "id": "Retail",
+      "label": "Retail"
+    },
+    {
+      "id": "GS1",
+      "label": "GS1 DataBar"
+    },
+    {
+      "id": "Postal",
+      "label": "Postal"
+    }
+  ],
+  "art": {
+    "title": "Artwork that still scans",
+    "body": "Theme presets, module palettes, rounded finders, gradients, image composition and procedural patterns. Functional patterns and the quiet zone stay intact, and the examples check every export with the CodeGlyphX decoder.",
+    "proof": "Each design in the colorful gallery must decode back to https://codeglyphx.com from the original pixels, a half-size copy and a lightly blurred copy before the example completes. Test your delivery size and target readers before printing.",
+    "code": "var options = new QrRenderOptions {\n    Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)\n};\n\nQR.Save(\"https://codeglyphx.com\", \"styled.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });",
+    "gallery": [
+      {
+        "image": "/images/art/qr-procedural-art-gallery.png",
+        "width": 1356,
+        "height": 912,
+        "title": "Procedural art",
+        "alt": "Six procedurally patterned QR codes with swirls, stripes and tiles around intact finder patterns."
+      },
+      {
+        "image": "/images/art/qr-colorful-gallery.png",
+        "width": 1376,
+        "height": 924,
+        "title": "Colorful gallery",
+        "alt": "Six colorful QR designs with gradients, confetti and illustrations woven into the data area."
+      }
+    ]
+  },
+  "decode": {
+    "title": "Read them back",
+    "body": "Decode QR, Micro QR, barcodes, Data Matrix, PDF417 and Aztec from PNG, JPEG, BMP, GIF and other documented image formats. Byte, pixel, dimension and time budgets keep untrusted input bounded.",
+    "code": "var scan = SymbolScanner.Scan(image, ScanOptions.Screen(\n    timeoutMilliseconds: 500,\n    maxDimension: 1600));\n\nforeach (var symbol in scan.Symbols)\n{\n    Console.WriteLine($\"{symbol.Format}: {symbol.Text}\");\n}"
+  },
+  "powershell": {
+    "intro": "ImagePlayground, the Evotec PowerShell module for visual automation, uses CodeGlyphX for QR codes, typed payloads, barcodes and decoding.",
+    "about": {
+      "title": "One module, three libraries",
+      "body": "A single Install-Module gives scripts the same .NET libraries that applications reference directly, so charts, QR codes and photo edits come from one toolset.",
+      "libraries": [
+        {
+          "name": "ChartForgeX",
+          "role": "Charts, topology, dashboards, canvases and animated stories",
+          "url": "https://chartforgex.com/"
+        },
+        {
+          "name": "CodeGlyphX",
+          "role": "QR codes, barcodes and decoding",
+          "url": "https://codeglyphx.com/"
+        },
+        {
+          "name": "OfficeIMO",
+          "role": "Image processing, metadata and pixel comparison",
+          "url": "https://officeimo.com/"
+        }
+      ],
+      "links": [
+        {
+          "title": "PowerShell Gallery",
+          "url": "https://www.powershellgallery.com/packages/ImagePlayground"
+        },
+        {
+          "title": "Source and examples",
+          "url": "https://github.com/EvotecIT/ImagePlayground"
+        },
+        {
+          "title": "Command reference",
+          "url": "/powershell/commands/"
+        },
+        {
+          "title": "Project overview",
+          "url": "https://evotec.xyz/projects/imageplayground/"
+        }
+      ]
+    },
+    "featured": [
+      "wifi",
+      "contact",
+      "otp",
+      "girocode"
+    ]
+  }
+}

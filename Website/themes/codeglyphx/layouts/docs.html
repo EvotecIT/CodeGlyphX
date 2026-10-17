@@ -16,23 +16,29 @@
   {{ opengraph_html }}
   {{ structured_data_html }}
 </head>
-<body{{ if body_class != "" }} class="{{ body_class }}"{{ end }}{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
+<body class="cgx-body-docs{{ if body_class != "" }} {{ body_class }}{{ end }}"{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
   <div class="page">
 {{ include "header" -}}
-<main>
+<main id="main" class="cgx-main cgx-main--docs">
+{{~ # The band shows the page's own H1; each guide is headed by the symbology it covers. ~}}
+{{~ docs_h1 = content | regex.match `<h1[^>]*>([\s\S]*?)</h1>` ~}}
+{{~ docs_glyphs = { qr: "qrcode", microqr: "microqrcode", datamatrix: "datamatrix", pdf417: "pdf417", aztec: "aztec", code128: "code128", code39: "code39", "ean-upc": "ean", "other-1d": "kixcode", gs1: "gs1code128", payloads: "payload-wifi", decoding: "qrcode", renderers: "dotcode", "symbol-capabilities": "hanxin", installation: "datamatrix", quickstart: "qrcode", "migration-2": "rmqrcode", "migration-3": "rmqrcode", index: "datamatrix" } ~}}
+{{~ ph_title = (docs_h1 && docs_h1.size > 1) ? docs_h1[1] : page.title; ph_lede = page.description; ph_glyph = docs_glyphs[page.slug] ?? "datamatrix" ~}}
+{{~ if page.slug != "index"; ph_crumb = "Documentation"; ph_crumb_url = "/docs/"; end ~}}
+{{ include "page-head" }}
   <div class="docs-layout">
-    <button class="docs-sidebar-toggle" aria-label="Toggle documentation menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+    <button class="docs-sidebar-toggle" type="button" aria-label="Toggle documentation menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" aria-hidden="true">
         <path d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
-      <span>Documentation Menu</span>
+      <span>Documentation menu</span>
     </button>
     <div class="docs-sidebar-overlay"></div>
     <aside class="docs-sidebar">
 {{ include "docs-sidebar" }}
     </aside>
     <div class="docs-content">
-{{ content }}
+{{ content | regex.replace `<h1[^>]*>[\s\S]*?</h1>` "" }}
     </div>
   </div>
 </main>

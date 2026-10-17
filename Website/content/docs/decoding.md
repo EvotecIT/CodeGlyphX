@@ -12,6 +12,9 @@ layout: docs
 
 Use `QrImageDecoder` when only QR is expected, or `MicroQrDecoder` for direct Micro QR recognition. `SymbolScanner` provides one result model for all 62 physical formats, including matrix, linear, stacked and postal symbols. The [capability matrix](/docs/symbol-capabilities/) records default recognition, explicit format selection, geometry and multiple-result support.
 
+
+{{< cgx-figure id="decoding" caption="Three inputs passed to SymbolScanner.Scan with ScanOptions.Balanced: QR artwork from the home page, a Data Matrix label and a Code 128 carton label. Each line is the scanner's result." >}}
+
 ## QR-only decoding
 
 ```csharp

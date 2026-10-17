@@ -28,7 +28,7 @@
         {{ product_visible_count = 0 }}
         <ul class="footer-list{{ if footer_product.items.size > 8 }} is-dense{{ end }}{{ if footer_product.items.size > 14 }} is-mega{{ end }}{{ if footer_product.items.size > 20 }} is-scroll{{ end }}">
         {{~ for item in footer_product.items ~}}
-        {{~ if item.url && product_visible_count < 6 ~}}
+        {{~ if item.url && product_visible_count < 8 ~}}
         {{ link_target = item.target }}
         {{ link_rel = item.rel }}
         {{ if item.external }}

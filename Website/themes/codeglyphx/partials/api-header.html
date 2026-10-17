@@ -1,29 +1,11 @@
-<script>(function(){let t='auto';try{t=localStorage.getItem('theme')||'auto';}catch(e){}document.documentElement.dataset.theme=t;})();</script>
-<header class="header">
-    <div class="header-content">
-        <a href="{{BRAND_URL}}" class="brand">
-            <div class="brand-icon">
-                <img src="{{BRAND_ICON}}" alt="{{SITE_NAME}} logo" width="28" height="28" loading="eager" decoding="async" />
-            </div>
-            <span>{{SITE_NAME}}</span>
-        </a>
-
-        <!-- Mobile hamburger toggle -->
-        <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox" />
-        <label for="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
-
-        <nav class="nav" aria-label="Main navigation">
-            <div class="nav-links">
-                {{NAV_LINKS}}
-            </div>
-            <div class="nav-actions">
-                {{NAV_ACTIONS}}
-            </div>
-        </nav>
+<!-- Fallback only: the pipeline passes headerHtml (_temp/chrome/api-header.html or ps-header.html), which
+     build/SiteChrome.cs copies from the header the site build rendered, so the API pages share it exactly. -->
+<header class="header cgx-header">
+  <nav class="nav cgx-nav" aria-label="Main">
+    <a href="{{BRAND_URL}}" class="brand"><span class="brand-icon"><img src="{{BRAND_ICON}}" alt="" width="32" height="32" /></span><span>{{SITE_NAME}}</span></a>
+    <div class="cgx-nav__sheet">
+      <div class="nav-links">{{NAV_LINKS}}</div>
+      <div class="nav-actions">{{NAV_ACTIONS}}</div>
     </div>
+  </nav>
 </header>
-

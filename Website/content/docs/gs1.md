@@ -12,6 +12,9 @@ layout: docs
 
 CodeGlyphX includes a generated catalog of all Application Identifiers in the bundled GS1 Barcode Syntax Dictionary release. The validator uses that catalog for field lengths, character sets, check digits, dates, code lists, required associations, exclusions, and the semantic rules attached to each AI.
 
+
+{{< cgx-figure id="gs1" caption="One GTIN with a batch and an expiry date in three GS1 carriers. The text under each is what CodeGlyphX decodes from its PNG." >}}
+
 ## Validate an element string
 
 ```csharp

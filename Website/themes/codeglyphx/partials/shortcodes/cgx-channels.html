@@ -1,0 +1,32 @@
+{{~ # Ways to get CodeGlyphX, each with a code CodeGlyphX drew for it (data/visuals.json pages.downloads). ~}}
+{{~ d = data.visuals.pages.downloads; ip = data.imageplayground ~}}
+<ul class="cgx-channels" aria-label="Ways to get CodeGlyphX">
+  <li class="cgx-channel">
+    <span class="cgx-channel__plate cgx-viewfinder-frame"><img src="{{ d.nuget.src }}" width="{{ d.nuget.w }}" height="{{ d.nuget.h }}" loading="lazy" decoding="async" alt="QR code for the CodeGlyphX NuGet package page" /></span>
+    <h3>NuGet package</h3>
+    <p>For .NET projects: the library, with no runtime dependencies on .NET 8 and 10.</p>
+    <code>dotnet add package CodeGlyphX</code>
+    <a class="cgx-btn cgx-btn--solid" href="{{ d.nuget.href }}">Open on NuGet</a>
+  </li>
+  <li class="cgx-channel">
+    <span class="cgx-channel__plate"><img src="{{ d.zipCode.src }}" width="{{ d.zipCode.w }}" height="{{ d.zipCode.h }}" loading="lazy" decoding="async" alt="Code 128 barcode encoding {{ d.zip }}" /></span>
+    <h3>Release ZIP</h3>
+    <p>Compiled assemblies for every target framework, attached to each GitHub release.</p>
+    <code>{{ d.zip }}</code>
+    <a class="cgx-btn cgx-btn--quiet" href="#dl-release">Builds by release</a>
+  </li>
+  <li class="cgx-channel">
+    <span class="cgx-channel__plate"><img src="{{ d.gallery.src }}" width="{{ d.gallery.w }}" height="{{ d.gallery.h }}" loading="lazy" decoding="async" alt="QR code for ImagePlayground on the PowerShell Gallery" /></span>
+    <h3>PowerShell</h3>
+    <p>ImagePlayground wraps CodeGlyphX in PowerShell commands for scripts and automation.</p>
+    <code>Install-Module ImagePlayground -MinimumVersion {{ ip.module.version }}</code>
+    <a class="cgx-btn cgx-btn--quiet" href="/powershell/">PowerShell examples</a>
+  </li>
+  <li class="cgx-channel">
+    <span class="cgx-channel__plate"><img src="{{ d.releases.src }}" width="{{ d.releases.w }}" height="{{ d.releases.h }}" loading="lazy" decoding="async" alt="QR code for CodeGlyphX releases on GitHub" /></span>
+    <h3>Source and releases</h3>
+    <p>Tagged source, release notes and assets for every version on GitHub.</p>
+    <code>{{ d.releases.decoded }}</code>
+    <a class="cgx-btn cgx-btn--quiet" href="{{ d.releases.href }}">GitHub Releases</a>
+  </li>
+</ul>

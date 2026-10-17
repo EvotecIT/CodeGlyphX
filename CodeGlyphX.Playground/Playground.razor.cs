@@ -181,6 +181,10 @@ public partial class Playground {
     // Component keys for forcing re-render
     internal int _exampleKey = 0;
 
+    // The example component is re-created after each generation; its tab choices live here.
+    internal string ExamplePlatform { get; set; } = "Console";
+    internal CodeLanguage ExampleLanguage { get; set; } = CodeLanguage.CSharp;
+
     // Output
     internal string? ImageDataUri { get; set; }
     internal string? SvgDataUri { get; set; }
@@ -338,7 +342,7 @@ public partial class Playground {
                 break;
             case "Code32":
                 BarcodeHint = "9 digits for Italian pharmaceutical codes";
-                BarcodeContent = "123456789";
+                BarcodeContent = "123456788";
                 break;
             case "GS1128":
                 BarcodeHint = "GS1 AI format, e.g. (01)09506000134352(10)ABC123";
@@ -494,5 +498,33 @@ public partial class Playground {
 
     internal static string NormalizeDigits(string content)
         => new string(content.Where(char.IsDigit).ToArray());
+
+    /// <summary>Uses the same case and retail digit normalization for previews and executable examples.</summary>
+    internal string GetNormalizedBarcodeContent()
+    {
+        var content = BarcodeContent;
+        switch (SelectedBarcodeType)
+        {
+            case "Code39":
+            case "Code93":
+            case "Code11":
+            case "Plessey":
+            case "Codabar":
+                return content.ToUpperInvariant();
+            case "EAN":
+                content = NormalizeDigits(content);
+                return content.Length <= 8 ? content.PadLeft(8, '0') : content.PadLeft(13, '0');
+            case "UPCA":
+                return NormalizeDigits(content).PadLeft(12, '0');
+            case "UPCE":
+                return NormalizeDigits(content).PadLeft(6, '0');
+            case "ITF14":
+                return NormalizeDigits(content).PadLeft(14, '0');
+            case "MSI":
+                return NormalizeDigits(content);
+            default:
+                return content;
+        }
+    }
 
 }

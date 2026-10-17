@@ -1,9 +1,4 @@
 {
-  "hero": {
-    "label": "Support",
-    "title": "Frequently Asked Questions",
-    "description": "Common questions about CodeGlyphX and QR/barcode generation in .NET."
-  },
   "sections": [
     {
       "title": "General",

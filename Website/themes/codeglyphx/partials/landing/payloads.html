@@ -1,0 +1,15 @@
+<section class="cgx-section cgx-payloads" aria-labelledby="cgx-payloads-title">
+  <div class="cgx-section__head">
+    <h2 id="cgx-payloads-title">Payloads people scan every day</h2>
+    <p>Typed builders produce the exact strings phones and authenticator apps expect, so a scan joins the network, saves the contact or starts the payment.</p>
+  </div>
+  <div class="cgx-payload-grid">
+    {{~ for p in data.specimens.payloads ~}}
+    <article class="cgx-payload">
+      <span class="cgx-payload__code"><img src="{{ p.file }}" loading="lazy" decoding="async" alt="QR code for a {{ p.name | string.downcase }} payload" /></span>
+      <h3>{{ p.name }}</h3>
+      <pre class="code-block"><code class="language-csharp">{{ p.code | html.escape }}</code></pre>
+    </article>
+    {{~ end ~}}
+  </div>
+</section>

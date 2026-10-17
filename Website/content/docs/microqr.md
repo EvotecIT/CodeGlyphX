@@ -54,4 +54,7 @@ The recognizer handles all M1-M4 sizes, quarter turns, arbitrary in-plane rotati
 | Max capacity | ~3KB | M4: 35 digits, 21 alphanumeric characters, 15 bytes, or 9 Kanji |
 | Best for | General use | Small labels, PCBs |
 
+{{< cgx-figure id="microqr-sizes" caption="M1 to M4 with the largest text each holds at error correction L, beside standard QR for the longest one. Micro QR needs one finder pattern and a two-module quiet zone." >}}
+
+
 Micro QR image scanning currently returns one result per frame. The generated [capability table](/docs/symbol-capabilities/) is the source of truth for this boundary.
