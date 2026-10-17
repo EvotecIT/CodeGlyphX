@@ -99,7 +99,7 @@ try {
         $rollbackPath = $null
         try {
             if ($null -eq $originalBytes) {
-                Remove-Item -LiteralPath $path -ErrorAction SilentlyContinue
+                Remove-Item -LiteralPath $path -ErrorAction Stop
             } else {
                 $rollbackPath = "$path.$([guid]::NewGuid().ToString('N')).rollback"
                 [System.IO.File]::WriteAllBytes($rollbackPath, $originalBytes)
