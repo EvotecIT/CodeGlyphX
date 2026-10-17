@@ -246,7 +246,13 @@ globalThis.setTheme = setTheme;
 
     // FAQ answers are <details>; open the one a link points at.
     function openTargetedDetails() {
-        const id = decodeURIComponent((window.location.hash || '').slice(1));
+        const fragment = (window.location.hash || '').slice(1);
+        let id;
+        try {
+            id = decodeURIComponent(fragment);
+        } catch {
+            id = fragment;
+        }
         if (!id) return;
         const target = document.getElementById(id);
         if (target instanceof HTMLDetailsElement && !target.open) target.open = true;

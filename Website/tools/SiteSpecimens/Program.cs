@@ -12,7 +12,7 @@ var output = Path.Combine(website, "static", "specimens");
 Directory.CreateDirectory(output);
 var utf8 = new UTF8Encoding(false);
 
-// One valid sample per symbology. Formats that do not encode the sample are reported and left out of the sheet.
+// One valid sample per format supported by the generic renderers. MaxiCode keeps its specialized hexagonal geometry and has no generic SVG renderer.
 var samples = new (SymbolFormat Format, string Name, string Family, string Value)[] {
     (SymbolFormat.QrCode, "QR Code", "2D", "https://codeglyphx.com"),
     (SymbolFormat.MicroQrCode, "Micro QR", "2D", "CGX2026"),
@@ -21,7 +21,6 @@ var samples = new (SymbolFormat Format, string Name, string Family, string Value
     (SymbolFormat.Aztec, "Aztec", "2D", "TICKET-2026-0042"),
     (SymbolFormat.Pdf417, "PDF417", "2D", "DOCUMENT-2026-0042"),
     (SymbolFormat.MicroPdf417, "MicroPDF417", "2D", "INV-0042"),
-    (SymbolFormat.MaxiCode, "MaxiCode", "2D", "CODEGLYPHX MAXICODE"),
     (SymbolFormat.DotCode, "DotCode", "2D", "CGX-0042"),
     (SymbolFormat.HanXin, "Han Xin", "2D", "CodeGlyphX"),
     (SymbolFormat.Code128, "Code 128", "Linear", "CODEGLYPHX-2026"),
