@@ -54,26 +54,74 @@ $catalog = [ordered]@{
         version = $manifest.ModuleVersion
         commandCount = $cmdlets.Count
         codeGlyphXCommandCount = [int](@($familyResults | ForEach-Object { $_.commandCount }) | Measure-Object -Sum).Sum
-        install = 'Install-Module -Name ImagePlayground -Scope CurrentUser'
+        install = "Install-Module -Name ImagePlayground -MinimumVersion $($manifest.ModuleVersion) -Scope CurrentUser"
         powerShell = 'Windows PowerShell 5.1 and PowerShell 7+'
     }
     families = @($familyResults)
 }
+
+# Validate command help before updating either snapshot so the overview and command reference stay in sync.
+$helpSource = Join-Path (Split-Path -Parent $ModulePath) 'en-US/ImagePlayground-help.xml'
+if (-not (Test-Path -LiteralPath $helpSource -PathType Leaf)) {
+    throw "No command help at $helpSource; refusing to update the ImagePlayground overview without its matching command reference."
+}
+$keep = @($familyResults | ForEach-Object { $_.commands })
+[xml] $maml = Get-Content -LiteralPath $helpSource -Raw
+foreach ($node in @($maml.helpItems.command)) {
+    if ($node.details.name.Trim() -notin $keep) { $null = $maml.helpItems.RemoveChild($node) }
+}
+
 $catalogPath = Join-Path $website 'data/imageplayground.json'
-$catalog | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $catalogPath -Encoding utf8NoBOM
+$helpPath = Join-Path $website 'powershell/imageplayground-help.xml'
+$catalogTempPath = "$catalogPath.$([guid]::NewGuid().ToString('N')).tmp"
+$helpTempPath = "$helpPath.$([guid]::NewGuid().ToString('N')).tmp"
+$catalogJson = $catalog | ConvertTo-Json -Depth 6
+$originalCatalog = $null
+$originalHelp = $null
+$replacedPaths = [System.Collections.Generic.List[string]]::new()
+try {
+    # Stage both snapshots before replacing either one, then restore the original pair if a replacement fails.
+    [System.IO.File]::WriteAllText($catalogTempPath, $catalogJson + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
+    $maml.Save($helpTempPath)
+    if (Test-Path -LiteralPath $catalogPath -PathType Leaf) { $originalCatalog = [System.IO.File]::ReadAllBytes($catalogPath) }
+    if (Test-Path -LiteralPath $helpPath -PathType Leaf) { $originalHelp = [System.IO.File]::ReadAllBytes($helpPath) }
+
+    [System.IO.File]::Move($helpTempPath, $helpPath, $true)
+    $replacedPaths.Add($helpPath)
+    [System.IO.File]::Move($catalogTempPath, $catalogPath, $true)
+    $replacedPaths.Add($catalogPath)
+} catch {
+    $replacementError = $_
+    $rollbackErrors = [System.Collections.Generic.List[string]]::new()
+    for ($index = $replacedPaths.Count - 1; $index -ge 0; $index--) {
+        $path = $replacedPaths[$index]
+        $originalBytes = if ($path -eq $helpPath) { $originalHelp } else { $originalCatalog }
+        $rollbackPath = $null
+        try {
+            if ($null -eq $originalBytes) {
+                Remove-Item -LiteralPath $path -ErrorAction Stop
+            } else {
+                $rollbackPath = "$path.$([guid]::NewGuid().ToString('N')).rollback"
+                [System.IO.File]::WriteAllBytes($rollbackPath, $originalBytes)
+                [System.IO.File]::Move($rollbackPath, $path, $true)
+            }
+        } catch {
+            $rollbackErrors.Add("$path : $($_.Exception.Message)")
+        } finally {
+            if ($rollbackPath) { Remove-Item -LiteralPath $rollbackPath -ErrorAction SilentlyContinue }
+        }
+    }
+    if ($rollbackErrors.Count) {
+        throw "Failed to update both ImagePlayground snapshots: $($replacementError.Exception.Message). Rollback also failed: $($rollbackErrors -join '; ')"
+    }
+    throw $replacementError
+} finally {
+    foreach ($temporaryPath in @($catalogTempPath, $helpTempPath)) {
+        Remove-Item -LiteralPath $temporaryPath -ErrorAction SilentlyContinue
+    }
+}
+
 Write-Host "ImagePlayground $($manifest.ModuleVersion): $($cmdlets.Count) commands, $($catalog.module.codeGlyphXCommandCount) powered by CodeGlyphX -> $catalogPath"
 
 # Command help for the on-site reference (/powershell/commands/), filtered to the commands above.
-$helpSource = Join-Path (Split-Path -Parent $ModulePath) 'en-US/ImagePlayground-help.xml'
-if (Test-Path -LiteralPath $helpSource) {
-    $keep = @($familyResults | ForEach-Object { $_.commands })
-    [xml] $maml = Get-Content -LiteralPath $helpSource -Raw
-    foreach ($node in @($maml.helpItems.command)) {
-        if ($node.details.name.Trim() -notin $keep) { $null = $maml.helpItems.RemoveChild($node) }
-    }
-    $helpPath = Join-Path $website 'powershell/imageplayground-help.xml'
-    $maml.Save($helpPath)
-    Write-Host "Kept help for $(@($maml.helpItems.command).Count) commands -> $helpPath"
-} else {
-    Write-Warning "No command help at $helpSource; the on-site command reference keeps its current snapshot."
-}
+Write-Host "Kept help for $(@($maml.helpItems.command).Count) commands -> $helpPath"

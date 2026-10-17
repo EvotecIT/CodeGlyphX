@@ -12,7 +12,7 @@ var output = Path.Combine(website, "static", "specimens");
 Directory.CreateDirectory(output);
 var utf8 = new UTF8Encoding(false);
 
-// One valid sample per symbology. Formats that do not encode the sample are reported and left out of the sheet.
+// One valid sample per format supported by the generic renderers. MaxiCode keeps its specialized hexagonal geometry and has no generic SVG renderer.
 var samples = new (SymbolFormat Format, string Name, string Family, string Value)[] {
     (SymbolFormat.QrCode, "QR Code", "2D", "https://codeglyphx.com"),
     (SymbolFormat.MicroQrCode, "Micro QR", "2D", "CGX2026"),
@@ -21,7 +21,6 @@ var samples = new (SymbolFormat Format, string Name, string Family, string Value
     (SymbolFormat.Aztec, "Aztec", "2D", "TICKET-2026-0042"),
     (SymbolFormat.Pdf417, "PDF417", "2D", "DOCUMENT-2026-0042"),
     (SymbolFormat.MicroPdf417, "MicroPDF417", "2D", "INV-0042"),
-    (SymbolFormat.MaxiCode, "MaxiCode", "2D", "CODEGLYPHX MAXICODE"),
     (SymbolFormat.DotCode, "DotCode", "2D", "CGX-0042"),
     (SymbolFormat.HanXin, "Han Xin", "2D", "CodeGlyphX"),
     (SymbolFormat.Code128, "Code 128", "Linear", "CODEGLYPHX-2026"),
@@ -55,13 +54,10 @@ var samples = new (SymbolFormat Format, string Name, string Family, string Value
 };
 
 var rendered = new List<object>();
-var skipped = new List<string>();
 foreach (var sample in samples) {
     var svg = TryRender(sample.Format, sample.Value, out var error);
-    if (svg is null) {
-        skipped.Add($"{sample.Name}: {error}");
-        continue;
-    }
+    if (string.IsNullOrWhiteSpace(svg))
+        throw new InvalidOperationException($"Failed to render required {sample.Name} specimen: {error ?? "renderer returned no SVG artifact"}");
 
     var file = sample.Format.ToString().ToLowerInvariant() + ".svg";
     File.WriteAllText(Path.Combine(output, file), svg, utf8);
@@ -104,9 +100,6 @@ var json = new JsonSerializerOptions { WriteIndented = true };
 File.WriteAllText(Path.Combine(website, "data", "specimens.json"),
     JsonSerializer.Serialize(new { generatedBy = "Website/tools/SiteSpecimens", count = rendered.Count, specimens = rendered, payloads = payloadResults, decoded }, json) + "\n", utf8);
 Console.WriteLine($"Rendered {rendered.Count} specimens and {payloadResults.Count} payloads.");
-foreach (var line in skipped) {
-    Console.WriteLine("Skipped " + line);
-}
 
 // Inner pages: navigation thumbnails, docs figures, benchmark charts and product-page codes (Visuals*.cs).
 SiteVisuals.Run(website);

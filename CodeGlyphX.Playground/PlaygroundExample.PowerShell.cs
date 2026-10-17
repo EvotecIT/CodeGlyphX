@@ -43,7 +43,7 @@ public partial class PlaygroundExample {
         if (Host is not { } host) return string.Empty;
 
         var script = new StringBuilder();
-        script.Append("# Install-Module ImagePlayground -Scope CurrentUser\n");
+        script.Append("# Install-Module ImagePlayground -MinimumVersion 3.3.0 -Scope CurrentUser\n");
         script.Append("Import-Module ImagePlayground\n\n");
 
         if (host.SelectedMode == "Decode") {
@@ -67,7 +67,8 @@ public partial class PlaygroundExample {
         parameters.Add(("FilePath", Quote(file)));
         parameters.Add(("PixelSize", RenderDefaults.QrModuleSize.ToString(CultureInfo.InvariantCulture)));
         if (command == "New-ImageQRCode") {
-            parameters.Add(("ErrorCorrection", Quote(host.ErrorCorrection)));
+            if (host.SelectedCategory != "SpecialQR")
+                parameters.Add(("ErrorCorrection", Quote(host.ErrorCorrection)));
             if (host.ModuleShape != "Square") parameters.Add(("ModuleShape", Quote(host.ModuleShape)));
             if (host.TargetSizePx > 0 && host.TargetSizeIncludesQuietZone)
                 parameters.Add(("Size", host.TargetSizePx.ToString(CultureInfo.InvariantCulture)));
@@ -133,12 +134,14 @@ public partial class PlaygroundExample {
         if (host.SelectedCategory == "SpecialQR" && host.SpecialPayloadType == "WiFi" && (host.WifiSecurity != "WPA" || host.WifiHidden))
             yield return "WEP, open and hidden networks";
         var basicQr = host.SelectedCategory != "SpecialQR" || host.SpecialPayloadType == "URL";
-        if (!basicQr && host.ErrorCorrection != "Q") yield return "error correction level";
+        if (host.SelectedCategory == "SpecialQR" && host.ErrorCorrection != "Q") yield return "error correction level";
         if (!basicQr && host.ModuleShape != "Square") yield return "module shapes";
+        if (host.ModuleShape == "Rounded") yield return "rounded-module corner radius";
         if (Math.Abs(host.ModuleScale - 1.0) > 0.001) yield return "module scale";
         if (host.UseForegroundGradient || host.UseBackgroundGradient) yield return "gradients";
         if (host.EnablePalette || host.EnableZonePalettes) yield return "palettes";
         if (host.EnableScaleMap) yield return "module scale maps";
+        if (host.EnableDebugOverlay) yield return "debug overlays";
         if (host.EnableQrBackgroundPattern) yield return "background patterns";
         if (host.CustomEyes) yield return "custom eyes";
         if (host.EnableCanvas) yield return "canvas";
