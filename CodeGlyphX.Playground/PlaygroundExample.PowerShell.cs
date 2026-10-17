@@ -43,7 +43,7 @@ public partial class PlaygroundExample {
         if (Host is not { } host) return string.Empty;
 
         var script = new StringBuilder();
-        script.Append("# Install-Module ImagePlayground -Scope CurrentUser\n");
+        script.Append("# Install-Module ImagePlayground -MinimumVersion 3.3.0 -Scope CurrentUser\n");
         script.Append("Import-Module ImagePlayground\n\n");
 
         if (host.SelectedMode == "Decode") {

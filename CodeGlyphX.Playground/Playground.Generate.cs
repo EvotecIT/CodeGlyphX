@@ -289,6 +289,9 @@ public partial class Playground {
                     "UPCA" => SymbolFormat.UpcA,
                     "UPCE" => SymbolFormat.UpcE,
                     "ITF14" => SymbolFormat.Itf14,
+                    "ITF" => SymbolFormat.Itf,
+                    "Code32" => SymbolFormat.Code32,
+                    "Telepen" => SymbolFormat.Telepen,
                     _ => SymbolFormat.Code128
                 };
 

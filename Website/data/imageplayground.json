@@ -5,7 +5,7 @@
     "version": "3.3.0",
     "commandCount": 132,
     "codeGlyphXCommandCount": 20,
-    "install": "Install-Module -Name ImagePlayground -Scope CurrentUser",
+    "install": "Install-Module -Name ImagePlayground -MinimumVersion 3.3.0 -Scope CurrentUser",
     "powerShell": "Windows PowerShell 5.1 and PowerShell 7+"
   },
   "families": [

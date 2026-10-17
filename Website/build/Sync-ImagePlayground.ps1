@@ -54,7 +54,7 @@ $catalog = [ordered]@{
         version = $manifest.ModuleVersion
         commandCount = $cmdlets.Count
         codeGlyphXCommandCount = [int](@($familyResults | ForEach-Object { $_.commandCount }) | Measure-Object -Sum).Sum
-        install = 'Install-Module -Name ImagePlayground -Scope CurrentUser'
+        install = "Install-Module -Name ImagePlayground -MinimumVersion $($manifest.ModuleVersion) -Scope CurrentUser"
         powerShell = 'Windows PowerShell 5.1 and PowerShell 7+'
     }
     families = @($familyResults)
