@@ -67,7 +67,8 @@ public partial class PlaygroundExample {
         parameters.Add(("FilePath", Quote(file)));
         parameters.Add(("PixelSize", RenderDefaults.QrModuleSize.ToString(CultureInfo.InvariantCulture)));
         if (command == "New-ImageQRCode") {
-            parameters.Add(("ErrorCorrection", Quote(host.ErrorCorrection)));
+            if (host.SelectedCategory != "SpecialQR")
+                parameters.Add(("ErrorCorrection", Quote(host.ErrorCorrection)));
             if (host.ModuleShape != "Square") parameters.Add(("ModuleShape", Quote(host.ModuleShape)));
             if (host.TargetSizePx > 0 && host.TargetSizeIncludesQuietZone)
                 parameters.Add(("Size", host.TargetSizePx.ToString(CultureInfo.InvariantCulture)));
@@ -133,8 +134,9 @@ public partial class PlaygroundExample {
         if (host.SelectedCategory == "SpecialQR" && host.SpecialPayloadType == "WiFi" && (host.WifiSecurity != "WPA" || host.WifiHidden))
             yield return "WEP, open and hidden networks";
         var basicQr = host.SelectedCategory != "SpecialQR" || host.SpecialPayloadType == "URL";
-        if (!basicQr && host.ErrorCorrection != "Q") yield return "error correction level";
+        if (host.SelectedCategory == "SpecialQR" && host.ErrorCorrection != "Q") yield return "error correction level";
         if (!basicQr && host.ModuleShape != "Square") yield return "module shapes";
+        if (host.ModuleShape == "Rounded") yield return "rounded-module corner radius";
         if (Math.Abs(host.ModuleScale - 1.0) > 0.001) yield return "module scale";
         if (host.UseForegroundGradient || host.UseBackgroundGradient) yield return "gradients";
         if (host.EnablePalette || host.EnableZonePalettes) yield return "palettes";

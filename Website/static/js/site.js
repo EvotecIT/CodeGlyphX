@@ -981,7 +981,12 @@ globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement
 (function () {
     var lost = document.querySelector('[data-cgx-lost]');
     if (!lost || !window.fetch) return;
-    var path = decodeURIComponent(window.location.pathname || '/');
+    var path = window.location.pathname || '/';
+    try {
+        path = decodeURIComponent(path);
+    } catch (error) {
+        // Keep the encoded pathname so malformed escapes cannot break the not-found page.
+    }
     var pathEl = lost.querySelector('[data-cgx-lost-path]');
     if (pathEl && path !== '/404/' && path !== '/404.html') pathEl.textContent = path;
     var tokens = function (value) { return value.toLowerCase().split(/[^a-z0-9]+/).filter(function (t) { return t.length > 1; }); };
