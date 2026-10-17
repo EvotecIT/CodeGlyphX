@@ -75,21 +75,23 @@ internal static class PostalDecoder {
         if (!bars[0].tall || !bars[bars.Count - 1].tall) return false;
 
         var digitCount = (bars.Count - 2) / 5;
+        if (digitCount < 2 || (digitCount > 12 && (!invert || digitCount != 14))) return false;
         var digits = new char[digitCount];
         var idx = 1;
         for (var d = 0; d < digitCount; d++) {
             var sum = 0;
+            var tallCount = 0;
             for (var i = 0; i < 5; i++) {
                 var isTall = bars[idx++].tall;
                 var tall = invert ? !isTall : isTall;
-                if (tall) sum += PostalTables.Weights[i];
+                if (tall) { sum += PostalTables.Weights[i]; tallCount++; }
             }
+            if (tallCount != 2) return false;
             var digit = sum == 11 ? 0 : sum;
             if ((uint)digit > 9) return false;
             digits[d] = (char)('0' + digit);
         }
 
-        if (digits.Length < 2) return false;
         var checksum = digits[digits.Length - 1] - '0';
         var expected = PostalTables.CalcChecksum(digits.AsSpan(0, digits.Length - 1));
         if (expected < 0 || checksum != expected) return false;

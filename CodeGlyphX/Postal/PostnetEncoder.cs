@@ -25,10 +25,11 @@ internal static class PostalEncoder {
             throw new InvalidOperationException("POSTNET/PLANET expects numeric digits only.");
         }
 
-        if (content.Length > 12) throw new InvalidOperationException("POSTNET/PLANET supports up to 12 digits including checksum.");
+        var maximumDigits = invert ? 14 : 12;
+        if (content.Length > maximumDigits) throw new InvalidOperationException($"The postal format supports up to {maximumDigits} digits including checksum.");
 
         string payload;
-        if (PostalTables.IsChecksumLength(content.Length)) {
+        if (PostalTables.IsChecksumLength(content.Length) || (invert && content.Length == 14)) {
             var check = content[content.Length - 1] - '0';
             var expected = PostalTables.CalcChecksum(content.AsSpan(0, content.Length - 1));
             if (expected < 0 || check != expected) {
@@ -36,7 +37,7 @@ internal static class PostalEncoder {
             }
             payload = content;
         } else {
-            if (content.Length > 11) throw new InvalidOperationException("POSTNET/PLANET data must be 11 digits or fewer.");
+            if (content.Length > maximumDigits - 1) throw new InvalidOperationException($"The postal format data must be {maximumDigits - 1} digits or fewer.");
             var expected = PostalTables.CalcChecksum(content);
             if (expected < 0) throw new InvalidOperationException("POSTNET/PLANET expects numeric digits only.");
             payload = content + (char)('0' + expected);

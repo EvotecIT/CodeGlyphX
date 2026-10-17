@@ -5,15 +5,20 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
+    /// <summary>Identifies linear formats whose optional checksums cannot establish a complete image-search boundary.</summary>
+    internal static bool RequiresUncheckedBarcodeBoundaryEvidence(BarcodeType type) =>
+        type == BarcodeType.Pharmacode || type == BarcodeType.ITF || type == BarcodeType.Industrial2of5 ||
+        type == BarcodeType.IATA2of5 || type == BarcodeType.Matrix2of5 ||
+        type == BarcodeType.Coop2of5 || type == BarcodeType.Datalogic2of5;
+
     /// <summary>Rejects unchecked symbols clipped by image-search region boundaries.</summary>
     private static bool IsBoundaryClippedUncheckedBarcode(BarcodeImageCandidate candidate, byte[] rgba,
         int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken) {
-        if (candidate.Decoded.Type != BarcodeType.Pharmacode && candidate.Decoded.Type != BarcodeType.ITF &&
-            candidate.Decoded.Type != BarcodeType.Industrial2of5) return false;
+        if (!RequiresUncheckedBarcodeBoundaryEvidence(candidate.Decoded.Type)) return false;
         var region = candidate.SearchRegion;
         if (region.X == 0 && region.Y == 0 && region.Width == width && region.Height == height) return false;
 
-        // Pharmacode, ordinary ITF and Industrial 2 of 5 have no mandatory checksum. A tile boundary through
+        // Pharmacode, ordinary ITF and discrete 2 of 5 have no mandatory checksum. A tile boundary through
         // a bar can turn a fragment into another valid number, even with ITF's short guards.
         // Require background at both ends of the actual sampled scanline.
         var vertical = candidate.Scanline.IsVertical;

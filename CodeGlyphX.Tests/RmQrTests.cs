@@ -167,12 +167,12 @@ public sealed class RmQrTests {
     }
 
     [Fact]
-    public void CapabilityCatalog_AdvertisesModuleEncodingAndDecodingBoundaries() {
+    public void CapabilityCatalog_AdvertisesEncodingAndModuleAndImageDecoding() {
         var capability = SymbolCapabilities.Get(SymbolFormat.RmQrCode);
 
         Assert.True(capability.CanEncode);
         Assert.True(capability.CanDecodeModules);
-        Assert.False(capability.CanScanImages);
+        Assert.True(capability.CanScanImages);
         Assert.True(capability.Has(SymbolCapabilityFlags.EciEncode));
         Assert.True(capability.Has(SymbolCapabilityFlags.EciDecode));
         Assert.True(capability.Has(SymbolCapabilityFlags.Gs1Encode));

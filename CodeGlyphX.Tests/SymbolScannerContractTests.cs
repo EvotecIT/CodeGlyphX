@@ -51,6 +51,7 @@ public sealed class SymbolScannerContractTests {
         var legacyTypes = Enum.GetValues<BarcodeType>();
 
         Assert.Equal(formats.Length, SymbolCapabilities.All.Count);
+        Assert.All(SymbolCapabilities.All, capability => Assert.True(capability.CanScanImages));
         Assert.Equal(formats.OrderBy(value => value), SymbolCapabilities.All.Select(item => item.Format).OrderBy(value => value));
         Assert.Equal(legacyTypes.OrderBy(value => value),
             SymbolCapabilities.All.Where(item => item.LegacyBarcodeType.HasValue).Select(item => item.LegacyBarcodeType!.Value).OrderBy(value => value));
@@ -87,7 +88,7 @@ public sealed class SymbolScannerContractTests {
         Assert.True(dataMatrix.Has(SymbolCapabilityFlags.Gs1Decode));
         Assert.True(dataMatrix.Has(SymbolCapabilityFlags.StructuredAppendEncode));
         Assert.True(dataMatrix.Has(SymbolCapabilityFlags.StructuredAppendDecode));
-        Assert.False(microPdf417.CanScanImages);
+        Assert.True(microPdf417.CanScanImages);
     }
 
     [Fact]
@@ -305,13 +306,13 @@ public sealed class SymbolScannerContractTests {
         var encoded = EncodePng(CreateWhiteRgba(20, 20), 20, 20, 20 * 4);
 
         var result = SymbolScanner.Scan(encoded, new ScanOptions {
-            Formats = new[] { SymbolFormat.MicroPdf417 },
+            Formats = new[] { (SymbolFormat)999 },
             Region = new ImageRegion(30, 30, 10, 10),
             Image = new ImageDecodeOptions { MaxDimension = 10 }
         });
 
         Assert.Equal(ScanStatus.UnsupportedFormats, result.Status);
-        Assert.Equal(SymbolFormat.MicroPdf417, Assert.Single(result.UnsupportedFormats));
+        Assert.Equal((SymbolFormat)999, Assert.Single(result.UnsupportedFormats));
     }
 
     [Theory]
@@ -470,26 +471,26 @@ public sealed class SymbolScannerContractTests {
     }
 
     [Fact]
-    public void Scan_ReportsModuleOnlyFormatsWithoutHidingSupportedResults() {
+    public void Scan_ReportsUnknownFormatsWithoutHidingSupportedResults() {
         var png = QR.Render("SUPPORTED-PLUS-UNSUPPORTED", OutputFormat.Png).Data.ToArray();
         var result = SymbolScanner.Scan(png, new ScanOptions {
-            Formats = new[] { SymbolFormat.QrCode, SymbolFormat.MicroPdf417 },
+            Formats = new[] { SymbolFormat.QrCode, (SymbolFormat)999 },
             TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
 
         Assert.Equal(ScanStatus.Success, result.Status);
         Assert.Equal("SUPPORTED-PLUS-UNSUPPORTED", Assert.Single(result.Symbols).Text);
-        Assert.Equal(SymbolFormat.MicroPdf417, Assert.Single(result.UnsupportedFormats));
+        Assert.Equal((SymbolFormat)999, Assert.Single(result.UnsupportedFormats));
     }
 
     [Fact]
     public void Scan_ReturnsUnsupportedWhenNoRequestedFormatCanScanImages() {
         var frame = ImageFrame.Packed(new byte[16], 2, 2, PixelFormat.Rgba32);
-        var result = SymbolScanner.Scan(frame, new ScanOptions { Formats = new[] { SymbolFormat.MicroPdf417 } });
+        var result = SymbolScanner.Scan(frame, new ScanOptions { Formats = new[] { (SymbolFormat)999 } });
 
         Assert.Equal(ScanStatus.UnsupportedFormats, result.Status);
         Assert.Empty(result.Symbols);
-        Assert.Equal(SymbolFormat.MicroPdf417, Assert.Single(result.UnsupportedFormats));
+        Assert.Equal((SymbolFormat)999, Assert.Single(result.UnsupportedFormats));
     }
 
     [Fact]

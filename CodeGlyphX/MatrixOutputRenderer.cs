@@ -28,6 +28,13 @@ internal static class MatrixOutputRenderer {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 
+        if (!string.IsNullOrEmpty(BarcodeLabelText.Normalize(options?.LabelText))) {
+            modules = MatrixLabelLayout.Compose(modules, options!);
+            options = options!.Clone();
+            options.QuietZone = 0; // The composed grid already contains the symbol and caption margins.
+            options.LabelText = null;
+        }
+
         var png = MatrixRenderOptionsBuilder.BuildPng(options);
         if (format == OutputFormat.Png && outputOptions is not null) png.PngCompressionLevel = outputOptions.ResolvePngCompression(png.PngCompressionLevel);
         return format switch {

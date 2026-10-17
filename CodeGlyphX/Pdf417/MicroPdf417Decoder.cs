@@ -51,7 +51,7 @@ public static class MicroPdf417Decoder {
 
         var dataCodewords = new int[dataCount];
         Array.Copy(codewords, 0, dataCodewords, 0, dataCount);
-        var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords);
+        var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords, out _, initialByteMode: true);
         if (decoded is null) return false;
         text = decoded;
         return true;

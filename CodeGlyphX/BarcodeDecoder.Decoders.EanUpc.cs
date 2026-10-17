@@ -636,12 +636,6 @@ public static partial class BarcodeDecoder {
     private static readonly bool[] AddOnSeparatorPattern = { false, true };
     private static readonly bool[] MsiStartPattern = { true, true, false };
     private static readonly bool[] MsiStopPattern = { true, false, false, true };
-    private static readonly int[] Industrial2of5StartBars = { 1, 1 };
-    private static readonly int[] Industrial2of5StopBars = { 3, 1 };
-    private static readonly int[] Matrix2of5StartBars = { 3, 1, 1, 1, 1 };
-    private static readonly int[] Matrix2of5StopBars = { 3, 1, 1, 1, 1 };
-    private static readonly int[] Iata2of5StartBars = { 1, 1, 1 };
-    private static readonly int[] Iata2of5StopBars = { 3, 1, 1 };
 
     private static readonly Lazy<Dictionary<uint, char>> Code39PatternMap = new(() => {
         var dict = new Dictionary<uint, char>();

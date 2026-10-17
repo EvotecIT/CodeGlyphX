@@ -43,5 +43,7 @@ public enum QrPayloadType {
     /// <summary>Lightning payment invoice (BOLT11/12).</summary>
     Lightning,
     /// <summary>EIP-681 Ethereum payment request.</summary>
-    Eip681
+    Eip681,
+    /// <summary>Swiss QR-bill payment payload.</summary>
+    SwissQr
 }

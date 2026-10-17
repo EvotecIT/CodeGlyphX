@@ -87,6 +87,9 @@ public static partial class SymbolScanner {
         }
         var frameRegion = region ?? fullRegion;
         var searchRegion = frameRegion;
+        if (options.SamplingGrid is not null && options.Region.HasValue && !frameRegion.Equals(options.Region.Value))
+            return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), unsupported,
+                "A calibrated grid must fit entirely inside the source image.");
 
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
         var rgba = ImageFrameConverter.ToRgba32(frame, frameRegion, out var width, out var height);
@@ -99,6 +102,17 @@ public static partial class SymbolScanner {
         if (IsUniformDefaultFrame(rgba, requested, deadline)) return Result(ScanStatus.NoSymbolFound, deadline, results, unsupported);
         var seen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         var requestedSet = new HashSet<SymbolFormat>(requested);
+        if (options.SamplingGrid is not null) {
+            ScanCalibratedGrid(rgba, width, height, searchRegion, options, deadline, requested[0], results, seen);
+            if (results.Count > 0) {
+                var completion = deadline.ShouldStop
+                    ? (deadline.CallerCancelled ? ScanCompletionReason.Cancelled : ScanCompletionReason.DeadlineExceeded)
+                    : ReachedMaximum(options, results) ? ScanCompletionReason.SymbolLimitReached : ScanCompletionReason.Completed;
+                return Result(ScanStatus.Success, deadline, results, unsupported, completionReason: completion);
+            }
+            return deadline.ShouldStop ? Cancelled(deadline, unsupported)
+                : Result(ScanStatus.NoSymbolFound, deadline, results, unsupported);
+        }
         var remainingAttempts = CountInitialAttempts(requestedSet, options, width, height);
         var separatedSearchEnabled = options.MaxSymbols != 1 && options.EnableTileScan;
         var searchedSeparatedRegions = false;
@@ -122,6 +136,7 @@ public static partial class SymbolScanner {
         if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanExpandedStacked(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanDataBarStacked(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanSpecialists(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results) && options.EnableTileScan) {
             if (separatedSearchEnabled && !searchedSeparatedRegions && results.Count > 0) {
                 ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
@@ -286,7 +301,8 @@ public static partial class SymbolScanner {
         var expectedTypes = new List<BarcodeType>();
         foreach (var format in requested) {
             var capability = SymbolCapabilities.Get(format);
-            if (capability.Family == SymbolFamily.Linear && capability.LegacyBarcodeType.HasValue && capability.CanScanImages) {
+            if (capability.Family == SymbolFamily.Linear && capability.LegacyBarcodeType.HasValue && capability.CanScanImages
+                && !SpecialistImageDecoder.RequiresSpecialistScanner(format)) {
                 expectedTypes.Add(capability.LegacyBarcodeType.Value);
             }
         }
@@ -343,7 +359,7 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         BarcodeType expectedType,
         BarcodeDecodeOptions? barcodeOptions) {
-        if (expectedType == BarcodeType.Pharmacode || expectedType == BarcodeType.ITF || expectedType == BarcodeType.Industrial2of5) {
+        if (BarcodeDecoder.RequiresUncheckedBarcodeBoundaryEvidence(expectedType)) {
             ScanLocatedLinear(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes,
                 expectedType, barcodeOptions, results, seen);
             return;
@@ -470,7 +486,9 @@ public static partial class SymbolScanner {
     private static BarcodeDecodeOptions? CloneBarcodeOptions(BarcodeDecodeOptions? source) {
         if (source is null) return null;
         return new BarcodeDecodeOptions {
+            Bc412Variant = source.Bc412Variant,
             Code39Checksum = source.Code39Checksum,
+            Code39FullAscii = source.Code39FullAscii,
             MsiChecksum = source.MsiChecksum,
             Code11Checksum = source.Code11Checksum,
             PlesseyChecksum = source.PlesseyChecksum,
@@ -544,12 +562,15 @@ public static partial class SymbolScanner {
         var bytes = symbol.HasRawBytes ? Convert.ToBase64String(symbol.RawBytes.ToArray()) : string.Empty;
         var readerInitialization = symbol.Metadata switch {
             Code128SymbolMetadata value => value.ReaderInitialization,
+            PosiCodeSymbolMetadata value => value.ReaderInitialization,
             DotCodeSymbolMetadata value => value.ReaderInitialization,
             DataMatrixSymbolMetadata value => value.ReaderProgramming,
             MaxiCodeSymbolMetadata value => value.IsReaderProgramming,
             _ => false
         };
-        return symbol.Format + "\u001f" + readerInitialization + "\u001f" + symbol.Text + "\u001f" + bytes;
+        var controls = symbol.Metadata is PosiCodeSymbolMetadata posi
+            ? "\u001f" + posi.Variant + "\u001f" + posi.IsGs1 + "\u001f" + posi.MessageAppend : string.Empty;
+        return symbol.Format + "\u001f" + readerInitialization + "\u001f" + symbol.Text + "\u001f" + bytes + controls;
     }
 
     private static bool ShouldStop(ScanOptions options, ScanDeadline deadline, List<DetectedSymbol> results) {
@@ -594,6 +615,8 @@ public static partial class SymbolScanner {
     }
 
     private static void ValidateOptions(ScanOptions options) {
+        if (options.SamplingGrid is not null && (options.Formats is null || options.Formats.Length != 1))
+            throw new ArgumentException("A calibrated grid requires exactly one explicitly selected format.", nameof(options));
         if (options.TimeoutMilliseconds < 0) throw new ArgumentOutOfRangeException(nameof(options.TimeoutMilliseconds));
         if (options.MaxSymbols < 0) throw new ArgumentOutOfRangeException(nameof(options.MaxSymbols));
         if (!Enum.IsDefined(typeof(ScanProfile), options.Profile)) throw new ArgumentOutOfRangeException(nameof(options.Profile));

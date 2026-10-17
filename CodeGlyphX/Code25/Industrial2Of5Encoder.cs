@@ -4,14 +4,12 @@ namespace CodeGlyphX.Code25;
 /// Encodes Industrial (Discrete) 2 of 5 barcodes.
 /// </summary>
 public static class Industrial2Of5Encoder {
-    private static readonly int[] StartBars = { 1, 1 };
-    private static readonly int[] StopBars = { 3, 1 };
 
     /// <summary>
     /// Encodes an Industrial 2 of 5 barcode. When <paramref name="includeChecksum"/> is true,
     /// a Mod-10 check digit is appended.
     /// </summary>
     public static Barcode1D Encode(string content, bool includeChecksum = false) {
-        return Discrete2Of5Encoder.Encode(content, includeChecksum, StartBars, StopBars, SymbolFormat.Industrial2Of5);
+        return Discrete2Of5Encoder.Encode(content, includeChecksum, SymbolFormat.Industrial2Of5);
     }
 }

@@ -38,10 +38,31 @@ public static partial class DataBarExpandedDecoder {
     public static bool TryDecodeExpandedStacked(BitMatrix modules, out string content) {
         content = string.Empty;
         if (modules is null || modules.Width <= 0 || modules.Height <= 0) return false;
-        if ((modules.Height - 1) % 4 != 0) return false;
+        if ((modules.Height - 1) % 4 == 0
+            && TryExtractStackedRows(modules, out var rowRuns, out var maxBlocks)
+            && TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content)) return true;
+        if (!TryCollapseStackedRowHeights(modules, out var compact)) return false;
+        return TryExtractStackedRows(compact, out rowRuns, out maxBlocks)
+            && TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content);
+    }
 
-        if (!TryExtractStackedRows(modules, out var rowRuns, out var maxBlocks)) return false;
-        return TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content);
+    private static bool TryCollapseStackedRowHeights(BitMatrix modules, out BitMatrix compact) {
+        compact = null!;
+        var rows = new List<int> { 0 };
+        for (var y = 1; y < modules.Height; y++) {
+            var same = true;
+            for (var x = 0; x < modules.Width; x++)
+                if (modules[x, y] != modules[x, y - 1]) { same = false; break; }
+            if (same) continue;
+            rows.Add(y);
+            // At most eleven physical data rows, each separated by three distinct rows.
+            if (rows.Count > 41) return false;
+        }
+        if (rows.Count == modules.Height || (rows.Count - 1) % 4 != 0) return false;
+        compact = new BitMatrix(modules.Width, rows.Count);
+        for (var y = 0; y < rows.Count; y++)
+            for (var x = 0; x < modules.Width; x++) compact[x, y] = modules[x, rows[y]];
+        return true;
     }
 
     private static bool TryDecodePayload(bool[] bits, out string content) {

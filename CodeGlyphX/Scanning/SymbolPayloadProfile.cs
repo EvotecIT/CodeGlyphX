@@ -7,5 +7,7 @@ public enum SymbolPayloadProfile {
     /// <summary>No specialized payload profile was identified.</summary>
     None,
     /// <summary>GS1/FNC1 payload semantics were identified.</summary>
-    Gs1
+    Gs1,
+    /// <summary>A validated Swiss QR-bill payment was identified.</summary>
+    SwissQr
 }

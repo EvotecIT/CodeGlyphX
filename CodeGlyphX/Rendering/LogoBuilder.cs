@@ -7,6 +7,24 @@ namespace CodeGlyphX.Rendering;
 /// Helpers for building simple logo pixels.
 /// </summary>
 public static class LogoBuilder {
+    /// <summary>Creates the square black-and-white recognition cross used by Swiss QR bills.</summary>
+    /// <remarks>The 83-unit design includes its white border. Scale the complete image to 7 mm when the QR area is 46 mm wide.</remarks>
+    public static byte[] CreateSwissCrossPng() {
+        const int size = 166;
+        var rgba = new byte[size * size * 4];
+        for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++) {
+                var unitX = x / 2;
+                var unitY = y / 2;
+                var square = unitX >= 6 && unitX < 77 && unitY >= 6 && unitY < 77;
+                var cross = (unitX >= 34 && unitX < 49 && unitY >= 18 && unitY < 65)
+                    || (unitX >= 18 && unitX < 65 && unitY >= 34 && unitY < 49);
+                var offset = (y * size + x) * 4;
+                var color = (byte)(square && !cross ? 0 : 255);
+                rgba[offset] = color; rgba[offset + 1] = color; rgba[offset + 2] = color; rgba[offset + 3] = 255;
+            }
+        return PngImageEncoder.EncodeRgba32(rgba, size, size);
+    }
     /// <summary>
     /// Creates a circular RGBA logo with an optional accent center.
     /// </summary>

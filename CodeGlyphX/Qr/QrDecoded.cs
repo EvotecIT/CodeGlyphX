@@ -51,17 +51,28 @@ public sealed class QrDecoded {
     /// </summary>
     public Payloads.QrParsedPayload Parsed { get; }
 
-    internal QrDecoded(int version, QrErrorCorrectionLevel ecc, int mask, byte[] bytes, string text, QrStructuredAppend? structuredAppend, QrFnc1Mode fnc1Mode, int? fnc1ApplicationIndicator) {
+    internal bool HasEci { get; }
+
+    internal QrDecoded(int version, QrErrorCorrectionLevel ecc, int mask, byte[] bytes, string text, QrStructuredAppend? structuredAppend, QrFnc1Mode fnc1Mode, int? fnc1ApplicationIndicator, bool hasEci = false) {
         Version = version;
         ErrorCorrectionLevel = ecc;
         Mask = mask;
         Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
-        Text = text ?? throw new ArgumentNullException(nameof(text));
+        HasEci = hasEci;
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        // Swiss payment data declares UTF-8 in its SPC header without a QR ECI.
+        // Accept that interpretation only after its complete payment fields validate.
+        var swissText = string.Empty;
+        var isSwiss = fnc1Mode == QrFnc1Mode.None && structuredAppend is null
+            && Payloads.SwissQrCodePayload.TryParseBytes(bytes, out _, out swissText)
+            && (!hasEci || string.Equals(text, swissText, StringComparison.Ordinal));
+        Text = isSwiss && !hasEci ? swissText : text;
         StructuredAppend = structuredAppend;
         Fnc1Mode = fnc1Mode;
         Fnc1ApplicationIndicator = fnc1ApplicationIndicator;
-        if (!Payloads.QrPayloadParser.TryParse(text, out var parsed)) {
-            parsed = new Payloads.QrParsedPayload(Payloads.QrPayloadType.Text, text, text);
+        if (!Payloads.QrPayloadParser.TryParse(Text, out var parsed)
+            || (parsed.Type == Payloads.QrPayloadType.SwissQr && !isSwiss)) {
+            parsed = new Payloads.QrParsedPayload(Payloads.QrPayloadType.Text, Text, Text);
         }
         Parsed = parsed;
     }

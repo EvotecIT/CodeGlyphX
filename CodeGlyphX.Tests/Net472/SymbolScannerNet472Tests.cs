@@ -6,6 +6,22 @@ using Xunit;
 namespace CodeGlyphX.Tests.Net472;
 
 public sealed class SymbolScannerNet472Tests {
+    [Theory]
+    [InlineData(SymbolFormat.Code16K, "HELLO")]
+    [InlineData(SymbolFormat.DotCode, "ABC123")]
+    [InlineData(SymbolFormat.HanXin, "1234567890")]
+    [InlineData(SymbolFormat.MicroPdf417, "ABC123")]
+    [InlineData(SymbolFormat.UspsIntelligentMail, "01234567094987654321-01234567891")]
+    public void Scanner_DecodesIndependentSpecialistImagesOnLegacyRuntime(SymbolFormat format, string expected) {
+        using var stream = typeof(SymbolScannerNet472Tests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.ImageSamples.bwipp-" + format + ".png");
+        Assert.NotNull(stream);
+        var scan = SymbolScanner.Scan(stream!, new ScanOptions { Formats = new[] { format }, MaxSymbols = 1, TimeoutMilliseconds = 10000 });
+        Assert.Equal(expected, Assert.Single(scan.Symbols).Text);
+        Assert.NotNull(scan.Symbols[0].Geometry);
+        Assert.Empty(scan.UnsupportedFormats);
+    }
+
     [Fact]
     public void Scanner_StreamUsesLegacyQrImageFallbackFromCurrentPosition() {
         var png = QR.Render("NET472-STREAM", OutputFormat.Png,

@@ -95,5 +95,37 @@ public enum SymbolFormat {
     /// <summary>Han Xin Code.</summary>
     HanXin = 44,
     /// <summary>GS1 Composite with a GS1-128 linear component.</summary>
-    Gs1Composite = 45
+    Gs1Composite = 45,
+    /// <summary>Standalone EAN/UPC two-digit supplement.</summary>
+    Ean2 = 46,
+    /// <summary>Standalone EAN/UPC five-digit supplement.</summary>
+    Ean5 = 47,
+    /// <summary>Telepen Numeric, using two-character numeric compaction.</summary>
+    TelepenNumeric = 48,
+    /// <summary>COOP 2 of 5.</summary>
+    Coop2Of5 = 49,
+    /// <summary>Datalogic 2 of 5.</summary>
+    Datalogic2Of5 = 50,
+    /// <summary>SEMI BC412 wafer identification.</summary>
+    Bc412 = 51,
+    /// <summary>USPS Facing Identification Mark.</summary>
+    FacingIdentificationMark = 52,
+    /// <summary>Explicit descender, ascender, full-height, and tracker bar states.</summary>
+    Daft = 53,
+    /// <summary>Flattermarken decimal collation marks.</summary>
+    Flattermarken = 54,
+    /// <summary>Channel Code.</summary>
+    ChannelCode = 55,
+    /// <summary>Code 16K stacked barcode.</summary>
+    Code16K = 56,
+    /// <summary>Code 49 stacked barcode.</summary>
+    Code49 = 57,
+    /// <summary>Codablock F stacked barcode.</summary>
+    CodablockF = 58,
+    /// <summary>Normal, limited and stacked PosiCode.</summary>
+    PosiCode = 59,
+    /// <summary>Royal Mail Mailmark C and L four-state symbols.</summary>
+    Mailmark4State = 60,
+    /// <summary>Provisional D3 AQR category frame around a QR Code.</summary>
+    D3Aqr = 61
 }

@@ -5,9 +5,12 @@ namespace CodeGlyphX;
 
 /// <summary>Projects specialist decoder results once into the stable common result contract.</summary>
 internal static class SymbolResultFactory {
+    internal static DetectedSymbol From(D3Aqr.D3AqrDecoded value) =>
+        new(SymbolFormat.D3Aqr, value.Text, value.Host.Bytes, new D3AqrSymbolMetadata(value),
+            value.Host.Fnc1Mode == QrFnc1Mode.FirstPosition ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
     internal static DetectedSymbol From(QrDecoded value, ImageRegion? region = null) =>
         new(SymbolFormat.QrCode, value.Text, value.Bytes, new QrSymbolMetadata(value),
-            value.Fnc1Mode == QrFnc1Mode.None ? SymbolPayloadProfile.None : SymbolPayloadProfile.Gs1, region);
+            value.Fnc1Mode != QrFnc1Mode.None ? SymbolPayloadProfile.Gs1 : value.Parsed.Type == Payloads.QrPayloadType.SwissQr ? SymbolPayloadProfile.SwissQr : SymbolPayloadProfile.None, region);
     internal static DetectedSymbol From(MicroQrDecoded value, ImageRegion? region = null,
         SymbolGeometry? geometry = null, bool? inverted = null, bool? mirrored = null) =>
         new(SymbolFormat.MicroQrCode, value.Text, value.Bytes, new MicroQrSymbolMetadata(value),
@@ -35,10 +38,11 @@ internal static class SymbolResultFactory {
     internal static DetectedSymbol From(BarcodeDecoded value, ImageRegion? region = null) {
         if (!SymbolCapabilities.TryFromLegacy(value.Type, out var format))
             throw new System.InvalidOperationException("The decoder returned an unknown physical format.");
-        var metadata = format == SymbolFormat.Code128 || format == SymbolFormat.Gs1Code128
-            ? new Code128SymbolMetadata(value) : null;
+        var metadata = value.Metadata ?? (format == SymbolFormat.Code128 || format == SymbolFormat.Gs1Code128
+            ? new Code128SymbolMetadata(value) : null);
         return new DetectedSymbol(format, value.Text, metadata: metadata,
-            payloadProfile: IsGs1(format) ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None,
+            payloadProfile: IsGs1(format) || metadata is PosiCodeSymbolMetadata { IsGs1: true }
+                ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None,
             searchRegion: region);
     }
     private static bool IsGs1(SymbolFormat format) => format == SymbolFormat.Gs1Code128 ||

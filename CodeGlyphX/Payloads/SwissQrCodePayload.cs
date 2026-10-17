@@ -8,11 +8,10 @@ namespace CodeGlyphX.Payloads;
 /// <summary>
 /// Swiss QR bill payload.
 /// </summary>
-public sealed class SwissQrCodePayload {
+public sealed partial class SwissQrCodePayload {
     private const string Br = "\n";
     private readonly Iban _iban;
     private readonly Contact _creditor;
-    private readonly Contact? _ultimateCreditor;
     private readonly AdditionalInformation _additionalInformation;
     private readonly decimal? _amount;
     private readonly SwissQrCurrency _currency;
@@ -24,6 +23,7 @@ public sealed class SwissQrCodePayload {
     /// <summary>
     /// Creates a Swiss QR bill payload.
     /// </summary>
+    /// <exception cref="ArgumentException">A field is invalid or the complete serialized payment exceeds 997 UTF-8 bytes.</exception>
     public SwissQrCodePayload(
         Iban iban,
         SwissQrCurrency currency,
@@ -37,11 +37,12 @@ public sealed class SwissQrCodePayload {
         string? alternativeProcedure2 = null) {
         _iban = iban ?? throw new ArgumentNullException(nameof(iban));
         _creditor = creditor ?? throw new ArgumentNullException(nameof(creditor));
-        _ultimateCreditor = ultimateCreditor;
+        if (ultimateCreditor is not null) throw new ArgumentException("The ultimate creditor fields are reserved and must be empty.", nameof(ultimateCreditor));
         _additionalInformation = additionalInformation ?? new AdditionalInformation();
-        if (amount.HasValue && amount.Value.ToString(CultureInfo.InvariantCulture).Length > 12) {
-            throw new ArgumentException("Amount (including decimals) must be shorter than 13 places.", nameof(amount));
+        if (amount.HasValue && (amount.Value < 0.01m || amount.Value > 999999999.99m || decimal.Round(amount.Value, 2) != amount.Value)) {
+            throw new ArgumentException("The amount must be 0.01 through 999999999.99 with at most two decimal places.", nameof(amount));
         }
+        if (currency != SwissQrCurrency.CHF && currency != SwissQrCurrency.EUR) throw new ArgumentOutOfRangeException(nameof(currency));
         _amount = amount;
         _currency = currency;
         _debitor = debitor;
@@ -58,15 +59,17 @@ public sealed class SwissQrCodePayload {
         if (alternativeProcedure2 is not null && alternativeProcedure2.Length > 100) {
             throw new ArgumentException("Alternative procedure information block 2 must be shorter than 101 chars.", nameof(alternativeProcedure2));
         }
-        _alternativeProcedure1 = alternativeProcedure1;
-        _alternativeProcedure2 = alternativeProcedure2;
+        _alternativeProcedure1 = CleanField(alternativeProcedure1, 100, nameof(alternativeProcedure1));
+        _alternativeProcedure2 = CleanField(alternativeProcedure2, 100, nameof(alternativeProcedure2));
+        if (!FitsEncodedCapacity(ToString()))
+            throw new ArgumentException("The complete Swiss QR payload must fit 997 UTF-8 bytes, including separators.");
     }
 
     /// <summary>
     /// Converts this payload to a QR payload with recommended settings.
     /// </summary>
     public QrPayloadData ToPayloadData() {
-        return new QrPayloadData(ToString(), QrErrorCorrectionLevel.M, textEncoding: QrTextEncoding.Utf8);
+        return new QrPayloadData(ToString(), QrErrorCorrectionLevel.M, maxVersion: 25, textEncoding: QrTextEncoding.Utf8);
     }
 
     /// <summary>
@@ -80,7 +83,7 @@ public sealed class SwissQrCodePayload {
         sb.Append(_iban).Append(Br);
         sb.Append(_creditor.ToString());
         sb.Append(RepeatBr(7));
-        sb.Append(_amount.HasValue ? $"{_amount:0.00}".Replace(",", ".") : string.Empty).Append(Br);
+        sb.Append(_amount.HasValue ? _amount.Value.ToString("0.00", CultureInfo.InvariantCulture) : string.Empty).Append(Br);
         sb.Append(_currency).Append(Br);
         sb.Append(_debitor is null ? RepeatBr(7) : _debitor.ToString());
         sb.Append(_reference.RefType).Append(Br);
@@ -90,16 +93,16 @@ public sealed class SwissQrCodePayload {
         sb.Append(!string.IsNullOrEmpty(unstructured) ? unstructured : string.Empty).Append(Br);
         sb.Append(_additionalInformation.Trailer).Append(Br);
         var billInfo = _additionalInformation.BillInformation;
-        if (!string.IsNullOrEmpty(billInfo)) {
+        if (!string.IsNullOrEmpty(billInfo) || !string.IsNullOrEmpty(_alternativeProcedure1) || !string.IsNullOrEmpty(_alternativeProcedure2)) {
             sb.Append(billInfo).Append(Br);
         }
         var alt1 = _alternativeProcedure1;
-        if (!string.IsNullOrEmpty(alt1)) {
-            sb.Append(alt1!.Replace("\n", "")).Append(Br);
+        if (!string.IsNullOrEmpty(alt1) || !string.IsNullOrEmpty(_alternativeProcedure2)) {
+            sb.Append(alt1).Append(Br);
         }
         var alt2 = _alternativeProcedure2;
         if (!string.IsNullOrEmpty(alt2)) {
-            sb.Append(alt2!.Replace("\n", "")).Append(Br);
+            sb.Append(alt2).Append(Br);
         }
 
         if (sb.Length > 0 && sb[sb.Length - 1] == '\n') {
@@ -142,8 +145,8 @@ public sealed class SwissQrCodePayload {
             if ((unstructuredMessage?.Length ?? 0) + (billInformation?.Length ?? 0) > 140) {
                 throw new ArgumentException("Unstructured message and bill information must be shorter than 141 chars in total.");
             }
-            _unstructuredMessage = unstructuredMessage;
-            _billInformation = billInformation;
+            _unstructuredMessage = CleanField(unstructuredMessage, 140, nameof(unstructuredMessage));
+            _billInformation = CleanField(billInformation, 140, nameof(billInformation));
         }
     }
 
@@ -167,6 +170,7 @@ public sealed class SwissQrCodePayload {
         /// Creates a reference section.
         /// </summary>
         public Reference(SwissQrReferenceType referenceType, string? reference = null) {
+            if (referenceType < SwissQrReferenceType.QRR || referenceType > SwissQrReferenceType.NON) throw new ArgumentOutOfRangeException(nameof(referenceType));
             RefType = referenceType;
             if (referenceType == SwissQrReferenceType.NON && reference != null) {
                 throw new ArgumentException("Reference is only allowed when referenceType not equals \"NON\".");
@@ -175,14 +179,16 @@ public sealed class SwissQrCodePayload {
                 throw new ArgumentException("Reference is required when referenceType is \"QRR\" or \"SCOR\".", nameof(reference));
             }
             if (referenceType == SwissQrReferenceType.QRR && reference != null) {
-                if (reference.Length > 27) throw new ArgumentException("QR-references have to be shorter than 28 chars.");
                 if (!RegexCache.DigitsRequired().IsMatch(reference)) throw new ArgumentException("QR-reference must exist out of digits only.");
+                if (reference.Length != 27) throw new ArgumentException("QR-references require exactly 27 digits.", nameof(reference));
                 if (!QrPayloadValidation.ChecksumMod10(reference)) throw new ArgumentException("QR-reference is invalid. Checksum error.");
             }
             if (referenceType == SwissQrReferenceType.SCOR && reference != null && reference.Length > 25) {
                 throw new ArgumentException("Creditor references (ISO 11649) have to be shorter than 26 chars.");
             }
-            _reference = reference;
+            if (referenceType == SwissQrReferenceType.SCOR && !QrPayloadValidation.IsValidCreditorReference(reference))
+                throw new ArgumentException("Invalid ISO 11649 creditor reference or Mod 97 check digits.", nameof(reference));
+            _reference = reference?.ToUpperInvariant();
         }
     }
 
@@ -202,15 +208,21 @@ public sealed class SwissQrCodePayload {
         /// Creates an IBAN instance.
         /// </summary>
         public Iban(string iban, SwissQrIbanType ibanType) {
+            if (iban is null) throw new ArgumentNullException(nameof(iban));
+            if (ibanType != SwissQrIbanType.Iban && ibanType != SwissQrIbanType.QrIban) throw new ArgumentOutOfRangeException(nameof(ibanType));
             if (ibanType == SwissQrIbanType.Iban && !QrPayloadValidation.IsValidIban(iban)) {
                 throw new ArgumentException("The IBAN entered isn't valid.", nameof(iban));
             }
             if (ibanType == SwissQrIbanType.QrIban && !QrPayloadValidation.IsValidQrIban(iban)) {
                 throw new ArgumentException("The QR-IBAN entered isn't valid.", nameof(iban));
             }
+            iban = iban.ToUpperInvariant().Replace("-", "").Replace(" ", "");
+            if (iban.Length != 21) throw new ArgumentException("A Swiss QR account requires a 21-character CH or LI IBAN.", nameof(iban));
             if (!iban.StartsWith("CH", StringComparison.Ordinal) && !iban.StartsWith("LI", StringComparison.Ordinal)) {
                 throw new ArgumentException("The IBAN must start with \"CH\" or \"LI\".", nameof(iban));
             }
+            if ((ibanType == SwissQrIbanType.QrIban) != QrPayloadValidation.IsValidQrIban(iban))
+                throw new ArgumentException("The declared account kind does not match its QR-IID range.", nameof(ibanType));
             _iban = iban;
             _ibanType = ibanType;
         }
@@ -226,7 +238,7 @@ public sealed class SwissQrCodePayload {
     /// <summary>
     /// Contact section.
     /// </summary>
-    public sealed class Contact {
+    public sealed partial class Contact {
         private readonly string _name;
         private readonly string _zipCode;
         private readonly string _city;
@@ -252,21 +264,24 @@ public sealed class SwissQrCodePayload {
         private Contact(string name, string? zipCode, string? city, string country, string? streetOrAddressLine1, string? houseNumberOrAddressLine2, SwissQrAddressType addressType) {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name must not be empty.", nameof(name));
             if (name.Length > 70) throw new ArgumentException("Name must be shorter than 71 chars.", nameof(name));
-            if (!IsTwoLetterCode(country)) throw new ArgumentException("Country must be a valid two-letter code.", nameof(country));
+            if (country is null || !IsoCountryCodes.ContainsAlpha2(country, ignoreCase: true))
+                throw new ArgumentException("Country must be an assigned ISO 3166-1 two-letter code.", nameof(country));
 
-            _name = name;
+            _name = CleanField(name, 70, nameof(name))!;
+            if (_name.Length == 0) throw new ArgumentException("Name must not be empty.", nameof(name));
             _country = country.ToUpperInvariant();
             _addressType = addressType;
-            _streetOrAddressLine1 = streetOrAddressLine1;
-            _houseNumberOrAddressLine2 = houseNumberOrAddressLine2;
+            _streetOrAddressLine1 = CleanField(streetOrAddressLine1, 70, nameof(streetOrAddressLine1));
+            _houseNumberOrAddressLine2 = CleanField(houseNumberOrAddressLine2, addressType == SwissQrAddressType.StructuredAddress ? 16 : 70, nameof(houseNumberOrAddressLine2));
 
             if (_addressType == SwissQrAddressType.StructuredAddress) {
                 if (string.IsNullOrEmpty(zipCode)) throw new ArgumentException("Zip code must not be empty.", nameof(zipCode));
                 if (string.IsNullOrEmpty(city)) throw new ArgumentException("City must not be empty.", nameof(city));
-                _zipCode = zipCode!;
-                _city = city!;
+                _zipCode = CleanField(zipCode, 16, nameof(zipCode))!;
+                _city = CleanField(city, 35, nameof(city))!;
+                if (_zipCode.Length == 0 || _city.Length == 0) throw new ArgumentException("Structured addresses require a postal code and town.");
             } else {
-                if (string.IsNullOrEmpty(houseNumberOrAddressLine2)) throw new ArgumentException("Address line 2 must be provided for combined addresses.", nameof(houseNumberOrAddressLine2));
+                if (string.IsNullOrEmpty(_houseNumberOrAddressLine2)) throw new ArgumentException("Address line 2 must be provided for combined addresses.", nameof(houseNumberOrAddressLine2));
                 _zipCode = string.Empty;
                 _city = string.Empty;
             }
@@ -289,8 +304,5 @@ public sealed class SwissQrCodePayload {
             return sb.ToString();
         }
 
-        private static bool IsTwoLetterCode(string code) {
-            return RegexCache.CountryCode().IsMatch(code ?? string.Empty);
-        }
     }
 }

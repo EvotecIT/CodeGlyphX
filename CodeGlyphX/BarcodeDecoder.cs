@@ -111,7 +111,7 @@ public static partial class BarcodeDecoder {
 
         // Unchecked formats need the same physical tile-boundary validation
         // through the pixel API and SymbolScanner. Keep that policy here.
-        if (expectedType == BarcodeType.Pharmacode || expectedType == BarcodeType.ITF || expectedType == BarcodeType.Industrial2of5) {
+        if (expectedType.HasValue && RequiresUncheckedBarcodeBoundaryEvidence(expectedType.Value)) {
             if (!TryDecodeAllLocated(pixels, width, height, stride, format, out var located,
                     expectedType, options, cancellationToken, recoverAfterHit)) return false;
             foreach (var candidate in located) AddUnique(list, seen, candidate.Decoded);
@@ -273,7 +273,7 @@ public static partial class BarcodeDecoder {
         if (pixels.IsEmpty) return false;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
-        if (options?.EnableTileScan == true) {
+        if (options?.EnableTileScan == true || expectedType.HasValue && RequiresUncheckedBarcodeBoundaryEvidence(expectedType.Value)) {
             var buffer = pixels.ToArray();
             return TryDecodeAll(buffer, width, height, stride, format, out decoded, expectedType, options, cancellationToken);
         }

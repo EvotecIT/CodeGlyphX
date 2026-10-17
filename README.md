@@ -13,6 +13,8 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, industrial and retail ba
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
 - Industrial and logistics formats including MaxiCode, DotCode, Han Xin Code, GS1 DataBar Limited/Stacked Omnidirectional, and GS1-128 Composite CC-A/CC-B/CC-C
 - Data Matrix ECC 200 and DMRE encoding/decoding, plus PDF417/MicroPDF417 and Aztec
+- Code 16K, Code 49, Codablock F, Channel Code, BC412, PosiCode, Mailmark, EAN supplements, Telepen Numeric, COOP/Datalogic 2 of 5, FIM, DAFT and Flattermarken
+- Checked ISBN/ISMN/ISSN/PZN and postal identifier profiles, HIBC carriers, USPS package data, North American coupons and complete Swiss QR symbols
 - QR payload builders for Wi-Fi, contacts, calendar events, OTP, payments, social profiles, and app links
 - PNG, JPEG, WebP, GIF, TIFF, BMP, Netpbm, TGA, ICO, XBM, XPM, SVG/SVGZ, HTML, PDF, EPS, and ASCII output
 - Managed raster decoding with explicit byte, pixel, dimension, animation, cancellation, and recognition-budget controls, plus opt-in laser-etch and dot-peen preprocessing
@@ -74,6 +76,30 @@ qr.Save("hello.png", new QrRenderOptions { ModuleSize = 6, QuietZone = 4 });
 ```
 
 `RenderedOutput.Data` is read-only; use `ToArray()` when a mutable byte array is required. Encoded symbols retain their format metadata and their own module data. Rendering cannot change payload, version or error correction.
+
+## Specialist barcodes and application profiles
+
+The runtime catalog covers 62 physical formats, all with encoding, sampled-module decoding and image recognition. [Symbol capabilities](https://codeglyphx.com/docs/symbol-capabilities/) lists default recognition, explicit format selection, geometry and multiple-result support separately. Raw Flattermarken cells require a calibrated grid because blank cells carry data; unchecked marks can also require a known orientation.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Code16K;
+using CodeGlyphX.Rendering;
+
+var part = Code16KEncoder.Encode("ORDER-123", new Code16KEncodingOptions {
+    StructuredAppend = new Code16KStructuredAppend(index: 1, total: 2)
+});
+part.Save("order-part.svg", new MatrixOptions { LabelText = "Part 1 of 2" });
+
+var book = BarcodeProfiles.Render(LinearBarcodeProfile.Isbn, "9781565812314", OutputFormat.Png);
+OutputWriter.Write("book.png", book);
+var coupon = NorthAmericanCoupon.Render("(8110)012345612345611110123", OutputFormat.Png);
+OutputWriter.Write("coupon.png", coupon);
+```
+
+[Barcode profiles and controls](https://codeglyphx.com/docs/barcode-profiles/) describes HIBC carriers, checked book/pharmacy/postal identifiers, USPS package fields, coupons, Mailmark 2D and Swiss QR payments. `SwissQrCode` validates the payment, selects QR error correction M and renders the recognition cross. Postal and payment helpers validate data and produce symbols; complete mailpieces, payment parts and printed acceptance require their own layout and qualification.
+
+The [specialist example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/SpecialistBarcodeExample.cs) exports the formats and profile captions and checks the decoded module payloads. Run it with `CODEGLYPHX_SPECIALIST_BARCODES=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. It also runs in the public API NativeAOT smoke test.
 
 ## QR styling
 
@@ -483,7 +509,9 @@ Gs1CompositeSymbol composite = Gs1CompositeEncoder.Encode(
 
 The GS1 Composite implementation currently pairs a GS1-128 carrier with CC-A, CC-B, or CC-C and uses the standards-defined general-field method. EAN/UPC/DataBar carriers and the optimized date/AI 90 methods are future work. Han Xin text outside its native compact modes is encoded as binary data with UTF-8 ECI; native GB18030 region compaction is not yet implemented.
 
-rMQR, MaxiCode, DotCode, Han Xin, and GS1 Composite support encoding and decoding of sampled modules. GS1 DataBar Limited and Omnidirectional participate in the unified linear image scanner. Expanded Stacked image scanning recognizes sampled rows in either image axis, including right-angle rotations and inversion, and returns one checksum-validated GS1 element string. DataBar Stacked and Stacked Omnidirectional image scanning recognizes two data rows in either image axis, including right-angle rotations and inversion, and validates their checksum and separator layout. These stacked scanners return one result; arbitrary perspective and multiple-symbol localization are not established. `SymbolCapabilities` reports these boundaries directly. Direct-part-mark preprocessing is opt-in for formats the image scanner already recognizes:
+rMQR, MaxiCode, DotCode, Han Xin and GS1 Composite support image recognition through `SymbolScanner`. Code 16K, Code 49, Codablock F, MicroPDF417, linked PosiCode rows, D3 AQR and postal bar states use the same scanner and result model. Their samplers preserve payload checks and structural metadata, handle right-angle rotations and inversion, and return one result per format. A bounded deskew pass handles modest in-plane rotation; arbitrary perspective and exhaustive multiple-symbol localization are not established for these specialist samplers.
+
+GS1 DataBar Limited and Omnidirectional participate in the linear image scanner. Expanded Stacked, Stacked and Stacked Omnidirectional recognize rows in either image axis and validate their checksums and separator layout. `SymbolCapabilities` reports each format's multiple-result and geometry support. Direct-part-mark preprocessing is opt-in:
 
 ```csharp
 ScanResult scan = SymbolScanner.Scan(image, new ScanOptions
@@ -551,6 +579,18 @@ ScanResult scan = SymbolScanner.Scan(frame, new ScanOptions
 ```
 
 `ImageFrame` accepts RGBA/BGRA, RGB/BGR24, ARGB/ABGR, Gray8/Gray16, and RGB565 buffers, including padded stride and bottom-up row order. The generated [symbol capability table](https://codeglyphx.com/docs/symbol-capabilities/) distinguishes encoding, module decoding, and image recognition for every format.
+
+For raw collation marks, supply the known data area and cell count. The region excludes quiet zones and captions; its white edge cells remain part of the message:
+
+```csharp
+var marks = SymbolScanner.Scan(image, new ScanOptions {
+    Formats = new[] { SymbolFormat.Flattermarken },
+    Region = new ImageRegion(x, y, dataWidth, dataHeight),
+    SamplingGrid = new ImageSamplingGrid(columns: digitCount * 9, rows: 1)
+});
+```
+
+`SamplingGrid` requires one explicit format. Its optional `rotationDegrees` argument describes a known clockwise quarter turn. Use it when the same unchecked DAFT, KIX or Pharmacode pattern could represent different messages in different orientations. Automatic format selection excludes raw and weak patterns; an explicit format hint alone cannot recover a Flattermarken cell origin or blank digits already cropped from an image.
 
 For untrusted raster inputs, set explicit resource limits:
 

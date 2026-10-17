@@ -7,6 +7,21 @@ namespace CodeGlyphX.Tests;
 
 [Collection("ImageScannerSerial")]
 public sealed class ScannerCompletionContractTests {
+    [Fact]
+    public void CalibratedGridHonorsRecognitionAllowanceWithoutTotalDeadline() {
+        const int size = 2400;
+        var pixels = new byte[size * size * 4];
+        for (var i = 0; i < pixels.Length; i++) pixels[i] = 255;
+        var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, size, size, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.Flattermarken }, SamplingGrid = new ImageSamplingGrid(9, 1),
+            TimeoutMilliseconds = 0, EnableTileScan = false,
+            Image = new ImageDecodeOptions { RecognitionBudgetMilliseconds = 1 }
+        });
+        Assert.Equal(ScanStatus.NoSymbolFound, scan.Status);
+        Assert.Equal(ScanCompletionReason.RecognitionBudgetExceeded, scan.CompletionReason);
+        Assert.True(scan.IsPartial);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
