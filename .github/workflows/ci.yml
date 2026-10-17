@@ -145,6 +145,7 @@ jobs:
       website_root: Website
       pipeline_config: Website/pipeline.website-ci.json
       engine_mode: source
+      authenticate_public_github_data: true
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
       powerforge_repository: EvotecIT/PSPublishModule
       powerforge_ref: 77a10b3d2b8cf3608d5b08747f273ae38e055479
