@@ -184,6 +184,7 @@ internal static partial class SpecialistImageDecoder {
         for (var y = 0; y < rows; y++) {
             if (DecodeBudget.ShouldAbort(token)) return false;
             for (var x = 0; x < columns; x++) {
+                if ((x & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return false;
                 var dark = 0;
                 // Interior samples tolerate fractional resampling and avoid antialiased cell edges.
                 for (var sy = 0; sy < 3; sy++) for (var sx = 0; sx < 3; sx++) {
