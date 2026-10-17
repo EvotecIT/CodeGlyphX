@@ -833,5 +833,3 @@ html[data-powerforge-generated-search-fallback] :is(.pf-search-desc, .pf-search-
 .nova-app-link-body span { color: var(--ink-dim); font-family: var(--cgx-mono); font-size: .8125rem; }
 .nova-button { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 12px; background: var(--accent-fill); color: #fff; font-weight: 650; }
 .nova-button:hover { background: var(--accent-fill-hover); color: #fff; }
-
-
