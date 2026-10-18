@@ -19,7 +19,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphX",
       "branch": "master",
-      "ref": "17344222cc771c248e296d17bc8503c7a4f50c84",
+      "ref": "7f4626f4e42251af6950522247b90619892c5a33",
       "refCaptureCommandId": "static-source-ref",
       "required": true
     },
@@ -28,7 +28,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphXRecovery",
       "branch": "master",
-      "ref": "17344222cc771c248e296d17bc8503c7a4f50c84",
+      "ref": "7f4626f4e42251af6950522247b90619892c5a33",
       "required": true
     },
     {
