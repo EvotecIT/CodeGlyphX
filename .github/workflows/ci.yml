@@ -140,7 +140,7 @@ jobs:
       actions: read
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@77a10b3d2b8cf3608d5b08747f273ae38e055479
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@cad2b985384215894e10eadaa8eb09b8096ac627
     with:
       website_root: Website
       pipeline_config: Website/pipeline.website-ci.json
@@ -148,7 +148,7 @@ jobs:
       authenticate_public_github_data: true
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 77a10b3d2b8cf3608d5b08747f273ae38e055479
+      powerforge_ref: cad2b985384215894e10eadaa8eb09b8096ac627
       report_artifact_name: powerforge-website-reports
 
   coverage:

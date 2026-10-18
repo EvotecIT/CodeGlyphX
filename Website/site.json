@@ -56,16 +56,19 @@
   "StructuredData": {
     "Enabled": true,
     "Breadcrumbs": true,
+    "WebPage": true,
+    "SoftwareSourceCode": true,
+    "OrganizationName": "Evotec",
+    "OrganizationUrl": "https://evotec.xyz/",
     "OrganizationLegalName": "Evotec Services sp. z o.o.",
-    "OrganizationDescription": "Pure-managed QR and barcode toolkit for .NET developers.",
-    "OrganizationLogo": "/codeglyphx-qr-icon.png",
+    "OrganizationDescription": "Evotec develops open-source .NET and PowerShell libraries and automation tools.",
+    "OrganizationLogo": "https://evotec.xyz/favicon.svg",
     "OrganizationSameAs": [
-      "https://github.com/EvotecIT/CodeGlyphX",
-      "https://www.nuget.org/packages/CodeGlyphX",
+      "https://github.com/EvotecIT",
       "https://evotec.xyz"
     ],
     "OrganizationEmail": "support@evotec.xyz",
-    "OrganizationContactUrl": "/faq/"
+    "OrganizationContactUrl": "https://evotec.xyz/contact/"
   },
   "AgentReadiness": {
     "Enabled": true,
@@ -101,7 +104,8 @@
     "ApiCatalog": {
       "Enabled": true,
       "Entries": [
-        { "Anchor": "/api/", "ServiceDesc": "/api/index.json", "ServiceDoc": "/api/", "Title": "CodeGlyphX API Reference" }
+        { "Anchor": "/api/", "ServiceDesc": "/api/index.json", "ServiceDoc": "/api/", "Title": "CodeGlyphX API Reference" },
+        { "Anchor": "/powershell/commands/", "ServiceDesc": "/powershell/commands/index.json", "ServiceDoc": "/powershell/commands/", "Title": "ImagePlayground commands for CodeGlyphX" }
       ]
     },
     "AgentSkills": {
@@ -132,7 +136,8 @@
         "ReadOnly": true
       }
     ],
-    "MarkdownNegotiation": false
+    "MarkdownNegotiation": false,
+    "MarkdownArtifacts": { "Enabled": true, "MaxPages": 0 }
   },
   "Cloudflare": {
     "Cache": {
