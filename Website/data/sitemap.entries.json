@@ -55,27 +55,6 @@
       "section": "API",
       "priority": "0.8",
       "changefreq": "weekly"
-    },
-    {
-      "path": "/llms.txt",
-      "title": "LLMS TXT",
-      "section": "Machine Readable",
-      "priority": "0.3",
-      "changefreq": "monthly"
-    },
-    {
-      "path": "/llms.json",
-      "title": "LLMS JSON",
-      "section": "Machine Readable",
-      "priority": "0.3",
-      "changefreq": "monthly"
-    },
-    {
-      "path": "/llms-full.txt",
-      "title": "LLMS Full",
-      "section": "Machine Readable",
-      "priority": "0.4",
-      "changefreq": "monthly"
     }
   ]
 }
