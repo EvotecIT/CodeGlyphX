@@ -326,6 +326,10 @@ main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; 
 .footer-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid var(--line); color: var(--ink-dim); font-size: .8125rem; }
 .footer-badges { display: flex; gap: 10px; }
 .footer-badges img { display: block; }
+.footer-family { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid var(--line); font-size: .875rem; }
+.footer-family span { color: var(--ink-dim); font-weight: 600; }
+.footer-family a { color: var(--ink-muted); text-decoration: none; }
+.footer-family a:hover, .footer-family a:focus-visible { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 860px) {
     .footer-content { grid-template-columns: minmax(0, 1fr); }
 }
