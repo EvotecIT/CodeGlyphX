@@ -113,7 +113,7 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodeCodabar(ref ModuleRunWorkspace runWorkspace, out string text) {
+    private static bool TryDecodeCodabar(ref ModuleRunWorkspace runWorkspace, BarcodeDecodeOptions? options, out string text) {
         var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 7) return false;
@@ -160,7 +160,13 @@ public static partial class BarcodeDecoder {
 
             var rawLen = count - 2;
             text = rawLen > 0 ? new string(rented, 1, rawLen) : string.Empty;
-            return true;
+            var policy = options?.CodabarChecksum ?? OptionalChecksumPolicy.None;
+            if (policy == OptionalChecksumPolicy.None) return true;
+            var sum = 0;
+            const string alphabet = "0123456789-$:/.+ABCD";
+            for (var i = 0; i < count; i++) sum += alphabet.IndexOf(rented[i]);
+            if (rawLen >= 2 && sum % 16 == 0) { text = text.Substring(0, text.Length - 1); return true; }
+            return policy == OptionalChecksumPolicy.StripIfValid;
         } finally {
             ArrayPool<char>.Shared.Return(rented);
         }
@@ -188,7 +194,10 @@ public static partial class BarcodeDecoder {
         var raw = new string(digits);
         var policy = options?.MsiChecksum ?? MsiChecksumPolicy.None;
         if (policy != MsiChecksumPolicy.None) {
-            if (TryStripMsiChecksum(raw, out var stripped)) {
+            var valid = options?.MsiChecksumAlgorithm is { } algorithm
+                ? MsiChecks.TryStrip(raw, algorithm, options.MsiExpectedDataLength, out var stripped)
+                : TryStripMsiChecksum(raw, out stripped);
+            if (valid) {
                 text = stripped;
                 return true;
             }

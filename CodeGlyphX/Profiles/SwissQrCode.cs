@@ -31,7 +31,7 @@ public static class SwissQrCode {
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format,
         out SwissQrCodePayload payload, bool allowLegacyCombinedAddresses = false) {
         payload = null!;
-        return pixels != null && QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr) && TryRead(qr, out payload, allowLegacyCombinedAddresses);
+        return pixels != null && QrImageDecoder.TryDecode(pixels, width, height, stride, format, out var qr) && TryRead(qr, out payload, allowLegacyCombinedAddresses);
     }
 
     private static bool TryRead(QrDecoded qr, out SwissQrCodePayload payload, bool legacy) {

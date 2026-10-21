@@ -135,25 +135,25 @@ public static partial class BarcodeDecoder {
         }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
-        if (TryDecodeItf(ref runWorkspace, out var itf)) {
+        if (TryDecodeItf(ref runWorkspace, out var itf) && ApplyTwoOfFiveCheck(ref itf, options)) {
             decoded = new BarcodeDecoded(BarcodeType.ITF, itf);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
-        if (TryDecodeIndustrial2of5(ref runWorkspace, out var industrial25)) {
+        if (TryDecodeIndustrial2of5(ref runWorkspace, out var industrial25) && ApplyTwoOfFiveCheck(ref industrial25, options)) {
             decoded = new BarcodeDecoded(BarcodeType.Industrial2of5, industrial25);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
-        if (TryDecodeMatrix2of5(ref runWorkspace, out var matrix25)) {
+        if (TryDecodeMatrix2of5(ref runWorkspace, out var matrix25) && ApplyTwoOfFiveCheck(ref matrix25, options)) {
             decoded = new BarcodeDecoded(BarcodeType.Matrix2of5, matrix25);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
-        if (TryDecodeIata2of5(ref runWorkspace, out var iata25)) {
+        if (TryDecodeIata2of5(ref runWorkspace, out var iata25) && ApplyTwoOfFiveCheck(ref iata25, options)) {
             decoded = new BarcodeDecoded(BarcodeType.IATA2of5, iata25);
             return true;
         }
@@ -190,7 +190,7 @@ public static partial class BarcodeDecoder {
         }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
-        if (TryDecodeCodabar(ref runWorkspace, out var codabar)) {
+        if (TryDecodeCodabar(ref runWorkspace, options, out var codabar)) {
             decoded = new BarcodeDecoded(BarcodeType.Codabar, codabar);
             return true;
         }
@@ -284,7 +284,7 @@ public static partial class BarcodeDecoder {
             case BarcodeType.Coop2of5:
             case BarcodeType.Datalogic2of5:
                 var discreteFormat = type == BarcodeType.Coop2of5 ? SymbolFormat.Coop2Of5 : SymbolFormat.Datalogic2Of5;
-                if (Code25.Discrete2Of5Encoder.TryDecode(runWorkspace.Runs, discreteFormat, out var discreteText)) {
+                if (Code25.Discrete2Of5Encoder.TryDecode(runWorkspace.Runs, discreteFormat, out var discreteText) && ApplyTwoOfFiveCheck(ref discreteText, options)) {
                     decoded = new BarcodeDecoded(type, discreteText);
                     return true;
                 }
@@ -333,25 +333,25 @@ public static partial class BarcodeDecoder {
                 }
                 return false;
             case BarcodeType.ITF:
-                if (TryDecodeItf(ref runWorkspace, out var itf)) {
+                if (TryDecodeItf(ref runWorkspace, out var itf) && ApplyTwoOfFiveCheck(ref itf, options)) {
                     decoded = new BarcodeDecoded(BarcodeType.ITF, itf);
                     return true;
                 }
                 return false;
             case BarcodeType.Industrial2of5:
-                if (TryDecodeIndustrial2of5(ref runWorkspace, out var industrial25)) {
+                if (TryDecodeIndustrial2of5(ref runWorkspace, out var industrial25) && ApplyTwoOfFiveCheck(ref industrial25, options)) {
                     decoded = new BarcodeDecoded(BarcodeType.Industrial2of5, industrial25);
                     return true;
                 }
                 return false;
             case BarcodeType.Matrix2of5:
-                if (TryDecodeMatrix2of5(ref runWorkspace, out var matrix25)) {
+                if (TryDecodeMatrix2of5(ref runWorkspace, out var matrix25) && ApplyTwoOfFiveCheck(ref matrix25, options)) {
                     decoded = new BarcodeDecoded(BarcodeType.Matrix2of5, matrix25);
                     return true;
                 }
                 return false;
             case BarcodeType.IATA2of5:
-                if (TryDecodeIata2of5(ref runWorkspace, out var iata25)) {
+                if (TryDecodeIata2of5(ref runWorkspace, out var iata25) && ApplyTwoOfFiveCheck(ref iata25, options)) {
                     decoded = new BarcodeDecoded(BarcodeType.IATA2of5, iata25);
                     return true;
                 }
@@ -387,7 +387,7 @@ public static partial class BarcodeDecoder {
                 }
                 return false;
             case BarcodeType.Codabar:
-                if (TryDecodeCodabar(ref runWorkspace, out var codabar)) {
+                if (TryDecodeCodabar(ref runWorkspace, options, out var codabar)) {
                     decoded = new BarcodeDecoded(BarcodeType.Codabar, codabar);
                     return true;
                 }

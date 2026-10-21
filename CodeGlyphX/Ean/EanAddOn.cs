@@ -28,7 +28,7 @@ internal static class EanAddOn {
         new[] { false, false, true, false, true }
     };
 
-    internal static void AppendAddOn(List<BarSegment> segments, string value) {
+    internal static void AppendAddOn(List<BarSegment> segments, string value, int gap = 1) {
         if (segments is null) throw new ArgumentNullException(nameof(segments));
         if (value is null) throw new ArgumentNullException(nameof(value));
         if (!RegexCache.DigitsRequired().IsMatch(value)) throw new InvalidOperationException("Add-on must contain only digits (0-9).");
@@ -37,7 +37,7 @@ internal static class EanAddOn {
             throw new InvalidOperationException("Add-on length must be 2 or 5 digits.");
         }
 
-        BarcodeSegments.AppendBit(segments, isBar: false);
+        for (var i = 0; i < gap; i++) BarcodeSegments.AppendBit(segments, isBar: false);
         BarcodeSegments.AppendBits(segments, AddOnStartPattern);
 
         for (var i = 0; i < value.Length; i++) {

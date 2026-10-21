@@ -203,6 +203,9 @@ public sealed class Pdf417Builder {
         return _text is not null ? Pdf417Code.Encode(_text, _encodeOptions) : Pdf417Code.EncodeBytes(_bytes!, _encodeOptions);
     }
 
+    /// <summary>Builds a measured physical print layout from this builder's encoded symbol.</summary>
+    public Printing.BarcodePrintLayout LayoutPrint(Printing.BarcodePrintOptions? options = null) => Printing.BarcodePrint.Layout(Encode(), options);
+
     /// <summary>
     /// Renders the configured PDF417 code to the requested output format.
     /// </summary>

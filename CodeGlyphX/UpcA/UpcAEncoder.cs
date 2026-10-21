@@ -13,6 +13,12 @@ public static class UpcAEncoder {
     /// Encodes a UPC-A barcode. Use "+NN" or "+NNNNN" to append add-ons.
     /// </summary>
     public static Barcode1D Encode(string content) {
+        return EncodeCore(content, addOnGap: 1);
+    }
+
+    internal static Barcode1D EncodeComposite(string content) => EncodeCore(content, addOnGap: 9);
+
+    private static Barcode1D EncodeCore(string content, int addOnGap) {
         if (content is null) throw new ArgumentNullException(nameof(content));
         var addOn = (string?)null;
         var plusIndex = content.IndexOf('+');
@@ -51,7 +57,7 @@ public static class UpcAEncoder {
         }
         BarcodeSegments.AppendBits(segments, new[] { true, false, true });
         if (!string.IsNullOrEmpty(addOn)) {
-            EanAddOn.AppendAddOn(segments, addOn!);
+            EanAddOn.AppendAddOn(segments, addOn!, addOnGap);
         }
         return new Barcode1D(segments, SymbolFormat.UpcA);
     }

@@ -5,76 +5,81 @@ description: Generated CodeGlyphX encoding, module-decoding, and image-scanning 
 
 # Symbol capabilities
 
-CodeGlyphX currently describes 62 physical symbol formats through `SymbolCapabilities`. This table is generated from that runtime registry, so the website and the public API report the same support boundary.
+CodeGlyphX currently describes 65 physical symbol formats through `SymbolCapabilities`. This table is generated from that runtime registry, so the website and the public API report the same support boundary.
 
 “Module decode” means CodeGlyphX can decode an already sampled `BitMatrix` or module sequence. “Image scan” means `SymbolScanner` can recognize the format from pixels. All listed formats have an image path; raw marks can require the known grid and orientation described below.
 
+“Colour-cell decode” uses `UltracodeGrid` and preserves information carried by the palette. Ultracode is decoded through `SymbolDecoder.Decode(cells)` or `UltracodeDecoder`; a `BitMatrix` cannot represent its payload. Its scanner reads RGB pixels before grayscale processing. A colour image is required.
+
 “Default scan” identifies formats selected when `ScanOptions.Formats` is null or empty. Pharmacode, Two-track Pharmacode, PatchCode, FIM, DAFT, Flattermarken and KIX require explicit selection because their raw or unchecked patterns can match unrelated content. Telepen Numeric requires an explicit hint because the same bars also carry a valid Telepen ASCII interpretation. Check `IsDefaultScanFormat` when building a format picker that follows the scanner defaults.
 
-| Format | Family | Encode | Module decode | Image scan | Default scan | Multiple | GS1 | ECI | Structured append | Geometry |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |
-| QR Code | Matrix | Yes | Yes | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
-| D3 AQR (provisional) | Matrix | Yes | Yes | Yes | Yes | No | Encode + decode | Encode + decode | No | Yes |
-| Micro QR Code | Matrix | Yes | Yes | Yes | Yes | Yes | No | No | No | Yes |
-| Rectangular Micro QR Code | Matrix | Yes | Yes | Yes | Yes | No | Encode + decode | Encode + decode | No | Yes |
-| Aztec Code | Matrix | Yes | Yes | Yes | Yes | Yes | No | Encode + decode | No | No |
-| Code 128 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| GS1-128 | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| Code 39 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Code 93 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| EAN | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| EAN-2 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| EAN-5 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| UPC-A | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| UPC-E | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| ITF-14 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Interleaved 2 of 5 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Industrial 2 of 5 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Matrix 2 of 5 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| IATA 2 of 5 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| COOP 2 of 5 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Datalogic 2 of 5 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Patch Code | Linear | Yes | Yes | Yes | No | Yes | No | No | No | No |
-| Codabar | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| MSI | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Code 11 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| BC412 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Facing Identification Mark | Linear | Yes | Yes | Yes | No | No | No | No | No | Yes |
-| DAFT | Postal | Yes | Yes | Yes | No | No | No | No | No | Yes |
-| Flattermarken | Linear | Yes | Yes | Yes | No | No | No | No | No | Yes |
-| Channel Code | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| PosiCode | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| Mailmark 4-State | Postal | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
-| Code 16K | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | Encode + decode | Yes |
-| Code 49 | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | Encode + decode | Yes |
-| Codablock F | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | Yes |
-| Plessey | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Telepen | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| Telepen Numeric | Linear | Yes | Yes | Yes | No | Yes | No | No | No | No |
-| Pharmacode | Linear | Yes | Yes | Yes | No | Yes | No | No | No | No |
-| Two-track Pharmacode | Stacked | Yes | Yes | Yes | No | No | No | No | No | Yes |
-| Code 32 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| POSTNET | Postal | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
-| PLANET | Postal | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
-| Royal Mail 4-State | Postal | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
-| Australia Post | Postal | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
-| Japan Post | Postal | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
-| GS1 DataBar Truncated | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| GS1 DataBar Omnidirectional | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| GS1 DataBar Stacked | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
-| GS1 DataBar Expanded | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| GS1 DataBar Expanded Stacked | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
-| GS1 DataBar Limited | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| GS1 DataBar Stacked Omnidirectional | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
-| MaxiCode | Matrix | Yes | Yes | Yes | Yes | Yes | No | Encode + decode | Encode + decode | No |
-| DotCode | Matrix | Yes | Yes | Yes | Yes | No | Encode + decode | Encode + decode | Encode + decode | Yes |
-| Han Xin Code | Matrix | Yes | Yes | Yes | Yes | No | No | Encode + decode | No | Yes |
-| GS1 Composite | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | Yes |
-| USPS Intelligent Mail | Postal | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
-| KIX Code | Postal | Yes | Yes | Yes | No | No | No | No | No | Yes |
-| Data Matrix | Matrix | Yes | Yes | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
-| PDF417 | Stacked | Yes | Yes | Yes | Yes | Yes | No | Encode + decode | No | No |
-| MicroPDF417 | Stacked | Yes | Yes | Yes | Yes | No | No | Encode + decode | No | Yes |
+| Format | Family | Encode | Module decode | Colour-cell decode | Image scan | Default scan | Multiple | GS1 | ECI | Structured append | Geometry |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |
+| QR Code | Matrix | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
+| D3 AQR (provisional) | Matrix | Yes | Yes | No | Yes | Yes | No | Encode + decode | Encode + decode | No | Yes |
+| Micro QR Code | Matrix | Yes | Yes | No | Yes | Yes | Yes | No | No | No | Yes |
+| Rectangular Micro QR Code | Matrix | Yes | Yes | No | Yes | Yes | No | Encode + decode | Encode + decode | No | Yes |
+| Aztec Code | Matrix | Yes | Yes | No | Yes | Yes | Yes | No | Encode + decode | No | No |
+| Aztec Rune | Matrix | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| Code One | Matrix | Yes | Yes | No | Yes | Yes | No | Encode + decode | Encode + decode | No | Yes |
+| Ultracode | Matrix | Yes | No | Yes | Yes | Yes | Yes | No | No | No | Yes |
+| Code 128 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| GS1-128 | Linear | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | No | No | No |
+| Code 39 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Code 93 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| EAN | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| EAN-2 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| EAN-5 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| UPC-A | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| UPC-E | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| ITF-14 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Interleaved 2 of 5 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Industrial 2 of 5 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Matrix 2 of 5 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| IATA 2 of 5 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| COOP 2 of 5 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Datalogic 2 of 5 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Patch Code | Linear | Yes | Yes | No | Yes | No | Yes | No | No | No | No |
+| Codabar | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| MSI | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Code 11 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| BC412 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Facing Identification Mark | Linear | Yes | Yes | No | Yes | No | No | No | No | No | Yes |
+| DAFT | Postal | Yes | Yes | No | Yes | No | No | No | No | No | Yes |
+| Flattermarken | Linear | Yes | Yes | No | Yes | No | No | No | No | No | Yes |
+| Channel Code | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| PosiCode | Linear | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | No | No | No |
+| Mailmark 4-State | Postal | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| Code 16K | Stacked | Yes | Yes | No | Yes | Yes | No | Encode + decode | No | Encode + decode | Yes |
+| Code 49 | Stacked | Yes | Yes | No | Yes | Yes | No | Encode + decode | No | Encode + decode | Yes |
+| Codablock F | Stacked | Yes | Yes | No | Yes | Yes | No | Encode + decode | No | No | Yes |
+| Plessey | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Telepen | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| Telepen Numeric | Linear | Yes | Yes | No | Yes | No | Yes | No | No | No | No |
+| Pharmacode | Linear | Yes | Yes | No | Yes | No | Yes | No | No | No | No |
+| Two-track Pharmacode | Stacked | Yes | Yes | No | Yes | No | No | No | No | No | Yes |
+| Code 32 | Linear | Yes | Yes | No | Yes | Yes | Yes | No | No | No | No |
+| POSTNET | Postal | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| PLANET | Postal | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| Royal Mail 4-State | Postal | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| Australia Post | Postal | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| Japan Post | Postal | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| GS1 DataBar Truncated | Linear | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | No | No | No |
+| GS1 DataBar Omnidirectional | Linear | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | No | No | No |
+| GS1 DataBar Stacked | Stacked | Yes | Yes | No | Yes | Yes | No | Encode + decode | No | No | No |
+| GS1 DataBar Expanded | Linear | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | No | No | No |
+| GS1 DataBar Expanded Stacked | Stacked | Yes | Yes | No | Yes | Yes | No | Encode + decode | No | No | No |
+| GS1 DataBar Limited | Linear | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | No | No | No |
+| GS1 DataBar Stacked Omnidirectional | Stacked | Yes | Yes | No | Yes | Yes | No | Encode + decode | No | No | No |
+| MaxiCode | Matrix | Yes | Yes | No | Yes | Yes | Yes | No | Encode + decode | Encode + decode | No |
+| DotCode | Matrix | Yes | Yes | No | Yes | Yes | No | Encode + decode | Encode + decode | Encode + decode | Yes |
+| Han Xin Code | Matrix | Yes | Yes | No | Yes | Yes | No | No | Encode + decode | No | Yes |
+| GS1 Composite | Stacked | Yes | Yes | No | Yes | Yes | No | Encode + decode | No | No | Yes |
+| USPS Intelligent Mail | Postal | Yes | Yes | No | Yes | Yes | No | No | No | No | Yes |
+| KIX Code | Postal | Yes | Yes | No | Yes | No | No | No | No | No | Yes |
+| Data Matrix | Matrix | Yes | Yes | No | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
+| PDF417 | Stacked | Yes | Yes | No | Yes | Yes | Yes | No | Encode + decode | No | No |
+| MicroPDF417 | Stacked | Yes | Yes | No | Yes | Yes | No | No | Encode + decode | No | Yes |
 
 ## Check a capability at runtime
 

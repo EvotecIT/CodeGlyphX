@@ -16,8 +16,8 @@ internal sealed class DataBarExpandedSymbol {
     internal int TotalCharacters { get; }
     internal int[] Elements { get; }
 
-    internal static DataBarExpandedSymbol Create(string value, bool requireEvenTotalCharacters) {
-        var binary = DataBarExpandedBinaryEncoder.Encode(value, requireEvenTotalCharacters);
+    internal static DataBarExpandedSymbol Create(string value, bool requireEvenTotalCharacters, bool linked = false) {
+        var binary = DataBarExpandedBinaryEncoder.Encode(value, requireEvenTotalCharacters, linked);
         var dataWidths = new int[binary.DataValues.Length][];
         for (var i = 0; i < dataWidths.Length; i++) {
             dataWidths[i] = DataBarExpandedSpecification.GetDataCharacterWidths(binary.DataValues[i]);

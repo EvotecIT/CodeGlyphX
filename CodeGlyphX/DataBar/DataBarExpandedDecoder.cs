@@ -36,14 +36,25 @@ public static partial class DataBarExpandedDecoder {
     /// Attempts to decode a GS1 DataBar Expanded Stacked symbol from a <see cref="BitMatrix"/>.
     /// </summary>
     public static bool TryDecodeExpandedStacked(BitMatrix modules, out string content) {
+        return TryDecodeStacked(modules, out content);
+    }
+
+    internal static bool TryDecodeComposite(BitMatrix modules, out string content) {
+        if (modules.Height != 1) return TryDecodeStacked(modules, out content, requireLinkage: true);
+        var row = new bool[modules.Width];
+        for (var x = 0; x < row.Length; x++) row[x] = modules[x, 0];
+        return TryDecodeModules(row, out content, requireLinkage: true);
+    }
+
+    private static bool TryDecodeStacked(BitMatrix modules, out string content, bool requireLinkage = false) {
         content = string.Empty;
         if (modules is null || modules.Width <= 0 || modules.Height <= 0) return false;
         if ((modules.Height - 1) % 4 == 0
             && TryExtractStackedRows(modules, out var rowRuns, out var maxBlocks)
-            && TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content)) return true;
+            && TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content, requireLinkage)) return true;
         if (!TryCollapseStackedRowHeights(modules, out var compact)) return false;
         return TryExtractStackedRows(compact, out rowRuns, out maxBlocks)
-            && TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content);
+            && TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content, requireLinkage);
     }
 
     private static bool TryCollapseStackedRowHeights(BitMatrix modules, out BitMatrix compact) {
@@ -459,7 +470,7 @@ public static partial class DataBarExpandedDecoder {
 
     private static bool TryDecodeAlpha(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
         if (TryDecodeAlphaModeSwitch(bits, ref pos, size, ref mode)) return true;
-        if (!TryDecodeAlpha5(bits, ref pos, size, sb, out var handled)) return false;
+        if (!TryDecodeAlpha5(bits, ref pos, size, sb, ref mode, out var handled)) return false;
         if (handled) return true;
         return TryDecodeAlpha6(bits, ref pos, size, sb);
     }
@@ -486,7 +497,7 @@ public static partial class DataBarExpandedDecoder {
         return false;
     }
 
-    private static bool TryDecodeAlpha5(bool[] bits, ref int pos, int size, StringBuilder sb, out bool handled) {
+    private static bool TryDecodeAlpha5(bool[] bits, ref int pos, int size, StringBuilder sb, ref GeneralFieldMode mode, out bool handled) {
         handled = false;
         if (size - pos < 5) {
             pos = size;
@@ -496,6 +507,7 @@ public static partial class DataBarExpandedDecoder {
         var v5 = ReadBits(bits, pos, 5);
         if (v5 == 15) {
             sb.Append(GroupSeparator);
+            mode = GeneralFieldMode.Numeric;
             pos += 5;
             handled = true;
             return true;
@@ -539,7 +551,7 @@ public static partial class DataBarExpandedDecoder {
 
     private static bool TryDecodeIso(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
         if (TryDecodeIsoModeSwitch(bits, ref pos, size, ref mode)) return true;
-        if (!TryDecodeIso5(bits, ref pos, size, sb, out var handled)) return false;
+        if (!TryDecodeIso5(bits, ref pos, size, sb, ref mode, out var handled)) return false;
         if (handled) return true;
         if (!TryDecodeIso7(bits, ref pos, size, sb, out handled)) return false;
         if (handled) return true;
@@ -568,7 +580,7 @@ public static partial class DataBarExpandedDecoder {
         return false;
     }
 
-    private static bool TryDecodeIso5(bool[] bits, ref int pos, int size, StringBuilder sb, out bool handled) {
+    private static bool TryDecodeIso5(bool[] bits, ref int pos, int size, StringBuilder sb, ref GeneralFieldMode mode, out bool handled) {
         handled = false;
         if (size - pos < 5) {
             pos = size;
@@ -578,6 +590,7 @@ public static partial class DataBarExpandedDecoder {
         var iso5 = ReadBits(bits, pos, 5);
         if (iso5 == 15) {
             sb.Append(GroupSeparator);
+            mode = GeneralFieldMode.Numeric;
             pos += 5;
             handled = true;
             return true;

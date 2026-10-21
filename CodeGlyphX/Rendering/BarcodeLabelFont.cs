@@ -62,6 +62,8 @@ internal static class BarcodeLabelFont {
         return Glyphs['?'];
     }
 
+    internal static bool ContainsExact(char c) => Glyphs.ContainsKey(c);
+
     public static int MeasureTextWidth(string text, int scale, int spacing) {
         if (string.IsNullOrEmpty(text)) return 0;
         var width = 0;

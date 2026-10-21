@@ -51,18 +51,20 @@ public static class CodabarEncoder {
         }
     }
 
-    private static bool IsStartStop(char ch) {
-        ch = char.ToUpperInvariant(ch);
+    internal static bool IsStartStop(char ch) {
+        ch = Alias(ch);
         return CodabarTables.StartStopChars.Contains(ch);
     }
 
-    private static char NormalizeStartStop(char ch) {
-        ch = char.ToUpperInvariant(ch);
+    internal static char NormalizeStartStop(char ch) {
+        ch = Alias(ch);
         if (!CodabarTables.StartStopChars.Contains(ch)) {
             throw new InvalidOperationException($"Invalid Codabar start/stop: '{ch}'.");
         }
         return ch;
     }
+
+    private static char Alias(char ch) => char.ToUpperInvariant(ch) switch { 'T' => 'A', 'N' => 'B', '*' => 'C', 'E' => 'D', var value => value };
 
     private static char NormalizeData(char ch) {
         ch = char.ToUpperInvariant(ch);

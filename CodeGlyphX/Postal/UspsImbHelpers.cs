@@ -16,12 +16,13 @@ internal static class UspsImbHelpers {
             tracker = content.Substring(0, dashIndex);
             zip = content.Substring(dashIndex + 1);
         } else {
-            tracker = content;
-            zip = string.Empty;
+            tracker = content.Length > 20 ? content.Substring(0, 20) : content;
+            zip = content.Length > 20 ? content.Substring(20) : string.Empty;
         }
 
         if (tracker.Length != 20) throw new InvalidOperationException("USPS IMB tracking code must be 20 digits.");
         if (!IsDigitsOnly(tracker)) throw new InvalidOperationException("USPS IMB tracking code must contain digits only.");
+        if (!IsValidTracker(tracker)) throw new InvalidOperationException("USPS IMB requires a barcode identifier second digit from 0 through 4; postal identifier 94 requires service type 009.");
 
         if (zip.Length != 0 && zip.Length != 5 && zip.Length != 9 && zip.Length != 11) {
             throw new InvalidOperationException("USPS IMB routing code must be 5, 9, or 11 digits (or omitted).");
@@ -70,8 +71,11 @@ internal static class UspsImbHelpers {
         }
 
         tracker = new string(trackChars);
-        return true;
+        return IsValidTracker(tracker);
     }
+
+    private static bool IsValidTracker(string tracker) => tracker[1] <= '4'
+        && (!tracker.StartsWith("94", StringComparison.Ordinal) || tracker.Substring(2, 3) == "009");
 
     internal static int ComputeCrc(BigInteger accum) {
         Span<int> bytes = stackalloc int[13];

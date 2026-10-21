@@ -13,6 +13,10 @@ public static class UpcEEncoder {
     /// Encodes a UPC-E barcode. Use "+NN" or "+NNNNN" to append add-ons.
     /// </summary>
     public static Barcode1D Encode(string content, UpcENumberSystem numberSystem = UpcENumberSystem.Zero) {
+        return EncodeCore(content, numberSystem, addOnGap: 1);
+    }
+
+    private static Barcode1D EncodeCore(string content, UpcENumberSystem numberSystem, int addOnGap) {
         if (content is null) throw new ArgumentNullException(nameof(content));
         var addOn = (string?)null;
         var plusIndex = content.IndexOf('+');
@@ -42,9 +46,25 @@ public static class UpcEEncoder {
         }
         BarcodeSegments.AppendBits(segments, new[] { false, true, false, true, false, true });
         if (!string.IsNullOrEmpty(addOn)) {
-            EanAddOn.AppendAddOn(segments, addOn!);
+            EanAddOn.AppendAddOn(segments, addOn!, addOnGap);
         }
         return new Barcode1D(segments, SymbolFormat.UpcE);
+    }
+
+    internal static Barcode1D EncodeComposite(string content) {
+        if (content is null) throw new ArgumentNullException(nameof(content));
+        var plus = content.IndexOf('+');
+        var core = plus < 0 ? content : content.Substring(0, plus);
+        var suffix = plus < 0 ? string.Empty : content.Substring(plus);
+        if (core.Length == 6) return EncodeCore(content, UpcENumberSystem.Zero, addOnGap: 9);
+        if ((core.Length != 7 && core.Length != 8) || (core[0] != '0' && core[0] != '1'))
+            throw new ArgumentException("UPC-E Composite expects six digits, or a number system followed by six digits and an optional check digit.", nameof(content));
+        var numberSystem = core[0] == '0' ? UpcENumberSystem.Zero : UpcENumberSystem.One;
+        var digits = core.Substring(1, 6);
+        var encoded = EncodeCore(digits + suffix, numberSystem, addOnGap: 9);
+        if (core.Length == 8 && core[7] != GetUpcAFromUpcE(digits, numberSystem)[11])
+            throw new ArgumentException("UPC-E check digit does not match its number system and data.", nameof(content));
+        return encoded;
     }
 
     private static string GetUpcAFromUpcE(string content, UpcENumberSystem numberSystem) {

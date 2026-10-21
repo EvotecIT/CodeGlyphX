@@ -38,7 +38,16 @@ internal static class ImageFrameConverter {
         return true;
     }
 
-    private static void ConvertRow(ReadOnlySpan<byte> source, byte[] destination, int destinationOffset, int width, PixelFormat format) {
+    internal static void ReadPixel(ImageFrame frame, int x, int y, Span<byte> rgba) {
+        if ((uint)x >= (uint)frame.Width || (uint)y >= (uint)frame.Height) throw new ArgumentOutOfRangeException(nameof(x));
+        if (rgba.Length < 4) throw new ArgumentException("One RGBA pixel needs four destination bytes.", nameof(rgba));
+        var row = frame.RowOrder == ImageRowOrder.TopDown ? y : frame.Height - 1 - y;
+        var bytes = ImageFrame.GetBytesPerPixel(frame.PixelFormat);
+        var offset = checked(row * frame.Stride + x * bytes);
+        ConvertRow(frame.Pixels.Span.Slice(offset, bytes), rgba, 0, 1, frame.PixelFormat);
+    }
+
+    private static void ConvertRow(ReadOnlySpan<byte> source, Span<byte> destination, int destinationOffset, int width, PixelFormat format) {
         for (var x = 0; x < width; x++) {
             var target = destinationOffset + x * 4;
             switch (format) {

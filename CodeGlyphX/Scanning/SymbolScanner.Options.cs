@@ -9,6 +9,8 @@ public static partial class SymbolScanner {
         return new ScanOptions {
             Formats = source.Formats is null ? null : (SymbolFormat[])source.Formats.Clone(),
             Region = source.Region, SamplingGrid = source.SamplingGrid, TimeoutMilliseconds = source.TimeoutMilliseconds,
+            CompositeCarrier = source.CompositeCarrier,
+            AustraliaPostCustomerTable = source.AustraliaPostCustomerTable, AustraliaPostCustomerInfoLength = source.AustraliaPostCustomerInfoLength,
             MaxSymbols = source.MaxSymbols, Deduplicate = source.Deduplicate,
             EnableTileScan = source.EnableTileScan, TileGrid = source.TileGrid, Profile = source.Profile,
             CancellationToken = source.CancellationToken, Barcode = CloneBarcodeOptions(source.Barcode),

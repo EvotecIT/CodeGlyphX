@@ -23,11 +23,51 @@ var captioned = BarcodeProfiles.Render(LinearBarcodeProfile.Isbn, isbn, OutputFo
 OutputWriter.Write("book-with-text.png", captioned);
 ```
 
-Decode with `BarcodeProfiles.TryDecode(profile, modules, out identifier)` when the application knows the expected profile, or call `TryParse` on an already decoded carrier value. An EAN or Code 39 symbol alone cannot uniquely identify the business application. ISSN uses the default `00` issue variant. The M&S carrier is EAN-8 with an initial zero; its caption shows the seven-digit identifier between M and S. These renderers produce symbols and captions, without a complete retail label template.
+Decode with `BarcodeProfiles.TryDecode(profile, modules, out identifier)` when the application knows the expected profile, or call `TryParse` on an already decoded carrier value. An EAN or Code 39 symbol alone cannot uniquely identify the business application. The M&S carrier is EAN-8; a seven-digit input has an implied leading zero, and eight-digit input keeps all eight checked digits. Its physical print layout positions M and S outside the data area and leaves the centre guards at digit height. These renderers produce symbols and captions, without a complete retail label template.
+
+ISSN accepts an optional space followed by a two-digit issue variant, such as `0317-8471 12`.
+The variant defaults to `00` and affects the EAN-13 bars. `Prepare` and `HumanReadable` retain the
+canonical ISSN. Use `TryDecodeDetailed` or `TryParseDetailed` to preserve `IssueVariant`,
+`Identifier` and the complete `CarrierText` in a `BarcodeProfileData` result.
+
+```csharp
+var periodical = BarcodeProfiles.Encode(LinearBarcodeProfile.Issn, "0317-8471 12");
+if (BarcodeProfiles.TryParseDetailed(LinearBarcodeProfile.Issn, "9770317847124", out var issue))
+{
+    Console.WriteLine(issue.IssueVariant); // 12
+}
+```
+
+## MSI checks and Channel Code finders
+
+`MsiEncoder.Encode` accepts no check, Mod10, Mod10Mod10, IBM Mod11/Mod11Mod10 and NCR
+Mod11/Mod11Mod10. Select the same algorithm through `BarcodeDecodeOptions.MsiChecksumAlgorithm`
+and a checksum policy when decoding. An omitted algorithm preserves the existing Mod10/Mod10Mod10
+handling. The default decode policy retains the full encoded text.
+
+Mod11 check value ten occupies two decimal digits. Some symbols therefore admit two valid data
+lengths. `StripIfValid` retains the complete text when that happens; `RequireValid` fails until the
+application supplies `MsiExpectedDataLength`. The same options work through `ScanOptions.Barcode`.
+
+```csharp
+using CodeGlyphX.Msi;
+
+var checkedMsi = MsiEncoder.Encode("12345678", MsiChecksumType.NcrMod11Mod10);
+var scanOptions = new ScanOptions
+{
+    Formats = new[] { SymbolFormat.Msi },
+    Barcode = new BarcodeDecodeOptions().WithMsiChecksum(
+        MsiChecksumPolicy.RequireValid, MsiChecksumType.NcrMod11Mod10, expectedDataLength: 8)
+};
+```
+
+`ChannelCodeEncoder.Encode("26", shortFinder: true)` selects the three-bar finder. The existing
+overload keeps its five-bar finder. Module and image decoders accept both and preserve the
+channel count as leading decimal zeros.
 
 ## HIBC
 
-`Hibc.Prepare` adds the leading plus and Mod-43 check. `TryParse` validates them and returns the unframed data. Supported carriers are Code 39, Code 128, QR, Data Matrix, PDF417, MicroPDF417 and Codablock F. Explicit Data Matrix options also select rectangular or DMRE models.
+`Hibc.Prepare` adds the leading plus and Mod-43 check. `TryParse` validates them and returns the unframed data. Supported carriers are Code 39, Code 128, QR, Aztec, Data Matrix, PDF417, MicroPDF417 and Codablock F. Explicit Data Matrix options also select rectangular or DMRE models. HIBC Aztec uses the recommended 23 percent error-correction setting.
 
 ```csharp
 var linear = Hibc.EncodeLinear(SymbolFormat.Code39, "A999BJC5D6E71");
@@ -39,7 +79,11 @@ matrix.Save("hibc-micro.pdf", new MatrixOptions { LabelText = Hibc.Prepare("A999
 bool valid = Hibc.TryDecodeMatrix(SymbolFormat.MicroPdf417, matrix.Modules, out string data);
 ```
 
-The helper validates HIBC transport framing. Assignment of labeler identifiers and complete UDI field rules remain the application's responsibility. Literal HIBC Code 39 uses its plus character directly; `Hibc.TryDecodeLinear` selects that interpretation rather than Full ASCII shift pairs.
+Use `PrepareStructured` to check supplier data fields before framing, or pass `validateStructure: true` to `EncodeLinear` or `EncodeMatrix`. `TryParseStructured` validates a checked payload and returns primary, secondary and supplemental fields. It retains two-digit date years without inventing a century, accepts and marks historical bare-Julian lot fields when decoding, and checks calendar dates, identifier lengths and supplemental-field order. Strict preparation does not produce historical forms.
+
+`Hibc.IsLinked` checks the link character between separate primary and secondary payloads. `HumanReadable` formats checked text with readable delimiters, underscores for spaces, slashed zeros and a line break between concatenated primary and secondary data. These display changes do not change encoded content.
+
+Assignment of labeler identifiers and regulatory acceptance remain the application's responsibility. Literal HIBC Code 39 uses its plus character directly; `Hibc.TryDecodeLinear` selects that interpretation rather than Full ASCII shift pairs.
 
 ## Postal and coupon helpers
 
@@ -59,6 +103,37 @@ OutputWriter.Write("coupon.png", coupon);
 ```
 
 `TryDecode` and `TryParse` return application fields alongside the carrier payload. Structure and checksums do not establish postal identifier ownership, service eligibility, manifests or acceptance of a printed mailpiece. Four-state modules are logical bar states; qualify their final physical dimensions separately.
+
+## Australia Post fields and printed lines
+
+The existing `AustraliaPostEncoder.Encode(string)` accepts a DPID and its fixed-width customer
+field. Use `EncodeSymbol` for an explicit two-digit FCC followed by an eight-digit DPID and a
+variable customer field. It supports FCC `00`, `11`, `59` and `62`; `00` requires an all-zero DPID.
+Select the C or N table explicitly. Customer 2 holds up to five C characters or eight N digits;
+Customer 3 holds up to ten C characters or fifteen N digits. Trailing customer spaces are retained.
+
+```csharp
+using CodeGlyphX.AustraliaPost;
+using CodeGlyphX.Printing;
+
+var postal = AustraliaPostEncoder.EncodeSymbol("5956439111ABz", AustraliaPostCustomerEncodingTable.C);
+var mailLayout = BarcodePrint.Layout(postal, new BarcodePrintOptions
+{
+    Font = BarcodeFont.FromBytes(File.ReadAllBytes("label-font.ttf")),
+    FontSizePoints = 8
+});
+mailLayout.Save("postal-label.pdf");
+```
+
+The physical layout positions the FCC, DPID, customer field and four decimal parity values above
+the bars. It measures that line with the supplied font and reports text over eight points.
+
+A C-table trailing `z` has the same bars as padding, and some fields fit both tables. Decoded
+`CustomerInfoAlternatives` retains those interpretations. The default preserves the previous
+table/longest-field interpretation and marks unresolved ambiguity. Supply the table and customer
+character count to the four-argument `AustraliaPostDecoder.TryDecode` overload, or set
+`ScanOptions.AustraliaPostCustomerTable` and `AustraliaPostCustomerInfoLength` for image scanning.
+Unified results retain the selected fields, parity and alternatives in `AustraliaPostSymbolMetadata.Data`.
 
 ## Swiss QR payments
 
@@ -85,6 +160,16 @@ For printing, scale the data-module area, excluding the quiet zone, to 46 by 46 
 
 ## Specialist format controls
 
+`RawLinear.Encode("9123456789")` treats each ASCII digit as a bar/space width from one through nine
+modules. It retains an even-length definition's final white run. `GetWidths` returns that definition,
+and `BarcodePrint.LayoutRaw` produces a measured layout with no required quiet zone or inferred text.
+The default raw bar height is 15 percent of the width; physical options can set it explicitly.
+
+`RawLinear.TryDecode` accepts exact module samples or an `ImageFrame` with the complete known
+symbol bounds, module count, rotation and polarity. Calibrated bounds must include trailing white
+modules and exclude captions. It recovers run widths and does no automatic symbol identification
+or application-text inference. Raw definitions are limited to 2500 runs and 22500 modules.
+
 - `Code16KEncodingOptions` selects GS1, reader initialization, FNC2 message append, FNC2 ordered concatenation or sixteen-row extended-data blocks. Sequence metadata uses one-based indices. Extended data supports up to 107 blocks; ordinary FNC2 concatenation supports up to nine.
 - `Code49EncodingOptions` selects GS1, continuation or an ordered group of up to nine symbols. The decoder retains these modes; FNC2 separates fields and reserved FNC3 is rejected.
 - `PosiCodeEncoder` selects A/B or Limited A/B variants, two through five linked rows, GS1 and reader/message controls. Limited variants use their restricted alphabet and have no function characters.
@@ -107,3 +192,36 @@ bool decoded = SymbolDecoder.TryDecode(linked.Modules, out var result, SymbolFor
 ```
 
 `MatrixOptions.LabelText` adds a portable caption outside the symbol's quiet zone. Caption rendering keeps the encoded modules intact. Code 16K, Code 49, Codablock F, Mailmark 4-state, D3 AQR and linked PosiCode rows also decode from images through `SymbolScanner`. The [capability table](/docs/symbol-capabilities/) records default recognition, calibration, geometry and multiple-result support for every physical format.
+
+## Optional check characters
+
+`BarcodeEncodingOptions` selects `None`, `Compute` or `Validate` for Code 39, Code 11,
+Codabar, ITF, discrete 2 of 5 and MSI. `Validate` checks characters supplied at the
+end of the input and encodes them once. Plessey always carries its mandatory CRC;
+its explicit options accept computation or validation. Other mandatory carrier
+checks remain part of their encoders.
+
+```csharp
+var builder = Barcode.Create(SymbolFormat.Code39, "aX")
+    .WithEncodingOptions(new BarcodeEncodingOptions {
+        Code39FullAscii = true,
+        CheckMode = BarcodeCheckMode.Compute,
+        PrintCheckCharacters = false
+    });
+var symbol = builder.Encode();
+var layout = builder.LayoutPrint(new BarcodePrintOptions { Font = suppliedFont });
+layout.Save("checked-label.pdf");
+```
+
+The check is calculated over the encoded alphabet. `PrintCheckCharacters` changes
+the preferred text for physical printing without changing bars. An explicit
+`BarcodePrintOptions.HumanReadableText` overrides that preference. Existing
+encoding overloads and pixel-render labels keep their defaults.
+
+On decoding, select `Code39Checksum`, `Code11Checksum`, `MsiChecksum`,
+`CodabarChecksum` or `TwoOfFiveChecksum` explicitly when the application knows
+that an optional check is present. Defaults retain optional characters as data.
+ITF may add a leading zero to form pairs; decoding retains it because the bars
+cannot identify whether it was padding. MSI Mod11 value ten can occupy two
+digits; set the algorithm and known data length when either interpretation is
+valid. Codabar accepts alternate framing `T/N/*/E` and normalizes it to `A/B/C/D`.

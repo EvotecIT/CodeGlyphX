@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-optional-checks.txt" />
     <Compile Include="../CodeGlyphX.Benchmarks/Corpus/CorpusPresentation.cs" Link="Comparison/CorpusPresentation.cs" />
   </ItemGroup>
 
@@ -28,6 +29,12 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Compile Include="Net472\**\*.cs" />
     <Compile Include="BarcodeBoundaryReviewTests.cs" />
+    <Compile Include="LinearControlConformanceTests.cs" />
+    <Compile Include="AustraliaPostControlTests.cs" />
+    <Compile Include="RawLinearTests.cs" />
+    <Compile Include="OptionalCheckControlTests.cs" />
+    <Compile Include="ProfileEncodingAndPrintTests.cs" />
+    <Compile Include="ApplicationPrintGeometryTests.cs" />
     <Compile Include="MultiSymbolImageTests.cs" />
     <Compile Include="WebpLargeRoundTripTests.cs" />
     <Compile Include="GlobalStateCollection.cs" />
@@ -116,6 +123,19 @@
     <Compile Include="ImageScannerSerialCollection.cs" />
     <Compile Include="RetailDigitFitTests.cs" />
     <Compile Include="AdditionalBarcodeRuntimeTests.cs" />
+    <Compile Include="AztecRuneConformanceTests.cs" />
+    <Compile Include="HibcStructuredTests.cs" />
+    <Compile Include="CodeOneConformanceTests.cs" />
+    <Compile Include="CodeOneControlBoundaryTests.cs" />
+    <Compile Include="BarcodeFontContractTests.cs" />
+    <Compile Include="BarcodePrintLayoutTests.cs" />
+    <Compile Include="BarcodePrintGeometryTests.cs" />
+    <Compile Include="UltracodeConformanceTests.cs" />
+    <Compile Include="UltracodeImageTests.cs" />
+    <Compile Include="UltracodeRenderingTests.cs" />
+    <Compile Include="CompositeCarrierConformanceTests.cs" />
+    <Compile Include="CompositeCarrierImageTests.cs" />
+    <Compile Include="Gs1CompositeCompactionTests.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
@@ -136,6 +156,22 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Fixtures/Conformance/*.json" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-aztec-runes.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-linear-controls.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-australia-controls.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-hibc-aztec.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-composite-compaction.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-code-one.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-ultracode.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-ultracode*.png" />
+    <EmbeddedResource Include="Fixtures/Conformance/bwipp-composite-carriers.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/zint-composite-carriers.txt" />
+    <EmbeddedResource Include="Fixtures/Conformance/zint-wide-composite.txt" />
+    <EmbeddedResource Include="Fixtures/Composite/bwipp-composite-*.png" />
+    <EmbeddedResource Include="Fixtures/Fonts/*.ttf" />
+    <EmbeddedResource Include="Fixtures/Fonts/*.otf" />
+    <EmbeddedResource Include="Fixtures/Fonts/*.ttc" />
+    <EmbeddedResource Include="Fixtures/Fonts/*.gz" />
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Aztec/*.png" />

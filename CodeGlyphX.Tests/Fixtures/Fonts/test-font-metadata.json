@@ -1,0 +1,74 @@
+{
+  "generator": "fontTools 4.67.0",
+  "source": "Build/Generate-PrintFontFixtures.py",
+  "fonts": [
+    {
+      "file": "TestOutlines.ttf",
+      "sha256": "490e83227fae41636a95fc7d05e1e242513938bbf2732089d7d305b9bfc53fe6",
+      "bytes": 2264,
+      "unitsPerEm": 1000,
+      "BInkBounds": [
+        20,
+        0,
+        600.0,
+        700
+      ],
+      "AAdvance": 600,
+      "fiAdvance": 500
+    },
+    {
+      "file": "TestOutlines.otf",
+      "sha256": "96e0728fe8f5d3fb3572c437d0195134f2d6fa113aed44a8045112834e3774ee",
+      "bytes": 2028,
+      "unitsPerEm": 1000,
+      "BInkBounds": [
+        20,
+        0,
+        600.0,
+        700
+      ],
+      "AAdvance": 600,
+      "fiAdvance": 500
+    },
+    {
+      "file": "TestOutlinesCff2.otf",
+      "sha256": "aeee9f788c034a01a6a3ac2135090d79e508ea7dfe03d34396cbad5661bd5eb4",
+      "bytes": 1772,
+      "unitsPerEm": 1000,
+      "BInkBounds": [
+        20,
+        0,
+        600.0,
+        700
+      ],
+      "AAdvance": 600,
+      "fiAdvance": 500
+    },
+    {
+      "file": "TestOutlines.ttc",
+      "sha256": "f72f6f8da6e9057bda08396f32064c5d5b6b28669b595c61335549d7ce69116d",
+      "bytes": 3180
+    },
+    {
+      "file": "TestOutlineBudget.ttf",
+      "sha256": "1f8b6ab98c747c5d6f25c7264dbb57722536c0f9649c853762766f347b929e9f",
+      "bytes": 1128
+    }
+  ],
+  "metadataBudgetFixtures": [
+    {
+      "file": "TestSharedCff2.otf.gz",
+      "decodedBytes": 21528,
+      "dictionaries": 256,
+      "subrsPerIndex": 16384,
+      "sharedIndex": true
+    },
+    {
+      "file": "TestCumulativeCff2.otf.gz",
+      "decodedBytes": 2624244,
+      "dictionaries": 40,
+      "subrsPerIndex": 65536,
+      "sharedIndex": false
+    }
+  ]
+}

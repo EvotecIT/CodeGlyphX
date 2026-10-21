@@ -4,7 +4,7 @@ namespace CodeGlyphX.DataBar;
 
 public static partial class DataBarExpandedDecoder {
     /// <summary>Validates sampled physical rows with the same assembly and checksum as module decoding.</summary>
-    internal static bool TryDecodeExpandedStackedRows(List<int[]> rows, int columns, out string content) {
+    internal static bool TryDecodeExpandedStackedRows(List<int[]> rows, int columns, out string content, bool requireLinkage = false) {
         content = string.Empty;
         if (rows.Count == 0 || rows.Count > 11 || columns < 1 || columns > 11) return false;
         var blocks = 0;
@@ -17,6 +17,6 @@ public static partial class DataBarExpandedDecoder {
         if (blocks > 11) return false;
         if (!TryBuildStackedElements(rows, columns, out var assembled)) return false;
         if (!TryTrimElements(assembled, out var trimmed)) return false;
-        return TryDecodeFromWidths(trimmed, out content);
+        return TryDecodeFromWidths(trimmed, out content, requireLinkage);
     }
 }

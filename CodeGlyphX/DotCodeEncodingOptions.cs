@@ -6,6 +6,9 @@ namespace CodeGlyphX;
 public sealed class DotCodeEncodingOptions {
     /// <summary>Gets or sets an optional symbol width from 5 through 200 modules.</summary>
     public int? Width { get; set; }
+    /// <summary>Gets or sets an optional symbol height from 5 through 200 modules.</summary>
+    /// <remarks>With both dimensions supplied, their sum must be odd and the grid must hold the payload and checks.</remarks>
+    public int? Height { get; set; }
     /// <summary>Gets or sets an optional mask from 0 through 7. Masks 4 through 7 force the six orientation corners.</summary>
     public int? Mask { get; set; }
     /// <summary>Gets or sets whether the value is a GS1 AI string.</summary>
@@ -23,6 +26,7 @@ public sealed class DotCodeEncodingOptions {
 
     internal DotCodeEncodingOptions Clone() => new() {
         Width = Width,
+        Height = Height,
         Mask = Mask,
         IsGs1 = IsGs1,
         ReaderInitialization = ReaderInitialization,

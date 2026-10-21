@@ -21,6 +21,8 @@ public sealed class SymbolCapability {
     public bool CanEncode => Has(SymbolCapabilityFlags.Encode);
     /// <summary>Gets whether module-level decoding is implemented.</summary>
     public bool CanDecodeModules => Has(SymbolCapabilityFlags.DecodeModules);
+    /// <summary>Gets whether sampled colour cells can be decoded without grayscale conversion.</summary>
+    public bool CanDecodeColorCells => Has(SymbolCapabilityFlags.DecodeColorCells);
     /// <summary>Gets whether image recognition is implemented.</summary>
     public bool CanScanImages => Has(SymbolCapabilityFlags.ScanImage);
     /// <summary>Gets whether this format participates when no explicit scan formats are supplied.</summary>

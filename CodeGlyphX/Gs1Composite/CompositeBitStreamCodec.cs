@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CodeGlyphX.Gs1Composite;
 
-internal static class CompositeBitStreamCodec {
+internal static partial class CompositeBitStreamCodec {
     private const int Numeric = 0;
     private const int Alphanumeric = 1;
     private const int IsoIec646 = 2;
@@ -20,12 +20,10 @@ internal static class CompositeBitStreamCodec {
         if (elementString.Length == 0) throw new ArgumentException("The composite component cannot be empty.", nameof(elementString));
         if (elementString[0] == Gs1.GroupSeparator) throw new ArgumentException("A GS1 element string cannot start with FNC1.", nameof(elementString));
 
-        // ISO/IEC 24723 encodation method 0. It accepts the complete GS1 general
-        // field and remains interoperable even when the date/lot and AI 90
-        // compaction methods would produce a shorter symbol.
-        var bits = new List<bool>(elementString.Length * 7 + 32) { false };
+        var bits = new List<bool>(elementString.Length * 7 + 32);
         var mode = Numeric;
-        EncodeGeneralField(elementString, bits, ref mode, out var lastDigit);
+        var generalField = EncodeCompactedPrefix(elementString, bits, ref mode, out var alphaPad);
+        EncodeGeneralField(generalField, bits, ref mode, out var lastDigit);
 
         var target = GetTargetBitLength(bits.Count, component, columns, linearWidth,
             out pdfColumns, out errorCorrectionLevel);
@@ -44,6 +42,7 @@ internal static class CompositeBitStreamCodec {
             }
         }
 
+        if (alphaPad) Append(bits, 31, 5);
         if (mode == Numeric) Append(bits, 0, 4);
         while (bits.Count < target) Append(bits, 4, 5);
         if (bits.Count > target) bits.RemoveRange(target, bits.Count - target);
@@ -52,11 +51,14 @@ internal static class CompositeBitStreamCodec {
 
     internal static bool TryDecode(bool[] bits, out string elementString) {
         elementString = string.Empty;
-        if (bits is null || bits.Length == 0 || bits[0]) return false;
+        if (bits is null || bits.Length == 0) return false;
+        return bits[0] ? TryDecodeCompressed(bits, out elementString)
+            : TryDecodeGeneralField(bits, 1, Numeric, out elementString);
+    }
 
+    private static bool TryDecodeGeneralField(bool[] bits, int position, int mode, out string elementString) {
+        elementString = string.Empty;
         var sb = new StringBuilder(bits.Length / 5);
-        var position = 1;
-        var mode = Numeric;
         while (position < bits.Length) {
             if (MatchesPadding(bits, position, mode)) {
                 elementString = sb.ToString();

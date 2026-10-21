@@ -51,13 +51,14 @@ return 0;
 
 static string BuildCapabilityTable(IReadOnlyList<SymbolCapability> capabilities) {
     var builder = new StringBuilder();
-    builder.AppendLine("| Format | Family | Encode | Module decode | Image scan | Default scan | Multiple | GS1 | ECI | Structured append | Geometry |");
-    builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |");
+    builder.AppendLine("| Format | Family | Encode | Module decode | Colour-cell decode | Image scan | Default scan | Multiple | GS1 | ECI | Structured append | Geometry |");
+    builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |");
     foreach (var capability in capabilities) {
         builder.Append("| ").Append(capability.DisplayName)
             .Append(" | ").Append(capability.Family)
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.Encode)))
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.DecodeModules)))
+            .Append(" | ").Append(YesNo(capability.CanDecodeColorCells))
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.ScanImage)))
             .Append(" | ").Append(YesNo(capability.IsDefaultScanFormat))
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.ScanMultiple)))
@@ -119,6 +120,7 @@ internal sealed class CapabilityOutput {
     public string Family { get; set; } = string.Empty;
     public bool Encode { get; set; }
     public bool ModuleDecode { get; set; }
+    public bool ColorCellDecode { get; set; }
     public bool ImageScan { get; set; }
     public bool IsDefaultScanFormat { get; set; }
     public bool Multiple { get; set; }
@@ -137,6 +139,7 @@ internal sealed class CapabilityOutput {
             Family = capability.Family.ToString(),
             Encode = capability.Has(SymbolCapabilityFlags.Encode),
             ModuleDecode = capability.Has(SymbolCapabilityFlags.DecodeModules),
+            ColorCellDecode = capability.CanDecodeColorCells,
             ImageScan = capability.Has(SymbolCapabilityFlags.ScanImage),
             IsDefaultScanFormat = capability.IsDefaultScanFormat,
             Multiple = capability.Has(SymbolCapabilityFlags.ScanMultiple),

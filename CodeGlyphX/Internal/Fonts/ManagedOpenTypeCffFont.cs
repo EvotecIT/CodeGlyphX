@@ -1,0 +1,555 @@
+// Adapted from OfficeIMO.Core, Copyright (c) 2022 Evotec.
+// Licensed under the MIT license; see Licenses/OfficeIMO-MIT.txt.
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+
+namespace CodeGlyphX.Internal.Fonts;
+
+/// <summary>First-party managed CFF1/CFF2 measurement and outline program.</summary>
+internal sealed class ManagedOpenTypeCffFont : IManagedCffBoundedFontProgram, IManagedFontBaselineMetrics, IManagedVariableFontProgram {
+    private readonly byte[] _data;
+    private readonly ManagedOpenTypeReader _reader;
+    private readonly ManagedCffFontData _cff;
+    private readonly ManagedFontVariationModel _variations;
+    private readonly ManagedOpenTypeHvarMetrics? _hvar;
+    private readonly ManagedOpenTypeKerning _kerning;
+    private readonly int _ascender;
+    private readonly int _descender;
+    private readonly int _lineGap;
+    private readonly string _fingerprint;
+
+    private ManagedOpenTypeCffFont(
+        byte[] data,
+        ManagedOpenTypeReader reader,
+        ManagedCffFontData cff,
+        ManagedFontVariationModel variations) {
+        _data = (byte[])data.Clone();
+        _reader = reader;
+        _cff = cff;
+        _variations = variations;
+        _kerning = ManagedOpenTypeKerning.FromReader(reader, variations);
+        _hvar = variations.IsVariable
+            ? ManagedOpenTypeHvarMetrics.TryParse(reader, variations)
+            : null;
+        ManagedOpenTypeMvarMetrics? mvar = variations.IsVariable
+            ? ManagedOpenTypeMvarMetrics.TryParse(reader, variations)
+            : null;
+        _ascender = checked(reader.Ascender + (mvar?.HorizontalAscenderDelta ?? 0));
+        _descender = checked(reader.Descender + (mvar?.HorizontalDescenderDelta ?? 0));
+        _lineGap = checked(reader.LineGap + (mvar?.HorizontalLineGapDelta ?? 0));
+        _fingerprint = ComputeFingerprint(data, variations.Identity);
+    }
+
+    internal static ManagedOpenTypeCffFont? TryLoad(
+        byte[] data,
+        IReadOnlyDictionary<string, float>? variationValues,
+        out string? error) {
+        error = null;
+        try {
+            ManagedOpenTypeReader? reader = ManagedOpenTypeReader.TryCreate(data);
+            if (reader == null || !reader.TryGetTable("CFF ", out _, out _) && !reader.TryGetTable("CFF2", out _, out _)) return null;
+            ManagedFontVariationModel variations = ManagedFontVariationModel.Create(reader, variationValues);
+            ManagedCffFontData cff = ManagedCffFontData.Parse(reader, variations);
+            return new ManagedOpenTypeCffFont(data, reader, cff, variations);
+        } catch (Exception exception) when (exception is InvalidDataException
+                                            || exception is NotSupportedException
+                                            || exception is ArgumentException
+                                            || exception is OverflowException
+                                            || exception is IndexOutOfRangeException) {
+            error = exception.Message;
+            return null;
+        }
+    }
+
+    public string Fingerprint => _fingerprint;
+    IReadOnlyDictionary<string, float> IManagedVariableFontProgram.VariationCoordinatesForShaping =>
+        _variations.DesignCoordinates;
+    public string? DisplayName => _reader.ReadDisplayName();
+    public int? CollectionIndex => null;
+    public int UnitsPerEm => _reader.UnitsPerEm;
+    public bool IsOpenTypeCff => true;
+    public bool ProvidesComplexTextLayout => false;
+    public double LineSpacingRatio => Math.Max(1, _ascender - _descender + _lineGap) / (double)_reader.UnitsPerEm;
+    internal bool IsVariable => _variations.IsVariable || _cff.IsCff2;
+
+    public byte[] GetFontDataForShaping() => (byte[])_data.Clone();
+
+    public bool HasGlyphs(string text) {
+        return _reader.HasGlyphs(text);
+    }
+
+    public double Measure(string text, double fontSize) {
+        ValidateTextAndSize(text, fontSize);
+        double scale = Scale(fontSize);
+        long width = 0;
+        var glyphs = new List<int>();
+        var scalars = new List<int>();
+        for (int index = 0; index < text.Length;) {
+            int glyph = _reader.ReadMappedGlyph(text, ref index, out int scalar);
+            if (glyph < 0) continue;
+            glyphs.Add(glyph);
+            scalars.Add(scalar);
+        }
+        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(glyphs, scalars);
+        for (int index = 0; index < glyphs.Count; index++) {
+            width = checked(width + AdvanceWidth(glyphs[index]) + positioning[index].XAdvance);
+        }
+        return width * scale;
+    }
+
+    public IReadOnlyList<double> MeasureTextElements(IReadOnlyList<string> elements, double fontSize) {
+        if (elements == null) throw new ArgumentNullException(nameof(elements));
+        ValidateSize(fontSize);
+        var result = new double[elements.Count];
+        double scale = Scale(fontSize);
+        var glyphs = new List<int>();
+        var scalars = new List<int>();
+        var elementIndexes = new List<int>();
+        for (int elementIndex = 0; elementIndex < elements.Count; elementIndex++) {
+            string text = elements[elementIndex];
+            for (int textIndex = 0; textIndex < text.Length;) {
+                int glyph = _reader.ReadMappedGlyph(text, ref textIndex, out int scalar);
+                if (glyph < 0) continue;
+                glyphs.Add(glyph);
+                scalars.Add(scalar);
+                elementIndexes.Add(elementIndex);
+            }
+        }
+        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(glyphs, scalars);
+        for (int index = 0; index < glyphs.Count; index++) {
+            result[elementIndexes[index]] += checked(
+                AdvanceWidth(glyphs[index]) + positioning[index].XAdvance) * scale;
+        }
+        return result;
+    }
+
+    public double LineHeight(double fontSize) {
+        ValidateSize(fontSize);
+        return Math.Max(1, _ascender - _descender) * Scale(fontSize);
+    }
+
+    public double BaselineOffset(double fontSize) {
+        ValidateSize(fontSize);
+        return _ascender * Scale(fontSize);
+    }
+
+    public List<List<ManagedPoint>> GetTextContours(string text, double x, double y, double fontSize) =>
+        GetTextContoursBounded(text, x, y, fontSize, int.MaxValue, CancellationToken.None);
+
+    public List<List<ManagedPoint>> GetTextContoursBounded(
+        string text,
+        double x,
+        double y,
+        double fontSize,
+        int maximumPointCount,
+        CancellationToken cancellationToken) => GetTextContoursBounded(
+            text,
+            x,
+            y,
+            fontSize,
+            maximumPointCount,
+            cancellationToken,
+            new ManagedCffOperationBudget());
+
+    public List<List<ManagedPoint>> GetTextContoursBounded(
+        string text,
+        double x,
+        double y,
+        double fontSize,
+        int maximumPointCount,
+        CancellationToken cancellationToken,
+        ManagedCffOperationBudget operationBudget) {
+        ValidateTextAndSize(text, fontSize);
+        ValidatePosition(x, y);
+        if (maximumPointCount <= 0) throw new ArgumentOutOfRangeException(nameof(maximumPointCount));
+        if (operationBudget == null) throw new ArgumentNullException(nameof(operationBudget));
+        var contours = new List<List<ManagedPoint>>();
+        double scale = Scale(fontSize);
+        double cursor = x;
+        double baseline = EnsureFiniteGeometry(y + _ascender * scale);
+        int pointCount = 0;
+        var glyphs = new List<(int Glyph, int Scalar)>();
+        for (int index = 0; index < text.Length;) {
+            cancellationToken.ThrowIfCancellationRequested();
+            int glyph = _reader.ReadMappedGlyph(text, ref index, out int scalar);
+            if (glyph < 0) continue;
+            glyphs.Add((glyph, scalar));
+        }
+
+        var glyphIds = new List<int>(glyphs.Count);
+        var scalars = new List<int>(glyphs.Count);
+        foreach ((int glyph, int scalar) in glyphs) {
+            glyphIds.Add(glyph);
+            scalars.Add(scalar);
+        }
+        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(glyphIds, scalars);
+
+        for (int index = 0; index < glyphs.Count; index++) {
+            cancellationToken.ThrowIfCancellationRequested();
+            int glyphId = glyphs[index].Glyph;
+            double glyphX = EnsureFiniteGeometry(cursor + positioning[index].XPlacement * scale);
+            RenderGlyph(glyphId, glyphX, baseline, scale, contours, ref pointCount, maximumPointCount, cancellationToken, operationBudget);
+            int positionedAdvance = checked(
+                AdvanceWidth(glyphId) +
+                positioning[index].XAdvance);
+            cursor = EnsureFiniteGeometry(cursor + positionedAdvance * scale);
+        }
+        return contours;
+    }
+
+    public bool TryGetGlyphMetrics(int scalar, out int glyphId, out int advanceWidth) {
+        glyphId = _reader.MapGlyph(scalar);
+        advanceWidth = glyphId == 0 ? 0 : AdvanceWidth(glyphId);
+        return glyphId != 0;
+    }
+
+    internal int GetKerningAdjustment(int leftGlyphId, int rightGlyphId, int leftScalar, int rightScalar) {
+        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(
+            new[] { leftGlyphId, rightGlyphId },
+            new[] { leftScalar, rightScalar });
+        return positioning.Length > 0 ? positioning[0].XAdvance : 0;
+    }
+
+    internal ManagedOpenTypeGlyphPositioning[] PositionGlyphRun(
+        IReadOnlyList<int> glyphs,
+        IReadOnlyList<int> scalars,
+        System.Threading.CancellationToken cancellationToken = default) => _kerning.PositionRun(glyphs, scalars, cancellationToken);
+
+    public double MeasureShapedText(string text, ManagedTextShapingResult result, double fontSize) {
+        PositionedGlyph[] glyphs = ValidateShapedGlyphs(text, result);
+        ValidateSize(fontSize);
+        long advance = 0;
+        for (int index = 0; index < glyphs.Length; index++) {
+            advance = checked(advance + (result.Direction == ManagedTextDirection.TopToBottom
+                ? glyphs[index].AdvanceHeight
+                : glyphs[index].AdvanceWidth));
+        }
+        return Math.Abs(advance * Scale(fontSize));
+    }
+
+    public List<List<ManagedPoint>> GetShapedTextContours(
+        string text,
+        ManagedTextShapingResult result,
+        double x,
+        double y,
+        double fontSize) => GetShapedTextContoursBounded(
+            text,
+            result,
+            x,
+            y,
+            fontSize,
+            int.MaxValue,
+            CancellationToken.None);
+
+    public List<List<ManagedPoint>> GetShapedTextContoursBounded(
+        string text,
+        ManagedTextShapingResult result,
+        double x,
+        double y,
+        double fontSize,
+        int maximumPointCount,
+        CancellationToken cancellationToken) => GetShapedTextContoursBounded(
+            text,
+            result,
+            x,
+            y,
+            fontSize,
+            maximumPointCount,
+            cancellationToken,
+            new ManagedCffOperationBudget());
+
+    public List<List<ManagedPoint>> GetShapedTextContoursBounded(
+        string text,
+        ManagedTextShapingResult result,
+        double x,
+        double y,
+        double fontSize,
+        int maximumPointCount,
+        CancellationToken cancellationToken,
+        ManagedCffOperationBudget operationBudget) {
+        PositionedGlyph[] glyphs = ValidateShapedGlyphs(text, result);
+        ValidateSize(fontSize);
+        ValidatePosition(x, y);
+        if (maximumPointCount <= 0) throw new ArgumentOutOfRangeException(nameof(maximumPointCount));
+        if (operationBudget == null) throw new ArgumentNullException(nameof(operationBudget));
+        var contours = new List<List<ManagedPoint>>();
+        double scale = Scale(fontSize);
+        if (result.Direction == ManagedTextDirection.TopToBottom) {
+            double cursorY = y;
+            int verticalPointCount = 0;
+            for (int index = 0; index < glyphs.Length; index++) {
+                cancellationToken.ThrowIfCancellationRequested();
+                PositionedGlyph glyph = glyphs[index];
+                RenderGlyph(
+                    glyph.GlyphId,
+                    EnsureFiniteGeometry(x + glyph.OffsetX * scale),
+                    EnsureFiniteGeometry(cursorY - glyph.OffsetY * scale),
+                    scale,
+                    contours,
+                    ref verticalPointCount,
+                    maximumPointCount,
+                    cancellationToken,
+                    operationBudget);
+                cursorY = EnsureFiniteGeometry(cursorY - glyph.AdvanceHeight * scale);
+            }
+            return contours;
+        }
+        long totalAdvance = 0;
+        for (int index = 0; index < glyphs.Length; index++) totalAdvance = checked(totalAdvance + glyphs[index].AdvanceWidth);
+        bool negativeDirection = totalAdvance < 0;
+        double cursor = negativeDirection ? EnsureFiniteGeometry(x - (totalAdvance * scale)) : x;
+        double baseline = EnsureFiniteGeometry(y + _ascender * scale);
+        int pointCount = 0;
+        for (int index = 0; index < glyphs.Length; index++) {
+            cancellationToken.ThrowIfCancellationRequested();
+            PositionedGlyph glyph = glyphs[index];
+            if (negativeDirection) cursor = EnsureFiniteGeometry(cursor + glyph.AdvanceWidth * scale);
+            RenderGlyph(
+                glyph.GlyphId,
+                EnsureFiniteGeometry(cursor + glyph.OffsetX * scale),
+                EnsureFiniteGeometry(baseline - glyph.OffsetY * scale),
+                scale,
+                contours,
+                ref pointCount,
+                maximumPointCount,
+                cancellationToken,
+                operationBudget);
+            if (!negativeDirection) cursor = EnsureFiniteGeometry(cursor + glyph.AdvanceWidth * scale);
+        }
+        return contours;
+    }
+
+    private void RenderGlyph(
+        int glyphId,
+        double x,
+        double baseline,
+        double scale,
+        List<List<ManagedPoint>> contours,
+        ref int pointCount,
+        int maximumPointCount,
+        CancellationToken cancellationToken,
+        ManagedCffOperationBudget operationBudget) {
+        if (glyphId < 0 || glyphId >= _cff.GlyphCount) throw new InvalidDataException("A CFF glyph identifier is outside CharStrings.");
+        var sink = new CffPathSink(x, baseline, scale, contours, pointCount, maximumPointCount, cancellationToken);
+        var interpreter = new ManagedType2CharStringInterpreter(_cff, glyphId, sink, cancellationToken, operationBudget);
+        interpreter.Render(_cff.GetCharString(glyphId));
+        pointCount = sink.PointCount;
+    }
+
+    private PositionedGlyph[] ValidateShapedGlyphs(string text, ManagedTextShapingResult result) {
+        if (text == null) throw new ArgumentNullException(nameof(text));
+        if (result == null) throw new ArgumentNullException(nameof(result));
+        if (text.Length > 0 && result.Glyphs.Count == 0) throw new ArgumentException("Drawing text shaping provider returned no glyphs for non-empty text.", nameof(result));
+        var glyphs = new PositionedGlyph[result.Glyphs.Count];
+        for (int index = 0; index < result.Glyphs.Count; index++) {
+            ManagedShapedGlyph glyph = result.Glyphs[index];
+            if (glyph.GlyphId <= 0 || glyph.GlyphId >= _reader.GlyphCount) {
+                throw new ArgumentException("Drawing text shaping provider returned a glyph outside the selected font range.", nameof(result));
+            }
+            if (glyph.TextIndex < 0 || glyph.TextIndex > text.Length || glyph.UnicodeText.Length > text.Length - glyph.TextIndex
+                || !string.Equals(text.Substring(glyph.TextIndex, glyph.UnicodeText.Length), glyph.UnicodeText, StringComparison.Ordinal)) {
+                throw new ArgumentException("Drawing text shaping provider returned a Unicode mapping outside the source text.", nameof(result));
+            }
+            glyphs[index] = new PositionedGlyph(
+                glyph.GlyphId,
+                glyph.AdvanceWidth ?? AdvanceWidth(glyph.GlyphId),
+                glyph.AdvanceHeight ?? 0,
+                glyph.OffsetX,
+                glyph.OffsetY);
+        }
+        return glyphs;
+    }
+
+    private double Scale(double fontSize) => fontSize / _reader.UnitsPerEm;
+
+    private int AdvanceWidth(int glyphId) => checked(
+        _reader.AdvanceWidth(glyphId) + (_hvar?.AdvanceWidthDelta(glyphId) ?? 0));
+
+    private static void ValidateTextAndSize(string text, double fontSize) {
+        if (text == null) throw new ArgumentNullException(nameof(text));
+        ValidateSize(fontSize);
+    }
+
+    private static void ValidateSize(double fontSize) {
+        if (fontSize <= 0D || double.IsNaN(fontSize) || double.IsInfinity(fontSize)) throw new ArgumentOutOfRangeException(nameof(fontSize));
+    }
+
+    private static void ValidatePosition(double x, double y) {
+        if (double.IsNaN(x) || double.IsInfinity(x)) throw new ArgumentOutOfRangeException(nameof(x));
+        if (double.IsNaN(y) || double.IsInfinity(y)) throw new ArgumentOutOfRangeException(nameof(y));
+    }
+
+    private static double EnsureFiniteGeometry(double value) {
+        if (double.IsNaN(value) || double.IsInfinity(value)) {
+            throw new ArgumentOutOfRangeException("fontSize", "CFF outline positioning produced non-finite geometry.");
+        }
+        return value;
+    }
+
+    private static int ReadScalar(string text, ref int index) {
+        char first = text[index++];
+        return char.IsHighSurrogate(first) && index < text.Length && char.IsLowSurrogate(text[index])
+            ? char.ConvertToUtf32(first, text[index++])
+            : first;
+    }
+
+    private static string ComputeFingerprint(byte[] data, string variationIdentity) {
+        using HashAlgorithm hash = SHA256.Create();
+        byte[] identity = Encoding.UTF8.GetBytes("ManagedIMO.CFF.FontProgram.v1\n" + variationIdentity);
+        hash.TransformBlock(identity, 0, identity.Length, identity, 0);
+        hash.TransformFinalBlock(data, 0, data.Length);
+        return "sha256:" + ToLowerHex(hash.Hash!);
+    }
+
+    private static string ToLowerHex(byte[] bytes) {
+        const string alphabet = "0123456789abcdef";
+        var result = new char[bytes.Length * 2];
+        for (int index = 0; index < bytes.Length; index++) {
+            result[index * 2] = alphabet[bytes[index] >> 4];
+            result[index * 2 + 1] = alphabet[bytes[index] & 0x0F];
+        }
+        return new string(result);
+    }
+
+    private readonly struct PositionedGlyph {
+        internal PositionedGlyph(int glyphId, int advanceWidth, int advanceHeight, int offsetX, int offsetY) {
+            GlyphId = glyphId;
+            AdvanceWidth = advanceWidth;
+            AdvanceHeight = advanceHeight;
+            OffsetX = offsetX;
+            OffsetY = offsetY;
+        }
+
+        internal int GlyphId { get; }
+        internal int AdvanceWidth { get; }
+        internal int AdvanceHeight { get; }
+        internal int OffsetX { get; }
+        internal int OffsetY { get; }
+    }
+
+    private sealed class CffPathSink : IManagedCffPathSink {
+        private const double CurveTolerance = 0.05D;
+        private const int MaximumCurveDepth = 12;
+        private readonly double _originX;
+        private readonly double _baseline;
+        private readonly double _scale;
+        private readonly List<List<ManagedPoint>> _contours;
+        private readonly int _maximumPointCount;
+        private readonly CancellationToken _cancellationToken;
+        private List<ManagedPoint>? _current;
+        private ManagedPoint _currentPoint;
+
+        internal CffPathSink(
+            double originX,
+            double baseline,
+            double scale,
+            List<List<ManagedPoint>> contours,
+            int existingPointCount,
+            int maximumPointCount,
+            CancellationToken cancellationToken) {
+            _originX = originX;
+            _baseline = baseline;
+            _scale = scale;
+            _contours = contours;
+            PointCount = existingPointCount;
+            _maximumPointCount = maximumPointCount;
+            _cancellationToken = cancellationToken;
+        }
+
+        internal int PointCount { get; private set; }
+
+        public void MoveTo(double x, double y) {
+            CloseContour();
+            _current = new List<ManagedPoint>();
+            Add(Transform(x, y));
+        }
+
+        public void LineTo(double x, double y) => Add(Transform(x, y));
+
+        public void CurveTo(double control1X, double control1Y, double control2X, double control2Y, double x, double y) {
+            EnsureCurrent();
+            FlattenCubic(
+                _currentPoint,
+                Transform(control1X, control1Y),
+                Transform(control2X, control2Y),
+                Transform(x, y),
+                0);
+        }
+
+        public void CloseContour() {
+            if (_current == null) return;
+            if (_current.Count >= 3) {
+                ManagedPoint first = _current[0];
+                if (_current[_current.Count - 1] != first) Add(first);
+                _contours.Add(_current);
+            }
+            _current = null;
+        }
+
+        private ManagedPoint Transform(double x, double y) {
+            var point = new ManagedPoint(_originX + x * _scale, _baseline - y * _scale);
+            EnsureFinitePoint(point);
+            return point;
+        }
+
+        private void FlattenCubic(ManagedPoint start, ManagedPoint control1, ManagedPoint control2, ManagedPoint end, int depth) {
+            double flatness = Math.Max(DistanceToLine(control1, start, end), DistanceToLine(control2, start, end));
+            if (depth >= MaximumCurveDepth || flatness <= CurveTolerance) {
+                Add(end);
+                return;
+            }
+            ManagedPoint startControl = Mid(start, control1);
+            ManagedPoint controls = Mid(control1, control2);
+            ManagedPoint controlEnd = Mid(control2, end);
+            ManagedPoint leftControl = Mid(startControl, controls);
+            ManagedPoint rightControl = Mid(controls, controlEnd);
+            ManagedPoint midpoint = Mid(leftControl, rightControl);
+            FlattenCubic(start, startControl, leftControl, midpoint, depth + 1);
+            FlattenCubic(midpoint, rightControl, controlEnd, end, depth + 1);
+        }
+
+        private void Add(ManagedPoint point) {
+            _cancellationToken.ThrowIfCancellationRequested();
+            EnsureFinitePoint(point);
+            if (PointCount >= _maximumPointCount) throw new InvalidOperationException("Font outline expansion exceeded the configured point budget.");
+            EnsureCurrent();
+            _current!.Add(point);
+            _currentPoint = point;
+            PointCount++;
+        }
+
+        private void EnsureCurrent() {
+            if (_current == null) _current = new List<ManagedPoint>();
+        }
+
+        private static ManagedPoint Mid(ManagedPoint left, ManagedPoint right) {
+            var midpoint = new ManagedPoint((left.X / 2D) + (right.X / 2D), (left.Y / 2D) + (right.Y / 2D));
+            EnsureFinitePoint(midpoint);
+            return midpoint;
+        }
+
+        private static void EnsureFinitePoint(ManagedPoint point) {
+            if (double.IsNaN(point.X) || double.IsInfinity(point.X) ||
+                double.IsNaN(point.Y) || double.IsInfinity(point.Y)) {
+                throw new InvalidDataException("A transformed CFF path coordinate is not finite.");
+            }
+        }
+
+        private static double DistanceToLine(ManagedPoint point, ManagedPoint start, ManagedPoint end) {
+            double deltaX = end.X - start.X;
+            double deltaY = end.Y - start.Y;
+            double length = Math.Sqrt((deltaX * deltaX) + (deltaY * deltaY));
+            if (length <= double.Epsilon) {
+                double dx = point.X - start.X;
+                double dy = point.Y - start.Y;
+                return Math.Sqrt((dx * dx) + (dy * dy));
+            }
+            return Math.Abs((deltaY * point.X) - (deltaX * point.Y) + (end.X * start.Y) - (end.Y * start.X)) / length;
+        }
+    }
+}

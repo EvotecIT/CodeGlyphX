@@ -5,17 +5,21 @@ namespace CodeGlyphX.Pdf417.Ec;
 
 internal sealed partial class ErrorCorrection {
     private readonly ModulusGF _field;
+    private readonly int _maximumParity;
 
-    public ErrorCorrection() {
-        _field = ModulusGF.Pdf417;
+    public ErrorCorrection() : this(ModulusGF.Pdf417, 512) { }
+
+    internal ErrorCorrection(ModulusGF field, int maximumParity) {
+        _field = field;
+        _maximumParity = maximumParity;
     }
 
-    /// <summary>Corrects GF(929) codewords, using known unreadable positions when available.
+    /// <summary>Corrects prime-field codewords, using known unreadable positions when available.
     /// Every successful correction has zero syndromes; errors cost two parity words and erasures one.</summary>
     public bool Decode(int[] received, int numECCodewords, int[]? erasures = null, CancellationToken cancellationToken = default) {
-        if (DecodeBudget.ShouldAbort(cancellationToken) || received.Length == 0 || received.Length > 928 ||
-            numECCodewords < 1 || numECCodewords > 512 || numECCodewords >= received.Length) return false;
-        foreach (var word in received) if ((uint)word >= 929) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken) || received.Length == 0 || received.Length >= _field.Size ||
+            numECCodewords < 1 || numECCodewords > _maximumParity || numECCodewords >= received.Length) return false;
+        foreach (var word in received) if ((uint)word >= _field.Size) return false;
         var erasureCount = erasures?.Length ?? 0;
         if (erasureCount > numECCodewords) return false;
         if (erasureCount > 0) {

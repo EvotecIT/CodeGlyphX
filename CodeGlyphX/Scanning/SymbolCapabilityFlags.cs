@@ -30,5 +30,7 @@ public enum SymbolCapabilityFlags {
     /// <summary>Structured-append decoding is implemented.</summary>
     StructuredAppendDecode = 1 << 9,
     /// <summary>The image scanner reports a detected quadrilateral.</summary>
-    ReportsGeometry = 1 << 10
+    ReportsGeometry = 1 << 10,
+    /// <summary>Decoding of logical colour cells is implemented.</summary>
+    DecodeColorCells = 1 << 11
 }

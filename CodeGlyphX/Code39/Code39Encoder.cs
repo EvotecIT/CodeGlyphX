@@ -44,7 +44,7 @@ public static class Code39Encoder {
         return new Barcode1D(segments, SymbolFormat.Code39);
     }
 
-    private static string Prepare(string content) {
+    internal static string Prepare(string content) {
         var sb = new StringBuilder();
         foreach (var ch in content) {
             if (ch > '\u007F') throw new InvalidOperationException("Only ASCII strings can be encoded");
@@ -54,7 +54,7 @@ public static class Code39Encoder {
         return sb.ToString();
     }
 
-    private static char GetChecksum(string content) {
+    internal static char GetChecksum(string content) {
         var sum = 0;
         foreach (var ch in content) {
             if (!Code39Tables.EncodingTable.TryGetValue(ch, out var entry) || entry.value < 0) {

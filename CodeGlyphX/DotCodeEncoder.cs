@@ -51,7 +51,7 @@ public static class DotCodeEncoder {
         var initialEccLength = 3 + dataLength / 2;
         var minimumDots = 9 * (dataLength + initialEccLength) + 2;
         var minimumArea = minimumDots * 2;
-        ResolveDimensions(minimumArea, options.Width, out var width, out var height);
+        ResolveDimensions(minimumArea, options.Width, options.Height, out var width, out var height);
         if (width > 200 || height > 200) throw new ArgumentException("The DotCode payload requires dimensions larger than 200 by 200 modules.", nameof(data));
 
         var dotCapacity = width * height / 2;
@@ -134,7 +134,15 @@ public static class DotCodeEncoder {
         return result;
     }
 
-    private static void ResolveDimensions(int minimumArea, int? requestedWidth, out int width, out int height) {
+    private static void ResolveDimensions(int minimumArea, int? requestedWidth, int? requestedHeight, out int width, out int height) {
+        if (requestedHeight.HasValue) {
+            height = requestedHeight.Value;
+            width = requestedWidth ?? Math.Max(5, (minimumArea + height - 1) / height);
+            if (!requestedWidth.HasValue && ((width + height) & 1) == 0) width++;
+            if (((width + height) & 1) == 0) throw new ArgumentException("DotCode width and height must sum to an odd number.");
+            if (width * height < minimumArea) throw new ArgumentException("The selected DotCode dimensions cannot hold the payload and checks.");
+            return;
+        }
         if (requestedWidth.HasValue) {
             width = requestedWidth.Value;
             height = Math.Max(5, (minimumArea + width - 1) / width);
@@ -159,6 +167,7 @@ public static class DotCodeEncoder {
 
     private static void Validate(DotCodeEncodingOptions options, int? eci) {
         if (options.Width is < 5 or > 200) throw new ArgumentOutOfRangeException(nameof(options), options.Width, "DotCode width must be between 5 and 200 modules.");
+        if (options.Height is < 5 or > 200) throw new ArgumentOutOfRangeException(nameof(options), options.Height, "DotCode height must be between 5 and 200 modules.");
         if (options.Mask is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(options), options.Mask, "DotCode mask must be between 0 and 7.");
         if (eci is < 0 or > 811799) throw new ArgumentOutOfRangeException(nameof(options), eci, "DotCode ECI assignments must be between 0 and 811799.");
         if (options.ReaderInitialization && options.IsGs1) throw new ArgumentException("Reader initialization cannot be combined with GS1 DotCode.", nameof(options));

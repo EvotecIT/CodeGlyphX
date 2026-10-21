@@ -111,7 +111,7 @@ public sealed partial class PlaygroundLivePreviewTests {
             await RenderRootComponentAsync(_root, ParameterView.Empty);
         });
         public Task Remove() => Dispatcher.InvokeAsync(() => RemoveRootComponent(_root));
-        public Task Change(string name, Func<Element, bool> match, string value, Action? assertPending = null) => Dispatcher.InvokeAsync(() => {
+        public Task Change(string name, Func<Element, bool> match, object value, Action? assertPending = null) => Dispatcher.InvokeAsync(() => {
             var element = Elements().First(match);
             var dispatch = DispatchEventAsync(element.Events[name], new EventFieldInfo { ComponentId = element.ComponentId, FieldValue = value }, new ChangeEventArgs { Value = value });
             assertPending?.Invoke();

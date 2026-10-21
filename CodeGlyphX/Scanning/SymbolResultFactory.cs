@@ -5,6 +5,8 @@ namespace CodeGlyphX;
 
 /// <summary>Projects specialist decoder results once into the stable common result contract.</summary>
 internal static class SymbolResultFactory {
+    internal static DetectedSymbol From(UltracodeDecoded value) =>
+        new(SymbolFormat.Ultracode, value.Text, value.Bytes, new UltracodeSymbolMetadata(value));
     internal static DetectedSymbol From(D3Aqr.D3AqrDecoded value) =>
         new(SymbolFormat.D3Aqr, value.Text, value.Host.Bytes, new D3AqrSymbolMetadata(value),
             value.Host.Fnc1Mode == QrFnc1Mode.FirstPosition ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);

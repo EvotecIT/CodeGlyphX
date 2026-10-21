@@ -13,15 +13,33 @@ public sealed class DotCodeTests {
         "10000010000010100010001", "00010000010100010101010", "10101000001000101010001", "01000001010101010000010"
     };
 
-    [Fact]
-    public void Gs1Mask0_MatchesAimAndIndependentZintMatrix() {
-        var symbol = DotCodeEncoder.EncodeGs1("(17)070620(10)ABC123456", new DotCodeEncodingOptions { Width = 23, Mask = 0 });
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Gs1Mask0_MatchesAimAndIndependentZintMatrix(bool fixedHeight) {
+        var symbol = DotCodeEncoder.EncodeGs1("(17)070620(10)ABC123456", new DotCodeEncodingOptions { Width = 23, Height = fixedHeight ? 16 : null, Mask = 0 });
 
         Assert.Equal(23, symbol.Modules.Width);
         Assert.Equal(16, symbol.Modules.Height);
         Assert.Equal(AimFigure5Mask0, ToRows(symbol.Modules));
         Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
         Assert.Equal("1707062010ABC123456", decoded.Text.Replace(Gs1.GroupSeparator.ToString(), string.Empty));
+    }
+
+    [Fact]
+    public void FixedHeightAndPaddedDimensions_RetainThePayloadAndRejectImpossibleGrids() {
+        foreach (var options in new[] { new DotCodeEncodingOptions { Height = 20 }, new DotCodeEncodingOptions { Width = 31, Height = 20 } }) {
+            var symbol = DotCodeEncoder.EncodeText("DIMENSIONS", options);
+            Assert.Equal(20, symbol.Height);
+            if (options.Width.HasValue) Assert.Equal(31, symbol.Width);
+            Assert.Equal(1, (symbol.Width + symbol.Height) & 1);
+            Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+            Assert.Equal("DIMENSIONS", decoded.Text);
+        }
+        Assert.Throws<ArgumentException>(() => DotCodeEncoder.EncodeText("A", new DotCodeEncodingOptions { Width = 20, Height = 20 }));
+        Assert.Throws<ArgumentException>(() => DotCodeEncoder.EncodeText("DOES NOT FIT", new DotCodeEncodingOptions { Width = 5, Height = 6 }));
+        Assert.Throws<ArgumentOutOfRangeException>(() => DotCodeEncoder.EncodeText("A", new DotCodeEncodingOptions { Height = 4 }));
+        Assert.Throws<ArgumentOutOfRangeException>(() => DotCodeEncoder.EncodeText("A", new DotCodeEncodingOptions { Height = 201 }));
     }
 
     [Theory]

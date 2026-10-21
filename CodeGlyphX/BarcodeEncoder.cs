@@ -22,7 +22,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Encodes supported barcode symbologies into a <see cref="Barcode1D"/> model.
 /// </summary>
-public static class BarcodeEncoder {
+public static partial class BarcodeEncoder {
     /// <summary>
     /// Encodes a barcode value using the specified <see cref="BarcodeType"/>.
     /// </summary>

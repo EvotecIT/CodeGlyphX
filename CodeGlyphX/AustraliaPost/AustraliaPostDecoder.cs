@@ -29,8 +29,16 @@ public static class AustraliaPostDecoder {
     /// For Customer Barcode 3 (67 bars), numeric-only customer data can be ambiguous between N and C tables.
     /// Provide <paramref name="preferredCustomerTable"/> to disambiguate if needed.
     /// </remarks>
-    public static bool TryDecode(BitMatrix modules, AustraliaPostCustomerEncodingTable? preferredCustomerTable, out AustraliaPostDecoded decoded) {
+    public static bool TryDecode(BitMatrix modules, AustraliaPostCustomerEncodingTable? preferredCustomerTable, out AustraliaPostDecoded decoded) =>
+        TryDecode(modules, preferredCustomerTable, null, out decoded);
+
+    /// <summary>Decodes using the application's known table and optional customer-character count.</summary>
+    /// <remarks>A trailing C-table z has the same bars as filler. Retain alternatives or supply its known length.</remarks>
+    public static bool TryDecode(BitMatrix modules, AustraliaPostCustomerEncodingTable? preferredCustomerTable,
+        int? customerInfoLength, out AustraliaPostDecoded decoded) {
         decoded = null!;
+        if (preferredCustomerTable.HasValue && !Enum.IsDefined(typeof(AustraliaPostCustomerEncodingTable), preferredCustomerTable.Value)) return false;
+        if (customerInfoLength.HasValue && (customerInfoLength.Value < 0 || customerInfoLength.Value > 15)) return false;
         if (modules is null) return false;
         if (modules.Width <= 0 || modules.Height != AustraliaPostTables.BarcodeHeight) return false;
 
@@ -44,43 +52,44 @@ public static class AustraliaPostDecoder {
         if (!TryDecodeFcc(dataBars, format, out var fcc)) return false;
 
         var dpidBars = dataBars.GetRange(4, 16);
-        if (!TryDecodeDigits(dpidBars, out var dpid)) return false;
+        if (!TryDecodeDigits(dpidBars, out var dpid) || (fcc == 0 && dpid != "00000000")) return false;
 
         var customerField = dataBars.GetRange(20, dataBars.Count - 20 - 12);
-        var customerInfo = string.Empty;
-        AustraliaPostCustomerEncodingTable? table = null;
-        var ambiguous = false;
-
+        var parity = new int[4];
+        Array.Copy(symbols, infoSymbols, parity, 0, 4);
         if (format == AustraliaPostFormat.Standard) {
-            if (!IsStandardCustomerField(customerField)) return false;
-        } else if (!TryDecodeCustomer(customerField, format, preferredCustomerTable, out customerInfo, out table, out ambiguous)) {
-            return false;
+            if (!IsStandardCustomerField(customerField) || (customerInfoLength.HasValue && customerInfoLength != 0)) return false;
+            decoded = new AustraliaPostDecoded(format, fcc, dpid, string.Empty, null, false, parity);
+            return true;
         }
-
-        decoded = new AustraliaPostDecoded(format, fcc, dpid, customerInfo, table, ambiguous);
-        return true;
+        var choices = CustomerChoices(customerField);
+        if (choices.Count == 0) return false;
+        var defaultTable = format == AustraliaPostFormat.Customer2 && customerField[customerField.Count - 1] == 3
+            ? AustraliaPostCustomerEncodingTable.C : AustraliaPostCustomerEncodingTable.N;
+        AustraliaPostCustomerInfo? chosen = null;
+        foreach (var choice in choices) {
+            if (chosen is null || (choice.EncodingTable == defaultTable && chosen.EncodingTable != defaultTable)
+                || (choice.EncodingTable == chosen.EncodingTable && choice.Text.Length > chosen.Text.Length)) chosen = choice;
+        }
+        var result = new AustraliaPostDecoded(format, fcc, dpid, chosen!.Text, chosen.EncodingTable, choices.Count > 1, parity, choices);
+        return result.TrySelectCustomerInfo(preferredCustomerTable, customerInfoLength, out decoded);
     }
 
-    private static bool TryDecodeCustomer(
-        List<int> customerBars,
-        AustraliaPostFormat format,
-        AustraliaPostCustomerEncodingTable? preferredTable,
-        out string customerInfo,
-        out AustraliaPostCustomerEncodingTable? table,
-        out bool ambiguous) {
-        customerInfo = string.Empty;
-        table = null;
-        ambiguous = false;
-
-        if (format == AustraliaPostFormat.Customer2) {
-            return TryDecodeCustomer2(customerBars, out customerInfo, out table);
+    private static List<AustraliaPostCustomerInfo> CustomerChoices(List<int> field) {
+        var result = new List<AustraliaPostCustomerInfo>();
+        foreach (var table in new[] { AustraliaPostCustomerEncodingTable.N, AustraliaPostCustomerEncodingTable.C }) {
+            var width = table == AustraliaPostCustomerEncodingTable.N ? 2 : 3;
+            for (var count = 0; count <= field.Count / width; count++) {
+                var end = count * width; var filler = true;
+                for (var i = end; i < field.Count; i++) if (field[i] != 3) { filler = false; break; }
+                if (!filler) continue;
+                var prefix = field.GetRange(0, end);
+                var valid = table == AustraliaPostCustomerEncodingTable.N
+                    ? TryDecodeDigits(prefix, out var text) : TryDecodeC(prefix, out text);
+                if (valid) result.Add(new AustraliaPostCustomerInfo(text, table));
+            }
         }
-
-        if (format == AustraliaPostFormat.Customer3) {
-            return TryDecodeCustomer3(customerBars, preferredTable, out customerInfo, out table, out ambiguous);
-        }
-
-        return false;
+        return result;
     }
 
     private static bool TryDecodeDigits(List<int> bars, out string digits) {
@@ -96,33 +105,9 @@ public static class AustraliaPostDecoder {
         return true;
     }
 
-    private static bool TryDecodeN(List<int> bars, bool dropTrailingFiller, out string digits) {
-        digits = string.Empty;
-        var count = bars.Count;
-        if (dropTrailingFiller) {
-            if (count == 0 || bars[count - 1] != 3) return false;
-            count -= 1;
-        }
-        if (count % 2 != 0) return false;
-
-        var output = new StringBuilder(count / 2);
-        for (var i = 0; i < count; i += 2) {
-            var digit = AustraliaPostTables.NDecodePairs[bars[i] * 4 + bars[i + 1]];
-            if (digit < 0) return false;
-            output.Append((char)('0' + digit));
-        }
-
-        digits = output.ToString();
-        return true;
-    }
-
-    private static bool TryDecodeC(List<int> bars, bool dropTrailingFiller, out string text) {
+    private static bool TryDecodeC(List<int> bars, out string text) {
         text = string.Empty;
         var count = bars.Count;
-        if (dropTrailingFiller) {
-            if (count == 0 || bars[count - 1] != 3) return false;
-            count -= 1;
-        }
         if (count % 3 != 0) return false;
 
         var output = new StringBuilder(count / 3);
@@ -211,7 +196,7 @@ public static class AustraliaPostDecoder {
         fcc = int.Parse(fccText, CultureInfo.InvariantCulture);
 
         return format switch {
-            AustraliaPostFormat.Standard => fcc == AustraliaPostTables.FccStandard,
+            AustraliaPostFormat.Standard => fcc == 0 || fcc == AustraliaPostTables.FccStandard,
             AustraliaPostFormat.Customer2 => fcc == AustraliaPostTables.FccCustomer2,
             AustraliaPostFormat.Customer3 => fcc == AustraliaPostTables.FccCustomer3,
             _ => false
@@ -220,64 +205,6 @@ public static class AustraliaPostDecoder {
 
     private static bool IsStandardCustomerField(List<int> customerField) {
         return customerField.Count == 1 && customerField[0] == 3;
-    }
-
-    private static bool TryDecodeCustomer2(List<int> customerBars, out string customerInfo, out AustraliaPostCustomerEncodingTable? table) {
-        customerInfo = string.Empty;
-        table = null;
-        if (customerBars.Count != 16) return false;
-        var last = customerBars[customerBars.Count - 1];
-        if (last == 3) {
-            if (!TryDecodeC(customerBars, dropTrailingFiller: true, out customerInfo)) return false;
-            table = AustraliaPostCustomerEncodingTable.C;
-            return true;
-        }
-
-        if (!TryDecodeN(customerBars, dropTrailingFiller: false, out customerInfo)) return false;
-        table = AustraliaPostCustomerEncodingTable.N;
-        return true;
-    }
-
-    private static bool TryDecodeCustomer3(
-        List<int> customerBars,
-        AustraliaPostCustomerEncodingTable? preferredTable,
-        out string customerInfo,
-        out AustraliaPostCustomerEncodingTable? table,
-        out bool ambiguous) {
-        customerInfo = string.Empty;
-        table = null;
-        ambiguous = false;
-        if (customerBars.Count != 31) return false;
-
-        if (preferredTable == AustraliaPostCustomerEncodingTable.C) {
-            if (!TryDecodeC(customerBars, dropTrailingFiller: true, out customerInfo)) return false;
-            table = AustraliaPostCustomerEncodingTable.C;
-            return true;
-        }
-
-        if (preferredTable == AustraliaPostCustomerEncodingTable.N) {
-            if (!TryDecodeN(customerBars, dropTrailingFiller: true, out customerInfo)) return false;
-            table = AustraliaPostCustomerEncodingTable.N;
-            return true;
-        }
-
-        var nOk = TryDecodeN(customerBars, dropTrailingFiller: true, out var nValue);
-        var cOk = TryDecodeC(customerBars, dropTrailingFiller: true, out var cValue);
-
-        if (nOk) {
-            customerInfo = nValue;
-            table = AustraliaPostCustomerEncodingTable.N;
-            ambiguous = cOk;
-            return true;
-        }
-
-        if (cOk) {
-            customerInfo = cValue;
-            table = AustraliaPostCustomerEncodingTable.C;
-            return true;
-        }
-
-        return false;
     }
 
     private static bool TryFindBarSpan(BitMatrix modules, out int firstBar, out int lastBar) {

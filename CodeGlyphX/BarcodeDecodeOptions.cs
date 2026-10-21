@@ -4,6 +4,10 @@ namespace CodeGlyphX;
 /// Options controlling how 1D barcode decoding behaves.
 /// </summary>
 public sealed partial class BarcodeDecodeOptions {
+    /// <summary>Gets or sets explicit Mod16 validation for Codabar, including its start and stop characters.</summary>
+    public OptionalChecksumPolicy CodabarChecksum { get; set; }
+    /// <summary>Gets or sets explicit Mod10 validation for ITF and discrete 2 of 5. A padded leading zero is retained as data.</summary>
+    public OptionalChecksumPolicy TwoOfFiveChecksum { get; set; }
     /// <summary>Gets or sets the convention for framed, checked BC412 symbols. Raw IBM modules use the specialist decoder.</summary>
     public Bc412.Bc412Variant Bc412Variant { get; set; } = Bc412.Bc412Variant.Semi;
     /// <summary>Interprets Code 39 shift pairs as Full ASCII (default). Set false for literal Code 39 application payloads such as HIBC.</summary>
@@ -16,6 +20,12 @@ public sealed partial class BarcodeDecodeOptions {
     /// Controls how MSI checksum digits are handled during decode.
     /// </summary>
     public MsiChecksumPolicy MsiChecksum { get; set; } = MsiChecksumPolicy.None;
+    /// <summary>Gets or sets an explicit MSI check algorithm. Null preserves the legacy Mod10/Mod10Mod10 interpretation.</summary>
+    /// <remarks>Set MsiChecksum to RequireValid or StripIfValid to apply this selection. Mod11 check value ten can make
+    /// the data length ambiguous; supply MsiExpectedDataLength when the application knows it.</remarks>
+    public MsiChecksumType? MsiChecksumAlgorithm { get; set; }
+    /// <summary>Gets or sets the known MSI data length before check digits. Requires an explicit check algorithm.</summary>
+    public int? MsiExpectedDataLength { get; set; }
     /// <summary>
     /// Controls how Code 11 checksum characters are handled during decode.
     /// </summary>
@@ -34,6 +44,16 @@ public sealed partial class BarcodeDecodeOptions {
     /// Tile grid size for multi-scan (0 = auto, 2..4 recommended).
     /// </summary>
     public int TileGrid { get; set; } = 0;
+}
+
+/// <summary>Explicit interpretation of a check that cannot be distinguished automatically from data.</summary>
+public enum OptionalChecksumPolicy {
+    /// <summary>Retain every data character without optional-check validation.</summary>
+    None,
+    /// <summary>Strip a valid check, retaining the input if validation fails.</summary>
+    StripIfValid,
+    /// <summary>Require and strip a valid check, otherwise fail decoding.</summary>
+    RequireValid
 }
 
 /// <summary>

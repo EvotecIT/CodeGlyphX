@@ -22,6 +22,8 @@ public static class MatrixBarcodeEncoder {
             SymbolFormat.MicroQrCode => MicroQrCodeEncoder.EncodeText(value),
             SymbolFormat.RmQrCode => RmQrCodeEncoder.EncodeText(value),
             SymbolFormat.Aztec => Aztec.AztecEncoder.EncodeSymbol(value),
+            SymbolFormat.AztecRune => AztecRune.EncodeText(value),
+            SymbolFormat.CodeOne => CodeOneEncoder.EncodeText(value),
             SymbolFormat.DataMatrix => DataMatrix.DataMatrixEncoder.EncodeSymbol(value),
             SymbolFormat.Pdf417 => Pdf417.Pdf417Encoder.EncodeSymbol(value),
             SymbolFormat.DotCode => DotCodeEncoder.EncodeText(value),

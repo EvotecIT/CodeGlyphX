@@ -21,6 +21,17 @@ public sealed class ScanOptions {
     /// Also useful for externally calibrated raw DAFT marks and orientation-ambiguous unchecked symbols.</remarks>
     public ImageSamplingGrid? SamplingGrid { get; set; }
 
+    /// <summary>Gets or sets an optional GS1 Composite carrier interpretation.</summary>
+    /// <remarks>Useful for identical EAN-13/UPC-A modules and DataBar Omnidirectional/Truncated height profiles.
+    /// Other requested formats retain their normal decoding behavior.</remarks>
+    public Gs1CompositeCarrier? CompositeCarrier { get; set; }
+
+    /// <summary>Gets or sets a known Australia Post customer-information table.</summary>
+    public AustraliaPost.AustraliaPostCustomerEncodingTable? AustraliaPostCustomerTable { get; set; }
+    /// <summary>Gets or sets the known number of Australia Post customer characters before filler bars (zero through fifteen).</summary>
+    /// <remarks>Use this for C-table trailing z characters, which share the filler's bar pattern.</remarks>
+    public int? AustraliaPostCustomerInfoLength { get; set; }
+
     /// <summary>
     /// Gets or sets the total wall-clock deadline in milliseconds for image decoding, conversion, and recognition.
     /// The default is 500 milliseconds, matching <see cref="Balanced(int)"/>. Zero explicitly disables

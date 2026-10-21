@@ -7,7 +7,7 @@ namespace CodeGlyphX.Internal;
 /// <summary>Locates and samples the matrix, stacked-row and bar-state families handled by the module codecs.</summary>
 internal static partial class SpecialistImageDecoder {
     internal static readonly SymbolFormat[] Formats = {
-        SymbolFormat.D3Aqr, SymbolFormat.RmQrCode, SymbolFormat.HanXin, SymbolFormat.DotCode,
+        SymbolFormat.D3Aqr, SymbolFormat.AztecRune, SymbolFormat.CodeOne, SymbolFormat.RmQrCode, SymbolFormat.HanXin, SymbolFormat.DotCode,
         SymbolFormat.Code16K, SymbolFormat.Code49, SymbolFormat.CodablockF, SymbolFormat.MicroPdf417,
         SymbolFormat.Gs1Composite, SymbolFormat.Mailmark4State, SymbolFormat.UspsIntelligentMail,
         SymbolFormat.RoyalMail4State, SymbolFormat.AustraliaPost, SymbolFormat.JapanPost, SymbolFormat.KixCode,
@@ -24,6 +24,9 @@ internal static partial class SpecialistImageDecoder {
         internal readonly List<ImageRegion>?[] Regions = new List<ImageRegion>?[8];
         internal ImageContext? Rectified;
         internal bool RectificationChecked;
+        internal bool ResourceLimitReached;
+        internal CompositeImageCandidate? CompositeFallback;
+        internal readonly List<SymbolGeometry> RetailCompositeAnchors = new();
         internal double Cos = 1, Sin, SourceCenterX, SourceCenterY, TargetCenterX, TargetCenterY;
         internal ImageContext(byte[] mask, int width, int height) { Mask = mask; Width = width; Height = height; }
     }
@@ -38,16 +41,25 @@ internal static partial class SpecialistImageDecoder {
 
     internal static bool TryDecode(ImageContext context, SymbolFormat format,
         ImageSamplingGrid? calibration, CancellationToken token, out DetectedSymbol symbol,
-        out SymbolGeometry geometry, out bool inverted, out bool mirrored) {
-        if (TryDecodeAligned(context, format, calibration, token, out symbol, out geometry, out inverted, out mirrored)) return true;
-        if (calibration is not null || DecodeBudget.ShouldAbort(token)) return false;
+        out SymbolGeometry geometry, out bool inverted, out bool mirrored, Gs1CompositeCarrier? compositeCarrier = null) {
+        if (TryDecodeAligned(context, format, calibration, token, out symbol, out geometry, out inverted, out mirrored, compositeCarrier)) return true;
+        if (calibration is not null) return false;
+        if (DecodeBudget.ShouldAbort(token)) return UseCompositeFallback(context, format, out symbol, out geometry, out inverted, out mirrored);
         if (!context.RectificationChecked) {
             context.Rectified = Rectify(context, token);
-            if (DecodeBudget.ShouldAbort(token)) return false;
+            if (DecodeBudget.ShouldAbort(token)) return UseCompositeFallback(context, format, out symbol, out geometry, out inverted, out mirrored);
             context.RectificationChecked = true;
         }
         var rectified = context.Rectified;
-        if (rectified is null || !TryDecodeAligned(rectified, format, null, token, out symbol, out geometry, out inverted, out mirrored)) return false;
+        if (rectified is null || !TryDecodeAligned(rectified, format, null, token, out symbol, out geometry, out inverted, out mirrored, compositeCarrier)) {
+            if (format == SymbolFormat.Gs1Composite && context.CompositeFallback is null && rectified?.CompositeFallback is { } partial)
+                context.CompositeFallback = MapCompositeCandidate(partial, point => MapRectified(rectified, point));
+            if (format == SymbolFormat.Gs1Composite && !DecodeBudget.ShouldAbort(token)
+                && TryCompositePerspective(context, token, compositeCarrier, out symbol, out geometry, out inverted, out mirrored)) return true;
+            return UseCompositeFallback(context, format, out symbol, out geometry, out inverted, out mirrored);
+        }
+        if (symbol.Metadata is Gs1CompositeSymbolMetadata metadata)
+            symbol = symbol.WithMetadata(metadata.MapImageGeometry(point => MapRectified(rectified, point)));
         geometry = new SymbolGeometry(MapRectified(rectified, geometry.TopLeft), MapRectified(rectified, geometry.TopRight),
             MapRectified(rectified, geometry.BottomRight), MapRectified(rectified, geometry.BottomLeft));
         return true;
@@ -55,7 +67,7 @@ internal static partial class SpecialistImageDecoder {
 
     private static bool TryDecodeAligned(ImageContext context, SymbolFormat format,
         ImageSamplingGrid? calibration, CancellationToken token, out DetectedSymbol symbol,
-        out SymbolGeometry geometry, out bool inverted, out bool mirrored) {
+        out SymbolGeometry geometry, out bool inverted, out bool mirrored, Gs1CompositeCarrier? compositeCarrier) {
         symbol = null!; geometry = null!; inverted = mirrored = false;
         var mask = context.Mask; var width = context.Width; var height = context.Height;
         for (var polarity = 0; polarity < 2; polarity++) {
@@ -65,7 +77,12 @@ internal static partial class SpecialistImageDecoder {
                 view = new MaskView(mask, width, height, (4 - calibration.RotationDegrees / 90) & 3, polarity != 0);
                 var full = new ImageRegion(0, 0, view.Width, view.Height);
                 if (TrySample(view, full, calibration.Columns, calibration.Rows, token, out var grid)
-                    && TryDecodeCalibratedGrid(grid, format, token, out symbol)) {
+                    && TryDecodeCalibratedGrid(grid, format, token, out symbol, compositeCarrier)) {
+                    if (symbol.Metadata is Gs1CompositeSymbolMetadata metadata) {
+                        var calibratedView = view;
+                        symbol = symbol.WithMetadata(metadata.ProjectModules(point => calibratedView.Map(
+                            point.X * full.Width / calibration.Columns, point.Y * full.Height / calibration.Rows)));
+                    }
                     geometry = Geometry(view, full, 0, false); inverted = polarity != 0; return true;
                 }
                 continue;
@@ -82,8 +99,26 @@ internal static partial class SpecialistImageDecoder {
                 context.Regions[cacheIndex] = regions;
                 foreach (var region in regions) {
                     if (DecodeBudget.ShouldAbort(token)) return false;
-                    if (TryRegion(view, region, format, token, out var sampledRegion, out symbol, out var turn, out mirrored)) {
-                        geometry = Geometry(view, sampledRegion, turn, mirrored); inverted = polarity != 0; return true;
+                    if (TryRegion(view, region, format, token, out var sampledRegion, out symbol, out var turn, out mirrored, compositeCarrier)) {
+                        geometry = symbol.Metadata is Gs1CompositeSymbolMetadata { IsStandalone: true, ComponentGeometry: { } componentGeometry }
+                            ? componentGeometry : Geometry(view, sampledRegion, turn, mirrored);
+                        inverted = polarity != 0;
+                        if (symbol.Metadata is Gs1CompositeSymbolMetadata { IsStandalone: true }) {
+                            if (TryRetailCompositeFromComponent(context, symbol, inverted, compositeCarrier, token,
+                                out var linked, out var linkedGeometry)) {
+                                symbol = linked; geometry = linkedGeometry; return true;
+                            }
+                            // Keep a readable component while all complete-label paths are searched.
+                            // A small component region must not preempt a carrier elsewhere in the frame.
+                            var whole = Geometry(view, regions[0], 0, false).Bounds;
+                            var part = geometry.Bounds;
+                            if (Math.Abs(part.X - whole.X) > 1 || Math.Abs(part.Y - whole.Y) > 1
+                                || Math.Abs(part.Width - whole.Width) > 1 || Math.Abs(part.Height - whole.Height) > 1) {
+                                context.CompositeFallback ??= new CompositeImageCandidate(symbol, geometry, inverted, mirrored);
+                                continue;
+                            }
+                        }
+                        return true;
                     }
                 }
             }
@@ -92,7 +127,8 @@ internal static partial class SpecialistImageDecoder {
     }
 
     private static bool TryRegion(MaskView view, ImageRegion region, SymbolFormat format,
-        CancellationToken token, out ImageRegion sampledRegion, out DetectedSymbol symbol, out int rotation, out bool mirrored) {
+        CancellationToken token, out ImageRegion sampledRegion, out DetectedSymbol symbol, out int rotation, out bool mirrored,
+        Gs1CompositeCarrier? compositeCarrier) {
         sampledRegion = region; symbol = null!; rotation = 0; mirrored = false;
         if (IsBarState(format)) return TryBarStates(view, region, format, token, out symbol, out rotation, out mirrored);
         if (format == SymbolFormat.FacingIdentificationMark) {
@@ -101,26 +137,32 @@ internal static partial class SpecialistImageDecoder {
         }
         if (format == SymbolFormat.Code16K || format == SymbolFormat.Code49 || format == SymbolFormat.CodablockF
             || format == SymbolFormat.MicroPdf417 || format == SymbolFormat.Gs1Composite || format == SymbolFormat.PosiCode)
-            return TryStacked(view, region, format, token, out symbol, out rotation, out mirrored);
+            return TryStacked(view, region, format, token, out symbol, out rotation, out mirrored, compositeCarrier);
         return TryMatrix(view, region, format, token, out sampledRegion, out symbol, out rotation, out mirrored);
     }
 
     private static bool TryOrientations(BitMatrix modules, SymbolFormat format, CancellationToken token,
-        out DetectedSymbol symbol, out int rotation, out bool mirrored) {
+        out DetectedSymbol symbol, out int rotation, out bool mirrored, Gs1CompositeCarrier? compositeCarrier = null) {
         symbol = null!; rotation = 0; mirrored = false;
+        (DetectedSymbol Symbol, int Rotation, bool Mirrored)? partial = null;
         for (var mirror = 0; mirror < 2; mirror++) {
             var grid = mirror == 0 ? modules : BitMatrixTransforms.MirrorHorizontal(modules);
             for (var turn = 0; turn < 4; turn++) {
-                if (DecodeBudget.ShouldAbort(token)) return false;
+                if (DecodeBudget.ShouldAbort(token)) return UseCompositeGridFallback(partial, out symbol, out rotation, out mirrored);
                 var success = format == SymbolFormat.D3Aqr
-                    ? TryDecodeD3Canonical(grid, token, out symbol) : SymbolDecoder.TryDecode(grid, out symbol, format);
+                    ? TryDecodeD3Canonical(grid, token, out symbol)
+                    : format == SymbolFormat.AztecRune ? TryDecodeRuneCanonical(grid, out symbol)
+                    : format == SymbolFormat.CodeOne ? TryDecodeCodeOneCanonical(grid, token, out symbol)
+                    : format == SymbolFormat.Gs1Composite ? TryDecodeCompositeImageGrid(grid, compositeCarrier, token, out symbol)
+                    : SymbolDecoder.TryDecode(grid, out symbol, format);
                 if (success) {
-                    rotation = turn; mirrored = mirror != 0; return true;
+                    if (symbol.Metadata is Gs1CompositeSymbolMetadata { IsStandalone: true }) partial ??= (symbol, turn, mirror != 0);
+                    else { rotation = turn; mirrored = mirror != 0; return true; }
                 }
                 grid = BitMatrixTransforms.Rotate90(grid);
             }
         }
-        return false;
+        return UseCompositeGridFallback(partial, out symbol, out rotation, out mirrored);
     }
 
     private static bool TryDecodeD3Canonical(BitMatrix modules, CancellationToken token, out DetectedSymbol symbol) {
@@ -130,8 +172,23 @@ internal static partial class SpecialistImageDecoder {
         return true;
     }
 
+    private static bool TryDecodeRuneCanonical(BitMatrix modules, out DetectedSymbol symbol) {
+        symbol = null!;
+        if (!Aztec.AztecRuneCodec.TryDecode(new BitMatrixView(modules), out var value)) return false;
+        symbol = AztecRune.Result(value);
+        return true;
+    }
+
+    private static bool TryDecodeCodeOneCanonical(BitMatrix modules, CancellationToken token, out DetectedSymbol symbol) {
+        symbol = null!;
+        if (!CodeOneDecoder.TryDecodeCanonical(new BitMatrixView(modules), out var value, token)) return false;
+        symbol = CodeOneDecoder.Result(value);
+        return true;
+    }
+
     private static bool TryDecodeCalibratedGrid(BitMatrix modules, SymbolFormat format, CancellationToken token,
-        out DetectedSymbol symbol) {
+        out DetectedSymbol symbol, Gs1CompositeCarrier? compositeCarrier) {
+        if (format == SymbolFormat.Gs1Composite) return SymbolDecoder.TryDecodeComposite(modules, out symbol, compositeCarrier);
         if (format != SymbolFormat.D3Aqr) return SymbolDecoder.TryDecode(modules, out symbol, format);
         symbol = null!;
         // Preserve the calibrated path's module-decoder orientation support while forwarding its attempt token.

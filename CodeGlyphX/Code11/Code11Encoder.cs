@@ -54,7 +54,7 @@ public static class Code11Encoder {
         }
     }
 
-    private static char CalcChecksum(string content, int maxWeight) {
+    internal static char CalcChecksum(string content, int maxWeight) {
         var sum = 0;
         var weight = 1;
         for (var i = content.Length - 1; i >= 0; i--) {

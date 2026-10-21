@@ -60,8 +60,20 @@ public static class DataBar14Encoder {
         return BuildStackedMatrix(widths);
     }
 
-    private static int[] BuildTotalWidths(string content, out int checkDigit) {
+    internal static BitMatrix EncodeComposite(string content, Gs1CompositeCarrier carrier) {
+        var widths = BuildTotalWidths(content, out _, linked: true);
+        if (carrier == Gs1CompositeCarrier.DataBarStacked) return BuildStackedMatrix(widths);
+        if (carrier == Gs1CompositeCarrier.DataBarStackedOmnidirectional) return BuildStackedOmnidirectionalMatrix(widths);
+        var matrix = new BitMatrix(96, 1);
+        var x = 0;
+        for (var run = 0; run < widths.Length; run++)
+            for (var module = 0; module < widths[run]; module++) matrix[x++, 0] = (run & 1) != 0;
+        return matrix;
+    }
+
+    private static int[] BuildTotalWidths(string content, out int checkDigit, bool linked = false) {
         var accum = ParseContent(content);
+        if (linked) accum += 10000000000000L;
         var dataCharacters = SplitDataCharacters(accum);
         var dataGroup = BuildDataGroups(dataCharacters);
         var vOdd = new int[4];
