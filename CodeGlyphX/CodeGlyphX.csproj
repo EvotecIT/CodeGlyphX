@@ -47,10 +47,10 @@
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.6.3" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.12" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.13" />
   </ItemGroup>
   <ItemGroup>
     <ApiCompatSuppressionFile Include="CompatibilitySuppressions.xml" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.402" PrivateAssets="all" />
   </ItemGroup>
 </Project>
