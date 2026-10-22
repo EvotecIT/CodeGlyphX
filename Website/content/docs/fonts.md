@@ -11,10 +11,12 @@ These APIs follow the current source. See [source and package versions](/docs/in
 
 | Choice | Included support | License and use |
 | --- | --- | --- |
-| `BarcodeFont.OcrA` | Bundled GG Ocra regular face, printable ASCII with letter case | CC0 1.0; the font and full notice ship with the package. |
-| `BarcodeFont.OcrB` | Bundled CodeGlyphX Scan B regular face, printable ASCII with letter case | SIL OFL 1.1; a renamed derivative of Raisty's OCR-B, with full license and provenance. |
-| `BarcodeFont.FromBytes(...)` | Supplied TTF, OpenType CFF/CFF2, and collection faces | Choose a font licensed for your intended output and redistribution. |
-| `CompactBarcodeFont.Instance` | The existing compact 5 by 7 uppercase lettering | Limited repertoire; this is not an OCR-A or OCR-B face. |
+| OCR-A | Bundled GG Ocra regular face, printable ASCII with letter case | CC0 1.0; the font and full notice ship with the package. |
+| OCR-B | Bundled CodeGlyphX Scan B regular face, printable ASCII with letter case | SIL OFL 1.1; a renamed derivative of Raisty's OCR-B, with full license and provenance. |
+| Supplied face | TTF, OpenType CFF/CFF2, and collection faces | Choose a font licensed for your intended output and redistribution. |
+| Compact font | The existing compact 5 by 7 uppercase lettering | Limited repertoire; this is not an OCR-A or OCR-B face. |
+
+Select the bundled faces with `BarcodeFont.OcrA` or `BarcodeFont.OcrB`, load a supplied face with `BarcodeFont.FromBytes`, or select compact lettering with `CompactBarcodeFont.Instance`.
 
 The bundled faces work across all supported target frameworks, trimming and NativeAOT. They are text fonts; selecting one does not provide OCR recognition or certify a printed label. Full notices are included in the package and linked from the browser print studio. See [third-party notices](https://github.com/EvotecIT/CodeGlyphX/blob/master/THIRD-PARTY-NOTICES.md).
 
