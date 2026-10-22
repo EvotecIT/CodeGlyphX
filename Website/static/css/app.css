@@ -435,6 +435,30 @@ main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; 
 .cgx-section__head p { margin-top: 12px; color: var(--ink-muted); font-size: 1.0625rem; }
 .section-description { max-width: var(--cgx-measure); margin: -8px 0 20px; color: var(--ink-muted); }
 
+/* Home page: the full-coverage link, the decode links and the measured print labels. Labels sit on white, like paper. */
+.cgx-specimens__all { margin-top: 18px; }
+.cgx-decode__links, .cgx-print__links { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.cgx-print { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 56px); align-items: center; border-top: 1px solid var(--border); }
+.cgx-print h2 { font-size: clamp(1.75rem, 1rem + 2.2vw, 2.75rem); font-weight: 800; line-height: 1.08; }
+.cgx-print__copy > p { margin-top: 14px; color: var(--text-muted); }
+.cgx-print__copy pre.code-block { margin-top: 20px; }
+.cgx-print__limits, .cgx-print__note { font-size: .9375rem; }
+.cgx-print__note a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.cgx-print__labels { display: grid; gap: 16px; }
+.cgx-print__label { margin: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); }
+.cgx-print__sheet { display: grid; place-items: center; padding: 22px 24px; background: #fff; }
+.cgx-print__sheet img { display: block; max-width: 100%; height: auto; }
+.cgx-print__label figcaption { display: grid; gap: 4px; padding: 12px 14px 14px; font-size: .875rem; }
+.cgx-print__label figcaption strong { color: var(--text); font-size: .9375rem; }
+.cgx-print__label figcaption span { color: var(--text-muted); }
+.cgx-print__label figcaption code { padding: 0; background: none; font-family: var(--cgx-mono); font-size: .8125rem; }
+.cgx-print__files { display: flex; gap: 14px; margin-top: 4px; }
+.cgx-print__files a { color: var(--accent-ink); font-weight: 650; text-decoration: none; }
+.cgx-print__files a:hover { text-decoration: underline; }
+@media (max-width: 1100px) {
+    .cgx-print { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ---------- Code ---------- */
 /* Every code sample is a pre.code-block: a caption bar with the language (or a data-label file name),
    Prism highlighting, and a copy button in the bar. The code scrolls, the bar stays. */

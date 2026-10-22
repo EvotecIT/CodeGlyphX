@@ -3,7 +3,8 @@
   <div class="cgx-decode__copy">
     <h2 id="cgx-decode-title">{{ d.title }}</h2>
     <p>{{ d.body }}</p>
-    <p><a class="cgx-link" href="/docs/decoding/">Read the decoding guide and its limits</a></p>
+    <p>{{ d.scope }}</p>
+    <p class="cgx-decode__links"><a class="cgx-link" href="/docs/decoding/">Read the decoding guide and its limits</a><a class="cgx-link" href="{{ data.landing.coverage.url }}">Compare formats</a></p>
   </div>
   <pre class="code-block"><code class="language-csharp">{{ d.code | html.escape }}</code></pre>
 </section>

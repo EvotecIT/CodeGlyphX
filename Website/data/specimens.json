@@ -1,6 +1,6 @@
 {
   "generatedBy": "Website/tools/SiteSpecimens",
-  "count": 37,
+  "count": 40,
   "specimens": [
     {
       "name": "QR Code",
@@ -55,6 +55,24 @@
       "family": "2D",
       "value": "CodeGlyphX",
       "file": "/specimens/hanxin.svg"
+    },
+    {
+      "name": "Aztec Rune",
+      "family": "2D",
+      "value": "42",
+      "file": "/specimens/aztecrune.svg"
+    },
+    {
+      "name": "Code One",
+      "family": "2D",
+      "value": "CODE ONE",
+      "file": "/specimens/codeone.svg"
+    },
+    {
+      "name": "Ultracode",
+      "family": "2D",
+      "value": "CODEGLYPHX",
+      "file": "/specimens/ultracode.svg"
     },
     {
       "name": "Code 128",
@@ -249,6 +267,34 @@
       "name": "SEPA payment",
       "code": "QrPayloads.Girocode(\n    iban: \u0022DE89370400440532013000\u0022,\n    bic: \u0022COBADEFFXXX\u0022,\n    name: \u0022Evotec Services\u0022,\n    amount: 99.99m)",
       "file": "/specimens/payload-girocode.svg"
+    }
+  ],
+  "print": [
+    {
+      "id": "ean13",
+      "name": "EAN-13",
+      "font": "CodeGlyphX Scan B (OCR-B)",
+      "value": "5901234123457",
+      "decoded": "5901234123457",
+      "dpi": 300,
+      "widthMm": 38.3,
+      "heightMm": 27.4,
+      "svg": "/specimens/print-ean13.svg",
+      "png": "/specimens/print-ean13.png",
+      "pdf": "/specimens/print-ean13.pdf"
+    },
+    {
+      "id": "code39",
+      "name": "Code 39",
+      "font": "GG Ocra (OCR-A)",
+      "value": "CGX-2026",
+      "decoded": "CGX-2026",
+      "dpi": 300,
+      "widthMm": 50.5,
+      "heightMm": 10.1,
+      "svg": "/specimens/print-code39.svg",
+      "png": "/specimens/print-code39.png",
+      "pdf": "/specimens/print-code39.pdf"
     }
   ],
   "decoded": [

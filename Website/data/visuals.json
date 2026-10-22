@@ -836,14 +836,14 @@
             },
             {
               "format": "PDF",
-              "bytes": 5756,
+              "bytes": 5726,
               "kb": "5.6 KB",
               "mime": "application/pdf"
             },
             {
               "format": "EPS",
-              "bytes": 7104,
-              "kb": "6.9 KB",
+              "bytes": 6760,
+              "kb": "6.6 KB",
               "mime": "application/postscript"
             },
             {
@@ -854,7 +854,7 @@
             },
             {
               "format": "ASCII",
-              "bytes": 1738,
+              "bytes": 1710,
               "kb": "1.7 KB",
               "mime": "text/plain"
             }
@@ -1733,7 +1733,7 @@
       }
     ],
     "notFound": {
-      "count": 34,
+      "count": 35,
       "index": "/visuals/notfound/index.json"
     }
   }
