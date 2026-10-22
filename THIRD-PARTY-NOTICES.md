@@ -29,9 +29,48 @@ The PosiCode character definitions, Mailmark field and layout rules, provisional
 - Source: <https://github.com/bwipp/postscriptbarcode>
 - License: MIT; full text in [the retained license](Licenses/BWIPP-LICENSE.txt).
 
+## Managed font implementation
+
+CodeGlyphX contains a separate source copy of the managed font reader, metrics, outlines and supported text shaping from OfficeIMO.Core at commit `cc808496403a2c46174ba0d0702907cb56525b34`. The copy uses internal CodeGlyphX types and excludes installed-font discovery and unrelated document features. CodeGlyphX has no runtime dependency on OfficeIMO.
+
+- Copyright (c) 2022 Evotec
+- Source: <https://github.com/EvotecIT/OfficeIMO/tree/cc808496403a2c46174ba0d0702907cb56525b34/OfficeIMO.Core>
+- License: MIT; full text in [the retained license](Licenses/OfficeIMO-MIT.txt).
+
+Supplied font programs have their own licenses. The font fixtures used by the tests are not included in the production package; their notices are retained beside the fixtures.
+
+The copied bidirectional mirroring table is generated from Unicode 17.0.0 `BidiMirroring.txt`, copyright (c) 1991-2026 Unicode, Inc. The [Unicode License V3](Licenses/Unicode-LICENSE.txt) is retained in the package.
+
+## Bundled OCR text fonts
+
+GG Ocra is included unchanged from FontLab's GetGo Fonts, commit
+`c3bb7eac16e0b855355d4e436479ec49fd1d25a2`. Its font metadata credits Retorillo,
+John Sauter and force4u. The full [CC0 1.0 dedication](Licenses/GG-Ocra-CC0.txt)
+is retained. Source: <https://github.com/fontlabcom/getgo-fonts>.
+
+CodeGlyphX Scan B is derived from OCR-B, copyright (c) 2019 Raisty, distributed
+under the [SIL Open Font License 1.1](Licenses/Raisty-OCR-B-OFL.txt), with Reserved
+Font Name OCR-B. The source is preserved in the public fork
+<https://github.com/jaycee723/ocr-b>, commit `fedeba81519770109925b5bec70e940be5948d8f`.
+Primary font names are changed to CodeGlyphX Scan B; outlines, metrics and layout
+tables are unchanged. The original copyright and license metadata are retained,
+with the full copyright/OFL text also included in the font's license metadata so
+embedded copies retain it. The browser print studio links to the complete notices.
+Neither the upstream authors nor their names endorse this derivative.
+
+The package contains the font files under `Fonts/`, their license texts under
+`Licenses/`, and `Fonts/provenance.json` with source URLs and SHA-256 hashes.
+`Build/Prepare-OcrFontAssets.py` optionally reproduces the assets from hash-checked
+inputs, including the matching browser notice files. Python and fontTools are not
+required by normal builds or deployed applications.
+
 ## Zint barcode library backend
 
-The rMQR, GS1 DataBar, MaxiCode, DotCode, Han Xin, GS1 Composite, and additional barcode implementations and conformance tests were developed with tables, algorithms, and interoperability vectors adapted from or checked against the Zint backend. CodeGlyphX has no runtime dependency on Zint.
+The rMQR, GS1 DataBar, MaxiCode, DotCode, Han Xin, GS1 Composite, Code One, and additional barcode implementations and conformance tests were developed with tables, algorithms, and interoperability vectors adapted from or checked against the Zint backend. CodeGlyphX has no runtime dependency on Zint.
+
+Code One recognition patterns and placement use the Zint 2.15.0 `backend/code1.c` reference. Its payload compaction and reversible extraction are managed CodeGlyphX implementations using the existing error-correction engine.
+
+Ultracode's fixed tile and data-column-count definitions use the Zint 2.15.0 `backend/ultra.c` tables. The generated data retains that file's copyright and BSD notice. `Build/Generate-UltracodeTables.py` checks the reference hash before regeneration; the managed encoder, colour sampler and decoder use CodeGlyphX's own image and prime-field arithmetic.
 
 Code 49's generated character and symbol-pattern tables reproduce the normative ANSI/AIM-BC6-2000 data published in Zint's `backend/code49.h` at commit `f5fd98106d02644e742a7a794771b3e9f277dbca`. The generated source retains that header's copyright and BSD license notice. `Build/Generate-Code49Tables.py` regenerates the checked-in data; neither Python nor Zint is required by normal builds or deployed applications.
 

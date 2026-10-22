@@ -11,7 +11,7 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, industrial and retail ba
 
 - QR, Micro QR, and rectangular Micro QR encoding and module decoding, including ECI, Kanji, FNC1/GS1, and structured append where the format supports it
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
-- Industrial and logistics formats including MaxiCode, DotCode, Han Xin Code, GS1 DataBar Limited/Stacked Omnidirectional, and GS1-128 Composite CC-A/CC-B/CC-C
+- Industrial and logistics formats including MaxiCode, DotCode, Han Xin Code, GS1 DataBar Limited/Stacked Omnidirectional, and GS1 Composite with GS1-128, EAN/UPC and DataBar carriers
 - Data Matrix ECC 200 and DMRE encoding/decoding, plus PDF417/MicroPDF417 and Aztec
 - Code 16K, Code 49, Codablock F, Channel Code, BC412, PosiCode, Mailmark, EAN supplements, Telepen Numeric, COOP/Datalogic 2 of 5, FIM, DAFT and Flattermarken
 - Checked ISBN/ISMN/ISSN/PZN and postal identifier profiles, HIBC carriers, USPS package data, North American coupons and complete Swiss QR symbols
@@ -79,7 +79,7 @@ qr.Save("hello.png", new QrRenderOptions { ModuleSize = 6, QuietZone = 4 });
 
 ## Specialist barcodes and application profiles
 
-The runtime catalog covers 62 physical formats, all with encoding, sampled-module decoding and image recognition. [Symbol capabilities](https://codeglyphx.com/docs/symbol-capabilities/) lists default recognition, explicit format selection, geometry and multiple-result support separately. Raw Flattermarken cells require a calibrated grid because blank cells carry data; unchecked marks can also require a known orientation.
+The runtime catalog covers 64 physical formats, all with encoding, sampled-module decoding and image recognition. [Symbol capabilities](https://codeglyphx.com/docs/symbol-capabilities/) lists default recognition, explicit format selection, geometry and multiple-result support separately. Raw Flattermarken cells require a calibrated grid because blank cells carry data; unchecked marks can also require a known orientation.
 
 ```csharp
 using CodeGlyphX;
@@ -98,6 +98,12 @@ OutputWriter.Write("coupon.png", coupon);
 ```
 
 [Barcode profiles and controls](https://codeglyphx.com/docs/barcode-profiles/) describes HIBC carriers, checked book/pharmacy/postal identifiers, USPS package fields, coupons, Mailmark 2D and Swiss QR payments. `SwissQrCode` validates the payment, selects QR error correction M and renders the recognition cross. Postal and payment helpers validate data and produce symbols; complete mailpieces, payment parts and printed acceptance require their own layout and qualification.
+
+[Barcode fonts](docs/fonts.md) provides bundled OCR-A/OCR-B faces and portable TrueType/OpenType text measurement and outlines through `BarcodeFont`, including case preservation, collection-face selection, explicit missing-glyph handling and supported managed shaping. It requires no installed fonts or additional runtime package.
+
+[Physical printing](docs/printing.md) measures labels in millimetres, positions family-specific bars and readable text, and shares glyph outlines across PNG, SVG and PDF. The playground's print studio offers bundled faces and local font uploads. Run `CODEGLYPHX_PHYSICAL_PRINT=1` for the label examples using bundled OCR-B, with an optional `CODEGLYPHX_PRINT_FONT` path to your supplied font.
+
+[Ultracode](docs/ultracode.md) encodes Latin-1 text or exact bytes with five error-correction levels. Its colour-cell decoder and image scanner preserve the palette, and its PNG/SVG renderers keep the required data colours.
 
 The [specialist example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/SpecialistBarcodeExample.cs) exports the formats and profile captions and checks the decoded module payloads. Run it with `CODEGLYPHX_SPECIALIST_BARCODES=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. It also runs in the public API NativeAOT smoke test.
 
@@ -507,7 +513,9 @@ Gs1CompositeSymbol composite = Gs1CompositeEncoder.Encode(
     compositeText: "(21)ABC123");
 ```
 
-The GS1 Composite implementation currently pairs a GS1-128 carrier with CC-A, CC-B, or CC-C and uses the standards-defined general-field method. EAN/UPC/DataBar carriers and the optimized date/AI 90 methods are future work. Han Xin text outside its native compact modes is encoded as binary data with UTF-8 ECI; native GB18030 region compaction is not yet implemented.
+GS1 Composite pairs GS1-128 with CC-A, CC-B or CC-C, and EAN-13, EAN-8, UPC-A, UPC-E and the seven DataBar carriers with CC-A or CC-B. It supports general-field, date/lot and AI 90 compaction. `Gs1CompositeComponents` encodes or decodes a standalone component; generic decode metadata distinguishes it from a linked label. See [linked carrier inputs and decoding](docs/gs1-composite.md). Han Xin text outside its native compact modes is encoded as binary data with UTF-8 ECI; native GB18030 region compaction is not yet implemented.
+
+`CodeOneEncoder` supports fixed versions A-H, S-10/S-20/S-30 and T-16/T-32/T-48, or automatically selects the smallest A-H size. `CodeOneDecoder` and `SymbolScanner` recover payloads and version metadata. Version S stores an integer, so leading zeros are not recoverable; its decoded result exposes the numeric value. Text encoding supports Latin-1 and explicit ECI, with UTF-8 selected for other Unicode text. Compaction includes ASCII, C40, Text, EDI, byte and decimal modes.
 
 rMQR, MaxiCode, DotCode, Han Xin and GS1 Composite support image recognition through `SymbolScanner`. Code 16K, Code 49, Codablock F, MicroPDF417, linked PosiCode rows, D3 AQR and postal bar states use the same scanner and result model. Their samplers preserve payload checks and structural metadata, handle right-angle rotations and inversion, and return one result per format. A bounded deskew pass handles modest in-plane rotation; arbitrary perspective and exhaustive multiple-symbol localization are not established for these specialist samplers.
 

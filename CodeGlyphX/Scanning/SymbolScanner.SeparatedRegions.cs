@@ -60,8 +60,10 @@ public static partial class SymbolScanner {
             var scan = ScanFrame(ImageFrame.Packed(tile, region.Width, region.Height, PixelFormat.Rgba32), localOptions, attempt);
             foreach (var symbol in scan.Symbols) {
                 var geometry = symbol.Geometry is null ? null : MapGeometryToSource(symbol.Geometry, mappedRegion, region.Width, region.Height);
+                var metadata = symbol.Metadata is Gs1CompositeSymbolMetadata composite
+                    ? composite.MapImageGeometry(point => MapPointToSource(point, mappedRegion, region.Width, region.Height)) : symbol.Metadata;
                 Add(results, seen, new DetectedSymbol(symbol.Format, symbol.Text,
-                    symbol.HasRawBytes ? symbol.RawBytes.ToArray() : null, symbol.Metadata, symbol.PayloadProfile,
+                    symbol.HasRawBytes ? symbol.RawBytes.ToArray() : null, metadata, symbol.PayloadProfile,
                     mappedRegion, geometry, symbol.Confidence, symbol.IsInverted, symbol.IsMirrored,
                     symbol.SymbologyIdentifier, symbol.DirectPartMarkProfile));
                 if (ReachedMaximum(options, results)) return;

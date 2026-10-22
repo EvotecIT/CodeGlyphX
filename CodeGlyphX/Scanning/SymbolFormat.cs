@@ -127,5 +127,11 @@ public enum SymbolFormat {
     /// <summary>Royal Mail Mailmark C and L four-state symbols.</summary>
     Mailmark4State = 60,
     /// <summary>Provisional D3 AQR category frame around a QR Code.</summary>
-    D3Aqr = 61
+    D3Aqr = 61,
+    /// <summary>Aztec Rune, an 11 by 11 module numeric mark.</summary>
+    AztecRune = 62,
+    /// <summary>Code One, including the A-H, S and T sizes.</summary>
+    CodeOne = 63,
+    /// <summary>Ultracode colour matrix symbol.</summary>
+    Ultracode = 64
 }

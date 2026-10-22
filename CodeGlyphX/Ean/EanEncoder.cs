@@ -12,6 +12,12 @@ public static class EanEncoder {
     /// Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length). Use "+NN" or "+NNNNN" to append add-ons.
     /// </summary>
     public static Barcode1D Encode(string content) {
+        return EncodeCore(content, addOnGap: 1);
+    }
+
+    internal static Barcode1D EncodeComposite(string content) => EncodeCore(content, addOnGap: 9);
+
+    private static Barcode1D EncodeCore(string content, int addOnGap) {
         if (content is null) throw new ArgumentNullException(nameof(content));
         SplitAddOn(content, out content, out var addOn);
 
@@ -20,7 +26,7 @@ public static class EanEncoder {
         content = NormalizeContent(content);
 
         var baseCode = content.Length == 8 ? EncodeEan8(content) : EncodeEan13(content);
-        return AppendAddOn(baseCode, addOn);
+        return AppendAddOn(baseCode, addOn, addOnGap);
     }
 
     private static void SplitAddOn(string content, out string core, out string? addOn) {
@@ -51,10 +57,10 @@ public static class EanEncoder {
         throw new InvalidOperationException("Invalid content length. Should be 7 or 12 if the code does not include a checksum, 8 or 13 if the code already includes a checksum");
     }
 
-    private static Barcode1D AppendAddOn(Barcode1D baseCode, string? addOn) {
+    private static Barcode1D AppendAddOn(Barcode1D baseCode, string? addOn, int addOnGap) {
         if (string.IsNullOrEmpty(addOn)) return baseCode;
         var segments = new List<BarSegment>(baseCode.Segments);
-        EanAddOn.AppendAddOn(segments, addOn!);
+        EanAddOn.AppendAddOn(segments, addOn!, addOnGap);
         return new Barcode1D(segments, SymbolFormat.Ean);
     }
 

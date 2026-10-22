@@ -1,0 +1,280 @@
+{
+  "tool": "fontTools 4.67.0; BoundsPen and authored rectangle arithmetic",
+  "sha256": "43a21ece17b98c4c63a0618b7744e5f22ffab1fd67b0f30a23b603eb2b0b3957",
+  "cases": [
+    {
+      "scalar": 57344,
+      "program": "horizontal",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57345,
+      "program": "vertical",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57346,
+      "program": "relative",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57347,
+      "program": "curves",
+      "bounds": [
+        20,
+        0,
+        420,
+        365.9564810057326
+      ]
+    },
+    {
+      "scalar": 57348,
+      "program": "curveLine",
+      "bounds": [
+        20,
+        0,
+        470,
+        365.9564810057326
+      ]
+    },
+    {
+      "scalar": 57349,
+      "program": "lineCurve",
+      "bounds": [
+        20,
+        0,
+        470,
+        385.9564810057326
+      ]
+    },
+    {
+      "scalar": 57350,
+      "program": "vv",
+      "bounds": [
+        20,
+        0,
+        240,
+        500
+      ]
+    },
+    {
+      "scalar": 57351,
+      "program": "hh",
+      "bounds": [
+        20,
+        0,
+        420,
+        320
+      ]
+    },
+    {
+      "scalar": 57352,
+      "program": "hv",
+      "bounds": [
+        20,
+        0,
+        360,
+        400
+      ]
+    },
+    {
+      "scalar": 57353,
+      "program": "vh",
+      "bounds": [
+        20,
+        0,
+        320,
+        440
+      ]
+    },
+    {
+      "scalar": 57354,
+      "program": "hflex",
+      "bounds": [
+        20,
+        0,
+        420,
+        100
+      ]
+    },
+    {
+      "scalar": 57355,
+      "program": "flex",
+      "bounds": [
+        20,
+        0,
+        420,
+        102.62980294136496
+      ]
+    },
+    {
+      "scalar": 57356,
+      "program": "hflex1",
+      "bounds": [
+        20,
+        0,
+        420,
+        120
+      ]
+    },
+    {
+      "scalar": 57357,
+      "program": "flex1",
+      "bounds": [
+        20,
+        0,
+        420,
+        102.62980294136496
+      ]
+    },
+    {
+      "scalar": 57358,
+      "program": "hints",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57359,
+      "program": "subroutines",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57360,
+      "program": "arithmetic",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57361,
+      "program": "sqrtDiv",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57362,
+      "program": "transient",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57363,
+      "program": "stack",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57364,
+      "program": "conditional",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    }
+  ],
+  "cid": {
+    "sha256": "a3ca1f2994f98e7992f0d912c1389ee99cdee2332fbaf84229615f7e9af13f23",
+    "A_bounds": [
+      20,
+      0,
+      320,
+      950
+    ],
+    "B_bounds": [
+      20,
+      0,
+      520,
+      950
+    ]
+  },
+  "seac": {
+    "sha256": "86a797c567a585210f49d062ee6370d8124417640000a74fedca8859c21f5410",
+    "bounds": [
+      20,
+      0,
+      560,
+      900
+    ]
+  },
+  "variable_cff2": {
+    "sha256": "f02b9b49cf699d2d005d45a187f1a379d96f22f26a9c5fcb751914a5d376f8db",
+    "instances": [
+      {
+        "weight": 400,
+        "A": 600,
+        "bounds": [
+          20,
+          0,
+          560,
+          700
+        ]
+      },
+      {
+        "weight": 650,
+        "A": 650,
+        "bounds": [
+          20,
+          0,
+          610,
+          700
+        ]
+      },
+      {
+        "weight": 900,
+        "A": 700,
+        "bounds": [
+          20,
+          0,
+          660,
+          700
+        ]
+      }
+    ]
+  },
+  "dictionary_variants": {
+    "TestCffCidFormat0.otf": "1667feaee94fcb0d5d18a57b0e203673b350dc90750e305fe2fe199ea14cbc43",
+    "TestCff2Dictionaries.otf": "08d57edce26e4117e4c6313cf2de111b0fa75e0b9ccd547a39db28a3a6a67ea3",
+    "TestCffCidUnterminated.otf": "99e8013f325be92adcc4182c0231a156608408bf4899635e51192f910dfdb687"
+  }
+}

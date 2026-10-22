@@ -207,6 +207,9 @@ public sealed class DataMatrixBuilder {
         return _text is not null ? DataMatrixCode.Encode(_text, _encodingOptions) : DataMatrixCode.EncodeBytes(_bytes!, _encodingOptions);
     }
 
+    /// <summary>Builds a measured physical print layout from this builder's encoded symbol.</summary>
+    public Printing.BarcodePrintLayout LayoutPrint(Printing.BarcodePrintOptions? options = null) => Printing.BarcodePrint.Layout(Encode(), options);
+
     /// <summary>
     /// Renders the configured Data Matrix to the requested output format.
     /// </summary>

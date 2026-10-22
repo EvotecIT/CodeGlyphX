@@ -13,7 +13,13 @@ public static class DataBarExpandedEncoder {
     /// <param name="value">A parenthesized GS1 AI string or raw GS1 element string.</param>
     /// <returns>The barcode's alternating light and dark module runs.</returns>
     public static Barcode1D EncodeExpanded(string value) {
-        var symbol = DataBarExpandedSymbol.Create(value, requireEvenTotalCharacters: false);
+        return EncodeLinear(value, linked: false);
+    }
+
+    internal static Barcode1D EncodeComposite(string value) => EncodeLinear(value, linked: true);
+
+    private static Barcode1D EncodeLinear(string value, bool linked) {
+        var symbol = DataBarExpandedSymbol.Create(value, requireEvenTotalCharacters: false, linked);
         var segments = new List<BarSegment>(symbol.Elements.Length);
         var isBar = false;
         for (var i = 0; i < symbol.Elements.Length; i++) {
@@ -30,10 +36,16 @@ public static class DataBarExpandedEncoder {
     /// <param name="columns">The number of finder/data-character blocks per row, from 1 through 10.</param>
     /// <returns>The stacked module matrix.</returns>
     public static BitMatrix EncodeExpandedStacked(string value, int columns = 2) {
+        return EncodeStacked(value, columns, linked: false);
+    }
+
+    internal static BitMatrix EncodeCompositeStacked(string value, int columns) => EncodeStacked(value, columns, linked: true);
+
+    private static BitMatrix EncodeStacked(string value, int columns, bool linked) {
         if (columns < 1 || columns > 10) throw new ArgumentOutOfRangeException(nameof(columns));
-        var symbol = DataBarExpandedSymbol.Create(value, requireEvenTotalCharacters: false);
+        var symbol = DataBarExpandedSymbol.Create(value, requireEvenTotalCharacters: false, linked);
         if (symbol.TotalCharacters % (columns * 2) == 1) {
-            symbol = DataBarExpandedSymbol.Create(value, requireEvenTotalCharacters: true);
+            symbol = DataBarExpandedSymbol.Create(value, requireEvenTotalCharacters: true, linked);
         }
         return DataBarExpandedStacking.Build(symbol.Elements, symbol.TotalCharacters, columns);
     }

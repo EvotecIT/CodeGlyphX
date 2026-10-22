@@ -9,6 +9,8 @@ CodeGlyphX currently describes {{FORMAT_COUNT}} physical symbol formats through 
 
 “Module decode” means CodeGlyphX can decode an already sampled `BitMatrix` or module sequence. “Image scan” means `SymbolScanner` can recognize the format from pixels. All listed formats have an image path; raw marks can require the known grid and orientation described below.
 
+“Colour-cell decode” uses `UltracodeGrid` and preserves information carried by the palette. Ultracode is decoded through `SymbolDecoder.Decode(cells)` or `UltracodeDecoder`; a `BitMatrix` cannot represent its payload. Its scanner reads RGB pixels before grayscale processing. A colour image is required.
+
 “Default scan” identifies formats selected when `ScanOptions.Formats` is null or empty. Pharmacode, Two-track Pharmacode, PatchCode, FIM, DAFT, Flattermarken and KIX require explicit selection because their raw or unchecked patterns can match unrelated content. Telepen Numeric requires an explicit hint because the same bars also carry a valid Telepen ASCII interpretation. Check `IsDefaultScanFormat` when building a format picker that follows the scanner defaults.
 
 {{CAPABILITY_TABLE}}

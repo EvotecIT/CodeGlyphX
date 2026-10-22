@@ -37,7 +37,15 @@ public static class DataBarLimitedDecoder {
         return TryDecodeWidths(widths, out content);
     }
 
-    private static bool TryDecodeWidths(ReadOnlySpan<int> widths, out string content) {
+    internal static bool TryDecodeComposite(Barcode1D barcode, out string content) {
+        content = string.Empty;
+        if (barcode.Segments.Count != 47 || barcode.Segments[0].IsBar) return false;
+        Span<int> widths = stackalloc int[47];
+        for (var i = 0; i < widths.Length; i++) widths[i] = barcode.Segments[i].Modules;
+        return TryDecodeWidths(widths, out content, linked: true);
+    }
+
+    private static bool TryDecodeWidths(ReadOnlySpan<int> widths, out string content, bool linked = false) {
         content = string.Empty;
         if (widths.Length != 47 || widths[0] != 1 || widths[1] != 1 ||
             widths[44] != 1 || widths[45] != 1 || widths[46] != 5) return false;
@@ -56,6 +64,7 @@ public static class DataBarLimitedDecoder {
         if (calculated != checksum) return false;
 
         var symbolValue = (long)leftValue * DataBarLimitedTables.PairDivisor + rightValue;
+        if (linked) symbolValue -= 2015133531096L;
         if (symbolValue < 0 || symbolValue > DataBarLimitedTables.MaximumSymbolValue) return false;
         content = symbolValue.ToString().PadLeft(13, '0');
         return true;

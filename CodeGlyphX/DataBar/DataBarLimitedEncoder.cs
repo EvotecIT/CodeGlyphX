@@ -18,7 +18,14 @@ public static class DataBarLimitedEncoder {
     /// digit and the optional <c>01</c>, <c>(01)</c>, or <c>[01]</c> application identifier are accepted.
     /// </param>
     public static Barcode1D Encode(string content) {
+        return EncodeCore(content, linked: false);
+    }
+
+    internal static Barcode1D EncodeComposite(string content) => EncodeCore(content, linked: true);
+
+    private static Barcode1D EncodeCore(string content, bool linked) {
         var value = ParseContent(content);
+        if (linked) value += 2015133531096L;
         var leftValue = (int)(value / DataBarLimitedTables.PairDivisor);
         var rightValue = (int)(value % DataBarLimitedTables.PairDivisor);
         var leftWidths = EncodePair(leftValue);

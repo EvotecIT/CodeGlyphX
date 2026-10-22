@@ -7,6 +7,44 @@ namespace CodeGlyphX;
 
 /// <summary>Decodes sampled module grids without image detection or raster conversion.</summary>
 public static class SymbolDecoder {
+    /// <summary>Decodes sampled Ultracode colour cells without losing their palette identity.</summary>
+    public static bool TryDecode(UltracodeGrid cells, out DetectedSymbol symbol) {
+        symbol = null!;
+        if (!UltracodeDecoder.TryDecode(cells, out var decoded)) return false;
+        symbol = SymbolResultFactory.From(decoded!);
+        return true;
+    }
+
+    /// <summary>Decodes a colour-cell grid or throws when its structure or checked message is invalid.</summary>
+    public static DetectedSymbol Decode(UltracodeGrid cells) {
+        if (!TryDecode(cells, out var symbol)) throw new FormatException("The colour grid does not contain a decodable Ultracode symbol.");
+        return symbol;
+    }
+    /// <summary>Decodes a linked GS1 Composite or standalone component, with an optional carrier interpretation.</summary>
+    public static bool TryDecodeComposite(BitMatrix modules, out DetectedSymbol symbol, Gs1CompositeCarrier? carrier = null) {
+        return TryDecodeCompositeCore(modules, out symbol, carrier, tolerateSamplingErrors: false);
+    }
+
+    internal static bool TryDecodeCompositeImage(BitMatrix modules, out DetectedSymbol symbol, Gs1CompositeCarrier? carrier) =>
+        TryDecodeCompositeCore(modules, out symbol, carrier, tolerateSamplingErrors: true);
+
+    private static bool TryDecodeCompositeCore(BitMatrix modules, out DetectedSymbol symbol, Gs1CompositeCarrier? carrier, bool tolerateSamplingErrors) {
+        if (modules is null) throw new ArgumentNullException(nameof(modules));
+        symbol = null!;
+        if (carrier.HasValue && !Enum.IsDefined(typeof(Gs1CompositeCarrier), carrier.Value)) throw new ArgumentOutOfRangeException(nameof(carrier));
+        var complete = tolerateSamplingErrors ? Gs1CompositeDecoder.TryDecodeImage(modules, carrier, out var composite)
+            : Gs1CompositeDecoder.TryDecode(modules, carrier, out composite);
+        if (!complete) {
+            var standalone = tolerateSamplingErrors ? Gs1CompositeComponents.TryDecodeImage(modules, out var componentText, out var componentType)
+                : Gs1CompositeComponents.TryDecode(modules, out componentText, out componentType);
+            if (!standalone) return false;
+            composite = new Gs1CompositeDecoded(string.Empty, componentText, componentType, carrier: null,
+                componentRegion: new ImageRegion(0, 0, modules.Width, modules.Height));
+        }
+        symbol = SymbolResultFactory.From(composite);
+        return true;
+    }
+
     private static readonly SymbolFormat[] DetailedFormats = {
         SymbolFormat.D3Aqr, SymbolFormat.Gs1Composite, SymbolFormat.RmQrCode, SymbolFormat.MaxiCode, SymbolFormat.DotCode,
         SymbolFormat.HanXin, SymbolFormat.MicroQrCode, SymbolFormat.QrCode, SymbolFormat.Aztec,
@@ -46,6 +84,9 @@ public static class SymbolDecoder {
     private static bool TryDecodeFormat(BitMatrix modules, SymbolFormat format, out DetectedSymbol symbol) {
         symbol = null!;
         switch (format) {
+            case SymbolFormat.AustraliaPost:
+                if (!AustraliaPost.AustraliaPostDecoder.TryDecode(modules, null, out var australian)) return false;
+                symbol = new DetectedSymbol(format, australian.Value, metadata: new AustraliaPostSymbolMetadata(australian)); return true;
             case SymbolFormat.D3Aqr:
                 if (!D3Aqr.D3AqrDecoder.TryDecode(modules, out var d3)) return false;
                 symbol = SymbolResultFactory.From(d3);
@@ -89,8 +130,10 @@ public static class SymbolDecoder {
                 if (!HanXinDecoder.TryDecodeDetailed(modules, out var han)) return false;
                 symbol = SymbolResultFactory.From(han); return true;
             case SymbolFormat.Gs1Composite:
-                if (!Gs1CompositeDecoder.TryDecode(modules, out var composite)) return false;
-                symbol = SymbolResultFactory.From(composite); return true;
+                return TryDecodeComposite(modules, out symbol);
+            case SymbolFormat.CodeOne:
+                if (!CodeOneDecoder.TryDecode(modules, out var codeOne)) return false;
+                symbol = CodeOneDecoder.Result(codeOne); return true;
             case SymbolFormat.DataMatrix:
                 if (!DataMatrixDecoder.TryDecodeDetailed(modules, out var matrix)) return false;
                 symbol = SymbolResultFactory.From(matrix); return true;
@@ -103,6 +146,9 @@ public static class SymbolDecoder {
             case SymbolFormat.Aztec:
                 if (!AztecDecoder.TryDecode(modules, out var aztec)) return false;
                 symbol = new DetectedSymbol(format, aztec); return true;
+            case SymbolFormat.AztecRune:
+                if (!AztecRune.TryDecode(modules, out var rune)) return false;
+                symbol = AztecRune.Result(rune); return true;
         }
         var capability = SymbolCapabilities.Get(format);
         if (!capability.LegacyBarcodeType.HasValue) return false;

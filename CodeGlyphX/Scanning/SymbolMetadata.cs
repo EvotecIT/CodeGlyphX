@@ -14,7 +14,6 @@ public abstract class SymbolMetadata {
         return System.Array.AsReadOnly(copy);
     }
 }
-
 /// <summary>Code 128 payload control information.</summary>
 public sealed class Code128SymbolMetadata : SymbolMetadata {
     /// <summary>Gets whether FNC3 marks the content as reader configuration.</summary>
@@ -166,18 +165,5 @@ public sealed class HanXinSymbolMetadata : SymbolMetadata {
     internal HanXinSymbolMetadata(HanXinDecoded value) {
         Version = value.Version; ErrorCorrectionLevel = value.ErrorCorrectionLevel; Mask = value.Mask;
         EciAssignments = Copy(value.EciAssignments);
-    }
-}
-
-/// <summary>Both component messages recovered from a GS1 Composite symbol.</summary>
-public sealed class Gs1CompositeSymbolMetadata : SymbolMetadata {
-    /// <summary>Gets the linear component's GS1 element string.</summary>
-    public string LinearText { get; }
-    /// <summary>Gets the two-dimensional component's GS1 element string.</summary>
-    public string CompositeText { get; }
-    /// <summary>Gets the composite component type.</summary>
-    public Gs1CompositeComponent Component { get; }
-    internal Gs1CompositeSymbolMetadata(Gs1CompositeDecoded value) {
-        LinearText = value.LinearText; CompositeText = value.CompositeText; Component = value.Component;
     }
 }

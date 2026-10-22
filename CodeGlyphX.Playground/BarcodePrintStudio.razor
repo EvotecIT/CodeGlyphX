@@ -1,0 +1,119 @@
+@using CodeGlyphX
+@using CodeGlyphX.Printing
+
+<details class="card print-studio">
+    <summary>Physical print studio <span>Fonts, dimensions and label exports</span></summary>
+    <p>Build a measured label in millimetres. Choose a bundled OCR face or upload your own font for readable text; uploaded font bytes stay in this browser.</p>
+    <div class="print-studio-grid">
+        <div>
+            <div class="form-group">
+                <label for="print-format">Format</label>
+                <select id="print-format" @bind="SelectedFormat" @bind:after="ChangeFormat">
+                    @foreach (var item in SymbolCapabilities.All) {
+                        <option @key="item.Format" value="@item.Format">@item.DisplayName</option>
+                    }
+                    <option value="CompositeComponent">Standalone GS1 Composite component</option>
+                    <option value="Raw">Raw alternating runs</option>
+                    <optgroup label="Application labels">
+                        @foreach (var profile in Enum.GetValues<LinearBarcodeProfile>()) { <option @key="profile" value="@("Profile:" + profile)">@profile</option> }
+                        <option value="Hibc">HIBC supplier label</option><option value="Package">USPS package label</option><option value="Coupon">North American coupon</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="print-content">@(SelectedFormat == "Raw" ? "Run widths (1–9, starting with a bar)" : "Content")</label>
+                <textarea id="print-content" rows="3" maxlength="2048" @bind="Content" @bind:event="oninput" @bind:after="ClearOutput"></textarea>
+            </div>
+            @if (SelectedFormat == "CodeOne") {
+                <div class="form-group"><label for="print-version">Code One size</label><select id="print-version" @bind="CodeOneSize" @bind:after="ClearOutput">
+                    @foreach (var version in Enum.GetValues<CodeOneVersion>()) { <option @key="version" value="@version">@version</option> }
+                </select></div>
+            }
+            @if (SelectedFormat == "Ultracode") {
+                <div class="form-group"><label for="print-ec">Error correction</label><select id="print-ec" @bind="UltraEc" @bind:after="ClearOutput">
+                    @foreach (var level in Enum.GetValues<UltracodeErrorCorrectionLevel>()) { <option @key="level" value="@level">@level</option> }
+                </select></div>
+            }
+            @if (SelectedFormat is "Gs1Composite" or "CompositeComponent") {
+                <div class="form-group"><label for="print-component">Component</label><select id="print-component" @bind="Component" @bind:after="ClearOutput">
+                    <option value="CcA">CC-A</option><option value="CcB">CC-B</option><option value="CcC">CC-C (GS1-128)</option>
+                </select></div>
+                @if (SelectedFormat == "Gs1Composite") {
+                    <div class="form-group"><label for="print-carrier">Linear carrier</label><select id="print-carrier" @bind="Carrier" @bind:after="ClearOutput">
+                        @foreach (var carrier in Enum.GetValues<Gs1CompositeCarrier>()) { <option @key="carrier" value="@carrier">@carrier</option> }
+                    </select></div>
+                    <div class="form-group"><label for="print-linear">Linear content</label><input id="print-linear" maxlength="2048" @bind="LinearContent" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                } else {
+                    <div class="form-group"><label for="print-columns">Component columns</label><input id="print-columns" type="number" min="1" max="30" @bind="Columns" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                }
+            }
+            @if (SupportsOptionalCheck) {
+                <div class="form-group"><label for="print-check">Check characters</label><select id="print-check" @bind="CheckMode" @bind:after="ClearOutput">
+                    <option value="">Encoder default</option>
+                    @if (SelectedFormat is not ("Bc412" or "Plessey")) { <option value="None">No optional check</option> }
+                    <option value="Compute">Compute from data</option><option value="Validate">Validate supplied check</option>
+                </select></div>
+                <label><input type="checkbox" @bind="PrintChecks" @bind:after="ClearOutput" /> Include checks in readable text</label>
+            }
+            @if (SelectedFormat == "Code39") {
+                <label><input type="checkbox" @bind="FullAscii" @bind:after="ClearOutput" /> Code 39 Full ASCII</label>
+            }
+            @if (SelectedFormat == "Msi") {
+                <div class="form-group"><label for="print-msi">MSI check algorithm</label><select id="print-msi" @bind="MsiCheck" @bind:after="ClearOutput">
+                    @foreach (var algorithm in Enum.GetValues<MsiChecksumType>()) { <option @key="algorithm" value="@algorithm">@algorithm</option> }
+                </select></div>
+            }
+            @if (SelectedFormat == "Hibc") {
+                <div class="form-group"><label for="print-hibc-carrier">HIBC carrier</label><select id="print-hibc-carrier" @bind="HibcCarrier" @bind:after="ClearOutput">
+                    @foreach (var carrier in HibcCarriers) { <option @key="carrier" value="@carrier">@SymbolCapabilities.Get(carrier).DisplayName</option> }
+                </select></div>
+                <label><input type="checkbox" @bind="HibcChecked" @bind:after="ClearOutput" /> Input includes the leading + and check character</label>
+                @if (HibcCarrier == SymbolFormat.QrCode) {
+                    <div class="print-studio-pair">
+                        <div class="form-group"><label for="print-hibc-version">QR version (blank = auto)</label><input id="print-hibc-version" type="number" min="1" max="40" @bind="HibcQrVersion" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                        <div class="form-group"><label for="print-hibc-ecc">QR error correction</label><select id="print-hibc-ecc" @bind="HibcQrEc" @bind:after="ClearOutput">@foreach (var level in Enum.GetValues<QrErrorCorrectionLevel>()) { <option @key="level" value="@level">@level</option> }</select></div>
+                    </div>
+                } else if (HibcCarrier == SymbolFormat.DataMatrix) {
+                    <label><input type="checkbox" @bind="HibcRectangle" @bind:after="ClearOutput" /> Rectangular Data Matrix</label>
+                } else if (HibcCarrier is SymbolFormat.Pdf417 or SymbolFormat.MicroPdf417 or SymbolFormat.CodablockF) {
+                    <div class="form-group"><label for="print-hibc-columns">Data columns (blank = default)</label><input id="print-hibc-columns" type="number" min="1" max="@(HibcCarrier == SymbolFormat.MicroPdf417 ? 4 : HibcCarrier == SymbolFormat.Pdf417 ? 30 : 62)" @bind="HibcColumns" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                }
+            }
+            @if (SelectedFormat == "DotCode") {
+                <div class="print-studio-pair">
+                    <div class="form-group"><label for="print-dot-width">DotCode columns (blank = auto)</label><input id="print-dot-width" type="number" min="5" max="200" @bind="DotWidth" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                    <div class="form-group"><label for="print-dot-height">DotCode rows (blank = auto)</label><input id="print-dot-height" type="number" min="5" max="200" @bind="DotHeight" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                </div>
+            }
+        </div>
+        <div>
+            <div class="form-group"><label for="print-font-choice">Readable text font</label><select id="print-font-choice" @bind="FontChoice" @bind:after="ChangeFont" disabled="@Busy">
+                <option value="None">Choose a font</option><option value="OcrA">OCR-A · GG Ocra</option><option value="OcrB">OCR-B · CodeGlyphX Scan B</option>
+                @if (UploadedFont is not null) { <option value="Uploaded">Uploaded · @UploadedFont.Name</option> }
+            </select></div>
+            <div class="form-group"><label for="print-font">Supplied font (TTF, OTF or TTC, up to 16 MiB)</label><InputFile id="print-font" OnChange="LoadFont" accept=".ttf,.otf,.ttc" disabled="@Busy" /></div>
+            @if (FontName is not null) { <p class="print-studio-note">Loaded: @FontName</p> }
+            <div class="form-group"><label><input id="print-readable" type="checkbox" @bind="IncludeText" @bind:after="ClearOutput" /> Include readable text</label></div>
+            <div class="form-group"><label for="print-text">Readable text override (optional)</label><input id="print-text" maxlength="2048" @bind="ReadableText" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+            <div class="form-group"><label for="print-caption">@(SelectedFormat == "Package" ? "USPS service banner" : "Caption (optional)")</label><input id="print-caption" maxlength="2048" @bind="Caption" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+            <div class="print-studio-pair">
+                <div class="form-group"><label for="print-dpi">Printer DPI</label><select id="print-dpi" @bind="Dpi" @bind:after="ClearOutput"><option>203</option><option>300</option><option>600</option></select></div>
+                <div class="form-group"><label for="print-points">Text size (points)</label><input id="print-points" type="number" min="4" max="72" @bind="FontPoints" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                <div class="form-group"><label for="print-x">Module width (mm, blank = nominal)</label><input id="print-x" type="number" min="0.05" max="5" step="0.01" @bind="XDimension" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+                <div class="form-group"><label for="print-rotation">Rotation (degrees)</label><input id="print-rotation" type="number" min="0" max="360" @bind="Rotation" @bind:event="oninput" @bind:after="ClearOutput" /></div>
+            </div>
+            <button type="button" class="btn btn-primary" disabled="@Busy" @onclick="Generate">@(Busy ? "Preparing label…" : "Prepare print label")</button>
+            @if (Error is not null) { <p class="print-studio-error" role="alert">@Error</p> }
+            @if (Layout is not null) {
+                <p role="status">@Dimensions · @Dpi DPI · @Layout.ModulePitchPixels.ToString("0.##") pixels per module</p>
+                @if (Findings.Count > 0) { <ul class="print-studio-findings">@foreach (var finding in Findings) { <li>@finding.Message</li> }</ul> }
+                @if (PngUri is not null) {
+                    <div class="print-studio-preview"><img src="@PngUri" alt="Prepared physical barcode label" /></div>
+                    <div class="print-studio-downloads"><a class="btn btn-secondary" href="@PngUri" download="label.png">PNG</a><a class="btn btn-secondary" href="@SvgUri" download="label.svg">SVG</a><a class="btn btn-secondary" href="@PdfUri" download="label.pdf">PDF</a></div>
+                }
+            }
+        </div>
+    </div>
+    <p class="print-studio-note">Preflight checks selected layout rules. Qualify the actual printed label for its scanner, printer and application. <a href="/docs/printing/">Font and print guide</a></p>
+    <p class="print-studio-note">Bundled font notices: <a href="../licenses/GG-Ocra-CC0.txt">GG Ocra · CC0</a> · <a href="../licenses/Raisty-OCR-B-OFL.txt">CodeGlyphX Scan B · OFL</a></p>
+</details>

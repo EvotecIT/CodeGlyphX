@@ -279,6 +279,9 @@ public sealed class QrBuilder {
     /// </summary>
     public QrCode Encode() => QR.Encode(_payload, Encoding);
 
+    /// <summary>Builds a measured physical print layout from this builder's encoded symbol.</summary>
+    public Printing.BarcodePrintLayout LayoutPrint(Printing.BarcodePrintOptions? options = null) => Printing.BarcodePrint.Layout(Encode(), options);
+
     /// <summary>
     /// Renders the configured QR code to the requested output format.
     /// </summary>

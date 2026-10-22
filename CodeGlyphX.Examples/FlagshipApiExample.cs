@@ -3,6 +3,7 @@ using CodeGlyphX.Aztec;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Printing;
 
 namespace CodeGlyphX.Examples;
 
@@ -20,6 +21,19 @@ internal static class FlagshipApiExample {
 
         QR.Save(contact, Path.Combine(outputDir, "contact.png"));
         Barcode.Save(SymbolFormat.Ean, "5901234123457", Path.Combine(outputDir, "product.svg"));
+        foreach (var face in new[] { BarcodeFont.OcrA, BarcodeFont.OcrB }) {
+            var label = BarcodePrint.Layout(Barcode.Encode(SymbolFormat.Code128, "FONT-AOT"),
+                new BarcodePrintOptions { Font = face, FontSizePoints = 8, HumanReadableText = "Batch aB09" });
+            var png = label.Render(OutputFormat.Png);
+            var recovered = SymbolScanner.Scan(png.ToArray(), new ScanOptions {
+                Formats = new[] { SymbolFormat.Code128 }, TimeoutMilliseconds = 5000
+            });
+            if (!recovered.Symbols.Any(symbol => symbol.Text == "FONT-AOT"))
+                throw new System.InvalidOperationException("The bundled-font NativeAOT print smoke test failed.");
+            var name = face == BarcodeFont.OcrA ? "ocr-a" : "ocr-b";
+            OutputWriter.Write(Path.Combine(outputDir, name + ".png"), png);
+            label.Save(Path.Combine(outputDir, name + ".pdf"));
+        }
         DataMatrixCode.Save("LOT-2026-0042", Path.Combine(outputDir, "lot.png"), options: new MatrixOptions {
             ModuleSize = 6,
             QuietZone = 2

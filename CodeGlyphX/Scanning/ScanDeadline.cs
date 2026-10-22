@@ -45,6 +45,10 @@ internal sealed class ScanDeadline : IDisposable {
     internal bool CallerCancelled => _callerToken.IsCancellationRequested;
     // Descendants yield time to sibling families without stopping this enclosing scan.
     internal bool RecognitionBudgetExceeded => _recognitionBudgetExceeded;
+    internal bool ResourceLimitReached { get; private set; }
+    internal void MarkResourceLimitReached() {
+        for (ScanDeadline? current = this; current != null; current = current._parent) current.ResourceLimitReached = true;
+    }
     internal bool DeadlineExceeded => !CallerCancelled && (_recognitionDeadline.IsExpired ||
         TimeoutMilliseconds > 0 && (_source?.IsCancellationRequested == true || _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds));
 

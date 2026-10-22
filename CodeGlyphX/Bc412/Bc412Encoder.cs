@@ -14,6 +14,15 @@ public static class Bc412Encoder {
         if (variant != Bc412Variant.Semi && variant != Bc412Variant.Ibm) throw new ArgumentOutOfRangeException(nameof(variant));
         if (variant == Bc412Variant.Ibm) return EncodeIbm(value, includeChecksum, includeStartStop);
         if (!includeChecksum || !includeStartStop) throw new ArgumentException("SEMI BC412 requires its check character and start/stop guards.");
+        var data = AddSemiCheck(value);
+        var runs = new List<BarSegment>(data.Length * 8 + 5);
+        Append(runs, "12");
+        foreach (var character in data) Append(runs, Bc412Tables.Patterns[Bc412Tables.Alphabet.IndexOf(character)]);
+        Append(runs, "111");
+        return new Barcode1D(runs, SymbolFormat.Bc412, data);
+    }
+
+    internal static string AddSemiCheck(string value) {
         if (value.Length < 7 || value.Length > 18)
             throw new ArgumentException("SEMI BC412 requires 7 through 18 data characters.", nameof(value));
         var data = new char[value.Length + 1];
@@ -27,11 +36,7 @@ public static class Bc412Encoder {
             sum += digit * ((i & 1) == 0 ? 1 : 2);
         }
         data[1] = Bc412Tables.Alphabet[sum * 17 % 35];
-        var runs = new List<BarSegment>(data.Length * 8 + 5);
-        Append(runs, "12");
-        foreach (var character in data) Append(runs, Bc412Tables.Patterns[Bc412Tables.Alphabet.IndexOf(character)]);
-        Append(runs, "111");
-        return new Barcode1D(runs, SymbolFormat.Bc412);
+        return new string(data);
     }
 
     private static Barcode1D EncodeIbm(string value, bool checksum, bool guards) {

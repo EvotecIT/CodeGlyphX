@@ -2,7 +2,7 @@ using System;
 
 namespace CodeGlyphX;
 
-/// <summary>Represents a standards-linked GS1-128 Composite symbol.</summary>
+/// <summary>Represents a standards-linked GS1 Composite symbol.</summary>
 public sealed class Gs1CompositeSymbol : MatrixSymbol {
     /// <summary>Gets the linear GS1 element string.</summary>
     public string LinearText { get; }
@@ -13,11 +13,16 @@ public sealed class Gs1CompositeSymbol : MatrixSymbol {
     /// <summary>Gets the number of rows in the two-dimensional component.</summary>
     public int ComponentRows { get; }
 
+    /// <summary>Gets the linear carrier associated with the two-dimensional component.</summary>
+    public Gs1CompositeCarrier Carrier { get; }
+
     internal Gs1CompositeSymbol(BitMatrix modules, string linearText, string compositeText,
-        Gs1CompositeComponent component, int componentRows) : base(SymbolFormat.Gs1Composite, modules) {
+        Gs1CompositeComponent component, int componentRows, Gs1CompositeCarrier carrier = Gs1CompositeCarrier.Gs1_128)
+        : base(SymbolFormat.Gs1Composite, modules) {
         LinearText = linearText ?? throw new ArgumentNullException(nameof(linearText));
         CompositeText = compositeText ?? throw new ArgumentNullException(nameof(compositeText));
         Component = component;
         ComponentRows = componentRows;
+        Carrier = carrier;
     }
 }

@@ -11,5 +11,7 @@ public enum ScanCompletionReason {
     /// <summary>The configured total deadline elapsed.</summary>
     DeadlineExceeded,
     /// <summary>A recognition family's time allowance elapsed while the total scan deadline still had time.</summary>
-    RecognitionBudgetExceeded
+    RecognitionBudgetExceeded,
+    /// <summary>A recognition route reached a bounded workspace or candidate allowance; further symbols may exist.</summary>
+    ResourceLimitReached
 }

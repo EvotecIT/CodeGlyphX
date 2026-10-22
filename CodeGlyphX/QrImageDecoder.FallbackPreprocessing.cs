@@ -7,7 +7,7 @@ namespace CodeGlyphX;
 
 public static partial class QrImageDecoder {
     private static void ApplyMaxDimension(ref byte[] rgba, ref int width, ref int height, ref int stride, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var maxDim = options?.MaxDimension ?? 0;
         if (maxDim <= 0) return;
 
@@ -18,21 +18,21 @@ public static partial class QrImageDecoder {
         var dstWidth = Math.Max(1, (int)Math.Round(width * scale));
         var dstHeight = Math.Max(1, (int)Math.Round(height * scale));
         var background = new CodeGlyphX.Rendering.Rgba32(255, 255, 255, 255);
-        rgba = ImageScaler.ResizeToFitNearest(rgba, width, height, stride, dstWidth, dstHeight, background, preserveAspectRatio: true, cancellationToken);
+        rgba = ImageScaler.ResizeToFitNearest(rgba, width, height, stride, dstWidth, dstHeight, background, preserveAspectRatio: true, cancellationToken, () => ThrowIfFallbackAborted(cancellationToken));
         width = dstWidth;
         height = dstHeight;
         stride = width * 4;
     }
 
     private static byte[] ConvertBgraToRgba(byte[] pixels, int width, int height, int stride, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var rgba = new byte[checked(width * height * 4)];
         var dst = 0;
         for (var y = 0; y < height; y++) {
-            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfFallbackAborted(cancellationToken);
             var row = y * stride;
             for (var x = 0; x < width; x++) {
-                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((x & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
                 var i = row + (x * 4);
                 rgba[dst + 0] = pixels[i + 2];
                 rgba[dst + 1] = pixels[i + 1];
@@ -45,14 +45,14 @@ public static partial class QrImageDecoder {
     }
 
     private static byte[] BuildGrayscale(byte[] rgba, int width, int height, int stride, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var gray = new byte[checked(width * height)];
         var dst = 0;
         for (var y = 0; y < height; y++) {
-            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfFallbackAborted(cancellationToken);
             var row = y * stride;
             for (var x = 0; x < width; x++) {
-                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((x & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
                 var i = row + (x * 4);
                 ReadCompositedRgba(rgba, i, out var r, out var g, out var b);
                 var lum = (299 * r) + (587 * g) + (114 * b);
@@ -63,14 +63,14 @@ public static partial class QrImageDecoder {
     }
 
     private static byte[] BuildChannelGrayscale(byte[] rgba, int width, int height, int stride, int variant, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var gray = new byte[checked(width * height)];
         var dst = 0;
         for (var y = 0; y < height; y++) {
-            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfFallbackAborted(cancellationToken);
             var row = y * stride;
             for (var x = 0; x < width; x++) {
-                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((x & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
                 var i = row + (x * 4);
                 ReadCompositedRgba(rgba, i, out var r, out var g, out var b);
                 gray[dst++] = variant switch {
@@ -98,24 +98,24 @@ public static partial class QrImageDecoder {
     }
 
     private static byte[] InvertGrayscale(byte[] gray, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var inverted = new byte[gray.Length];
         for (var i = 0; i < gray.Length; i++) {
-            if ((i & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+            if ((i & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
             inverted[i] = (byte)(255 - gray[i]);
         }
         return inverted;
     }
 
     private static void ComputeGrayStats(byte[] gray, out byte min, out byte max, out int mean, out byte otsuThreshold, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var histogram = new int[256];
         long sum = 0;
         min = 255;
         max = 0;
 
         for (var i = 0; i < gray.Length; i++) {
-            if ((i & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+            if ((i & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
             var value = gray[i];
             histogram[value]++;
             sum += value;
@@ -187,14 +187,14 @@ public static partial class QrImageDecoder {
     }
 
     private static bool TryContrastStretch(byte[] gray, out byte[] stretched, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         stretched = Array.Empty<byte>();
         if (gray.Length == 0) return false;
 
         byte min = 255;
         byte max = 0;
         for (var i = 0; i < gray.Length; i++) {
-            if ((i & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+            if ((i & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
             var value = gray[i];
             if (value < min) min = value;
             if (value > max) max = value;
@@ -206,7 +206,7 @@ public static partial class QrImageDecoder {
         stretched = new byte[gray.Length];
         var scale = 255.0 / range;
         for (var i = 0; i < gray.Length; i++) {
-            if ((i & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+            if ((i & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
             var value = (int)((gray[i] - min) * scale + 0.5);
             stretched[i] = (byte)ClampByte(value);
         }
@@ -214,7 +214,7 @@ public static partial class QrImageDecoder {
     }
 
     private static bool TryLocalNormalize(byte[] gray, int width, int height, out byte[] normalized, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         normalized = Array.Empty<byte>();
         if (gray.Length == 0 || width <= 0 || height <= 0) return false;
 
@@ -228,13 +228,13 @@ public static partial class QrImageDecoder {
         var integral = new int[stride * (height + 1)];
 
         for (var y = 1; y <= height; y++) {
-            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfFallbackAborted(cancellationToken);
             var rowSum = 0;
             var srcRow = (y - 1) * width;
             var baseIndex = y * stride;
             var prevIndex = (y - 1) * stride;
             for (var x = 1; x <= width; x++) {
-                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((x & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
                 rowSum += gray[srcRow + (x - 1)];
                 integral[baseIndex + x] = integral[prevIndex + x] + rowSum;
             }
@@ -242,7 +242,7 @@ public static partial class QrImageDecoder {
 
         normalized = new byte[gray.Length];
         for (var y = 0; y < height; y++) {
-            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfFallbackAborted(cancellationToken);
             var y0 = y - radius;
             var y1 = y + radius;
             if (y0 < 0) y0 = 0;
@@ -252,7 +252,7 @@ public static partial class QrImageDecoder {
             var y1i = (y1 + 1) * stride;
 
             for (var x = 0; x < width; x++) {
-                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((x & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
                 var x0 = x - radius;
                 var x1 = x + radius;
                 if (x0 < 0) x0 = 0;
@@ -271,7 +271,7 @@ public static partial class QrImageDecoder {
     }
 
     private static bool TryFindDarkBounds(byte[] gray, int width, int height, byte threshold, out int minX, out int minY, out int maxX, out int maxY, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         minX = width;
         minY = height;
         maxX = -1;
@@ -279,9 +279,9 @@ public static partial class QrImageDecoder {
 
         var idx = 0;
         for (var y = 0; y < height; y++) {
-            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfFallbackAborted(cancellationToken);
             for (var x = 0; x < width; x++, idx++) {
-                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((x & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
                 if (gray[idx] >= threshold) continue;
                 if (x < minX) minX = x;
                 if (y < minY) minY = y;

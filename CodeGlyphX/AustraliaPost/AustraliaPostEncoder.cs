@@ -25,6 +25,39 @@ public static class AustraliaPostEncoder {
             throw new InvalidOperationException("Australia Post expects 8, 13, 16, 18, or 23 characters (see documentation).");
         }
 
+        return EncodeCore(format, fcc, table, dpid, customerInfo, out _);
+    }
+
+    /// <summary>Encodes an explicit FCC, eight-digit DPID and variable-length customer field using the selected table.</summary>
+    /// <remarks>The input begins with FCC 00, 11, 59 or 62. Unlike the legacy DPID-only overload, it retains trailing customer spaces.</remarks>
+    public static BitMatrix Encode(string content, AustraliaPostCustomerEncodingTable customerTable) =>
+        EncodeSymbol(content, customerTable).Modules.Clone();
+
+    /// <summary>Encodes explicit postal fields and retains their exact readable interpretation and four parity symbols.</summary>
+    public static AustraliaPostSymbol EncodeSymbol(string content, AustraliaPostCustomerEncodingTable customerTable = AustraliaPostCustomerEncodingTable.C) {
+        if (content is null) throw new ArgumentNullException(nameof(content));
+        if (!Enum.IsDefined(typeof(AustraliaPostCustomerEncodingTable), customerTable)) throw new ArgumentOutOfRangeException(nameof(customerTable));
+        if (content.Length < 10 || content.Length > 25) throw new ArgumentException("Supply a two-digit FCC, eight-digit DPID and the customer information.", nameof(content));
+        var fccText = content.Substring(0, 2); var dpid = content.Substring(2, 8); var info = content.Substring(10);
+        if (!IsDigitsOnly(fccText) || !IsDigitsOnly(dpid)) throw new ArgumentException("FCC and DPID require ASCII decimal digits.", nameof(content));
+        var fcc = int.Parse(fccText, CultureInfo.InvariantCulture);
+        var format = fcc is 0 or 11 ? AustraliaPostFormat.Standard : fcc == 59 ? AustraliaPostFormat.Customer2
+            : fcc == 62 ? AustraliaPostFormat.Customer3 : throw new ArgumentException("Supported FCC values are 00, 11, 59 and 62.", nameof(content));
+        if (fcc == 0 && dpid != "00000000") throw new ArgumentException("FCC 00 requires DPID 00000000.", nameof(content));
+        var maximum = format == AustraliaPostFormat.Standard ? 0 : customerTable == AustraliaPostCustomerEncodingTable.N
+            ? format == AustraliaPostFormat.Customer2 ? 8 : 15 : format == AustraliaPostFormat.Customer2 ? 5 : 10;
+        if (info.Length > maximum || (customerTable == AustraliaPostCustomerEncodingTable.N ? !IsDigitsOnly(info) : !IsCContent(info)))
+            throw new ArgumentException("The customer information does not fit the selected format and encoding table.", nameof(content));
+        AustraliaPostCustomerEncodingTable? table = format == AustraliaPostFormat.Standard ? null : customerTable;
+        var modules = EncodeCore(format, fcc, table, dpid, info, out var parity);
+        var choices = table.HasValue ? new[] { new AustraliaPostCustomerInfo(info, table.Value) } : Array.Empty<AustraliaPostCustomerInfo>();
+        var data = new AustraliaPostDecoded(format, fcc, dpid, info, table, false, parity, choices);
+        return new AustraliaPostSymbol(modules, data);
+    }
+
+    private static BitMatrix EncodeCore(AustraliaPostFormat format, int fcc, AustraliaPostCustomerEncodingTable? table,
+        string dpid, string customerInfo, out int[] parity) {
+
         var infoBars = new List<int>(GetInfoBarsCapacity(format));
 
         AppendFcc(infoBars, fcc);
@@ -36,7 +69,7 @@ public static class AustraliaPostEncoder {
             AppendCustomer(infoBars, customerInfo, table!.Value, format);
         }
 
-        var parityBars = BuildParityBars(infoBars);
+        var parityBars = BuildParityBars(infoBars, out parity);
 
         var bars = new List<int>(2 + infoBars.Count + parityBars.Count + 2) {
             AustraliaPostTables.StartBarAscender,
@@ -166,14 +199,14 @@ public static class AustraliaPostEncoder {
         return format == AustraliaPostFormat.Customer2 ? 36 : 51;
     }
 
-    private static List<int> BuildParityBars(List<int> infoBars) {
+    private static List<int> BuildParityBars(List<int> infoBars, out int[] parity) {
         var symbols = new int[infoBars.Count / 3];
         for (var i = 0; i < symbols.Length; i++) {
             var idx = i * 3;
             symbols[i] = AustraliaPostTables.BarDigitsToValue(infoBars[idx], infoBars[idx + 1], infoBars[idx + 2]);
         }
 
-        var parity = AustraliaPostTables.ComputeParity(symbols);
+        parity = AustraliaPostTables.ComputeParity(symbols);
         var parityBars = new List<int>(12);
         Span<int> digits = stackalloc int[3];
         for (var i = 0; i < parity.Length; i++) {

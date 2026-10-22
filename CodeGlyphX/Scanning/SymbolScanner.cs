@@ -121,6 +121,7 @@ public static partial class SymbolScanner {
             searchedSeparatedRegions = true;
         }
 
+        if (!ShouldStop(options, deadline, results)) ScanUltracode(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         // Default all-format negatives retain their established recognition allowance.
         // A QR hit can trigger region recovery early enough to find the other families.
@@ -489,7 +490,11 @@ public static partial class SymbolScanner {
             Bc412Variant = source.Bc412Variant,
             Code39Checksum = source.Code39Checksum,
             Code39FullAscii = source.Code39FullAscii,
+            CodabarChecksum = source.CodabarChecksum,
+            TwoOfFiveChecksum = source.TwoOfFiveChecksum,
             MsiChecksum = source.MsiChecksum,
+            MsiChecksumAlgorithm = source.MsiChecksumAlgorithm,
+            MsiExpectedDataLength = source.MsiExpectedDataLength,
             Code11Checksum = source.Code11Checksum,
             PlesseyChecksum = source.PlesseyChecksum,
             EnableTileScan = source.EnableTileScan,
@@ -605,6 +610,10 @@ public static partial class SymbolScanner {
             completionReason = ScanCompletionReason.RecognitionBudgetExceeded;
             failure ??= "A recognition family exhausted its time allowance; further symbols may exist.";
         }
+        if (completionReason == ScanCompletionReason.Completed && deadline.ResourceLimitReached) {
+            completionReason = ScanCompletionReason.ResourceLimitReached;
+            failure ??= "A recognition route reached its workspace or candidate limit; further symbols may exist.";
+        }
         return new ScanResult(status, symbols, unsupported, deadline.Elapsed, failure, completionReason);
     }
 
@@ -615,6 +624,8 @@ public static partial class SymbolScanner {
     }
 
     private static void ValidateOptions(ScanOptions options) {
+        if (options.CompositeCarrier.HasValue && !Enum.IsDefined(typeof(Gs1CompositeCarrier), options.CompositeCarrier.Value))
+            throw new ArgumentOutOfRangeException(nameof(options.CompositeCarrier));
         if (options.SamplingGrid is not null && (options.Formats is null || options.Formats.Length != 1))
             throw new ArgumentException("A calibrated grid requires exactly one explicitly selected format.", nameof(options));
         if (options.TimeoutMilliseconds < 0) throw new ArgumentOutOfRangeException(nameof(options.TimeoutMilliseconds));
@@ -628,13 +639,24 @@ public static partial class SymbolScanner {
                 options.Qr.MaxScale < 0 || options.Qr.MaxScale > 8 || options.Qr.BudgetMilliseconds < 0)
                 throw new ArgumentOutOfRangeException(nameof(options.Qr));
         }
+        if (options.AustraliaPostCustomerTable.HasValue && !Enum.IsDefined(typeof(AustraliaPost.AustraliaPostCustomerEncodingTable), options.AustraliaPostCustomerTable.Value))
+            throw new ArgumentOutOfRangeException(nameof(options.AustraliaPostCustomerTable));
+        if (options.AustraliaPostCustomerInfoLength.HasValue && (options.AustraliaPostCustomerInfoLength.Value < 0 || options.AustraliaPostCustomerInfoLength.Value > 15))
+            throw new ArgumentOutOfRangeException(nameof(options.AustraliaPostCustomerInfoLength));
         if (options.Barcode is not null) {
             ValidateTileGrid(options.Barcode.TileGrid, nameof(options.Barcode.TileGrid));
-            if (!Enum.IsDefined(typeof(Code39ChecksumPolicy), options.Barcode.Code39Checksum) ||
+            if (!Enum.IsDefined(typeof(OptionalChecksumPolicy), options.Barcode.CodabarChecksum) ||
+                !Enum.IsDefined(typeof(OptionalChecksumPolicy), options.Barcode.TwoOfFiveChecksum) ||
+                !Enum.IsDefined(typeof(Code39ChecksumPolicy), options.Barcode.Code39Checksum) ||
                 !Enum.IsDefined(typeof(MsiChecksumPolicy), options.Barcode.MsiChecksum) ||
                 !Enum.IsDefined(typeof(Code11ChecksumPolicy), options.Barcode.Code11Checksum) ||
                 !Enum.IsDefined(typeof(PlesseyChecksumPolicy), options.Barcode.PlesseyChecksum))
                 throw new ArgumentOutOfRangeException(nameof(options.Barcode));
+            if (options.Barcode.MsiChecksumAlgorithm.HasValue && !Enum.IsDefined(typeof(MsiChecksumType), options.Barcode.MsiChecksumAlgorithm.Value))
+                throw new ArgumentOutOfRangeException(nameof(options.Barcode.MsiChecksumAlgorithm));
+            if (options.Barcode.MsiExpectedDataLength.HasValue && (!options.Barcode.MsiChecksumAlgorithm.HasValue
+                || options.Barcode.MsiExpectedDataLength.Value < 1 || options.Barcode.MsiExpectedDataLength.Value > 1048576))
+                throw new ArgumentOutOfRangeException(nameof(options.Barcode.MsiExpectedDataLength));
         }
         if (options.DirectPartMarking is not null) DirectPartMarkPreprocessor.Validate(options.DirectPartMarking);
     }

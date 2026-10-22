@@ -15,16 +15,7 @@ public static class PlesseyEncoder {
         if (content is null) throw new ArgumentNullException(nameof(content));
         if (content.Length == 0) throw new InvalidOperationException("Plessey content cannot be empty.");
 
-        var bits = new List<bool>(content.Length * 4 + 16);
-        for (var i = 0; i < content.Length; i++) {
-            var ch = char.ToUpperInvariant(content[i]);
-            if (!PlesseyTables.HexValues.TryGetValue(ch, out var value)) {
-                throw new InvalidOperationException($"Invalid Plessey hex digit: '{content[i]}'.");
-            }
-            for (var b = 0; b < 4; b++) {
-                bits.Add(((value >> b) & 1) != 0);
-            }
-        }
+        var bits = DataBits(content);
 
         var crc = CalcCrc(bits);
         for (var b = 0; b < 8; b++) {
@@ -40,6 +31,26 @@ public static class PlesseyEncoder {
         AppendBits(segments, PlesseyTables.StopBits, reverse: true);
 
         return new Barcode1D(segments, SymbolFormat.Plessey);
+    }
+
+    internal static string CheckCharacters(string content) {
+        var crc = CalcCrc(DataBits(content));
+        const string hex = "0123456789ABCDEF";
+        return new string(new[] { hex[crc & 15], hex[crc >> 4] });
+    }
+
+    private static List<bool> DataBits(string content) {
+        var bits = new List<bool>(content.Length * 4 + 16);
+        for (var i = 0; i < content.Length; i++) {
+            var ch = char.ToUpperInvariant(content[i]);
+            if (!PlesseyTables.HexValues.TryGetValue(ch, out var value)) {
+                throw new InvalidOperationException($"Invalid Plessey hex digit: '{content[i]}'.");
+            }
+            for (var b = 0; b < 4; b++) {
+                bits.Add(((value >> b) & 1) != 0);
+            }
+        }
+        return bits;
     }
 
     private static void AppendBits(List<BarSegment> segments, string bits, bool reverse) {
@@ -70,17 +81,5 @@ public static class PlesseyEncoder {
         }
     }
 
-    private static byte CalcCrc(List<bool> bits) {
-        const int poly = 0x1E9;
-        var crc = 0;
-        for (var i = 0; i < bits.Count; i++) {
-            crc = (crc << 1) | (bits[i] ? 1 : 0);
-            if ((crc & 0x100) != 0) crc ^= poly;
-        }
-        for (var i = 0; i < 8; i++) {
-            crc <<= 1;
-            if ((crc & 0x100) != 0) crc ^= poly;
-        }
-        return (byte)(crc & 0xFF);
-    }
+    private static byte CalcCrc(List<bool> bits) => PlesseyChecks.Calculate(bits.ToArray());
 }

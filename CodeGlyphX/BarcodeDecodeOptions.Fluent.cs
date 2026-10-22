@@ -1,6 +1,10 @@
 namespace CodeGlyphX;
 
 public sealed partial class BarcodeDecodeOptions {
+    /// <summary>Selects Codabar optional Mod16 check handling.</summary>
+    public BarcodeDecodeOptions WithCodabarChecksum(OptionalChecksumPolicy policy) { CodabarChecksum = policy; return this; }
+    /// <summary>Selects optional Mod10 check handling for ITF and discrete 2 of 5.</summary>
+    public BarcodeDecodeOptions WithTwoOfFiveChecksum(OptionalChecksumPolicy policy) { TwoOfFiveChecksum = policy; return this; }
     /// <summary>
     /// Sets Code39 checksum handling.
     /// </summary>
@@ -14,6 +18,12 @@ public sealed partial class BarcodeDecodeOptions {
     /// </summary>
     public BarcodeDecodeOptions WithMsiChecksum(MsiChecksumPolicy policy) {
         MsiChecksum = policy;
+        return this;
+    }
+
+    /// <summary>Selects an MSI algorithm and optional known data length without guessing between check conventions.</summary>
+    public BarcodeDecodeOptions WithMsiChecksum(MsiChecksumPolicy policy, MsiChecksumType algorithm, int? expectedDataLength = null) {
+        MsiChecksum = policy; MsiChecksumAlgorithm = algorithm; MsiExpectedDataLength = expectedDataLength;
         return this;
     }
 

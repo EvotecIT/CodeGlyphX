@@ -4,7 +4,7 @@ using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Aztec;
 
-internal static class AztecEncoder {
+internal static partial class AztecEncoder {
     private const int DefaultEcPercent = 33;
     private const int MaxLayers = 32;
     private const int MaxCompactLayers = 4;

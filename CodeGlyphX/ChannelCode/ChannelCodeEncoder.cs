@@ -9,7 +9,13 @@ public static class ChannelCodeEncoder {
     /// <summary>Encodes two through seven digits. Automatic channel selection preserves the supplied digit width.</summary>
     /// <param name="value">Two through seven decimal digits whose number fits the selected channel capacity.</param>
     /// <param name="channels">Three through eight channels, or null to select the digit count plus one. An explicitly wider channel count decodes with leading zeros to that count minus one.</param>
-    public static Barcode1D Encode(string value, int? channels = null) {
+    public static Barcode1D Encode(string value, int? channels = null) => Encode(value, channels, false);
+
+    /// <summary>Encodes using the full five-bar or short three-bar finder, with automatic channel selection.</summary>
+    public static Barcode1D Encode(string value, bool shortFinder) => Encode(value, null, shortFinder);
+
+    /// <summary>Encodes with explicit channel count and finder length. The existing full-finder default is preserved.</summary>
+    public static Barcode1D Encode(string value, int? channels, bool shortFinder) {
         if (value is null) throw new ArgumentNullException(nameof(value));
         if (value.Length < 2 || value.Length > 7) throw new ArgumentException("Channel Code accepts two through seven decimal digits.", nameof(value));
         for (var i = 0; i < value.Length; i++)
@@ -20,8 +26,9 @@ public static class ChannelCodeEncoder {
         if (value.Length >= count || number > ChannelCodeRank.Capacities[count - 3])
             throw new ArgumentException("The value exceeds the selected Channel Code capacity.", nameof(value));
         var body = new ChannelCodeRank(count).Unrank(number);
-        var segments = new List<BarSegment>(9 + body.Length);
-        for (var i = 0; i < 9; i++) segments.Add(new BarSegment((i & 1) == 0, 1));
+        var finder = shortFinder ? 5 : 9;
+        var segments = new List<BarSegment>(finder + body.Length);
+        for (var i = 0; i < finder; i++) segments.Add(new BarSegment((i & 1) == 0, 1));
         for (var i = 0; i < body.Length; i++) segments.Add(new BarSegment((i & 1) != 0, body[i]));
         return new Barcode1D(segments, SymbolFormat.ChannelCode);
     }

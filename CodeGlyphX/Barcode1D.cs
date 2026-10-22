@@ -25,13 +25,19 @@ public sealed class Barcode1D {
     /// <summary>Gets the encoded physical format, or null for a manually constructed sequence of runs.</summary>
     public SymbolFormat? Format { get; }
 
+    /// <summary>Gets the preferred interpretation selected by explicit encoding options, or null when none was supplied.</summary>
+    /// <remarks>Physical print layout uses this line unless overridden. Existing pixel-render labels keep their own settings.</remarks>
+    public string? HumanReadableText { get; }
+
     /// <summary>
     /// Creates a new <see cref="Barcode1D"/> from the provided segments.
     /// </summary>
     /// <param name="segments">Barcode segments in order (must contain at least one segment, each with a positive width).</param>
     public Barcode1D(IEnumerable<BarSegment> segments) : this(segments, null) { }
 
-    internal Barcode1D(IEnumerable<BarSegment> segments, SymbolFormat? format) {
+    internal Barcode1D(IEnumerable<BarSegment> segments, SymbolFormat? format) : this(segments, format, null) { }
+
+    internal Barcode1D(IEnumerable<BarSegment> segments, SymbolFormat? format, string? humanReadableText) {
         if (segments is null) throw new ArgumentNullException(nameof(segments));
         var snapshot = segments.ToArray();
         if (snapshot.Length == 0) throw new ArgumentException("At least one segment is required.", nameof(segments));
@@ -44,6 +50,7 @@ public sealed class Barcode1D {
         _segments = Array.AsReadOnly(snapshot);
         TotalModules = total;
         Format = format;
+        HumanReadableText = humanReadableText;
     }
 
     /// <summary>Renders the encoded bars with layout and output settings.</summary>

@@ -48,6 +48,12 @@ public static partial class Barcode {
     /// </summary>
     public static Barcode1D Encode(SymbolFormat type, string content) {
         var barcode = BarcodeEncoder.Encode(SymbolCapabilities.GetBarcodeType(type), content);
-        return new Barcode1D(barcode.Segments, type);
+        return new Barcode1D(barcode.Segments, type, barcode.HumanReadableText);
+    }
+
+    /// <summary>Encodes with explicit optional-check and readable-text controls while preserving the physical format.</summary>
+    public static Barcode1D Encode(SymbolFormat type, string content, BarcodeEncodingOptions options) {
+        var barcode = BarcodeEncoder.Encode(SymbolCapabilities.GetBarcodeType(type), content, options);
+        return new Barcode1D(barcode.Segments, type, barcode.HumanReadableText);
     }
 }

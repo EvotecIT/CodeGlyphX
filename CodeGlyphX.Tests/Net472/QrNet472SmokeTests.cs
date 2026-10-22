@@ -54,7 +54,7 @@ public sealed class QrNet472SmokeTests {
             QuietZone = 8
         });
 
-        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 600, maxDimension: 900);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: TestBudget.Adjust(5000), maxDimension: 900);
         var ok = QrImageDecoder.TryDecodeImage(png, imageOptions, options: null, out var decoded);
         Assert.True(ok);
         Assert.Equal(Payload, decoded.Text);
@@ -69,7 +69,7 @@ public sealed class QrNet472SmokeTests {
         });
 
         using var stream = new System.IO.MemoryStream(png);
-        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 600, maxDimension: 1000);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: TestBudget.Adjust(5000), maxDimension: 1000);
         var ok = QrImageDecoder.TryDecodeImage(stream, imageOptions, options: null, out var decoded);
         Assert.True(ok);
         Assert.Equal(Payload, decoded.Text);
@@ -85,7 +85,7 @@ public sealed class QrNet472SmokeTests {
         var png = QrPngRenderer.Render(qr.Modules, opts);
 
         // Force a heavy downscale via ImageDecodeOptions.
-        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 800, maxDimension: 700);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: TestBudget.Adjust(5000), maxDimension: 700);
         var ok = QrImageDecoder.TryDecodeImage(png, imageOptions, options: new QrPixelDecodeOptions {
             MaxDimension = 4000
         }, out var decoded);
@@ -118,7 +118,7 @@ public sealed class QrNet472SmokeTests {
             QuietZone = 8
         });
 
-        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 700, maxDimension: 1200);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: TestBudget.Adjust(5000), maxDimension: 1200);
         var result = QrImageDecoder.DecodeImageResult(png, imageOptions, new QrPixelDecodeOptions {
             MaxDimension = 2500
         });

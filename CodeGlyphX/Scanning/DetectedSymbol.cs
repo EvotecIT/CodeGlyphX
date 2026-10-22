@@ -54,4 +54,8 @@ public sealed class DetectedSymbol {
         SymbologyIdentifier = symbologyIdentifier;
         DirectPartMarkProfile = directPartMarkProfile;
     }
+
+    internal DetectedSymbol WithMetadata(SymbolMetadata metadata) => new(Format, Text, _rawBytes,
+        metadata, PayloadProfile, SearchRegion, Geometry, Confidence, IsInverted, IsMirrored,
+        SymbologyIdentifier, DirectPartMarkProfile);
 }

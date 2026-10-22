@@ -52,14 +52,14 @@ internal static class CompositeComponentCodec {
         };
     }
 
-    internal static bool TryDecode(BitMatrix modules, out bool[] bits, out Gs1CompositeComponent component) {
+    internal static bool TryDecode(BitMatrix modules, out bool[] bits, out Gs1CompositeComponent component, bool tolerateSamplingErrors = false) {
         bits = Array.Empty<bool>();
         component = Gs1CompositeComponent.Auto;
-        if (TryDecodeCcA(modules, out bits)) {
+        if (TryDecodeCcA(modules, out bits, tolerateSamplingErrors)) {
             component = Gs1CompositeComponent.CcA;
             return true;
         }
-        if (TryDecodeCcB(modules, out bits)) {
+        if (TryDecodeCcB(modules, out bits, tolerateSamplingErrors)) {
             component = Gs1CompositeComponent.CcB;
             return true;
         }
@@ -79,7 +79,7 @@ internal static class CompositeComponentCodec {
         return BuildCcAMatrix(data, columns, variant);
     }
 
-    private static bool TryDecodeCcA(BitMatrix modules, out bool[] bits) {
+    private static bool TryDecodeCcA(BitMatrix modules, out bool[] bits, bool tolerateSamplingErrors) {
         bits = Array.Empty<bool>();
         var columns = modules.Width == 55 ? 2 : modules.Width == 72 ? 3 : modules.Width == 99 ? 4 : 0;
         if (columns == 0) return false;
@@ -92,25 +92,26 @@ internal static class CompositeComponentCodec {
         var right = CcARap[2][variant];
         var cluster = CcARap[3][variant];
         var output = 0;
+        var damagedRaps = tolerateSamplingErrors ? modules.Height * (columns == 4 ? 3 : 2) / 3 : 0;
         for (var row = 0; row < modules.Height; row++) {
             var position = 0;
             if (columns != 3) {
-                if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapLRBits[left]) return false;
+                if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapLRBits[left], ref damagedRaps)) return false;
                 position += 10;
             }
             if (!ReadCodeword(modules, row, ref position, cluster, out received[output++])) return false;
             if (columns == 3) {
-                if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapCBits[centre]) return false;
+                if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapCBits[centre], ref damagedRaps)) return false;
                 position += 10;
             }
             if (!ReadCodeword(modules, row, ref position, cluster, out received[output++])) return false;
             if (columns == 4) {
-                if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapCBits[centre]) return false;
+                if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapCBits[centre], ref damagedRaps)) return false;
                 position += 10;
             }
             if (columns >= 3 && !ReadCodeword(modules, row, ref position, cluster, out received[output++])) return false;
             if (columns == 4 && !ReadCodeword(modules, row, ref position, cluster, out received[output++])) return false;
-            if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapLRBits[right]) return false;
+            if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapLRBits[right], ref damagedRaps)) return false;
             position += 10;
             if (position >= modules.Width || !modules[position, row] || position + 1 != modules.Width) return false;
             left = NextRap(left);
@@ -146,12 +147,12 @@ internal static class CompositeComponentCodec {
         return BuildMicroMatrix(data, columns, rows, variant);
     }
 
-    private static bool TryDecodeCcB(BitMatrix modules, out bool[] bits) {
+    private static bool TryDecodeCcB(BitMatrix modules, out bool[] bits, bool tolerateSamplingErrors) {
         bits = Array.Empty<bool>();
         var columns = modules.Width == 55 ? 2 : modules.Width == 82 ? 3 : modules.Width == 99 ? 4 : 0;
         if (columns == 0 || !MicroPdf417Tables.TryGetVariant(columns, modules.Height, out var variant)) return false;
         var received = new int[columns * modules.Height];
-        if (!ReadMicroCodewords(modules, columns, variant, received)) return false;
+        if (!ReadMicroCodewords(modules, columns, variant, received, tolerateSamplingErrors)) return false;
         var eccCount = MicroPdf417Tables.MicroVariants[variant + 68];
         var dataCount = received.Length - eccCount;
         var coefficientOffset = MicroPdf417Tables.MicroVariants[variant + 102];
@@ -159,7 +160,7 @@ internal static class CompositeComponentCodec {
             if (!CorrectAndValidate(received, eccCount) ||
                 !ValidateCorrection(received, dataCount, eccCount, MicroPdf417Tables.MicroCoefficients, coefficientOffset)) return false;
         }
-        if (dataCount < 2 || received[0] != 920 || received[1] != 901) return false;
+        if (dataCount < 2 || received[0] != 920 || (received[1] != 901 && received[1] != 924)) return false;
         var target = FindCcBTarget(columns, modules.Height);
         if (target == 0) return false;
         var data = new int[dataCount - 1];
@@ -211,7 +212,7 @@ internal static class CompositeComponentCodec {
             var candidate = (int[])received.Clone();
             if (!CorrectAndValidate(candidate, eccCount)) continue;
             var dataCount = candidate.Length - eccCount;
-            if (candidate[0] != dataCount || candidate[1] != 920 || candidate[2] != 901) continue;
+            if (candidate[0] != dataCount || candidate[1] != 920 || (candidate[2] != 901 && candidate[2] != 924)) continue;
             var byteCodewords = dataCount - 3;
             var byteLength = 6 * (byteCodewords / 5) + byteCodewords % 5;
             var data = new int[dataCount - 2];
@@ -257,7 +258,7 @@ internal static class CompositeComponentCodec {
     }
 
     private static List<int> EncodeBytes(byte[] bytes) {
-        var result = new List<int>(bytes.Length + 1) { 901 };
+        var result = new List<int>(bytes.Length + 1) { bytes.Length > 0 && bytes.Length % 6 == 0 ? 924 : 901 };
         var index = 0;
         while (index + 6 <= bytes.Length) {
             long value = 0;
@@ -276,7 +277,8 @@ internal static class CompositeComponentCodec {
 
     private static bool TryDecodeBytes(int[] codewords, int byteLength, out byte[] bytes) {
         bytes = Array.Empty<byte>();
-        if (codewords.Length == 0 || codewords[0] != 901) return false;
+        if (codewords.Length == 0 || (codewords[0] != 901 && codewords[0] != 924)
+            || (codewords[0] == 924 && byteLength % 6 != 0)) return false;
         var result = new byte[byteLength];
         var codeword = 1;
         var output = 0;
@@ -284,7 +286,12 @@ internal static class CompositeComponentCodec {
         for (var group = 0; group < groups; group++) {
             if (codeword + 5 > codewords.Length) return false;
             long value = 0;
-            for (var i = 0; i < 5; i++) value = value * 900 + codewords[codeword++];
+            for (var i = 0; i < 5; i++) {
+                var item = codewords[codeword++];
+                if ((uint)item >= 900) return false;
+                value = value * 900 + item;
+            }
+            if (value > 0xffffffffffffL) return false;
             for (var i = 5; i >= 0; i--) {
                 result[output + i] = (byte)(value & 0xff);
                 value >>= 8;
@@ -292,9 +299,10 @@ internal static class CompositeComponentCodec {
             output += 6;
         }
         while (output < byteLength) {
-            if (codeword >= codewords.Length || codewords[codeword] > 255) return false;
+            if (codeword >= codewords.Length || (uint)codewords[codeword] > 255) return false;
             result[output++] = (byte)codewords[codeword++];
         }
+        if (codeword != codewords.Length) return false;
         bytes = result;
         return true;
     }
@@ -377,29 +385,30 @@ internal static class CompositeComponentCodec {
         return matrix;
     }
 
-    private static bool ReadMicroCodewords(BitMatrix modules, int columns, int variant, int[] output) {
+    private static bool ReadMicroCodewords(BitMatrix modules, int columns, int variant, int[] output, bool tolerateSamplingErrors) {
         var left = MicroPdf417Tables.RapTable[variant];
         var centre = MicroPdf417Tables.RapTable[variant + 34];
         var right = MicroPdf417Tables.RapTable[variant + 68];
         var cluster = MicroPdf417Tables.RapTable[variant + 102] / 3;
         var index = 0;
+        var damagedRaps = tolerateSamplingErrors ? modules.Height * (columns >= 3 ? 3 : 2) / 3 : 0;
         for (var row = 0; row < modules.Height; row++) {
             var position = 0;
-            if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapLRBits[left]) return false;
+            if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapLRBits[left], ref damagedRaps)) return false;
             position += 10;
             if (!ReadCodeword(modules, row, ref position, cluster, out output[index++])) return false;
             if (columns == 3) {
-                if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapCBits[centre]) return false;
+                if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapCBits[centre], ref damagedRaps)) return false;
                 position += 10;
             }
             if (columns >= 2 && !ReadCodeword(modules, row, ref position, cluster, out output[index++])) return false;
             if (columns == 4) {
-                if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapCBits[centre]) return false;
+                if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapCBits[centre], ref damagedRaps)) return false;
                 position += 10;
             }
             if (columns >= 3 && !ReadCodeword(modules, row, ref position, cluster, out output[index++])) return false;
             if (columns == 4 && !ReadCodeword(modules, row, ref position, cluster, out output[index++])) return false;
-            if (ReadBits(modules, row, position, 10) != MicroPdf417Tables.RapLRBits[right]) return false;
+            if (!MatchSampledRap(ReadBits(modules, row, position, 10), MicroPdf417Tables.RapLRBits[right], ref damagedRaps)) return false;
             position += 10;
             if (position >= modules.Width || !modules[position, row]) return false;
             left = NextRap(left);
@@ -407,6 +416,20 @@ internal static class CompositeComponentCodec {
             right = NextRap(right);
             cluster = (cluster + 1) % 3;
         }
+        return true;
+    }
+
+    private static bool MatchSampledRap(int actual, int expected, ref int remaining) {
+        var difference = actual ^ expected;
+        if (difference == 0) return true;
+        if (remaining == 0) return false;
+        var errors = 0;
+        for (; difference != 0; difference &= difference - 1) errors++;
+        // Image sampling may shift one edge across two cells. At least two thirds
+        // of the known row-address patterns must still match exactly. Data framing,
+        // correction, GS1 content and carrier linkage remain independently checked.
+        if (errors > 2) return false;
+        remaining--;
         return true;
     }
 

@@ -27,6 +27,12 @@ public static class SymbolCapabilities {
             ImageGeometry | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
+        Entry(SymbolFormat.AztecRune, "Aztec Rune", SymbolFamily.Matrix, ImageGeometry),
+        Entry(SymbolFormat.CodeOne, "Code One", SymbolFamily.Matrix, ImageGeometry | SymbolCapabilityFlags.Gs1Encode
+            | SymbolCapabilityFlags.Gs1Decode | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
+        Entry(SymbolFormat.Ultracode, "Ultracode", SymbolFamily.Matrix, SymbolCapabilityFlags.Encode
+            | SymbolCapabilityFlags.DecodeColorCells | SymbolCapabilityFlags.ScanImage
+            | SymbolCapabilityFlags.ReportsGeometry | SymbolCapabilityFlags.ScanMultiple),
         Legacy(SymbolFormat.Code128, "Code 128", SymbolFamily.Linear, BarcodeType.Code128, ImageMulti),
         Legacy(SymbolFormat.Gs1Code128, "GS1-128", SymbolFamily.Linear, BarcodeType.GS1_128,
             ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),

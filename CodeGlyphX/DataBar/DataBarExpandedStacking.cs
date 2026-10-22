@@ -105,7 +105,8 @@ internal static class DataBarExpandedStacking {
         var rowWidth = 0;
         for (var i = 0; i < widths.Length; i++) rowWidth += widths[i];
         var end = Math.Min(rowWidth - 4, matrix.Width - 4);
-        for (var x = 4; x < end; x++) {
+        // A special last row starts with a two-module guard; its adjacent separator starts one module later.
+        for (var x = widths[0] == 2 ? 5 : 4; x < end; x++) {
             if (!matrix[x, sourceRow]) matrix[x, targetRow] = true;
         }
 

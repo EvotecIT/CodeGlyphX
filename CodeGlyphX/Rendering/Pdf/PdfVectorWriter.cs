@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Globalization;
 
 namespace CodeGlyphX.Rendering.Pdf;
 
@@ -14,10 +15,21 @@ internal static class PdfVectorWriter {
         return ms.ToArray();
     }
 
+    /// <summary>Writes a vector page using explicit PDF-point dimensions, including fractional physical sizes.</summary>
+    internal static byte[] Write(double width, double height, string content) {
+        using var ms = new MemoryStream();
+        WriteCore(ms, width.ToString("0.########", CultureInfo.InvariantCulture), height.ToString("0.########", CultureInfo.InvariantCulture), width, height, content);
+        return ms.ToArray();
+    }
+
     internal static void Write(Stream stream, int width, int height, string content) {
+        WriteCore(stream, width.ToString(CultureInfo.InvariantCulture), height.ToString(CultureInfo.InvariantCulture), width, height, content);
+    }
+
+    private static void WriteCore(Stream stream, string widthText, string heightText, double width, double height, string content) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
-        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        if (double.IsNaN(width) || double.IsInfinity(width) || width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+        if (double.IsNaN(height) || double.IsInfinity(height) || height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (content is null) throw new ArgumentNullException(nameof(content));
 
         var offsets = new long[5];
@@ -40,7 +52,7 @@ internal static class PdfVectorWriter {
 
         offsets[3] = stream.Position;
         writer.WriteLine("3 0 obj");
-        writer.WriteLine($"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {width} {height}]");
+        writer.WriteLine($"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {widthText} {heightText}]");
         writer.WriteLine("   /Resources << >>");
         writer.WriteLine("   /Contents 4 0 R >>");
         writer.WriteLine("endobj");

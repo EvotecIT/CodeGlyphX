@@ -729,14 +729,14 @@ public static partial class QrImageDecoder {
         if (image is null) throw new ArgumentNullException(nameof(image));
         decoded = null!;
         info = default;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
         if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) return false;
 
         var mergedOptions = MergeDecodeOptions(imageOptions, options);
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, GetBudgetMs(imageOptions, mergedOptions), out var token);
         try {
             return TryDecodeFallbackCore(new QrFallbackFrame(rgba, width, height, width * 4, PixelFormat.Rgba32), mergedOptions, token, out decoded, out info);
-        } catch (OperationCanceledException) when (token.IsCancellationRequested) {
+        } catch (OperationCanceledException) when (FallbackShouldAbort(token)) {
             decoded = null!;
             info = default;
             return false;
@@ -746,7 +746,7 @@ public static partial class QrImageDecoder {
     private static bool TryDecodeAllImageFallback(byte[] image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         if (image is null) throw new ArgumentNullException(nameof(image));
         decoded = Array.Empty<QrDecoded>();
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
         if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) return false;
 
         var mergedOptions = MergeDecodeOptions(imageOptions, options);
@@ -754,7 +754,7 @@ public static partial class QrImageDecoder {
         var stride = width * 4;
         try {
             return TryDecodeAllFallbackCore(new QrFallbackFrame(rgba, width, height, stride, PixelFormat.Rgba32), mergedOptions, token, out decoded);
-        } catch (OperationCanceledException) when (token.IsCancellationRequested) {
+        } catch (OperationCanceledException) when (FallbackShouldAbort(token)) {
             decoded = Array.Empty<QrDecoded>();
             return false;
         }
@@ -813,7 +813,7 @@ public static partial class QrImageDecoder {
         if (image is null) throw new ArgumentNullException(nameof(image));
         decoded = null!;
         info = default;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
 
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
             return false;
@@ -827,7 +827,7 @@ public static partial class QrImageDecoder {
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options?.BudgetMilliseconds ?? 0, out var token);
         try {
             return TryDecodeAllFallbackCore(new QrFallbackFrame(pixels, width, height, stride, format), options, token, out decoded, deduplicate);
-        } catch (OperationCanceledException) when (token.IsCancellationRequested) {
+        } catch (OperationCanceledException) when (FallbackShouldAbort(token)) {
             decoded = Array.Empty<QrDecoded>();
             return false;
         }
@@ -844,14 +844,14 @@ public static partial class QrImageDecoder {
             AddFallbackResult(results, seen, fullFrame);
         }
 
-        if (options?.EnableTileScan == true && !cancellationToken.IsCancellationRequested) {
+        if (options?.EnableTileScan == true && !FallbackShouldAbort(cancellationToken)) {
             try {
                 if (TryDecodeAllTilesFallback(frame.Pixels, frame.Width, frame.Height, frame.Stride, frame.Format, options, cancellationToken, out var tileResults, deduplicate)) {
                     for (var i = 0; i < tileResults.Length; i++) {
                         AddFallbackResult(results, seen, tileResults[i]);
                     }
                 }
-            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            } catch (OperationCanceledException) when (FallbackShouldAbort(cancellationToken)) {
                 // A recognition budget ending during tile preparation must not discard the full-frame result.
             }
         }
@@ -864,11 +864,11 @@ public static partial class QrImageDecoder {
         decoded = Array.Empty<QrDecoded>();
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (width <= 0 || height <= 0 || stride < width * 4) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
 
         var rgba = format == PixelFormat.Rgba32 ? pixels : ConvertBgraToRgba(pixels, width, height, stride, cancellationToken);
         ApplyMaxDimension(ref rgba, ref width, ref height, ref stride, options, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
 
         var tileGrid = options.TileGrid;
         if (tileGrid < 2 || tileGrid > 4) {
@@ -898,7 +898,7 @@ public static partial class QrImageDecoder {
             if (th <= 0) continue;
 
             for (var tx = 0; tx < tileGrid; tx++) {
-                if (cancellationToken.IsCancellationRequested) {
+                if (FallbackShouldAbort(cancellationToken)) {
                     decoded = list.ToArray();
                     return decoded.Length > 0;
                 }
@@ -920,7 +920,7 @@ public static partial class QrImageDecoder {
             }
         }
 
-        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+        } catch (OperationCanceledException) when (FallbackShouldAbort(cancellationToken)) {
             // Preserve symbols recovered before cancellation interrupted a later tile.
         }
         decoded = list.ToArray();
@@ -933,7 +933,7 @@ public static partial class QrImageDecoder {
     }
 
     private static byte[] CropRgba(byte[] rgba, int width, int height, int stride, int x, int y, int cropWidth, int cropHeight, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         if (cropWidth <= 0 || cropHeight <= 0) return Array.Empty<byte>();
         var x0 = ClampInt(x, 0, width - 1);
         var y0 = ClampInt(y, 0, height - 1);
@@ -945,11 +945,11 @@ public static partial class QrImageDecoder {
         var dest = new byte[h * destStride];
 
         for (var row = 0; row < h; row++) {
-            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfFallbackAborted(cancellationToken);
             var srcIndex = (y0 + row) * stride + (x0 * 4);
             var dstIndex = row * destStride;
             for (var offset = 0; offset < destStride; offset += 4096) {
-                cancellationToken.ThrowIfCancellationRequested();
+                ThrowIfFallbackAborted(cancellationToken);
                 Buffer.BlockCopy(rgba, srcIndex + offset, dest, dstIndex + offset, Math.Min(4096, destStride - offset));
             }
         }
@@ -961,7 +961,7 @@ public static partial class QrImageDecoder {
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options?.BudgetMilliseconds ?? 0, out var token);
         try {
             return TryDecodeFallbackCore(new QrFallbackFrame(pixels, width, height, stride, format), options, token, out decoded, out info);
-        } catch (OperationCanceledException) when (token.IsCancellationRequested) {
+        } catch (OperationCanceledException) when (FallbackShouldAbort(token)) {
             decoded = null!;
             info = default;
             return false;
@@ -976,11 +976,11 @@ public static partial class QrImageDecoder {
         var height = frame.Height;
         var stride = frame.Stride;
         if (width <= 0 || height <= 0 || stride < width * 4) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
 
         var rgba = frame.Format == PixelFormat.Rgba32 ? pixels : ConvertBgraToRgba(pixels, width, height, stride, cancellationToken);
         ApplyMaxDimension(ref rgba, ref width, ref height, ref stride, options, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
 
         var grayscale = BuildGrayscale(rgba, width, height, stride, cancellationToken);
         if (TryDecodeGrayscaleVariants(grayscale, width, height, options, cancellationToken, out decoded, out info)) {
@@ -1041,7 +1041,7 @@ public static partial class QrImageDecoder {
     private static bool TryDecodeColorVariants(byte[] rgba, int width, int height, int stride, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         decoded = null!;
         info = default;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (FallbackShouldAbort(cancellationToken)) return false;
 
         for (var variant = 0; variant < 4; variant++) {
             var gray = BuildChannelGrayscale(rgba, width, height, stride, variant, cancellationToken);
@@ -1099,7 +1099,7 @@ public static partial class QrImageDecoder {
             foreach (var version in versions) {
                 var dimension = (version * 4) + 17;
                 var modules = SampleModules(gray, width, height, adjMinX, adjMinY, adjMaxX, adjMaxY, threshold, dimension);
-                if (cancellationToken.IsCancellationRequested) return false;
+                if (FallbackShouldAbort(cancellationToken)) return false;
 
                 if (TryDecodeModules(modules, options, cancellationToken, out decoded, out var moduleInfo)) {
                     info = new QrPixelDecodeInfo(1, threshold, invert: false, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
@@ -1119,13 +1119,22 @@ public static partial class QrImageDecoder {
     }
 
     private static bool TryDecodeModules(BitMatrix modules, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrDecodeInfo moduleInfo) {
-        if (cancellationToken.IsCancellationRequested) {
+        if (FallbackShouldAbort(cancellationToken)) {
             decoded = null!;
             moduleInfo = default;
             return false;
         }
 
-        if (QrDecoder.TryDecode(modules, out decoded, out moduleInfo)) {
+        var deadline = DecodeBudget.Capture();
+        Func<bool>? shouldStop = cancellationToken.CanBeCanceled || deadline.Enabled
+            ? () => deadline.ShouldAbort(cancellationToken) : null;
+        bool TryRead(BitMatrix candidate, out QrDecoded result, out QrDecodeInfo diagnostics) {
+            var ok = QrDecoder.TryDecodeInternal(candidate, shouldStop, out result, out var raw);
+            diagnostics = QrDecodeInfo.FromInternal(raw);
+            return ok;
+        }
+
+        if (TryRead(modules, out decoded, out moduleInfo)) {
             return true;
         }
 
@@ -1133,21 +1142,28 @@ public static partial class QrImageDecoder {
             return false;
         }
 
+        if (FallbackShouldAbort(cancellationToken)) return false;
         var rot90 = Rotate90(modules);
-        if (QrDecoder.TryDecode(rot90, out decoded, out moduleInfo)) return true;
+        if (TryRead(rot90, out decoded, out moduleInfo)) return true;
+        if (FallbackShouldAbort(cancellationToken)) return false;
         var rot180 = Rotate180(modules);
-        if (QrDecoder.TryDecode(rot180, out decoded, out moduleInfo)) return true;
+        if (TryRead(rot180, out decoded, out moduleInfo)) return true;
+        if (FallbackShouldAbort(cancellationToken)) return false;
         var rot270 = Rotate270(modules);
-        if (QrDecoder.TryDecode(rot270, out decoded, out moduleInfo)) return true;
+        if (TryRead(rot270, out decoded, out moduleInfo)) return true;
 
+        if (FallbackShouldAbort(cancellationToken)) return false;
         var mirror = MirrorX(modules);
-        if (QrDecoder.TryDecode(mirror, out decoded, out moduleInfo)) return true;
+        if (TryRead(mirror, out decoded, out moduleInfo)) return true;
+        if (FallbackShouldAbort(cancellationToken)) return false;
         var mirror90 = Rotate90(mirror);
-        if (QrDecoder.TryDecode(mirror90, out decoded, out moduleInfo)) return true;
+        if (TryRead(mirror90, out decoded, out moduleInfo)) return true;
+        if (FallbackShouldAbort(cancellationToken)) return false;
         var mirror180 = Rotate180(mirror);
-        if (QrDecoder.TryDecode(mirror180, out decoded, out moduleInfo)) return true;
+        if (TryRead(mirror180, out decoded, out moduleInfo)) return true;
+        if (FallbackShouldAbort(cancellationToken)) return false;
         var mirror270 = Rotate270(mirror);
-        if (QrDecoder.TryDecode(mirror270, out decoded, out moduleInfo)) return true;
+        if (TryRead(mirror270, out decoded, out moduleInfo)) return true;
 
         return false;
     }
@@ -1201,7 +1217,7 @@ public static partial class QrImageDecoder {
     }
 
     private static int EstimateDimension(byte[] gray, int width, int minX, int minY, int maxX, int maxY, byte threshold, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var boxWidth = (maxX - minX) + 1;
         var boxHeight = (maxY - minY) + 1;
         if (boxWidth < 21 || boxHeight < 21) return 0;
@@ -1213,7 +1229,7 @@ public static partial class QrImageDecoder {
         var lastDark = gray[rowStart] < threshold;
         var run = 0;
         for (var i = rowStart; i < rowEnd; i++) {
-                if ((i & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((i & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
             var dark = gray[i] < threshold;
             if (dark == lastDark) {
                 run++;
@@ -1238,7 +1254,7 @@ public static partial class QrImageDecoder {
     }
 
     private static int EstimateModuleSize(byte[] gray, int width, int height, int minX, int minY, int maxX, int maxY, byte threshold, CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfFallbackAborted(cancellationToken);
         var boxWidth = (maxX - minX) + 1;
         var boxHeight = (maxY - minY) + 1;
         if (boxWidth <= 0 || boxHeight <= 0) return 1;
@@ -1252,7 +1268,7 @@ public static partial class QrImageDecoder {
         var lastDark = gray[rowStart] < threshold;
         var run = 0;
         for (var x = 0; x < width; x++) {
-                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((x & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
             var dark = gray[rowStart + x] < threshold;
             if (dark == lastDark) {
                 run++;
@@ -1270,7 +1286,7 @@ public static partial class QrImageDecoder {
         var limit = baseline * 8;
         var filtered = new List<int>(32);
         for (var i = 0; i < runs.Count && filtered.Count < 32; i++) {
-                if ((i & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                if ((i & 1023) == 0) ThrowIfFallbackAborted(cancellationToken);
             var value = runs[i];
             if (value > limit) break;
             filtered.Add(value);

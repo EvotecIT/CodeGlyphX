@@ -1,0 +1,55 @@
+{
+  "inputs": {
+    "TestOutlines.otf": "96e0728fe8f5d3fb3572c437d0195134f2d6fa113aed44a8045112834e3774ee",
+    "TestOutlinesCff2.otf": "aeee9f788c034a01a6a3ac2135090d79e508ea7dfe03d34396cbad5661bd5eb4",
+    "TestOutlines.ttf": "490e83227fae41636a95fc7d05e1e242513938bbf2732089d7d305b9bfc53fe6"
+  },
+  "outputs": {
+    "TestMixedCffFirst.ttc": {
+      "sha256": "a3641ef5333d3815064f66af7d52f378ff92e3c1eef89ec383ff3489091a75c1",
+      "faces": [
+        {
+          "source": "TestOutlines.otf",
+          "A": 600,
+          "fi": 500,
+          "fi_glyph_id": 8
+        },
+        {
+          "source": "TestOutlinesCff2.otf",
+          "A": 700,
+          "fi": 650,
+          "fi_glyph_id": 5
+        },
+        {
+          "source": "TestOutlines.ttf",
+          "A": 800,
+          "fi": 700,
+          "fi_glyph_id": 8
+        }
+      ]
+    },
+    "TestMixedTrueTypeFirst.ttc": {
+      "sha256": "c4f846aecdfc737bad9a6c434a6095ab97810237431a41d2d021048010fae7bf",
+      "faces": [
+        {
+          "source": "TestOutlines.ttf",
+          "A": 600,
+          "fi": 500,
+          "fi_glyph_id": 8
+        },
+        {
+          "source": "TestOutlines.otf",
+          "A": 700,
+          "fi": 650,
+          "fi_glyph_id": 5
+        },
+        {
+          "source": "TestOutlinesCff2.otf",
+          "A": 800,
+          "fi": 700,
+          "fi_glyph_id": 8
+        }
+      ]
+    }
+  }
+}

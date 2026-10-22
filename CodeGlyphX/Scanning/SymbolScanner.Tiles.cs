@@ -51,6 +51,7 @@ public static partial class SymbolScanner {
         if (requested.Contains(SymbolFormat.QrCode)) count += 3;
         if (requested.Contains(SymbolFormat.MicroQrCode)) count++;
         if (requested.Contains(SymbolFormat.MaxiCode)) count++;
+        if (requested.Contains(SymbolFormat.Ultracode)) count += UltracodeAttemptWeight;
         foreach (var format in SpecialistImageDecoder.Formats) if (requested.Contains(format)) count++;
         if (requested.Contains(SymbolFormat.Gs1DataBarExpandedStacked)) count++;
         if (requested.Contains(SymbolFormat.Gs1DataBarStacked) || requested.Contains(SymbolFormat.Gs1DataBarStackedOmnidirectional)) count++;

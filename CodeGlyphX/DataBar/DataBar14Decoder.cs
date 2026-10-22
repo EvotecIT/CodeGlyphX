@@ -81,7 +81,21 @@ public static partial class DataBar14Decoder {
         return TryDecodeFromWidths(widths, out content);
     }
 
-    private static bool TryDecodeFromWidths(ReadOnlySpan<int> totalWidths, out string content) {
+    internal static bool TryDecodeComposite(BitMatrix modules, out string content) {
+        content = string.Empty;
+        Span<int> widths = stackalloc int[46];
+        if (modules.Height == 1) {
+            if (modules.Width != 96) return false;
+            var row = new bool[96];
+            for (var x = 0; x < row.Length; x++) row[x] = modules[x, 0];
+            if (!DataBarModuleRuns.TryRead(row, widths, out var count) || count != 46) return false;
+        } else if (modules.Height == 3 || modules.Height == 5) {
+            if (!TryExtractWidthsFromStacked(modules, 0, modules.Height - 1, widths)) return false;
+        } else return false;
+        return TryDecodeFromWidths(widths, out content, linked: true);
+    }
+
+    private static bool TryDecodeFromWidths(ReadOnlySpan<int> totalWidths, out string content, bool linked = false) {
         content = string.Empty;
         if (!HasValidGuards(totalWidths)) return false;
 
@@ -94,7 +108,7 @@ public static partial class DataBar14Decoder {
         Span<int> dataCharacters = stackalloc int[4];
         if (!TryDecodeDataCharacters(dataWidths, dataCharacters)) return false;
 
-        if (!TryBuildContent(dataCharacters, out content)) return false;
+        if (!TryBuildContent(dataCharacters, out content, linked)) return false;
         return true;
     }
 
@@ -190,11 +204,12 @@ public static partial class DataBar14Decoder {
         return true;
     }
 
-    private static bool TryBuildContent(ReadOnlySpan<int> dataCharacters, out string content) {
+    private static bool TryBuildContent(ReadOnlySpan<int> dataCharacters, out string content, bool linked = false) {
         content = string.Empty;
         var leftReg = dataCharacters[0] * 1597 + dataCharacters[1];
         var rightReg = dataCharacters[2] * 1597 + dataCharacters[3];
         var accum = leftReg * 4537077L + rightReg;
+        if (linked) accum -= 10000000000000L;
         if (accum < 0 || accum > 9999999999999L) return false;
         content = accum.ToString().PadLeft(13, '0');
         return true;

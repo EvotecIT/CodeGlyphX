@@ -12,6 +12,7 @@
         </div>
 
         @if (!IsArtwork) { <PlaygroundExample @key="_exampleKey" /> }
+        @if (SelectedMode == "Generate" && !IsArtwork) { <BarcodePrintStudio /> }
         <PlaygroundFooter />
     </CascadingValue>
 </div>

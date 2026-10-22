@@ -4,15 +4,17 @@ using CodeGlyphX.Gs1Composite;
 
 namespace CodeGlyphX;
 
-/// <summary>Encodes standards-linked GS1-128 Composite symbols.</summary>
+/// <summary>Encodes standards-linked GS1 Composite symbols.</summary>
 public static class Gs1CompositeEncoder {
-    /// <summary>Encodes a GS1-128 linear message and its associated two-dimensional message.</summary>
-    /// <param name="linearText">The GS1 data carried by the GS1-128 component.</param>
+    /// <summary>Encodes a linear message and its associated two-dimensional GS1 message.</summary>
+    /// <param name="linearText">The carrier's retail digits, GTIN, or GS1 element string.</param>
     /// <param name="compositeText">The GS1 data carried by CC-A, CC-B, or CC-C.</param>
     /// <param name="options">Optional component selection.</param>
     public static Gs1CompositeSymbol Encode(string linearText, string compositeText,
         Gs1CompositeEncodingOptions? options = null) {
         options ??= new Gs1CompositeEncodingOptions();
+        if (options.Carrier != Gs1CompositeCarrier.Gs1_128)
+            return CompositeCarrierCodec.Encode(linearText, compositeText, options);
         var linear = Gs1.ElementString(linearText);
         var composite = Gs1.ElementString(compositeText);
         if (linear.Length == 0) throw new ArgumentException("The linear component cannot be empty.", nameof(linearText));

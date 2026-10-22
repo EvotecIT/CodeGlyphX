@@ -6,13 +6,13 @@ public static partial class DataBarExpandedDecoder {
     // Twenty-two symbol characters, eleven five-element finders and four guards.
     private const int MaximumPatternElements = 235;
 
-    private static bool TryDecodeModules(bool[] modules, out string content) {
+    private static bool TryDecodeModules(bool[] modules, out string content, bool requireLinkage = false) {
         content = string.Empty;
         if (modules.Length < 2) return false;
         // At most two light boundary runs can be discarded by guard restoration.
         Span<int> widths = stackalloc int[MaximumPatternElements + 2];
         if (!DataBarModuleRuns.TryRead(modules, widths, out var count)) return false;
-        if (TryDecodeFromWidths(widths.Slice(0, count), out content)) return true;
+        if (TryDecodeFromWidths(widths.Slice(0, count), out content, requireLinkage)) return true;
 
         // Generic linear extraction may trim Expanded's light guards along with quiet space.
         // Preserve the original retries: one leading light module, then a trailing one as well.
@@ -22,16 +22,16 @@ public static partial class DataBarExpandedDecoder {
         if (innerCount <= 0 || innerCount + 1 > MaximumPatternElements) return false;
         widths.Slice(first, innerCount).CopyTo(widths.Slice(1));
         widths[0] = 1;
-        if (TryDecodeFromWidths(widths.Slice(0, innerCount + 1), out content)) return true;
+        if (TryDecodeFromWidths(widths.Slice(0, innerCount + 1), out content, requireLinkage)) return true;
         if (innerCount + 2 > MaximumPatternElements) return false;
         widths[innerCount + 1] = 1;
-        return TryDecodeFromWidths(widths.Slice(0, innerCount + 2), out content);
+        return TryDecodeFromWidths(widths.Slice(0, innerCount + 2), out content, requireLinkage);
     }
 
-    private static bool TryDecodeFromWidths(ReadOnlySpan<int> widths, out string content) {
+    private static bool TryDecodeFromWidths(ReadOnlySpan<int> widths, out string content, bool requireLinkage = false) {
         content = string.Empty;
         return TryGetTotalCharacters(widths.Length, out var totalChars)
-            && TryDecodeWithTotalChars(widths, totalChars, out content);
+            && TryDecodeWithTotalChars(widths, totalChars, out content, requireLinkage);
     }
 
     private static bool TryGetTotalCharacters(int patternWidth, out int totalChars) {
@@ -54,7 +54,7 @@ public static partial class DataBarExpandedDecoder {
         return true;
     }
 
-    private static bool TryDecodeWithTotalChars(ReadOnlySpan<int> elements, int totalChars, out string content) {
+    private static bool TryDecodeWithTotalChars(ReadOnlySpan<int> elements, int totalChars, out string content, bool requireLinkage = false) {
         content = string.Empty;
         var dataChars = totalChars - 1;
         if (dataChars <= 0) return false;
@@ -65,6 +65,7 @@ public static partial class DataBarExpandedDecoder {
         if (!TryDecodeDataCharacter(checkWidths, out var checkChar)) return false;
         if (!DataBarExpandedSpecification.HasValidCheckCharacter(dataWidths, totalChars, checkChar)) return false;
         var bits = BuildDataBits(dataValues);
+        if (requireLinkage && !bits[0]) return false;
         return TryDecodePayload(bits, out content);
     }
 

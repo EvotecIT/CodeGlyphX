@@ -9,6 +9,18 @@ internal static partial class SpecialistImageDecoder {
     private static bool TryMatrix(MaskView view, ImageRegion region, SymbolFormat format, CancellationToken token,
         out ImageRegion sampledRegion, out DetectedSymbol symbol, out int rotation, out bool mirrored) {
         sampledRegion = region; symbol = null!; rotation = 0; mirrored = false;
+        if (format == SymbolFormat.AztecRune)
+            return TryRune(view, region, token, out sampledRegion, out symbol, out rotation, out mirrored);
+        if (format == SymbolFormat.CodeOne) {
+            foreach (var layout in CodeOne.CodeOneLayout.All) {
+                if (DecodeBudget.ShouldAbort(token)) return false;
+                var ratio = region.Width / (double)layout.Width / (region.Height / (double)layout.Height);
+                if (ratio < .8 || ratio > 1.25) continue;
+                if (TrySample(view, region, layout.Width, layout.Height, token, out var grid)
+                    && TryOrientations(grid, format, token, out symbol, out rotation, out mirrored)) return true;
+            }
+            return TryCodeOneTextBands(view, region, token, out sampledRegion, out symbol, out rotation, out mirrored);
+        }
         if (format == SymbolFormat.RmQrCode) {
             for (var version = 1; version <= 32; version++) {
                 var width = RmQrTables.GetWidth(version); var height = RmQrTables.GetHeight(version);
@@ -20,7 +32,7 @@ internal static partial class SpecialistImageDecoder {
             return false;
         }
         if (format == SymbolFormat.D3Aqr) return TryD3(view, region, token, out sampledRegion, out symbol, out rotation, out mirrored);
-        if (format == SymbolFormat.DotCode) return TryDots(view, region, token, out symbol, out rotation, out mirrored);
+        if (format == SymbolFormat.DotCode) return TryDots(view, region, token, out sampledRegion, out symbol, out rotation, out mirrored);
         if (region.Width / (double)region.Height < .65 || region.Width / (double)region.Height > 1.55) return false;
         var pitch = EstimatePitch(view, region, token);
         if (pitch == 0) return false;
@@ -29,6 +41,34 @@ internal static partial class SpecialistImageDecoder {
             if (pitch > 0 && Math.Abs(region.Width / (double)size / pitch - 1) > .22) continue;
             if (TrySample(view, region, size, size, token, out var grid)
                 && TryOrientations(grid, format, token, out symbol, out rotation, out mirrored)) return true;
+        }
+        return false;
+    }
+
+    private static bool TryRune(MaskView view, ImageRegion region, CancellationToken token,
+        out ImageRegion sampledRegion, out DetectedSymbol symbol, out int rotation, out bool mirrored) {
+        sampledRegion = region; symbol = null!; rotation = 0; mirrored = false;
+        var ratio = region.Width / (double)region.Height;
+        if (ratio < .8 || ratio > 1.25) return false;
+        if (TrySample(view, region, 11, 11, token, out var grid)
+            && TryOrientations(grid, SymbolFormat.AztecRune, token, out symbol, out rotation, out mirrored)) return true;
+        // Some values have an entirely white last mode-message row. The fixed
+        // orientation marks reach the other three edges, so at most one edge is
+        // missing. Restore it from the full eleven-module side, in either direction.
+        var size = Math.Max(region.Width, region.Height);
+        var missing = Math.Abs(region.Width - region.Height);
+        var pitch = size / 11.0;
+        if (missing < pitch * .5 || missing > pitch * 1.5) return false;
+        for (var before = 0; before <= 1; before++) {
+            if (DecodeBudget.ShouldAbort(token)) return false;
+            var left = region.X - (region.Width < size ? before * missing : 0);
+            var top = region.Y - (region.Height < size ? before * missing : 0);
+            if (left < 0 || top < 0 || left + size > view.Width || top + size > view.Height) continue;
+            var area = new ImageRegion(left, top, size, size);
+            if (!TrySample(view, area, 11, 11, token, out grid)
+                || !TryOrientations(grid, SymbolFormat.AztecRune, token, out symbol, out rotation, out mirrored)) continue;
+            sampledRegion = area;
+            return true;
         }
         return false;
     }
@@ -63,8 +103,8 @@ internal static partial class SpecialistImageDecoder {
     }
 
     private static bool TryDots(MaskView view, ImageRegion region, CancellationToken token,
-        out DetectedSymbol symbol, out int rotation, out bool mirrored) {
-        symbol = null!; rotation = 0; mirrored = false;
+        out ImageRegion sampledRegion, out DetectedSymbol symbol, out int rotation, out bool mirrored) {
+        sampledRegion = region; symbol = null!; rotation = 0; mirrored = false;
         // Circular dots can overlap in projection while remaining separate components. Use their
         // centers, not occupied projection bands or the renderer-dependent dot diameter.
         var local = new byte[checked(region.Width * region.Height)];
@@ -99,13 +139,22 @@ internal static partial class SpecialistImageDecoder {
                 grid[x, y] = view.Get(px, py);
             }
         }
-        return TryOrientations(grid, SymbolFormat.DotCode, token, out symbol, out rotation, out mirrored);
+        if (!TryOrientations(grid, SymbolFormat.DotCode, token, out symbol, out rotation, out mirrored)) return false;
+        var left = Math.Max(0, (int)Math.Floor(xs[0] - stepX / 2));
+        var top = Math.Max(0, (int)Math.Floor(ys[0] - stepY / 2));
+        var right = Math.Min(view.Width, (int)Math.Ceiling(xs[xs.Count - 1] + stepX / 2));
+        var bottom = Math.Min(view.Height, (int)Math.Ceiling(ys[ys.Count - 1] + stepY / 2));
+        sampledRegion = new ImageRegion(left, top, right - left, bottom - top);
+        return true;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S4158:Empty collections should not be accessed or iterated", Justification = "BinaryImageComponents.Visit synchronously populates the captured sizes and points collections for each qualifying component.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S2583:Conditionally executed code should be reachable", Justification = "The component visitor mutates the captured sizes list; both empty and populated component sets are reachable.")]
     private static System.Collections.Generic.List<SymbolPoint> CollectDotComponents(byte[] mask, ImageRegion region,
         CancellationToken token, out System.Collections.Generic.List<int> diameters) {
         var points = new System.Collections.Generic.List<SymbolPoint>();
         var sizes = new System.Collections.Generic.List<int>();
+        var largerSizes = new System.Collections.Generic.List<int>();
         BinaryImageComponents.Visit(mask, region.Width, region.Height, false, token, (queue, length, edge) => {
             if (length < 2) return false;
             var left = region.Width; var right = 0; var top = region.Height; var bottom = 0;
@@ -119,10 +168,22 @@ internal static partial class SpecialistImageDecoder {
             if (right - left > (bottom - top + 1) * 2 || bottom - top > (right - left + 1) * 2) return false;
             points.Add(new SymbolPoint(region.X + sumX / (double)length, region.Y + sumY / (double)length));
             sizes.Add(Math.Min(right - left + 1, bottom - top + 1));
+            largerSizes.Add(Math.Max(right - left + 1, bottom - top + 1));
             return points.Count > 20000;
         });
-        diameters = sizes;
-        return points;
+        // Printable captions contribute components too. The much more numerous dots establish
+        // a common diameter; large glyph outlines must not create extra lattice rows/columns.
+        var sorted = new System.Collections.Generic.List<int>(sizes);
+        sorted.Sort();
+        diameters = new System.Collections.Generic.List<int>();
+        if (sorted.Count == 0) return points;
+        var median = sorted[sorted.Count / 2];
+        var dots = new System.Collections.Generic.List<SymbolPoint>();
+        for (var i = 0; i < points.Count; i++) {
+            if (sizes[i] < median * .65 || largerSizes[i] > median * 1.5) continue;
+            dots.Add(points[i]); diameters.Add(sizes[i]);
+        }
+        return dots;
     }
 
     private static System.Collections.Generic.List<double> DotCenters(System.Collections.Generic.List<SymbolPoint> points,

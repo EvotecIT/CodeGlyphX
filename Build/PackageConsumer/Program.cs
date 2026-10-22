@@ -1,9 +1,11 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Printing;
 
 namespace CodeGlyphX.PackageConsumer;
 
@@ -52,6 +54,19 @@ internal static class Program {
             "PDF417 encoding lost its structural metadata.");
         var barcode = Barcode.Encode(type: SymbolFormat.Code128, content: "PRODUCT-42");
         Require(barcode.TotalModules > 0, "Linear encoding failed.");
+        foreach (var font in new[] { BarcodeFont.OcrA, BarcodeFont.OcrB }) {
+            var shaped = font.Shape("Batch aB09", 4);
+            Require(shaped.Text == "Batch aB09" && shaped.MissingGlyphs.Count == 0 && shaped.Contours.Count > 0,
+                "The packaged bundled font lost its repertoire or outlines.");
+            var label = BarcodePrint.Layout(barcode, new BarcodePrintOptions { Font = font, FontSizePoints = 8 });
+            Require(!label.HasErrors, "Bundled-font label failed preflight.");
+            var printed = SymbolScanner.Scan(label.Render(OutputFormat.Png).ToArray(), new ScanOptions {
+                Formats = new[] { SymbolFormat.Code128 }, TimeoutMilliseconds = 5000
+            });
+            Require(printed.Symbols.Any(symbol => symbol.Text == "PRODUCT-42"), "Bundled-font label did not scan.");
+            Require(!label.Render(OutputFormat.Svg).GetText().Contains("<text"), "SVG depends on external text rendering.");
+            Require(label.Render(OutputFormat.Pdf).Data.Length > 100, "Bundled-font PDF is empty.");
+        }
         Console.WriteLine("Package consumer contracts passed.");
     }
 

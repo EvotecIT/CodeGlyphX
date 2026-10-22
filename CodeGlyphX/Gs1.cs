@@ -8,7 +8,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// High-level helpers for parsing, validating, building, and encoding GS1 Application Identifier messages.
 /// </summary>
-public static class Gs1 {
+public static partial class Gs1 {
     /// <summary>ASCII Group Separator (FNC1) used between variable-length GS1 elements.</summary>
     public const char GroupSeparator = (char)29;
 

@@ -38,6 +38,17 @@ public sealed class BarcodeBuilder {
 
     private readonly SymbolFormat _type;
     private readonly string _content;
+    private BarcodeEncodingOptions? _encodingOptions;
+
+    /// <summary>Copies format-specific encoding controls into this builder.</summary>
+    public BarcodeBuilder WithEncodingOptions(BarcodeEncodingOptions options) {
+        _encodingOptions = (options ?? throw new ArgumentNullException(nameof(options))).Snapshot();
+        return this;
+    }
+
+    /// <summary>Builds a measured physical layout using the configured encoding controls.</summary>
+    public Printing.BarcodePrintLayout LayoutPrint(Printing.BarcodePrintOptions? options = null) =>
+        Printing.BarcodePrint.Layout(Barcode.Encode(_type, _content, _encodingOptions ?? new BarcodeEncodingOptions()), options);
 
     /// <summary>
     /// Rendering options used by this builder.
@@ -191,13 +202,13 @@ public sealed class BarcodeBuilder {
     /// <summary>
     /// Encodes the barcode.
     /// </summary>
-    public Barcode1D Encode() => Barcode.Encode(_type, _content);
+    public Barcode1D Encode() => _encodingOptions is null ? Barcode.Encode(_type, _content) : Barcode.Encode(_type, _content, _encodingOptions);
 
     /// <summary>
     /// Renders the configured barcode to the requested output format.
     /// </summary>
     public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
-        return Barcode.Render(_type, _content, format, Options, outputOptions ?? OutputOptions);
+        return Barcode.Render(Encode(), format, Options, outputOptions ?? OutputOptions);
     }
 
     /// <summary>

@@ -13,6 +13,8 @@ internal static class BookIdentifiers {
         if ((value.Length != 12 && value.Length != 13)
             || (!value.StartsWith("978", StringComparison.Ordinal) && !value.StartsWith("979", StringComparison.Ordinal)))
             throw new ArgumentException("ISBN requires an ISBN-10 or an ISBN-13 beginning with 978 or 979.", nameof(value));
+        if (value.StartsWith("9790", StringComparison.Ordinal))
+            throw new ArgumentException("The 9790 prefix belongs to ISMN and cannot identify an ISBN.", nameof(value));
         return IdentifierChecks.WithCheck(value, 13, IdentifierChecks.Gs1);
     }
 

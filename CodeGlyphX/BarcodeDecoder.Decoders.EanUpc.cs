@@ -554,72 +554,20 @@ public static partial class BarcodeDecoder {
         return false;
     }
 
-    private static char CalcMsiMod10(string content) {
-        var sum = 0;
-        var doubleIt = true;
-        for (var i = content.Length - 1; i >= 0; i--) {
-            var digit = content[i] - '0';
-            if (doubleIt) {
-                digit *= 2;
-                if (digit > 9) digit = (digit / 10) + (digit % 10);
-            }
-            sum += digit;
-            doubleIt = !doubleIt;
-        }
-        var mod = sum % 10;
-        var check = mod == 0 ? 0 : 10 - mod;
-        return (char)('0' + check);
-    }
+    private static char CalcMsiMod10(string content) => MsiChecks.Mod10(content);
 
     private static bool TryStripCode11Checksum(string raw, out string stripped) {
         stripped = raw;
-        if (raw.Length >= 2) {
-            var data = raw.Substring(0, raw.Length - 2);
-            var c = raw[raw.Length - 2];
-            var k = raw[raw.Length - 1];
-            if (CalcCode11Checksum(data, 10) == c && CalcCode11Checksum(data + c, 9) == k) {
-                stripped = data;
-                return true;
-            }
-        }
-        if (raw.Length >= 1) {
-            var data = raw.Substring(0, raw.Length - 1);
-            var c = raw[raw.Length - 1];
-            if (CalcCode11Checksum(data, 10) == c) {
-                stripped = data;
-                return true;
-            }
-        }
-        return false;
+        var checks = raw.Length >= 12 ? 2 : 1;
+        if (raw.Length < 2 || raw.Length == 11) return false;
+        var data = raw.Substring(0, raw.Length - checks);
+        var c = Code11Encoder.CalcChecksum(data, 10);
+        if (raw[data.Length] != c || (checks == 2 && raw[raw.Length - 1] != Code11Encoder.CalcChecksum(data + c, 9))) return false;
+        stripped = data;
+        return true;
     }
 
-    private static char CalcCode11Checksum(string content, int maxWeight) {
-        var sum = 0;
-        var weight = 1;
-        for (var i = content.Length - 1; i >= 0; i--) {
-            var ch = content[i];
-            if (!Code11Tables.ValueTable.TryGetValue(ch, out var value)) return '-';
-            sum += value * weight;
-            weight++;
-            if (weight > maxWeight) weight = 1;
-        }
-        var check = sum % 11;
-        return check == 10 ? '-' : (char)('0' + check);
-    }
-
-    private static byte CalcPlesseyCrc(bool[] bits) {
-        const int poly = 0x1E9;
-        var crc = 0;
-        for (var i = 0; i < bits.Length; i++) {
-            crc = (crc << 1) | (bits[i] ? 1 : 0);
-            if ((crc & 0x100) != 0) crc ^= poly;
-        }
-        for (var i = 0; i < 8; i++) {
-            crc <<= 1;
-            if ((crc & 0x100) != 0) crc ^= poly;
-        }
-        return (byte)(crc & 0xFF);
-    }
+    private static byte CalcPlesseyCrc(bool[] bits) => PlesseyChecks.Calculate(bits);
 
     private static byte BitsToByte(bool[] bits) {
         var value = 0;

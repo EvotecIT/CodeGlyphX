@@ -16,25 +16,12 @@ public static class MsiEncoder {
         if (content.Length == 0) throw new InvalidOperationException("MSI content cannot be empty.");
 
         for (var i = 0; i < content.Length; i++) {
-            if (!char.IsDigit(content[i])) {
+            if ((uint)(content[i] - '0') > 9) {
                 throw new InvalidOperationException("MSI supports digits only.");
             }
         }
 
-        var data = content;
-        switch (checksum) {
-            case MsiChecksumType.None:
-                break;
-            case MsiChecksumType.Mod10:
-                data += CalcMod10(data);
-                break;
-            case MsiChecksumType.Mod10Mod10:
-                data += CalcMod10(data);
-                data += CalcMod10(data);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(checksum));
-        }
+        var data = MsiChecks.Append(content, checksum);
 
         var segments = new List<BarSegment>(data.Length * 12 + 16);
         AppendPattern(segments, MsiTables.Start);
@@ -55,20 +42,4 @@ public static class MsiEncoder {
         }
     }
 
-    private static char CalcMod10(string content) {
-        var sum = 0;
-        var doubleIt = true;
-        for (var i = content.Length - 1; i >= 0; i--) {
-            var digit = content[i] - '0';
-            if (doubleIt) {
-                digit *= 2;
-                if (digit > 9) digit = (digit / 10) + (digit % 10);
-            }
-            sum += digit;
-            doubleIt = !doubleIt;
-        }
-        var mod = sum % 10;
-        var check = mod == 0 ? 0 : 10 - mod;
-        return (char)('0' + check);
-    }
 }

@@ -98,6 +98,11 @@ $expectedLibraryEntries = @(
     'README.md'
     'LICENSE'
     'THIRD-PARTY-NOTICES.md'
+    'Licenses/GG-Ocra-CC0.txt'
+    'Licenses/Raisty-OCR-B-OFL.txt'
+    'Fonts/GGOcra.ttf'
+    'Fonts/CodeGlyphXScanB-Regular.ttf'
+    'Fonts/provenance.json'
     'codeglyphx-qr-icon.png'
 ) + $libraryEntries
 Assert-ZipEntries -Path $package[0].FullName -ExpectedEntries $expectedLibraryEntries

@@ -10,13 +10,14 @@ internal static class DataBarExpandedBinaryEncoder {
     private const char GroupSeparator = Gs1.GroupSeparator;
     private const string Padding = "00100";
 
-    internal static DataBarExpandedBinary Encode(string value, bool requireEvenTotalCharacters) {
+    internal static DataBarExpandedBinary Encode(string value, bool requireEvenTotalCharacters, bool linked = false) {
         var content = Gs1.ElementString(value);
         ValidateCharacters(content);
 
         var bits = new List<bool>(128);
         var method = SelectMethod(content);
         var finalMode = EncodeByMethod(content, method, bits);
+        bits[0] = linked;
         var dataCharacters = GetDataCharacterCount(bits.Count, requireEvenTotalCharacters);
         var totalCharacters = dataCharacters + 1;
         if (finalMode == GeneralFieldMode.Numeric && (dataCharacters * 12) - bits.Count >= 7) {
@@ -125,6 +126,13 @@ internal static class DataBarExpandedBinaryEncoder {
         var index = 0;
 
         while (index < content.Length) {
+            // FNC1 in either alphabetic mode returns directly to Numeric (ISO/IEC 24724 general field).
+            if (mode != GeneralFieldMode.Numeric && content[index] == GroupSeparator) {
+                AppendBits(bits, 15, 5);
+                mode = GeneralFieldMode.Numeric;
+                index++;
+                continue;
+            }
             switch (mode) {
                 case GeneralFieldMode.Numeric:
                     if (index + 1 < content.Length && IsNumeric(content[index]) && IsNumeric(content[index + 1])) {

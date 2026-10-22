@@ -7,8 +7,8 @@ using CodeGlyphX.Pdf417;
 namespace CodeGlyphX;
 
 /// <summary>Owns HIBC's leading plus, character validation, Mod-43 check character, and carrier adapters.</summary>
-/// <remarks>These helpers validate HIBC transport framing. They do not assign labeler codes or validate a complete UDI record.</remarks>
-public static class Hibc {
+/// <remarks>Low-level helpers preserve transport framing. Structured helpers also validate supplier fields; neither assigns labeler codes or establishes regulatory acceptance.</remarks>
+public static partial class Hibc {
     private const string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
 
     /// <summary>Builds a checked HIBC carrier payload from unframed data.</summary>
@@ -41,7 +41,12 @@ public static class Hibc {
 
     /// <summary>Encodes a HIBC payload in Code 39 or Code 128, without adding a second Code 39 check character.</summary>
     public static Barcode1D EncodeLinear(SymbolFormat carrier, string data) {
-        var payload = Prepare(data);
+        return EncodeLinear(carrier, data, validateStructure: false);
+    }
+
+    /// <summary>Encodes a HIBC linear payload, optionally validating the supplier data fields.</summary>
+    public static Barcode1D EncodeLinear(SymbolFormat carrier, string data, bool validateStructure) {
+        var payload = validateStructure ? PrepareStructured(data) : Prepare(data);
         return carrier switch {
             SymbolFormat.Code39 => Code39Encoder.Encode(payload, includeChecksum: false),
             SymbolFormat.Code128 => Code128Encoder.Encode(payload),
@@ -49,11 +54,17 @@ public static class Hibc {
         };
     }
 
-    /// <summary>Encodes HIBC in QR Code, square Data Matrix, PDF417, MicroPDF417, or Codablock F.</summary>
+    /// <summary>Encodes HIBC in QR Code, Aztec, square Data Matrix, PDF417, MicroPDF417, or Codablock F.</summary>
     public static MatrixSymbol EncodeMatrix(SymbolFormat carrier, string data) {
-        var payload = Prepare(data);
+        return EncodeMatrix(carrier, data, validateStructure: false);
+    }
+
+    /// <summary>Encodes a HIBC matrix payload, optionally validating the supplier data fields.</summary>
+    public static MatrixSymbol EncodeMatrix(SymbolFormat carrier, string data, bool validateStructure) {
+        var payload = validateStructure ? PrepareStructured(data) : Prepare(data);
         return carrier switch {
             SymbolFormat.QrCode => new MatrixSymbol(carrier, QR.Encode(payload).Modules),
+            SymbolFormat.Aztec => Aztec.AztecEncoder.EncodeSymbol(payload, new Aztec.AztecEncodeOptions { ErrorCorrectionPercent = 23 }),
             SymbolFormat.DataMatrix => DataMatrixEncoder.EncodeSymbol(payload),
             SymbolFormat.Pdf417 => Pdf417Encoder.EncodeSymbol(payload),
             SymbolFormat.MicroPdf417 => new MatrixSymbol(carrier, MicroPdf417Encoder.Encode(payload)),
@@ -81,7 +92,7 @@ public static class Hibc {
     /// <summary>Decodes and validates HIBC transport data from a known matrix carrier.</summary>
     public static bool TryDecodeMatrix(SymbolFormat carrier, BitMatrix modules, out string data) {
         data = string.Empty;
-        if (carrier != SymbolFormat.QrCode && carrier != SymbolFormat.DataMatrix
+        if (carrier != SymbolFormat.QrCode && carrier != SymbolFormat.Aztec && carrier != SymbolFormat.DataMatrix
             && carrier != SymbolFormat.Pdf417 && carrier != SymbolFormat.MicroPdf417 && carrier != SymbolFormat.CodablockF)
             throw new ArgumentException("This format is not a supported HIBC matrix carrier.", nameof(carrier));
         return SymbolDecoder.TryDecode(modules, out var decoded, carrier) && TryParse(decoded.Text, out data);
