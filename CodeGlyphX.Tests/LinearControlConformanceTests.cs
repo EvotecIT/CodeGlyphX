@@ -42,7 +42,7 @@ public sealed class LinearControlConformanceTests {
             IncludeHumanReadable = false, Dpi = 300, XDimensionMm = .508
         });
         var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png, new BarcodePrintPlacement { RotationDegrees = rotation }).ToArray(), new ScanOptions {
-            Formats = new[] { SymbolFormat.ChannelCode }, TimeoutMilliseconds = 5000
+            Formats = new[] { SymbolFormat.ChannelCode }, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
         Assert.Equal(value, Assert.Single(result.Symbols).Text);
     }
@@ -140,7 +140,7 @@ public sealed class LinearControlConformanceTests {
     public void MsiImageScan_RetainsTheSelectedAlgorithmAndApplicationLength(MsiChecksumType type) {
         var layout = BarcodePrint.Layout(MsiEncoder.Encode("12345678", type));
         var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png).ToArray(), new ScanOptions {
-            Formats = new[] { SymbolFormat.Msi }, TimeoutMilliseconds = 5000,
+            Formats = new[] { SymbolFormat.Msi }, TimeoutMilliseconds = TestBudget.Adjust(5000),
             Barcode = new BarcodeDecodeOptions().WithMsiChecksum(MsiChecksumPolicy.RequireValid, type, 8)
         });
         Assert.Equal("12345678", Assert.Single(result.Symbols).Text);

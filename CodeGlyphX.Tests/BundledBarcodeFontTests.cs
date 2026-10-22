@@ -68,7 +68,7 @@ public sealed class BundledBarcodeFontTests {
         Assert.Equal("590123412345712", string.Concat(layout.Text.Select(line => line.Text)));
         Assert.All(layout.Text, line => Assert.NotEmpty(line.Shape.Contours));
         var png = layout.Render(OutputFormat.Png).ToArray();
-        var scan = SymbolScanner.Scan(png, new ScanOptions { Formats = new[] { SymbolFormat.Ean }, TimeoutMilliseconds = 5000 });
+        var scan = SymbolScanner.Scan(png, new ScanOptions { Formats = new[] { SymbolFormat.Ean }, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         Assert.Contains(scan.Symbols, symbol => symbol.Text == payload);
         var svg = XDocument.Parse(layout.Render(OutputFormat.Svg).GetText());
         Assert.DoesNotContain(svg.Descendants(), node => node.Name.LocalName == "text");

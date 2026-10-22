@@ -40,6 +40,7 @@
     <Compile Include="WebpLargeRoundTripTests.cs" />
     <Compile Include="GlobalStateCollection.cs" />
     <Compile Include="TestBudget.cs" />
+    <Compile Include="QrFallbackDeadlineTests.cs" />
     <Compile Include="FractionalBarcodeSamplingTests.cs" />
     <Compile Include="Code93RunLocalizationTests.cs" />
     <Compile Include="Code39RunLocalizationTests.cs" />

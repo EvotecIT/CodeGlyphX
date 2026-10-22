@@ -196,7 +196,7 @@ public sealed class ApplicationPrintGeometryTests {
             HumanReadableText = Gs1.HumanReadable(input, true), Caption = "TOBACCO 123", CaptionSizePoints = 6, MinimumCaptionSizePoints = 6
         });
         var placement = new BarcodePrintPlacement { RotationDegrees = rotation };
-        var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png, placement).ToArray(), new ScanOptions { Formats = new[] { SymbolFormat.DotCode }, TimeoutMilliseconds = 5000 });
+        var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png, placement).ToArray(), new ScanOptions { Formats = new[] { SymbolFormat.DotCode }, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         var found = Assert.Single(result.Symbols);
         Assert.Equal(Gs1.ElementString(input), found.Text);
         var grid = found.Geometry!.Bounds;
@@ -206,7 +206,7 @@ public sealed class ApplicationPrintGeometryTests {
     }
 
     private static string Scan(BarcodePrintLayout layout, SymbolFormat format) {
-        var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png).ToArray(), new ScanOptions { Formats = new[] { format }, TimeoutMilliseconds = 5000 });
+        var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png).ToArray(), new ScanOptions { Formats = new[] { format }, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         Assert.True(result.Symbols.Count == 1, format + ": " + result.Status + " / " + result.Symbols.Count);
         return Assert.Single(result.Symbols).Text;
     }
@@ -222,7 +222,7 @@ public sealed class ApplicationPrintGeometryTests {
         });
         var placement = new BarcodePrintPlacement { RotationDegrees = rotation };
         var scan = SymbolScanner.Scan(label.Render(OutputFormat.Png, placement).ToArray(), new ScanOptions {
-            Formats = new[] { SymbolFormat.CodeOne }, TimeoutMilliseconds = 5000
+            Formats = new[] { SymbolFormat.CodeOne }, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
         var found = Assert.Single(scan.Symbols);
         Assert.Equal(input, found.Text);

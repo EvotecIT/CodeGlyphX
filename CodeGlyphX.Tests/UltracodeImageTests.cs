@@ -94,7 +94,7 @@ public sealed class UltracodeImageTests {
     [Fact]
     public void DefaultFormatSelectionRecognizesColourBeforeMonochromeSampling() {
         var encoded = UltracodeEncoder.EncodeText("Default scan");
-        var scan = SymbolScanner.Scan(encoded.RenderPng(), new ScanOptions { MaxSymbols = 1, TimeoutMilliseconds = 5000 });
+        var scan = SymbolScanner.Scan(encoded.RenderPng(), new ScanOptions { MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         var symbol = Assert.Single(scan.Symbols);
         Assert.Equal(SymbolFormat.Ultracode, symbol.Format);
         Assert.Equal("Default scan", symbol.Text);
@@ -133,7 +133,7 @@ public sealed class UltracodeImageTests {
     }
 
     private static ScanOptions Options() => new() {
-        Formats = new[] { SymbolFormat.Ultracode }, MaxSymbols = 1, TimeoutMilliseconds = 5000
+        Formats = new[] { SymbolFormat.Ultracode }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000)
     };
 
     private static UltracodeGrid Rotate(UltracodeGrid grid) {

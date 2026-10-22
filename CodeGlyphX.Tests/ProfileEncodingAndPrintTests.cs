@@ -138,7 +138,7 @@ public sealed class ProfileEncodingAndPrintTests {
         Assert.Equal(.031 * 25.4, upper.Y - identification[0].Bounds.Bottom, 7);
         Assert.Equal(.031 * 25.4, identification[1].Bounds.Y - lower.Bottom, 7);
         Assert.Null(options.HumanReadableText); Assert.False(options.SyntheticBold);
-        var scan = SymbolScanner.Scan(layout.Render(OutputFormat.Png).ToArray(), new ScanOptions { Formats = new[] { SymbolFormat.Gs1Code128 }, TimeoutMilliseconds = 5000 });
+        var scan = SymbolScanner.Scan(layout.Render(OutputFormat.Png).ToArray(), new ScanOptions { Formats = new[] { SymbolFormat.Gs1Code128 }, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         Assert.Equal(package.ElementString, Assert.Single(scan.Symbols).Text);
     }
 

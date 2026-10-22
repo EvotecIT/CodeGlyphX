@@ -159,7 +159,7 @@ public sealed class BarcodePrintGeometryTests {
 
     private static DetectedSymbol Scan(BarcodePrintLayout layout, SymbolFormat format, Gs1CompositeCarrier? carrier = null) {
         var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png).ToArray(), new ScanOptions {
-            Formats = new[] { format }, CompositeCarrier = carrier, TimeoutMilliseconds = 5000,
+            Formats = new[] { format }, CompositeCarrier = carrier, TimeoutMilliseconds = TestBudget.Adjust(5000),
             EnableTileScan = false, MaxSymbols = 1, Image = new ImageDecodeOptions { MaxDimension = 0 }
         });
         Assert.True(result.Symbols.Count == 1, $"{format}/{carrier}: {result.Status}");

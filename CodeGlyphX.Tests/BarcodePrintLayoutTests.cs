@@ -74,7 +74,7 @@ public sealed class BarcodePrintLayoutTests {
         var layout = BarcodePrint.Layout(QrCodeEncoder.EncodeText(value), new BarcodePrintOptions { Dpi = 300 });
         var png = layout.Render(OutputFormat.Png).ToArray();
         Assert.Equal(11811, PngPixelsPerMetre(png));
-        var scan = SymbolScanner.Scan(png, new ScanOptions { Formats = new[] { SymbolFormat.QrCode }, TimeoutMilliseconds = 5000 });
+        var scan = SymbolScanner.Scan(png, new ScanOptions { Formats = new[] { SymbolFormat.QrCode }, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         Assert.Equal(value, Assert.Single(scan.Symbols).Text);
         var svg = XDocument.Parse(layout.Render(OutputFormat.Svg).GetText()).Root!;
         Assert.EndsWith("mm", svg.Attribute("width")!.Value);
@@ -135,7 +135,7 @@ public sealed class BarcodePrintLayoutTests {
         Assert.Equal(layout.Bounds.Height, bounds.Width, 7);
         var pixels = layout.RenderPixels(out var width, out var height, p);
         var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
-            Formats = new[] { SymbolFormat.QrCode }, TimeoutMilliseconds = 5000
+            Formats = new[] { SymbolFormat.QrCode }, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
         Assert.Equal("PLACED", Assert.Single(scan.Symbols).Text);
         p.CanvasWidthMm = 5;

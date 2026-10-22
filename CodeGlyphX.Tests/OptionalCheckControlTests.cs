@@ -165,7 +165,7 @@ public sealed class OptionalCheckControlTests {
         var layout = Barcode.Create(format, "12345").WithEncodingOptions(new BarcodeEncodingOptions { CheckMode = BarcodeCheckMode.Compute })
             .LayoutPrint(new BarcodePrintOptions { IncludeHumanReadable = false, XDimensionMm = .508 });
         var scan = SymbolScanner.Scan(layout.Render(OutputFormat.Png, new BarcodePrintPlacement { RotationDegrees = rotation }).ToArray(), new ScanOptions {
-            Formats = new[] { format }, TimeoutMilliseconds = 5000,
+            Formats = new[] { format }, TimeoutMilliseconds = TestBudget.Adjust(5000),
             Barcode = new BarcodeDecodeOptions { CodabarChecksum = OptionalChecksumPolicy.RequireValid, TwoOfFiveChecksum = OptionalChecksumPolicy.RequireValid }
         });
         Assert.Equal("12345", Assert.Single(scan.Symbols).Text);

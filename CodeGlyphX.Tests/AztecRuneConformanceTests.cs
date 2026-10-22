@@ -75,7 +75,7 @@ public sealed class AztecRuneConformanceTests {
         using var bytes = new MemoryStream();
         stream.CopyTo(bytes);
         var result = SymbolScanner.Scan(bytes.ToArray(), new ScanOptions {
-            Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = 5000
+            Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
         var symbol = Assert.Single(result.Symbols);
         Assert.Equal(SymbolFormat.AztecRune, symbol.Format);
@@ -91,7 +91,7 @@ public sealed class AztecRuneConformanceTests {
             var image = AztecRune.Encode(value).Render(OutputFormat.Png,
                 new MatrixOptions { ModuleSize = 5, QuietZone = 3 }).ToArray();
             var result = SymbolScanner.Scan(image, new ScanOptions {
-                Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = 5000
+                Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000)
             });
             Assert.True(result.Symbols.Count == 1, "Missing Rune value " + value.ToString(CultureInfo.InvariantCulture));
             Assert.Equal(value.ToString(CultureInfo.InvariantCulture), Assert.Single(result.Symbols).Text);
@@ -118,7 +118,7 @@ public sealed class AztecRuneConformanceTests {
         if (inverted) { options.Foreground = Rgba32.White; options.Background = Rgba32.Black; }
         var image = new MatrixSymbol(SymbolFormat.AztecRune, modules).Render(OutputFormat.Png, options).ToArray();
         var result = SymbolScanner.Scan(image, new ScanOptions {
-            Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = 5000
+            Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
         var symbol = Assert.Single(result.Symbols);
         Assert.Equal("68", symbol.Text);
@@ -133,7 +133,7 @@ public sealed class AztecRuneConformanceTests {
     public void OrdinaryAztecImages_AreNotMisidentifiedAsRunes(string text) {
         var image = AztecCode.Encode(text).Render(OutputFormat.Png, new MatrixOptions { ModuleSize = 5 }).ToArray();
         var result = SymbolScanner.Scan(image, new ScanOptions {
-            Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = 5000
+            Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
         Assert.Empty(result.Symbols);
     }
@@ -143,7 +143,7 @@ public sealed class AztecRuneConformanceTests {
         var symbol = MatrixBarcode.Encode(SymbolFormat.AztecRune, "255");
         var result = SymbolScanner.Scan(symbol.Render(OutputFormat.Png,
             new MatrixOptions { ModuleSize = 5, QuietZone = 2 }).ToArray(),
-            new ScanOptions { Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = 5000 });
+            new ScanOptions { Formats = new[] { SymbolFormat.AztecRune }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         Assert.Equal("255", Assert.Single(result.Symbols).Text);
         Assert.Throws<ArgumentOutOfRangeException>(() => AztecRune.Encode(-1));
         Assert.Throws<ArgumentOutOfRangeException>(() => AztecRune.Encode(256));

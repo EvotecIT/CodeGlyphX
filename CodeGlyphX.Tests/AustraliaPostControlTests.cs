@@ -86,7 +86,7 @@ public sealed class AustraliaPostControlTests {
         Assert.True(text.InkBounds.Bottom < layout.Paths.Where(path => path.Role == "bars").Min(path => path.Bounds.Y));
         Assert.Null(options.HumanReadableText);
         var scanned = SymbolScanner.Scan(layout.Render(OutputFormat.Png, new BarcodePrintPlacement { RotationDegrees = rotation }).ToArray(), new ScanOptions {
-            Formats = new[] { SymbolFormat.AustraliaPost }, TimeoutMilliseconds = 5000,
+            Formats = new[] { SymbolFormat.AustraliaPost }, TimeoutMilliseconds = TestBudget.Adjust(5000),
             AustraliaPostCustomerTable = table, AustraliaPostCustomerInfoLength = input.Length - 10
         });
         var result = Assert.Single(scanned.Symbols);
