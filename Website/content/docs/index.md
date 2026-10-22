@@ -10,7 +10,7 @@ layout: docshome
 
 ## About CodeGlyphX
 
-CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, linear barcodes, and 2D matrix codes. It does not require native graphics libraries.
+CodeGlyphX is a pure-managed .NET library for generating and decoding 65 physical QR, matrix, stacked, linear, colour and postal formats. It also supplies application profiles, portable text fonts and measured print layouts without native graphics libraries.
 
 - **No native graphics dependencies** - No System.Drawing, SkiaSharp, or ImageSharp required
 - **Encode and decode** - Supported symbologies have explicit APIs and documented limits
@@ -18,7 +18,11 @@ CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, 
 - **Cross-platform** - Windows, Linux, macOS
 - **AOT validated** - CI publishes and executes a `net8.0` NativeAOT consumer
 
-The [capability matrix](/docs/symbol-capabilities/) lists what each format supports, and the [API reference](/api/) documents every public type. Upgrading? Read the [3.0 migration guide](/docs/migration-3/); the [2.0 guide](/docs/migration-2/) is kept for earlier upgrades.
+The [capability matrix](/docs/symbol-capabilities/) lists every physical format and separates encoding, module or colour-cell decoding, image scanning, default selection and multiple results. [Profiles and controls](/docs/barcode-profiles/) cover checked identifiers, GS1, HIBC, linked Composite and specialist options. These profiles use existing carriers rather than adding duplicate format counts.
+
+For labels, start with [fonts](/docs/fonts/) and [physical printing](/docs/printing/): bundled OCR-A/OCR-B, supplied font files, millimetres and printer DPI, quiet zones, readable text and matching PNG/SVG/PDF exports. Try these controls in the [playground's print studio](/playground/).
+
+The [API reference](/api/) documents every public type. Upgrading? Read the [3.0 migration guide](/docs/migration-3/); the [2.0 guide](/docs/migration-2/) is kept for earlier upgrades.
 
 ## Performance and recognition
 

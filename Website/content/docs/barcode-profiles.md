@@ -7,6 +7,19 @@ description: Checked application identifiers, postal and payment helpers, and sp
 
 Use an application helper when the label needs more than a physical barcode alphabet. These APIs prepare check characters, validate decoded values and keep application fields separate from the carrier. They reuse the same managed encoders and renderers as the rest of CodeGlyphX.
 
+The [complete support matrix](/docs/symbol-capabilities/) lists physical formats. This guide covers the application and encoding options layered on them:
+
+| Capability | What it adds |
+| --- | --- |
+| Checked identifiers | GTIN/SSCC, ISBN/ISMN/ISSN, PZN, Deutsche Post and M&S validation and readable text. |
+| Healthcare and GS1 | HIBC carriers, GS1 element strings, ECI where supported, and application metadata. |
+| Linked Composite | A linked linear carrier and 2D component, with carrier-specific layout and readback. |
+| Postal and payment helpers | USPS packages, Mailmark 2D, coupons and Swiss QR data validation. |
+| Specialist controls | Check policies, full ASCII, reader initialization, sequence/append controls and format variants. |
+| Raw run layouts | Exact bar/space widths with calibrated decoding rather than automatic identification. |
+
+Decode the carrier first and validate the expected profile; a physical symbol alone does not establish its business meaning. Optional check characters and modes need matching decode settings. See [image decoding](/docs/decoding/) for format hints and calibration, and [physical printing](/docs/printing/) for quiet zones, fonts, captions and placement.
+
 ## Checked identifiers
 
 `BarcodeProfiles` supports GTIN-14/EAN-14, SSCC-18, ISBN, ISMN, ISSN, PZN-7/PZN-8, Deutsche Post Identcode/Leitcode and Marks & Spencer identifiers. It accepts spaces and hyphens, calculates omitted checks where the identifier allows that, and rejects incorrect supplied checks. ISBN-10 and legacy ISMN are converted to their thirteen-digit forms.

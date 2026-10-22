@@ -7,6 +7,10 @@ description: Generated CodeGlyphX encoding, module-decoding, and image-scanning 
 
 CodeGlyphX currently describes 65 physical symbol formats through `SymbolCapabilities`. This table is generated from that runtime registry, so the website and the public API report the same support boundary.
 
+Use this table as the complete format list. The homepage specimen gallery is a selection of examples. Application profiles and encoding controls reuse these carriers and are counted separately. For practical workflows, see [profiles and controls](/docs/barcode-profiles/), [image decoding](/docs/decoding/), [fonts](/docs/fonts/) and [physical printing](/docs/printing/).
+
+The table follows the current source. Check [source and package versions](/docs/installation/#source-and-package-versions) when choosing a published package; the expansion and print APIs were merged after the 3.0.0 release.
+
 “Module decode” means CodeGlyphX can decode an already sampled `BitMatrix` or module sequence. “Image scan” means `SymbolScanner` can recognize the format from pixels. All listed formats have an image path; raw marks can require the known grid and orientation described below.
 
 “Colour-cell decode” uses `UltracodeGrid` and preserves information carried by the palette. Ultracode is decoded through `SymbolDecoder.Decode(cells)` or `UltracodeDecoder`; a `BitMatrix` cannot represent its payload. Its scanner reads RGB pixels before grayscale processing. A colour image is required.

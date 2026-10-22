@@ -278,6 +278,7 @@
         ".webp"
       ],
       "imageQuality": 82,
+      "imageExclude": ["specimens/print-*.png"],
       "imageStripMetadata": true,
       "imageGenerateWebp": true,
       "imagePreferNextGen": true,

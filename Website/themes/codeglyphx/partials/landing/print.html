@@ -1,0 +1,24 @@
+{{~ p = data.landing.print ~}}
+<section class="cgx-section cgx-print" aria-labelledby="cgx-print-title">
+  <div class="cgx-print__copy">
+    <h2 id="cgx-print-title">{{ p.title }}</h2>
+    <p>{{ p.body }}</p>
+    <pre class="code-block"><code class="language-csharp">{{ p.code | html.escape }}</code></pre>
+    <p class="cgx-print__limits">{{ p.limits }}</p>
+    <p class="cgx-print__links">{{~ for l in p.links ~}}<a class="cgx-link" href="{{ l.url }}">{{ l.title }}</a>{{~ end ~}}</p>
+    <p class="cgx-print__note">{{ p.availability }} <a href="{{ p.availabilityLink.url }}">{{ p.availabilityLink.title }}</a></p>
+  </div>
+  <div class="cgx-print__labels">
+    {{~ for l in data.specimens.print ~}}
+    <figure class="cgx-print__label">
+      {{~ # Both labels share one scale (6 px per millimetre), so their sizes compare like the printed labels. ~}}
+      <span class="cgx-print__sheet"><img src="{{ l.svg }}" width="{{ l.widthMm * 6 | math.round }}" height="{{ l.heightMm * 6 | math.round }}" loading="lazy" decoding="async" alt="{{ l.name }} label encoding {{ l.value }}, with text in {{ l.font }}" /></span>
+      <figcaption>
+        <strong>{{ l.name }} in {{ l.font }}</strong>
+        <span>{{ l.widthMm }} × {{ l.heightMm }} mm at {{ l.dpi }} DPI · decoded <code>{{ l.decoded }}</code></span>
+        <span class="cgx-print__files"><a href="{{ l.png }}" aria-label="{{ l.name }} PNG label">PNG</a><a href="{{ l.svg }}" aria-label="{{ l.name }} SVG label">SVG</a><a href="{{ l.pdf }}" aria-label="{{ l.name }} PDF label">PDF</a></span>
+      </figcaption>
+    </figure>
+    {{~ end ~}}
+  </div>
+</section>

@@ -79,7 +79,7 @@ qr.Save("hello.png", new QrRenderOptions { ModuleSize = 6, QuietZone = 4 });
 
 ## Specialist barcodes and application profiles
 
-The runtime catalog covers 64 physical formats, all with encoding, sampled-module decoding and image recognition. [Symbol capabilities](https://codeglyphx.com/docs/symbol-capabilities/) lists default recognition, explicit format selection, geometry and multiple-result support separately. Raw Flattermarken cells require a calibrated grid because blank cells carry data; unchecked marks can also require a known orientation.
+The runtime catalog covers 65 physical formats with encoding, sampled-module or colour-cell decoding, and image recognition. [Symbol capabilities](https://codeglyphx.com/docs/symbol-capabilities/) lists default recognition, explicit format selection, geometry and multiple-result support separately. Raw Flattermarken cells require a calibrated grid because blank cells carry data; unchecked marks can also require a known orientation.
 
 ```csharp
 using CodeGlyphX;

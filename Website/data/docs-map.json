@@ -8,6 +8,7 @@
       "topics": [
         { "card": "installation", "title": "Installation", "url": "/docs/installation/", "summary": "One NuGet package for .NET 8, 10, Standard 2.0 and Framework 4.7.2.", "value": "https://www.nuget.org/packages/CodeGlyphX" },
         { "card": "quickstart", "title": "Quick start", "url": "/docs/quickstart/", "summary": "Your first QR code, barcode and decode in a few lines.", "value": "Hello, World!" },
+        { "card": "symbol-capabilities", "title": "All supported formats", "url": "/docs/symbol-capabilities/", "summary": "The complete 65-format matrix: encoding, module or colour-cell decoding, image scanning and format hints.", "value": "CodeGlyphX" },
         { "card": "migration-3", "title": "Migrate to 3.0", "url": "/docs/migration-3/", "summary": "Encoding apart from appearance, unified scanning, stable results.", "value": "CODEGLYPHX 3.0" }
       ]
     },
@@ -40,7 +41,8 @@
       "key": "var(--cgx-violet)",
       "topics": [
         { "card": "document-codes", "title": "Document label assets", "url": "/docs/document-codes/", "summary": "Generate reusable QR, Code 128 and Data Matrix images and verify their payloads.", "value": "https://example.org/assets/AT-1042" },
-        { "card": "document-codes", "title": "Fonts and physical printing", "url": "/docs/printing/", "summary": "Measure labels in millimetres, load supplied fonts and export PNG, SVG and PDF.", "value": "LABEL-1042" },
+        { "card": "document-codes", "title": "Barcode fonts", "url": "/docs/fonts/", "summary": "Bundled OCR-A/OCR-B, supplied TrueType/OpenType faces, licenses and text coverage.", "value": "LABEL-1042" },
+        { "card": "document-codes", "title": "Physical printing", "url": "/docs/printing/", "summary": "Millimetres, printer DPI, quiet zones, readable text and matching PNG/SVG/PDF exports.", "value": "LABEL-1042" },
         { "card": "office-documents", "title": "OfficeIMO documents", "url": "/docs/office-documents/", "summary": "Place generated images in Word, Excel, PowerPoint and PDF.", "value": "LOT-2026-1042" },
         { "card": "powershell-documents", "title": "PowerShell documents", "url": "/docs/powershell-documents/", "summary": "Generate SVG codes with ImagePlayground and place them with PSWriteOffice.", "value": "AT-1042" }
       ]
@@ -51,12 +53,12 @@
       "key": "#f59e0b",
       "topics": [
         { "card": "gs1", "title": "GS1 data and Digital Link", "url": "/docs/gs1/", "summary": "Validate element strings and build Digital Link URIs.", "value": "(01)09520123456788(10)ABC1(17)261231" },
-        { "card": "barcode-profiles", "title": "Barcode profiles", "url": "/docs/barcode-profiles/", "summary": "Checked identifiers, postal and payment helpers, specialist format controls.", "value": "9781565812314" },
+        { "card": "barcode-profiles", "title": "Profiles and encoding controls", "url": "/docs/barcode-profiles/", "summary": "Checked identifiers, HIBC/GS1, linked Composite, postal/payment helpers and specialist controls.", "value": "9781565812314" },
         { "card": "payloads", "title": "Payload helpers", "url": "/docs/payloads/", "summary": "Wi-Fi, contacts, authenticators and payments that phones understand.", "value": "WIFI:T:WPA;S:Evotec-Guest;P:correct-horse-battery;;" },
         { "card": "decoding", "title": "Image decoding", "url": "/docs/decoding/", "summary": "Find and read codes in screenshots, photos and artwork.", "value": "https://example.com/art" },
         { "card": "styling", "title": "Styling", "url": "/docs/qr/#styling-options", "summary": "Module shapes, finder frames, palettes and logos.", "value": "https://codeglyphx.com" },
         { "card": "renderers", "title": "Output formats", "url": "/docs/renderers/", "summary": "PNG, SVG, PDF, WebP, ASCII and a dozen more.", "value": "https://codeglyphx.com" },
-        { "card": "symbol-capabilities", "title": "Symbol capabilities", "url": "/docs/symbol-capabilities/", "summary": "What each format can encode, decode and scan.", "value": "CodeGlyphX" }
+        { "card": "symbol-capabilities", "title": "Encoding and decoding matrix", "url": "/docs/symbol-capabilities/", "summary": "Directional GS1, ECI, structured append, default scanning and multiple-result support.", "value": "CodeGlyphX" }
       ]
     }
   ]

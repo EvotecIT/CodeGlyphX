@@ -9,6 +9,17 @@ description: Measure barcode labels in millimetres and export bundled or supplie
 bar and glyph outlines, quiet zones, ink and logical bounds, and preflight findings.
 Use it for output with a declared physical size and printer resolution.
 
+These APIs follow the current source. See [source and package versions](/docs/installation/#source-and-package-versions) before choosing an installed package.
+
+| Need | Print support |
+| --- | --- |
+| Physical dimensions | Millimetres, printer DPI and a module width snapped to printer pixels by default. |
+| Readable text | Bundled OCR-A/OCR-B or supplied fonts, separate caption faces, point sizes and multiline text. |
+| Family layout | EAN/UPC digit groups and guards, supplements, publishing captions, ITF-14 bearers, postal bar states, MaxiCode hexagons and linked Composite carriers. |
+| Placement | Measured bounds, quiet zones, translation, uniform scale, rotation and optional canvas dimensions. |
+| Export | PNG with DPI metadata, SVG with millimetre dimensions and PDF with physical page dimensions, using the same bar and glyph outlines. |
+| Checks | Preflight for selected size, text, quiet-zone, placement and output constraints. Qualify the final printed artifact for its application. |
+
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Printing;
@@ -37,6 +48,9 @@ also supply TTF, OTF or TTC bytes. CodeGlyphX uses the same measured
 glyph run for raster and vector output. Strict text rejects missing glyphs and
 unsupported shaping. Select a font whose license permits your intended use;
 the compact legacy font has a limited repertoire and is not an OCR font.
+
+The [font guide](/docs/fonts/) explains each bundled face, collection selection,
+supplied-font formats, text coverage and shaping limits.
 
 The [playground](/playground/) includes a physical print studio with bundled font
 selection, local font upload, printer DPI, module width, readable text, captions and rotated exports.

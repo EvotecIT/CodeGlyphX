@@ -1,7 +1,8 @@
 <section class="cgx-section cgx-specimens" aria-labelledby="cgx-specimens-title">
   <div class="cgx-section__head">
-    <h2 id="cgx-specimens-title">{{ data.specimens.count }} symbologies, drawn by CodeGlyphX</h2>
-    <p>A selection of SVG output from the current library, with the value each symbol encodes. The <a href="/docs/symbol-capabilities/">complete capability table</a> covers all supported formats, including specialist encoders and image decoding.</p>
+    <h2 id="cgx-specimens-title">{{ data.specimens.count }} of {{ data.landing.coverage.formats }} formats, drawn by CodeGlyphX</h2>
+    <p>A selection of SVG output from the current library, with the value each symbol encodes, including the newer Aztec Rune, Code One and Ultracode. The capability table lists every supported format with its encoding, decoding and image scanning support.</p>
+    <p class="cgx-specimens__all"><a class="cgx-btn cgx-btn--quiet" href="{{ data.landing.coverage.url }}">See all {{ data.landing.coverage.formats }} supported formats</a></p>
   </div>
   {{~ family_keys = { "2D": "var(--cgx-violet)", Linear: "var(--mark)", Retail: "var(--cgx-pink)", GS1: "#f59e0b", Postal: "#34d399" } ~}}
   <div class="cgx-tabs cgx-filters" role="group" aria-label="Filter symbologies" data-cgx-filter-set="[data-cgx-specimens]">

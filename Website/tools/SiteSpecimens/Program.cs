@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
+using CodeGlyphX.Printing;
 using CodeGlyphX.Website.Specimens;
 using CodeGlyphX.Rendering;
 
@@ -12,7 +13,8 @@ var output = Path.Combine(website, "static", "specimens");
 Directory.CreateDirectory(output);
 var utf8 = new UTF8Encoding(false);
 
-// One valid sample per format supported by the generic renderers. MaxiCode keeps its specialized hexagonal geometry and has no generic SVG renderer.
+// A selection of the supported formats, one valid sample each; /docs/symbol-capabilities/ lists them all.
+// MaxiCode keeps its specialized hexagonal geometry and has no generic SVG renderer. Ultracode is a colour symbol drawn by its print layout.
 var samples = new (SymbolFormat Format, string Name, string Family, string Value)[] {
     (SymbolFormat.QrCode, "QR Code", "2D", "https://codeglyphx.com"),
     (SymbolFormat.MicroQrCode, "Micro QR", "2D", "CGX2026"),
@@ -23,6 +25,9 @@ var samples = new (SymbolFormat Format, string Name, string Family, string Value
     (SymbolFormat.MicroPdf417, "MicroPDF417", "2D", "INV-0042"),
     (SymbolFormat.DotCode, "DotCode", "2D", "CGX-0042"),
     (SymbolFormat.HanXin, "Han Xin", "2D", "CodeGlyphX"),
+    (SymbolFormat.AztecRune, "Aztec Rune", "2D", "42"),
+    (SymbolFormat.CodeOne, "Code One", "2D", "CODE ONE"),
+    (SymbolFormat.Ultracode, "Ultracode", "2D", "CODEGLYPHX"),
     (SymbolFormat.Code128, "Code 128", "Linear", "CODEGLYPHX-2026"),
     (SymbolFormat.Gs1Code128, "GS1-128", "Linear", "(01)09501101530003"),
     (SymbolFormat.Code39, "Code 39", "Linear", "CGX-2026"),
@@ -96,16 +101,28 @@ if (Directory.Exists(artRoot)) {
     }
 }
 
+// Measured print labels with the bundled OCR-A and OCR-B faces (Specimens.Print.cs).
+var print = PrintSpecimens.Render(output);
+
 var json = new JsonSerializerOptions { WriteIndented = true };
 File.WriteAllText(Path.Combine(website, "data", "specimens.json"),
-    JsonSerializer.Serialize(new { generatedBy = "Website/tools/SiteSpecimens", count = rendered.Count, specimens = rendered, payloads = payloadResults, decoded }, json) + "\n", utf8);
-Console.WriteLine($"Rendered {rendered.Count} specimens and {payloadResults.Count} payloads.");
+    JsonSerializer.Serialize(new { generatedBy = "Website/tools/SiteSpecimens", count = rendered.Count, specimens = rendered, payloads = payloadResults, print, decoded }, json) + "\n", utf8);
+Console.WriteLine($"Rendered {rendered.Count} specimens, {payloadResults.Count} payloads and {print.Count} print labels.");
 
 // Inner pages: navigation thumbnails, docs figures, benchmark charts and product-page codes (Visuals*.cs).
 SiteVisuals.Run(website);
 
 static string? TryRender(SymbolFormat format, string value, out string? error) {
     error = null;
+    if (format == SymbolFormat.Ultracode) {
+        try {
+            return BarcodePrint.Layout(UltracodeEncoder.EncodeText(value), new BarcodePrintOptions { IncludeHumanReadable = false })
+                .Render(OutputFormat.Svg).GetText();
+        } catch (Exception colour) {
+            error = colour.GetType().Name + " / " + colour.Message;
+            return null;
+        }
+    }
     try {
         return format == SymbolFormat.QrCode
             ? QR.Render(value, OutputFormat.Svg).GetText()
