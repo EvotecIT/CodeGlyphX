@@ -8,6 +8,10 @@ CodeGlyphX generates and decodes QR codes and barcodes in .NET. Start with insta
 - [Installation](https://codeglyphx.com/docs/installation/index.md)
 - [Quickstart](https://codeglyphx.com/docs/quickstart/index.md)
 - [Symbol capabilities](https://codeglyphx.com/docs/symbol-capabilities/index.md)
+- [Encoding profiles and controls](https://codeglyphx.com/docs/barcode-profiles/index.md)
+- [Image decoding](https://codeglyphx.com/docs/decoding/index.md)
+- [Barcode fonts](https://codeglyphx.com/docs/fonts/index.md)
+- [Physical printing](https://codeglyphx.com/docs/printing/index.md)
 - [Renderers](https://codeglyphx.com/docs/renderers/index.md)
 
 ## Formats and integrations

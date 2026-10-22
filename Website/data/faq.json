@@ -68,8 +68,8 @@
           "id": "supported-formats",
           "question": "What code formats are supported?",
           "answer": [
-            "<p>CodeGlyphX supports a wide range of 1D and 2D codes:</p>",
-            "<ul><li><strong>QR Codes:</strong> All versions (1-40), all error correction levels (L/M/Q/H)</li><li><strong>1D Barcodes:</strong> Code 128, GS1-128, Code 39, Code 93, Code 11, Codabar, MSI, Plessey, EAN-13, EAN-8, UPC-A, UPC-E, ITF-14, ITF</li><li><strong>2D Matrix:</strong> Data Matrix, PDF417, Aztec Code</li></ul>"
+            "<p>CodeGlyphX supports 65 physical formats across QR, matrix, stacked, linear, colour and postal families, including Aztec Rune, Code One and Ultracode. The <a href=\"/docs/symbol-capabilities/\">complete support matrix</a> lists every format and separates encoding, module or colour-cell decoding, image scanning and format hints.</p>",
+            "<p><a href=\"/docs/barcode-profiles/\">Application profiles and controls</a> add checked identifiers, HIBC, GS1, linked Composite and postal/payment helpers using those carriers. They are not counted as additional physical formats. The homepage specimen gallery shows a selection.</p>"
           ]
         },
         {
@@ -90,7 +90,15 @@
           "id": "decoding",
           "question": "Can CodeGlyphX decode/read barcodes?",
           "answer": [
-            "<p>Yes. CodeGlyphX can decode QR + 1D/2D barcodes from images. Supported image formats include PNG, JPEG, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, and XPM. It can detect multiple codes in a single image.</p><p><em>Note:</em> animated GIF is first-frame only; TIFF is baseline/strip-based.</p>"
+            "<p>Yes. Every listed physical format has an image path, with default selection, calibration, geometry and multiple-result support recorded per format in the <a href=\"/docs/symbol-capabilities/\">capability matrix</a>. Some raw marks need explicit format selection or a known sampling grid; Ultracode requires colour pixels. Multiple-code recognition is format-dependent.</p><p>The <a href=\"/docs/decoding/\">image decoding guide</a> covers supported image files, raw pixel buffers, deadlines and input limits. Direct module decoding is separate from finding a symbol in an arbitrary photo.</p>"
+          ]
+        },
+        {
+          "id": "fonts-and-printing",
+          "question": "Can I use OCR fonts and print labels at a physical size?",
+          "answer": [
+            "<p>Yes. Bundled GG Ocra (OCR-A, CC0) and CodeGlyphX Scan B (OCR-B, SIL OFL) work without installed fonts. You can also supply TTF, OpenType CFF/CFF2 and collection faces. <a href=\"/docs/fonts/\">Font coverage and shaping limits</a> are documented.</p>",
+            "<p><a href=\"/docs/printing/\">Physical printing</a> measures modules, quiet zones, readable text and captions in millimetres at a selected DPI, then shares the outlines across PNG, SVG and PDF. The <a href=\"/playground/\">playground</a> includes a print studio. Preflight does not certify a physical printer, scanner or mailpiece.</p>"
           ]
         },
         {

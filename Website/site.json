@@ -250,7 +250,7 @@
             "Title": "Developers",
             "Description": "Build with the .NET package.",
             "Items": [
-              { "Id": "docs", "Title": "Docs", "Url": "/docs/", "Description": "Every symbology, payloads, decoding and output formats." },
+              { "Id": "docs", "Title": "Docs and format support", "Url": "/docs/", "Description": "All 65 formats, encoding, decoding, fonts and physical printing." },
               { "Id": "api", "Title": "API", "Url": "/api/", "Description": "Every public type and member in the package." },
               { "Id": "benchmarks", "Title": "Benchmarks", "Url": "/benchmarks/", "Description": "Generation timing and image recognition beside ZXing and QRCoder." },
               { "Id": "downloads", "Title": "Downloads", "Url": "/downloads/", "Description": "ZIP builds of every release, and the NuGet package." },
@@ -265,6 +265,8 @@
           { "Title": "Playground", "Url": "/playground/" },
           { "Title": "PowerShell", "Url": "/powershell/" },
           { "Title": "Docs", "Url": "/docs/" },
+          { "Title": "All supported formats", "Url": "/docs/symbol-capabilities/" },
+          { "Title": "Fonts and printing", "Url": "/docs/printing/" },
           { "Title": "API Reference", "Url": "/api/" },
           { "Title": "Benchmarks", "Url": "/benchmarks/" },
           { "Title": "Showcase", "Url": "/showcase/" },

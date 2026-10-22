@@ -12,6 +12,12 @@ layout: docs
 
 CodeGlyphX is available as a NuGet package and can be installed in several ways.
 
+## Source and package versions
+
+These guides and the capability matrix describe the current repository. The 65-format expansion, bundled OCR fonts and physical print APIs were merged after the `CodeGlyphX-v3.0.0` release. They require a source build until a newer package includes them. Installing the existing 3.0.0 package does not add those APIs; check the [release notes](/changelog/) for your installed version.
+
+For a source build, clone the [repository](https://github.com/EvotecIT/CodeGlyphX), build `CodeGlyphX/CodeGlyphX.csproj`, and use a project reference from your application. The installation commands below install the published package.
+
 ## .NET CLI
 
 ```bash

@@ -10,7 +10,18 @@ layout: docs
 
 # Image Decoding
 
-Use `QrImageDecoder` when only QR is expected, or `MicroQrDecoder` for direct Micro QR recognition. `SymbolScanner` provides one result model for all 62 physical formats, including matrix, linear, stacked and postal symbols. The [capability matrix](/docs/symbol-capabilities/) records default recognition, explicit format selection, geometry and multiple-result support.
+Use `QrImageDecoder` when only QR is expected, or `MicroQrDecoder` for direct Micro QR recognition. `SymbolScanner` provides one result model for all 65 physical formats, including matrix, linear, stacked, colour and postal symbols. The [capability matrix](/docs/symbol-capabilities/) records default recognition, explicit format selection, geometry and multiple-result support.
+
+## Choose the decoding path
+
+| Input you have | Path | What to check |
+| --- | --- | --- |
+| A sampled monochrome module grid or bar sequence | The format's module decoder, or `SymbolDecoder` | Select the correct physical format and preserve its framing. |
+| Sampled Ultracode colour cells | `UltracodeDecoder` or `SymbolDecoder.Decode(UltracodeGrid)` | Preserve the palette; a monochrome `BitMatrix` loses the payload. |
+| An image file or raw pixels | `SymbolScanner` | Check default selection, format hints, geometry and multiple-result support in the capability matrix. |
+| An application identifier such as ISBN, HIBC or Swiss QR | Decode the physical carrier, then validate its application data | [Profiles and controls](/docs/barcode-profiles/) describe the identifier checks and returned metadata. |
+
+Encoding support does not imply automatic recognition in every photo. All formats have image paths, but raw marks can require calibration and specialist samplers have documented geometry limits. Aztec Rune, Code One and Ultracode are included in the matrix; Ultracode scanning needs a colour image. Physical print output and readable text are covered separately by [fonts](/docs/fonts/) and [printing](/docs/printing/).
 
 
 {{< cgx-figure id="decoding" caption="Three inputs passed to SymbolScanner.Scan with ScanOptions.Balanced: QR artwork from the home page, a Data Matrix label and a Code 128 carton label. Each line is the scanner's result." >}}
