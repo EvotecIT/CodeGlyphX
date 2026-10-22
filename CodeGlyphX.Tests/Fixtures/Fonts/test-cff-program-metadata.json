@@ -1,0 +1,216 @@
+{
+  "tool": "fontTools 4.67.0; BoundsPen and authored rectangle arithmetic",
+  "sha256": "43a21ece17b98c4c63a0618b7744e5f22ffab1fd67b0f30a23b603eb2b0b3957",
+  "cases": [
+    {
+      "scalar": 57344,
+      "program": "horizontal",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57345,
+      "program": "vertical",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57346,
+      "program": "relative",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57347,
+      "program": "curves",
+      "bounds": [
+        20,
+        0,
+        420,
+        365.9564810057326
+      ]
+    },
+    {
+      "scalar": 57348,
+      "program": "curveLine",
+      "bounds": [
+        20,
+        0,
+        470,
+        365.9564810057326
+      ]
+    },
+    {
+      "scalar": 57349,
+      "program": "lineCurve",
+      "bounds": [
+        20,
+        0,
+        470,
+        385.9564810057326
+      ]
+    },
+    {
+      "scalar": 57350,
+      "program": "vv",
+      "bounds": [
+        20,
+        0,
+        240,
+        500
+      ]
+    },
+    {
+      "scalar": 57351,
+      "program": "hh",
+      "bounds": [
+        20,
+        0,
+        420,
+        320
+      ]
+    },
+    {
+      "scalar": 57352,
+      "program": "hv",
+      "bounds": [
+        20,
+        0,
+        360,
+        400
+      ]
+    },
+    {
+      "scalar": 57353,
+      "program": "vh",
+      "bounds": [
+        20,
+        0,
+        320,
+        440
+      ]
+    },
+    {
+      "scalar": 57354,
+      "program": "hflex",
+      "bounds": [
+        20,
+        0,
+        420,
+        100
+      ]
+    },
+    {
+      "scalar": 57355,
+      "program": "flex",
+      "bounds": [
+        20,
+        0,
+        420,
+        102.62980294136496
+      ]
+    },
+    {
+      "scalar": 57356,
+      "program": "hflex1",
+      "bounds": [
+        20,
+        0,
+        420,
+        120
+      ]
+    },
+    {
+      "scalar": 57357,
+      "program": "flex1",
+      "bounds": [
+        20,
+        0,
+        420,
+        102.62980294136496
+      ]
+    },
+    {
+      "scalar": 57358,
+      "program": "hints",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57359,
+      "program": "subroutines",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57360,
+      "program": "arithmetic",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57361,
+      "program": "sqrtDiv",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57362,
+      "program": "transient",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57363,
+      "program": "stack",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    },
+    {
+      "scalar": 57364,
+      "program": "conditional",
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ]
+    }
+  ]
+}

@@ -485,13 +485,17 @@ internal static partial class ManagedBidiTextResolver {
 
     private static ManagedTextDirection ResolveBaseDirectionWithoutFormattingControls(string text) {
         var value = new StringBuilder(text.Length);
+        var isolateDepth = 0;
         foreach (string element in ManagedTextElements.Enumerate(text)) {
+            if (element is "\u2066" or "\u2067" or "\u2068") { isolateDepth++; continue; }
+            if (element is "\u2069") { if (isolateDepth > 0) isolateDepth--; continue; }
+            if (isolateDepth > 0) continue;
             if (!ManagedTextElements.ContainsBidiControl(element) || element is "\u061C" or "\u200E" or "\u200F") value.Append(element);
         }
         return ManagedTextElements.ResolveBaseDirection(value.ToString());
     }
 
-    private static ManagedTextDirection ResolveBaseDirection(string text, ManagedTextDirection requestedDirection) {
+    internal static ManagedTextDirection ResolveBaseDirection(string text, ManagedTextDirection requestedDirection) {
         ManagedTextDirection direction = requestedDirection == ManagedTextDirection.Auto
             ? ResolveBaseDirectionWithoutFormattingControls(text)
             : requestedDirection;

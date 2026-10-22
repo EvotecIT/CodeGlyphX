@@ -6,8 +6,8 @@ namespace CodeGlyphX.Printing;
 
 /// <summary>Checks sfnt table extents and TrueType metrics before the managed reader follows glyph references.</summary>
 internal static class BarcodeFontValidation {
-    internal static void Validate(byte[] data, int? collectionIndex) {
-        if (Read32(data, 0) != 0x74746366) { ValidateFace(data, 0); return; }
+    internal static int Validate(byte[] data, int? collectionIndex) {
+        if (Read32(data, 0) != 0x74746366) { ValidateFace(data, 0); return 1; }
         var count = Read32(data, 8);
         if (count == 0 || count > 256 || 12L + count * 4L > data.Length || collectionIndex >= count) throw new InvalidDataException("Invalid TrueType collection directory.");
         for (var index = 0; index < count; index++) {
@@ -16,6 +16,7 @@ internal static class BarcodeFontValidation {
             if (offset > int.MaxValue) throw new InvalidDataException("Invalid face offset.");
             ValidateFace(data, (int)offset);
         }
+        return (int)count;
     }
 
     private static void ValidateFace(byte[] data, int offset) {

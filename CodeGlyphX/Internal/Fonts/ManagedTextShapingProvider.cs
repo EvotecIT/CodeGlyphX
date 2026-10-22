@@ -17,7 +17,7 @@ namespace CodeGlyphX.Internal.Fonts;
 /// keeps <see cref="IManagedTextShapingProvider"/> as the single shaping contract used by Drawing and PDF.
 /// </remarks>
 internal sealed partial class ManagedTextShapingProvider : IManagedTextShapingProvider, IManagedTextShapingProviderMetadata {
-    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<byte[], LatinFont> LatinFonts = new();
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<IManagedFontProgram, LatinFont> LatinFonts = new();
     /// <summary>Shared stateless provider instance.</summary>
     public static ManagedTextShapingProvider Instance { get; } = new ManagedTextShapingProvider();
 
@@ -142,9 +142,13 @@ internal sealed partial class ManagedTextShapingProvider : IManagedTextShapingPr
     }
 
     private sealed class LatinFont {
-        internal LatinFont(byte[] data, bool isCff, IManagedFontProgram? suppliedProgram) {
-            Substitution = ManagedOpenTypeSubstitution.TryCreate(data, suppliedProgram?.CollectionIndex);
-            Font = suppliedProgram ?? (isCff ? ManagedOpenTypeCffFont.TryLoad(data, null, out _) : ManagedTrueTypeFont.TryLoad(data));
+        internal LatinFont(ManagedTextShapingRequest request, IManagedFontProgram? suppliedProgram) {
+            var data = request.FontDataForShaping;
+            var face = suppliedProgram?.CollectionIndex ?? request.FontCollectionIndex;
+            Substitution = ManagedOpenTypeSubstitution.TryCreate(data, face);
+            Font = suppliedProgram ?? (request.IsOpenTypeCff
+                ? ManagedOpenTypeCffFont.TryLoad(data, face, request.VariationCoordinatesForShaping, out _)
+                : ManagedTrueTypeFont.TryLoad(data, face));
         }
         internal IManagedFontProgram? Font { get; }
         internal ManagedOpenTypeSubstitution? Substitution { get; }

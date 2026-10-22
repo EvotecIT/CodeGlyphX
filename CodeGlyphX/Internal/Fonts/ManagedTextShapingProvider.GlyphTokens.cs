@@ -51,16 +51,16 @@ internal sealed partial class ManagedTextShapingProvider {
             (ManagedTextElements.ContainsJoiningScript(request.Text) &&
              !ManagedArabicTextShaper.CanShapeAllJoiningCharacters(request.Text)))) return false;
 
+        var suppliedProgram = request.FontProgramCacheKeyForShaping as IManagedFontProgram;
         LatinFont? latinFont = request.ApplyDefaultLatinLigatures
-            ? LatinFonts.GetValue(request.FontDataForShaping, data => new LatinFont(data, request.IsOpenTypeCff,
-                request.FontProgramCacheKeyForShaping as IManagedFontProgram)) : null;
+            ? suppliedProgram is null ? new LatinFont(request, null)
+                : LatinFonts.GetValue(suppliedProgram, program => new LatinFont(request, program)) : null;
         IManagedFontProgram? loadedFont = latinFont?.Font ?? request.FontProgramCacheKeyForShaping as IManagedFontProgram ?? (request.IsOpenTypeCff
-            ? ManagedOpenTypeCffFont.TryLoad(request.FontDataForShaping, request.VariationCoordinatesForShaping, out _)
+            ? ManagedOpenTypeCffFont.TryLoad(request.FontDataForShaping, request.FontCollectionIndex, request.VariationCoordinatesForShaping, out _)
             : ManagedTrueTypeFont.TryLoad(request.FontDataForShaping, request.FontCollectionIndex));
         if (loadedFont == null) return false;
         font = loadedFont;
-        resolvedDirection = request.Direction == ManagedTextDirection.Auto
-            ? ManagedTextElements.ResolveBaseDirection(request.Text) : request.Direction;
+        resolvedDirection = ManagedBidiTextResolver.ResolveBaseDirection(request.Text, request.Direction);
         ManagedOpenTypeSubstitution? substitution = latinFont?.Substitution ?? ManagedOpenTypeSubstitution.TryCreate(request.FontDataForShaping, request.FontCollectionIndex);
         bool ascii = request.ApplyDefaultLatinLigatures &&
             (resolvedDirection == ManagedTextDirection.LeftToRight || resolvedDirection == ManagedTextDirection.Auto) &&

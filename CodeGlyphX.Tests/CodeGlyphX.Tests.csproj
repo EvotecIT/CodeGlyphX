@@ -130,6 +130,11 @@
     <Compile Include="CodeOneConformanceTests.cs" />
     <Compile Include="CodeOneControlBoundaryTests.cs" />
     <Compile Include="BarcodeFontContractTests.cs" />
+    <Compile Include="BarcodeFontCollectionTests.cs" />
+    <Compile Include="NativeFontLayoutContractTests.cs" />
+    <Compile Include="NativeFontVariationContractTests.cs" />
+    <Compile Include="NativeFontBidiContractTests.cs" />
+    <Compile Include="NativeFontCffContractTests.cs" />
     <Compile Include="BarcodePrintLayoutTests.cs" />
     <Compile Include="BarcodePrintGeometryTests.cs" />
     <Compile Include="UltracodeConformanceTests.cs" />
@@ -174,6 +179,7 @@
     <EmbeddedResource Include="Fixtures/Fonts/*.otf" />
     <EmbeddedResource Include="Fixtures/Fonts/*.ttc" />
     <EmbeddedResource Include="Fixtures/Fonts/*.gz" />
+    <EmbeddedResource Include="Fixtures/Fonts/BidiMirroring-17.0.0.txt" />
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Aztec/*.png" />

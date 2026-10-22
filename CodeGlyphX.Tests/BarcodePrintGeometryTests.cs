@@ -157,6 +157,29 @@ public sealed class BarcodePrintGeometryTests {
         Assert.Equal(normal.SymbolBounds.Height, shortBars.SymbolBounds.Height, 7);
     }
 
+    [Theory]
+    [InlineData(Gs1CompositeCarrier.Ean13, "9520123456788")]
+    [InlineData(Gs1CompositeCarrier.Ean8, "95200002+12345")]
+    [InlineData(Gs1CompositeCarrier.UpcA, "012345678905+12")]
+    [InlineData(Gs1CompositeCarrier.UpcE, "01234558")]
+    public void RetailComposite_TextOverrideReplacesDigitsOnceAndKeepsCaption(Gs1CompositeCarrier carrier, string primary) {
+        var symbol = Gs1CompositeEncoder.Encode(primary, "(11)990102", new Gs1CompositeEncodingOptions { Carrier = carrier });
+        var options = new BarcodePrintOptions { Font = BarcodeFont.OcrB, Caption = "LABEL", HumanReadableText = "CUSTOM" };
+        var custom = BarcodePrint.Layout(symbol, options);
+        Assert.Equal(new[] { "CUSTOM", "LABEL" }, custom.Text.Select(line => line.Text));
+        Assert.Equal(primary, Assert.IsType<Gs1CompositeSymbolMetadata>(Scan(custom, SymbolFormat.Gs1Composite, carrier).Metadata).LinearText);
+        Assert.Equal("CUSTOM", options.HumanReadableText); // The caller's settings remain reusable.
+        options.HumanReadableText = string.Empty;
+        Assert.Equal("LABEL", Assert.Single(BarcodePrint.Layout(symbol, options).Text).Text);
+        options.HumanReadableText = null;
+        var derived = BarcodePrint.Layout(symbol, options);
+        options.HumanReadableText = primary;
+        Assert.Equal(derived.Text.Select(line => line.Text), BarcodePrint.Layout(symbol, options).Text.Select(line => line.Text));
+        options.IncludeHumanReadable = false;
+        options.HumanReadableText = "CUSTOM";
+        Assert.Equal("LABEL", Assert.Single(BarcodePrint.Layout(symbol, options).Text).Text);
+    }
+
     private static DetectedSymbol Scan(BarcodePrintLayout layout, SymbolFormat format, Gs1CompositeCarrier? carrier = null) {
         var result = SymbolScanner.Scan(layout.Render(OutputFormat.Png).ToArray(), new ScanOptions {
             Formats = new[] { format }, CompositeCarrier = carrier, TimeoutMilliseconds = TestBudget.Adjust(5000),

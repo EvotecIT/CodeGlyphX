@@ -22,12 +22,14 @@ internal sealed class ManagedOpenTypeCffFont : IManagedCffBoundedFontProgram, IM
     private readonly int _descender;
     private readonly int _lineGap;
     private readonly string _fingerprint;
+    private readonly int? _collectionIndex;
 
     private ManagedOpenTypeCffFont(
         byte[] data,
         ManagedOpenTypeReader reader,
         ManagedCffFontData cff,
-        ManagedFontVariationModel variations) {
+        ManagedFontVariationModel variations,
+        int? collectionIndex) {
         _data = (byte[])data.Clone();
         _reader = reader;
         _cff = cff;
@@ -42,20 +44,28 @@ internal sealed class ManagedOpenTypeCffFont : IManagedCffBoundedFontProgram, IM
         _ascender = checked(reader.Ascender + (mvar?.HorizontalAscenderDelta ?? 0));
         _descender = checked(reader.Descender + (mvar?.HorizontalDescenderDelta ?? 0));
         _lineGap = checked(reader.LineGap + (mvar?.HorizontalLineGapDelta ?? 0));
-        _fingerprint = ComputeFingerprint(data, variations.Identity);
+        _collectionIndex = collectionIndex;
+        _fingerprint = ComputeFingerprint(data, variations.Identity + (collectionIndex.HasValue ? "|face=" + collectionIndex.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : string.Empty));
     }
 
     internal static ManagedOpenTypeCffFont? TryLoad(
         byte[] data,
         IReadOnlyDictionary<string, float>? variationValues,
+        out string? error) => TryLoad(data, null, variationValues, out error);
+
+    internal static ManagedOpenTypeCffFont? TryLoad(
+        byte[] data,
+        int? collectionIndex,
+        IReadOnlyDictionary<string, float>? variationValues,
         out string? error) {
         error = null;
         try {
-            ManagedOpenTypeReader? reader = ManagedOpenTypeReader.TryCreate(data);
+            ManagedOpenTypeReader? reader = ManagedOpenTypeReader.TryCreateForFace(data, collectionIndex);
             if (reader == null || !reader.TryGetTable("CFF ", out _, out _) && !reader.TryGetTable("CFF2", out _, out _)) return null;
             ManagedFontVariationModel variations = ManagedFontVariationModel.Create(reader, variationValues);
             ManagedCffFontData cff = ManagedCffFontData.Parse(reader, variations);
-            return new ManagedOpenTypeCffFont(data, reader, cff, variations);
+            var selected = data.Length >= 4 && data[0] == 't' && data[1] == 't' && data[2] == 'c' && data[3] == 'f' ? collectionIndex ?? 0 : (int?)null;
+            return new ManagedOpenTypeCffFont(data, reader, cff, variations, selected);
         } catch (Exception exception) when (exception is InvalidDataException
                                             || exception is NotSupportedException
                                             || exception is ArgumentException
@@ -70,7 +80,7 @@ internal sealed class ManagedOpenTypeCffFont : IManagedCffBoundedFontProgram, IM
     IReadOnlyDictionary<string, float> IManagedVariableFontProgram.VariationCoordinatesForShaping =>
         _variations.DesignCoordinates;
     public string? DisplayName => _reader.ReadDisplayName();
-    public int? CollectionIndex => null;
+    public int? CollectionIndex => _collectionIndex;
     public int UnitsPerEm => _reader.UnitsPerEm;
     public bool IsOpenTypeCff => true;
     public bool ProvidesComplexTextLayout => false;

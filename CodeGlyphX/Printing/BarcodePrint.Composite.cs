@@ -44,7 +44,6 @@ public static partial class BarcodePrint {
             if (!TryRetail(linear, format, out var data)) throw new ArgumentException("The Composite retail carrier cannot be represented.", nameof(symbol));
             var o = b.Options.Snapshot();
             o.Format = null; o.XDimensionMm = b.X; o.SnapToPrinterPixels = false; o.Caption = null;
-            o.HumanReadableText = null;
             var layout = Retail(linear, data, o);
             var retailLeftQuiet = b.Options.IncludeQuietZones ? (format is SymbolFormat.UpcA or SymbolFormat.UpcE ? 9 : symbol.Carrier == Gs1CompositeCarrier.Ean8 ? 7 : 11) * b.X : 0;
             var dx = qx + first * b.X - retailLeftQuiet;
@@ -52,6 +51,8 @@ public static partial class BarcodePrint {
             b.Append(layout, dx, dy);
             bounds = new BarcodeBounds(0, 0, symbol.Width * b.X + 2 * qx, qy + componentHeight + 6 * b.X)
                 .Union(layout.SymbolBounds.Translate(dx, dy));
+            // The retail layout owns both derived digit groups and explicit text overrides.
+            b.Options.HumanReadableText = null;
         } else {
             DrawRows(b, symbol.Modules, symbol.ComponentRows, 1, qx, carrierTop, b.X);
             var bodyRows = symbol.Height - symbol.ComponentRows - 1;

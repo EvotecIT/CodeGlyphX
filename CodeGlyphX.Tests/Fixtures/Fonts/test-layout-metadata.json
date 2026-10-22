@@ -1,0 +1,76 @@
+{
+  "tool": "fontTools 4.67.0",
+  "source_sha256": "490e83227fae41636a95fc7d05e1e242513938bbf2732089d7d305b9bfc53fe6",
+  "variable_instances": [
+    {
+      "weight": 100,
+      "optical": 12,
+      "A": 540,
+      "bounds": [
+        20,
+        0,
+        500,
+        700
+      ],
+      "ascender": 740
+    },
+    {
+      "weight": 400,
+      "optical": 12,
+      "A": 600,
+      "bounds": [
+        20,
+        0,
+        560,
+        700
+      ],
+      "ascender": 800
+    },
+    {
+      "weight": 650,
+      "optical": 12,
+      "A": 675,
+      "bounds": [
+        20,
+        0,
+        635,
+        700
+      ],
+      "ascender": 875
+    },
+    {
+      "weight": 900,
+      "optical": 12,
+      "A": 700,
+      "bounds": [
+        20,
+        0,
+        660,
+        700
+      ],
+      "ascender": 900
+    },
+    {
+      "weight": 900,
+      "optical": 72,
+      "A": 760,
+      "bounds": [
+        20,
+        0,
+        720,
+        700
+      ],
+      "ascender": 960
+    }
+  ],
+  "outputs": {
+    "TestKerningClasses.ttf": "187c60d8ff781973aa034c947a46e9ac0c12e2a600d60f12342f5fca79741b4e",
+    "TestKerningExtension.ttf": "22bcb1b223b6f239c22e38a61ea2bf4a760106cf198d380ba4d44764968fd234",
+    "TestKerningLegacy.ttf": "980a21f31bca1f2da27920aa02329685b7cca1a842b6d6316164fcf608043f5a",
+    "TestKerningPairs.ttf": "40b294cd79b75bbec13d4478163ecbee7a66ae8b762d1ddfee44d7bb63507947",
+    "TestLayoutSubstitution.ttf": "56a47cfc3b73dccfb6ea1dd38c6ff2bb13e3448a53ecd65d4684b8b611a0d8f6",
+    "TestTrackingAndSelectors.ttf": "67d031566f0466234337bda635686c8a166ad41390c8d8ef446d2e402ededd51",
+    "TestVariable.ttf": "6149445de331155c082fdbcc7537555d31ead3ebedaa7711289a7498e708648d",
+    "TestVariableGvarMetrics.ttf": "9a5809412a5d8d72fd2dca3046d414b64502d365c296f18b9eac0d4dc6c87157"
+  }
+}

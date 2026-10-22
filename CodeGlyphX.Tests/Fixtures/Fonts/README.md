@@ -20,3 +20,26 @@ metadata fixtures distinguish shared subroutine references from distinct indices
 the cumulative parsing limit. `TestSubstitutionCoverage.ttf.gz` has repeated nonmatching coverage
 ranges to exercise the shaping work limit. These bounded fixtures expand to at most 3 MiB;
 the tests do not run the large-memory or long-running forms of the malformed inputs.
+
+`TestMixedCffFirst.ttc` and `TestMixedTrueTypeFirst.ttc` combine the original CFF, CFF2 and
+TrueType fixtures in different orders. `Build/Generate-PrintFontCollections.py` uses pinned
+input hashes and fontTools 4.67.0; `test-collection-metadata.json` records the face order,
+distinct nominal and ligature advances, and collection hashes. These qualify explicit and
+automatic face selection, shaping cache isolation and outline exports.
+
+`Build/Generate-PrintFontLayoutFixtures.py` creates the original `TestKerning*`,
+`TestLayoutSubstitution`, `TestTrackingAndSelectors` and `TestVariable*` fonts. They qualify
+pair/class/extension kerning, legacy precedence, coverage-based substitutions, text clusters,
+variation selectors, normal tracking, and variable outlines/metrics with and without HVAR.
+`test-layout-metadata.json` records fontTools instance advances, BoundsPen measurements and hashes.
+
+`Build/Generate-PrintCffPrograms.py` authors the original `TestCffPrograms.otf` operator programs.
+`test-cff-program-metadata.json` records independent BoundsPen bounds for curves, hints and
+subroutines; the arithmetic programs draw an explicitly authored 540 by 700 design-unit box.
+Both tools use fontTools 4.67.0 and run only when a maintainer chooses to regenerate fixtures.
+
+`BidiMirroring-17.0.0.txt` is the unchanged Unicode 17.0 mirroring data from
+https://www.unicode.org/Public/17.0.0/ucd/BidiMirroring.txt (SHA-256
+`a2f16fb873ab4fcdf3221cb1a8a85a134ddd6ed03603181823ff5206af3741ce`). It supplies independent
+expected pairs for the generated mirroring table. Its Unicode copyright notice is retained;
+the full license is also in `Licenses/Unicode-LICENSE.txt`.

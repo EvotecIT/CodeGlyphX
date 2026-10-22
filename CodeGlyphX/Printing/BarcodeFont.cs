@@ -10,7 +10,7 @@ namespace CodeGlyphX.Printing;
 /// <summary>A portable font loaded from bundled or caller-supplied TrueType or OpenType bytes.</summary>
 /// <remarks>
 /// The font owns its data and never searches installed fonts. TrueType outlines, OpenType CFF/CFF2,
-/// and TrueType collection faces are supported. Managed shaping covers common Latin substitutions,
+/// and mixed-outline OpenType collection faces are supported. Managed shaping covers common Latin substitutions,
 /// bidirectional text and bounded Arabic joining; strict mode rejects scripts requiring unsupported shaping.
 /// Font redistribution and outline use remain subject to the selected font's license.
 /// </remarks>
@@ -23,7 +23,7 @@ public sealed partial class BarcodeFont : IBarcodeFont {
 
     /// <inheritdoc />
     public string Name { get; }
-    /// <summary>Gets the selected zero-based TrueType collection face, or null for a standalone font.</summary>
+    /// <summary>Gets the selected zero-based OpenType collection face, or null for a standalone font.</summary>
     public int? CollectionIndex => _program.CollectionIndex;
 
     private BarcodeFont(IManagedBoundedFontProgram program, byte[] data) {
@@ -33,8 +33,8 @@ public sealed partial class BarcodeFont : IBarcodeFont {
     }
 
     /// <summary>Loads a font from an independent snapshot of at most 16 MiB.</summary>
-    /// <param name="data">A complete, uncompressed TTF, OTF or TrueType collection.</param>
-    /// <param name="collectionIndex">A zero-based TrueType collection face, or null to select the first supported face.</param>
+    /// <param name="data">A complete, uncompressed TTF, OTF or OpenType font collection.</param>
+    /// <param name="collectionIndex">A zero-based collection face, or null to select the first supported face.</param>
     /// <returns>A scoped font that uses no operating-system font services.</returns>
     /// <exception cref="ArgumentException">The bytes are malformed, unsupported, or exceed the input limit.</exception>
     public static BarcodeFont FromBytes(byte[] data, int? collectionIndex = null) {
@@ -43,10 +43,15 @@ public sealed partial class BarcodeFont : IBarcodeFont {
         if (data.Length < 12 || data.Length > MaximumFontBytes) throw new ArgumentException("A font must contain 12 bytes to 16 MiB of uncompressed font data.", nameof(data));
         var snapshot = (byte[])data.Clone();
         try {
-            BarcodeFontValidation.Validate(snapshot, collectionIndex);
-            IManagedBoundedFontProgram? program = collectionIndex is null or 0
-                ? ManagedOpenTypeCffFont.TryLoad(snapshot, null, out _) : null;
-            program ??= ManagedTrueTypeFont.TryLoad(snapshot, collectionIndex);
+            var faceCount = BarcodeFontValidation.Validate(snapshot, collectionIndex);
+            var collection = snapshot[0] == 't' && snapshot[1] == 't' && snapshot[2] == 'c' && snapshot[3] == 'f';
+            IManagedBoundedFontProgram? program = null;
+            for (var face = collectionIndex ?? 0; face < faceCount; face++) {
+                int? selected = collection ? face : collectionIndex;
+                program = ManagedOpenTypeCffFont.TryLoad(snapshot, selected, null, out _);
+                program ??= ManagedTrueTypeFont.TryLoad(snapshot, selected);
+                if (program is not null || collectionIndex.HasValue) break;
+            }
             if (program is null || program.UnitsPerEm <= 0 || !BarcodeBounds.Finite(program.LineHeight(1)) || program.LineHeight(1) <= 0)
                 throw new ArgumentException("The supplied font has no supported outline face or valid metrics.", nameof(data));
             return new BarcodeFont(program, snapshot);
