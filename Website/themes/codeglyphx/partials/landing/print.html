@@ -16,7 +16,7 @@
       <figcaption>
         <strong>{{ l.name }} in {{ l.font }}</strong>
         <span>{{ l.widthMm }} × {{ l.heightMm }} mm at {{ l.dpi }} DPI · decoded <code>{{ l.decoded }}</code></span>
-        <span class="cgx-print__files"><a href="{{ l.png }}">PNG</a><a href="{{ l.svg }}">SVG</a><a href="{{ l.pdf }}">PDF</a></span>
+        <span class="cgx-print__files"><a href="{{ l.png }}" aria-label="{{ l.name }} PNG label">PNG</a><a href="{{ l.svg }}" aria-label="{{ l.name }} SVG label">SVG</a><a href="{{ l.pdf }}" aria-label="{{ l.name }} PDF label">PDF</a></span>
       </figcaption>
     </figure>
     {{~ end ~}}

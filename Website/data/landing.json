@@ -102,7 +102,7 @@
     "title": "Labels measured for print",
     "body": "BarcodePrint lays out a label in millimetres at your printer's resolution, with quiet zones and human-readable text, then exports the same outlines to PNG, SVG and PDF. Text comes from the bundled GG Ocra (OCR-A) and CodeGlyphX Scan B (OCR-B) faces or a TrueType, OpenType or collection font you supply, with no installed fonts or font services.",
     "limits": "Preflight checks size, text, quiet-zone and placement constraints. It does not certify a printer, scanner or label for an application; qualify the printed result. Text shaping does not cover every complex script.",
-    "code": "var options = new BarcodePrintOptions {\n    Dpi = 300,\n    Font = BarcodeFont.OcrB\n};\n\nvar label = BarcodePrint.Layout(\n    Barcode.Encode(SymbolFormat.Ean, \"5901234123457\"), options);\n\nlabel.Save(\"label.pdf\");",
+    "code": "var options = new BarcodePrintOptions {\n    Dpi = 300,\n    Font = BarcodeFont.OcrB,\n    FontSizePoints = 8\n};\n\nvar label = BarcodePrint.Layout(\n    Barcode.Encode(SymbolFormat.Ean, \"5901234123457\"), options);\n\nlabel.Save(\"label.pdf\");",
     "links": [
       {
         "title": "Fonts and physical printing",
