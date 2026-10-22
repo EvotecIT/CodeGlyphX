@@ -34,10 +34,14 @@ public partial class BarcodePrintStudio : ComponentBase {
     private string ReadableText { get; set; } = "";
     private string Caption { get; set; } = "";
     private int Dpi { get; set; } = 300;
-    private double FontPoints { get; set; } = 10;
+    private double FontPoints { get; set; } = 8;
     private double? XDimension { get; set; }
     private double Rotation { get; set; }
-    private BarcodeFont? Font { get; set; }
+    private string FontChoice { get; set; } = "None";
+    private BarcodeFont? UploadedFont { get; set; }
+    private BarcodeFont? Font => FontChoice switch {
+        "OcrA" => BarcodeFont.OcrA, "OcrB" => BarcodeFont.OcrB, "Uploaded" => UploadedFont, _ => null
+    };
     private string? FontName => Font?.Name;
     private bool Busy { get; set; }
     private string? Error { get; set; }
@@ -52,6 +56,11 @@ public partial class BarcodePrintStudio : ComponentBase {
 
     private void ClearOutput() {
         Layout = null; Findings = Array.Empty<BarcodePrintFinding>(); PngUri = SvgUri = PdfUri = null; Error = null;
+    }
+
+    private void ChangeFont() {
+        ClearOutput();
+        if (Font is not null) IncludeText = true;
     }
 
     private void ChangeFormat() {
@@ -71,12 +80,13 @@ public partial class BarcodePrintStudio : ComponentBase {
     }
 
     private async Task LoadFont(InputFileChangeEventArgs args) {
-        ClearOutput(); Font = null; Busy = true;
+        ClearOutput(); UploadedFont = null; FontChoice = "None"; Busy = true;
         try {
             using var input = args.File.OpenReadStream(16 * 1024 * 1024);
             using var bytes = new MemoryStream();
             await input.CopyToAsync(bytes);
-            Font = BarcodeFont.FromBytes(bytes.ToArray());
+            UploadedFont = BarcodeFont.FromBytes(bytes.ToArray());
+            FontChoice = "Uploaded";
             IncludeText = true;
         } catch (Exception exception) when (exception is ArgumentException or IOException or InvalidOperationException) {
             Error = "The font could not be loaded. Choose an uncompressed TTF, OTF or TTC file with supported outlines, up to 16 MiB.";
@@ -91,6 +101,7 @@ public partial class BarcodePrintStudio : ComponentBase {
                 throw new ArgumentException("The print studio accepts at most 2048 characters per field.");
             var options = new BarcodePrintOptions {
                 Dpi = Dpi, Font = Font, FontSizePoints = FontPoints, CaptionSizePoints = FontPoints,
+                MinimumCaptionSizePoints = Math.Min(9, FontPoints),
                 IncludeHumanReadable = IncludeText, HumanReadableText = string.IsNullOrEmpty(ReadableText) ? null : ReadableText,
                 Caption = string.IsNullOrEmpty(Caption) ? null : Caption, XDimensionMm = XDimension
             };

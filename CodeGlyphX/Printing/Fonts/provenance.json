@@ -1,0 +1,26 @@
+{
+  "tool": "fontTools 4.66.1; Prepare-OcrFontAssets.py",
+  "inputs": {
+    "gg-ocra.ttf": {
+      "url": "https://raw.githubusercontent.com/fontlabcom/getgo-fonts/c3bb7eac16e0b855355d4e436479ec49fd1d25a2/getgo-fonts/cc0/ocra/ocra.ttf",
+      "sha256": "c9c2658009c0ce6086165610ada58db852a78be0acd89c9870dacffd91b8e979"
+    },
+    "GG-Ocra-CC0.txt": {
+      "url": "https://raw.githubusercontent.com/fontlabcom/getgo-fonts/c3bb7eac16e0b855355d4e436479ec49fd1d25a2/getgo-fonts/cc0/LICENSE.txt",
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    "ocr-b-original.ttf": {
+      "url": "https://raw.githubusercontent.com/jaycee723/ocr-b/fedeba81519770109925b5bec70e940be5948d8f/dist/OCR-B.ttf",
+      "sha256": "367d876cca948ecd4900851f6e85687cbb6e71de9d0d2f36348edec5655526af"
+    },
+    "Raisty-OCR-B-OFL.txt": {
+      "url": "https://raw.githubusercontent.com/jaycee723/ocr-b/fedeba81519770109925b5bec70e940be5948d8f/LICENSE.md",
+      "sha256": "035f9ce834c07a9bf88db572f515d2fb494089a9589441ccc056b758805a29ef"
+    }
+  },
+  "outputs": {
+    "GGOcra.ttf": "c9c2658009c0ce6086165610ada58db852a78be0acd89c9870dacffd91b8e979",
+    "CodeGlyphXScanB-Regular.ttf": "3e97d1f9544f0b2af32b584b56443197c5103f591ad7f0f8664dc92dd9bb06a6"
+  },
+  "modifications": "GG Ocra unchanged. OCR-B primary names changed to CodeGlyphX Scan B; outlines, metrics and layout tables unchanged."
+}

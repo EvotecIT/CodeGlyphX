@@ -1,6 +1,6 @@
 ---
 title: Fonts and physical printing
-description: Measure barcode labels in millimetres and export supplied-font outlines to PNG, SVG and PDF.
+description: Measure barcode labels in millimetres and export bundled or supplied-font outlines to PNG, SVG and PDF.
 ---
 
 # Fonts and physical printing
@@ -14,13 +14,13 @@ using CodeGlyphX;
 using CodeGlyphX.Printing;
 using CodeGlyphX.Rendering;
 
-var font = BarcodeFont.FromBytes(File.ReadAllBytes("label-font.ttf"));
+var font = BarcodeFont.OcrB;
 var label = Barcode.Create(SymbolFormat.Code39, "aX")
     .WithEncodingOptions(new BarcodeEncodingOptions {
         Code39FullAscii = true,
         PrintCheckCharacters = false
     })
-    .LayoutPrint(new BarcodePrintOptions { Dpi = 300, Font = font });
+    .LayoutPrint(new BarcodePrintOptions { Dpi = 300, Font = font, FontSizePoints = 8 });
 
 foreach (var finding in label.Preflight(format: OutputFormat.Pdf))
     Console.WriteLine(finding.Message);
@@ -30,13 +30,16 @@ label.Save("label.svg");
 label.Save("label.pdf");
 ```
 
-Fonts come from supplied TTF, OTF or TTC bytes. CodeGlyphX uses the same measured
+Choose `BarcodeFont.OcrA` for GG Ocra or `BarcodeFont.OcrB` for CodeGlyphX Scan B.
+Both bundled faces include printable ASCII and load without installed fonts.
+Their full CC0/OFL licenses and provenance are included in the package. You can
+also supply TTF, OTF or TTC bytes. CodeGlyphX uses the same measured
 glyph run for raster and vector output. Strict text rejects missing glyphs and
 unsupported shaping. Select a font whose license permits your intended use;
 the compact legacy font has a limited repertoire and is not an OCR font.
 
-The [playground](/playground/) includes a physical print studio with local font
-upload, printer DPI, module width, readable text, captions and rotated exports.
+The [playground](/playground/) includes a physical print studio with bundled font
+selection, local font upload, printer DPI, module width, readable text, captions and rotated exports.
 It also exposes Rune, Code One, Ultracode, linked Composite and raw-run layouts.
 Prepared exports are cleared when settings change or a font fails to load.
 

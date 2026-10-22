@@ -24,7 +24,7 @@ public sealed class BarcodePrintOptions {
     public string? HumanReadableText { get; set; }
     /// <summary>Gets or sets whether to include readable text when available.</summary>
     public bool IncludeHumanReadable { get; set; } = true;
-    /// <summary>Gets or sets a scoped supplied font. Required when printable text is requested.</summary>
+    /// <summary>Gets or sets a bundled or supplied font. Required when printable text is requested.</summary>
     public IBarcodeFont? Font { get; set; }
     /// <summary>Gets or sets the readable text's em size in points.</summary>
     public double FontSizePoints { get; set; } = 10;

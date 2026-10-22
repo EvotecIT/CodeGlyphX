@@ -10,12 +10,12 @@ using CodeGlyphX;
 using CodeGlyphX.Printing;
 using CodeGlyphX.Rendering;
 
-var font = BarcodeFont.FromBytes(File.ReadAllBytes("label-font.ttf"));
+var font = BarcodeFont.OcrB;
 var symbol = Barcode.Encode(SymbolFormat.Ean, "5901234123457");
 var layout = BarcodePrint.Layout(symbol, new BarcodePrintOptions {
     Dpi = 300,
     Font = font,
-    FontSizePoints = 10
+    FontSizePoints = 8
 });
 
 foreach (var finding in layout.Preflight(format: OutputFormat.Pdf))
@@ -25,7 +25,11 @@ layout.Save("retail-label.pdf");
 layout.Save("retail-label.png");
 ```
 
-Fonts are scoped to supplied bytes. The library does not look up installed fonts or fetch fonts
+`BarcodeFont.OcrA` (GG Ocra) and `BarcodeFont.OcrB` (CodeGlyphX Scan B) provide bundled
+regular faces with printable ASCII. Their licenses and provenance are included in the package.
+See the [font guide](fonts.md) for details and supplied-font support.
+
+Fonts are scoped to bundled or supplied bytes. The library does not look up installed fonts or fetch fonts
 over the network. Select a face whose license permits the intended outline use and distribution.
 `BarcodeFont.FromBytes` supports TrueType, OpenType CFF/CFF2 and collection faces. The same
 shaped line supplies advance, baseline, ink bounds and contours to every print export. Strict
@@ -43,7 +47,7 @@ a printed postal or healthcare label.
 derive checked digits from the encoded bars when it is null. Use `BarcodeProfiles`, `Hibc` and
 the GS1 owners to prepare application text; a physical carrier cannot establish every application
 profile. `IncludeHumanReadable = false` explicitly omits text. A requested printable line needs
-a supplied font. Captions sit above the symbol; `FitCaptionToSymbolWidth` can shrink them down
+a bundled or supplied font. Captions sit above the symbol; `FitCaptionToSymbolWidth` can shrink them down
 to `MinimumCaptionSizePoints`, then reports `CaptionDoesNotFit` if the line is still too wide.
 
 ## Physical size and bounds

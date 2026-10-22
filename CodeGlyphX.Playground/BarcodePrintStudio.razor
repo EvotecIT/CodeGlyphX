@@ -3,7 +3,7 @@
 
 <details class="card print-studio">
     <summary>Physical print studio <span>Fonts, dimensions and label exports</span></summary>
-    <p>Build a measured label in millimetres. Upload your own font for readable text; font bytes stay in this browser.</p>
+    <p>Build a measured label in millimetres. Choose a bundled OCR face or upload your own font for readable text; uploaded font bytes stay in this browser.</p>
     <div class="print-studio-grid">
         <div>
             <div class="form-group">
@@ -87,6 +87,10 @@
             }
         </div>
         <div>
+            <div class="form-group"><label for="print-font-choice">Readable text font</label><select id="print-font-choice" @bind="FontChoice" @bind:after="ChangeFont" disabled="@Busy">
+                <option value="None">Choose a font</option><option value="OcrA">OCR-A · GG Ocra</option><option value="OcrB">OCR-B · CodeGlyphX Scan B</option>
+                @if (UploadedFont is not null) { <option value="Uploaded">Uploaded · @UploadedFont.Name</option> }
+            </select></div>
             <div class="form-group"><label for="print-font">Supplied font (TTF, OTF or TTC, up to 16 MiB)</label><InputFile id="print-font" OnChange="LoadFont" accept=".ttf,.otf,.ttc" disabled="@Busy" /></div>
             @if (FontName is not null) { <p class="print-studio-note">Loaded: @FontName</p> }
             <div class="form-group"><label><input id="print-readable" type="checkbox" @bind="IncludeText" @bind:after="ClearOutput" /> Include readable text</label></div>

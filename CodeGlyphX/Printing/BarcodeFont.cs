@@ -7,14 +7,14 @@ using CodeGlyphX.Internal.Fonts;
 
 namespace CodeGlyphX.Printing;
 
-/// <summary>A portable font loaded from caller-supplied TrueType or OpenType bytes.</summary>
+/// <summary>A portable font loaded from bundled or caller-supplied TrueType or OpenType bytes.</summary>
 /// <remarks>
 /// The font owns its data and never searches installed fonts. TrueType outlines, OpenType CFF/CFF2,
 /// and TrueType collection faces are supported. Managed shaping covers common Latin substitutions,
 /// bidirectional text and bounded Arabic joining; strict mode rejects scripts requiring unsupported shaping.
 /// Font redistribution and outline use remain subject to the selected font's license.
 /// </remarks>
-public sealed class BarcodeFont : IBarcodeFont {
+public sealed partial class BarcodeFont : IBarcodeFont {
     private const int MaximumFontBytes = 16 * 1024 * 1024;
     private const int MaximumTextLength = 32768;
     private const int MaximumOutlinePoints = 1048576;

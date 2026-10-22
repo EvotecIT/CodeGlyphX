@@ -99,9 +99,9 @@ OutputWriter.Write("coupon.png", coupon);
 
 [Barcode profiles and controls](https://codeglyphx.com/docs/barcode-profiles/) describes HIBC carriers, checked book/pharmacy/postal identifiers, USPS package fields, coupons, Mailmark 2D and Swiss QR payments. `SwissQrCode` validates the payment, selects QR error correction M and renders the recognition cross. Postal and payment helpers validate data and produce symbols; complete mailpieces, payment parts and printed acceptance require their own layout and qualification.
 
-[Supplied fonts](docs/fonts.md) provides portable TrueType/OpenType text measurement and outlines through `BarcodeFont`, including case preservation, collection-face selection, explicit missing-glyph handling and supported managed shaping. It requires no installed fonts or additional runtime package.
+[Barcode fonts](docs/fonts.md) provides bundled OCR-A/OCR-B faces and portable TrueType/OpenType text measurement and outlines through `BarcodeFont`, including case preservation, collection-face selection, explicit missing-glyph handling and supported managed shaping. It requires no installed fonts or additional runtime package.
 
-[Physical printing](docs/printing.md) measures labels in millimetres, positions family-specific bars and readable text, and shares glyph outlines across PNG, SVG and PDF. The playground's print studio accepts local font uploads. Run `CODEGLYPHX_PHYSICAL_PRINT=1` for the label examples, with an optional `CODEGLYPHX_PRINT_FONT` path to your supplied font.
+[Physical printing](docs/printing.md) measures labels in millimetres, positions family-specific bars and readable text, and shares glyph outlines across PNG, SVG and PDF. The playground's print studio offers bundled faces and local font uploads. Run `CODEGLYPHX_PHYSICAL_PRINT=1` for the label examples using bundled OCR-B, with an optional `CODEGLYPHX_PRINT_FONT` path to your supplied font.
 
 [Ultracode](docs/ultracode.md) encodes Latin-1 text or exact bytes with five error-correction levels. Its colour-cell decoder and image scanner preserve the palette, and its PNG/SVG renderers keep the required data colours.
 

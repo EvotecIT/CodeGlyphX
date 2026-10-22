@@ -9,6 +9,26 @@ namespace CodeGlyphX.Tests;
 
 public sealed partial class PlaygroundLivePreviewTests {
     [Theory]
+    [InlineData("OcrA")]
+    [InlineData("OcrB")]
+    public async Task PrintStudio_BundledFontsNeedNoUploadAndFontEditsClearExports(string font) {
+        await using var renderer = new PlaygroundRenderer();
+        await renderer.Start();
+        await renderer.Change("onchange", e => e.Attribute("id") == "print-font-choice", font);
+        await renderer.Click("Prepare print label");
+        var png = Convert.FromBase64String(renderer.Elements().Single(e => e.Attribute("download") == "label.png").Attribute("href")!.Split(',')[1]);
+        var scan = SymbolScanner.Scan(png, new ScanOptions { Formats = new[] { SymbolFormat.Ean }, TimeoutMilliseconds = 5000 });
+        Assert.Equal("5901234123457", Assert.Single(scan.Symbols).Text);
+        Assert.Contains(renderer.Elements(), e => e.Attribute("download") == "label.svg");
+        Assert.Contains(renderer.Elements(), e => e.Attribute("download") == "label.pdf");
+        await renderer.Change("onchange", e => e.Attribute("id") == "print-font-choice", "None");
+        Assert.DoesNotContain(renderer.Elements(), e => e.Attribute("download")?.StartsWith("label.", StringComparison.Ordinal) == true);
+        await renderer.Click("Prepare print label");
+        Assert.Contains(renderer.Elements(), e => e.Attribute("role") == "alert");
+        Assert.Empty(renderer.Errors);
+    }
+
+    [Theory]
     [InlineData("Package", "(420")]
     [InlineData("Gs1Code128", "(01)09506000134353")]
     public async Task PrintStudio_InvalidGs1ShowsAnAlertAndKeepsExportsCleared(string format, string input) {

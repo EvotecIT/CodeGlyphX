@@ -3,12 +3,12 @@ using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Examples;
 
-/// <summary>Portable supplied-font labels and the newer matrix, colour and linked formats.</summary>
+/// <summary>Portable bundled or supplied-font labels and the newer matrix, colour and linked formats.</summary>
 internal static class BarcodePrintExample {
     internal static void Run(string outputDir) {
         var fontPath = Environment.GetEnvironmentVariable("CODEGLYPHX_PRINT_FONT");
-        var font = string.IsNullOrWhiteSpace(fontPath) ? null : BarcodeFont.FromBytes(File.ReadAllBytes(fontPath));
-        var options = new BarcodePrintOptions { Dpi = 300, Font = font, IncludeHumanReadable = font is not null };
+        var font = string.IsNullOrWhiteSpace(fontPath) ? BarcodeFont.OcrB : BarcodeFont.FromBytes(File.ReadAllBytes(fontPath));
+        var options = new BarcodePrintOptions { Dpi = 300, Font = font, FontSizePoints = 8, IncludeHumanReadable = true };
         var labels = new (string Name, BarcodePrintLayout Layout)[] {
             ("retail-print", BarcodePrint.Layout(Barcode.Encode(SymbolFormat.Ean, "5901234123457+12"), options)),
             ("code39-print", Barcode.Create(SymbolFormat.Code39, "aX").WithEncodingOptions(new BarcodeEncodingOptions {

@@ -41,6 +41,26 @@ Supplied font programs have their own licenses. The font fixtures used by the te
 
 The copied bidirectional mirroring table is generated from Unicode 17.0.0 `BidiMirroring.txt`, copyright (c) 1991-2026 Unicode, Inc. The [Unicode License V3](Licenses/Unicode-LICENSE.txt) is retained in the package.
 
+## Bundled OCR text fonts
+
+GG Ocra is included unchanged from FontLab's GetGo Fonts, commit
+`c3bb7eac16e0b855355d4e436479ec49fd1d25a2`. Its font metadata credits Retorillo,
+John Sauter and force4u. The full [CC0 1.0 dedication](Licenses/GG-Ocra-CC0.txt)
+is retained. Source: <https://github.com/fontlabcom/getgo-fonts>.
+
+CodeGlyphX Scan B is derived from OCR-B, copyright (c) 2019 Raisty, distributed
+under the [SIL Open Font License 1.1](Licenses/Raisty-OCR-B-OFL.txt), with Reserved
+Font Name OCR-B. The source is preserved in the public fork
+<https://github.com/jaycee723/ocr-b>, commit `fedeba81519770109925b5bec70e940be5948d8f`.
+Primary font names are changed to CodeGlyphX Scan B; outlines, metrics and layout
+tables are unchanged. The original copyright and license metadata are retained.
+Neither the upstream authors nor their names endorse this derivative.
+
+The package contains the font files under `Fonts/`, their license texts under
+`Licenses/`, and `Fonts/provenance.json` with source URLs and SHA-256 hashes.
+`Build/Prepare-OcrFontAssets.py` optionally reproduces the assets from hash-checked
+inputs. Python and fontTools are not required by normal builds or deployed applications.
+
 ## Zint barcode library backend
 
 The rMQR, GS1 DataBar, MaxiCode, DotCode, Han Xin, GS1 Composite, Code One, and additional barcode implementations and conformance tests were developed with tables, algorithms, and interoperability vectors adapted from or checked against the Zint backend. CodeGlyphX has no runtime dependency on Zint.
