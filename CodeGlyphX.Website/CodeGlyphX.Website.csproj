@@ -46,9 +46,6 @@
 
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-    <Content Include="../Licenses/GG-Ocra-CC0.txt;../Licenses/Raisty-OCR-B-OFL.txt"
-             Link="wwwroot/licenses/%(Filename)%(Extension)"
-             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- Copy XML documentation to wwwroot for API reference -->

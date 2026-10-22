@@ -71,6 +71,9 @@ def main():
                 raise ValueError(f"Renaming changed the {tag} table")
     for name in ("GG-Ocra-CC0.txt", "Raisty-OCR-B-OFL.txt"):
         shutil.copyfile(args.source_directory / name, ROOT / "Licenses" / name)
+        browser_notices = ROOT / "CodeGlyphX.Website/wwwroot/licenses"
+        browser_notices.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(args.source_directory / name, browser_notices / name)
     manifest = {
         "tool": "fontTools 4.66.1; Prepare-OcrFontAssets.py",
         "inputs": {name: {"url": url, "sha256": digest} for name, (url, digest) in INPUTS.items()},

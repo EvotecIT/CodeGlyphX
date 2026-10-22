@@ -61,7 +61,8 @@ Neither the upstream authors nor their names endorse this derivative.
 The package contains the font files under `Fonts/`, their license texts under
 `Licenses/`, and `Fonts/provenance.json` with source URLs and SHA-256 hashes.
 `Build/Prepare-OcrFontAssets.py` optionally reproduces the assets from hash-checked
-inputs. Python and fontTools are not required by normal builds or deployed applications.
+inputs, including the matching browser notice files. Python and fontTools are not
+required by normal builds or deployed applications.
 
 ## Zint barcode library backend
 
