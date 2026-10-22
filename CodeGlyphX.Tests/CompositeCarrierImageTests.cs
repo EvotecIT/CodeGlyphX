@@ -40,7 +40,7 @@ public sealed class CompositeCarrierImageTests {
             for (var rotation = 0; rotation < 4; rotation++) {
                 var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
                     Formats = new[] { SymbolFormat.Gs1Composite }, CompositeCarrier = carrier,
-                    MaxSymbols = 1, EnableTileScan = false, TimeoutMilliseconds = 5000
+                    MaxSymbols = 1, EnableTileScan = false, TimeoutMilliseconds = TestBudget.Adjust(5000)
                 });
                 if (result.Symbols.Count != 1 || result.Symbols[0].Metadata is not Gs1CompositeSymbolMetadata metadata
                     || metadata.IsStandalone || metadata.LinearText != Gs1.ElementString(parts[2])
@@ -171,7 +171,7 @@ public sealed class CompositeCarrierImageTests {
 
     private static ScanOptions Options() => new() {
         Formats = new[] { SymbolFormat.Gs1Composite }, CompositeCarrier = Gs1CompositeCarrier.Ean13,
-        MaxSymbols = 1, EnableTileScan = false, TimeoutMilliseconds = 5000
+        MaxSymbols = 1, EnableTileScan = false, TimeoutMilliseconds = TestBudget.Adjust(5000)
     };
 
     [Theory]
