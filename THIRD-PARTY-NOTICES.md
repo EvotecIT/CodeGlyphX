@@ -53,7 +53,9 @@ under the [SIL Open Font License 1.1](Licenses/Raisty-OCR-B-OFL.txt), with Reser
 Font Name OCR-B. The source is preserved in the public fork
 <https://github.com/jaycee723/ocr-b>, commit `fedeba81519770109925b5bec70e940be5948d8f`.
 Primary font names are changed to CodeGlyphX Scan B; outlines, metrics and layout
-tables are unchanged. The original copyright and license metadata are retained.
+tables are unchanged. The original copyright and license metadata are retained,
+with the full copyright/OFL text also included in the font's license metadata so
+embedded copies retain it. The browser print studio links to the complete notices.
 Neither the upstream authors nor their names endorse this derivative.
 
 The package contains the font files under `Fonts/`, their license texts under

@@ -56,6 +56,12 @@ def main():
     for record in original["name"].names:
         if record.nameID in names:
             record.string = names[record.nameID].encode(record.getEncoding())
+    # Keep the full notice with embedded copies too, including browser Webcil assemblies.
+    # The original license label and URL remain, followed by the complete upstream notice.
+    license_text = (args.source_directory / "Raisty-OCR-B-OFL.txt").read_text(encoding="utf-8")
+    for record in original["name"].names:
+        if record.nameID == 13:
+            record.string = (record.toUnicode() + "\n\n" + license_text).encode(record.getEncoding())
     output = target / "CodeGlyphXScanB-Regular.ttf"
     original.save(output, reorderTables=False)
     renamed = TTFont(output, recalcTimestamp=False)
@@ -69,7 +75,7 @@ def main():
         "tool": "fontTools 4.66.1; Prepare-OcrFontAssets.py",
         "inputs": {name: {"url": url, "sha256": digest} for name, (url, digest) in INPUTS.items()},
         "outputs": {name: sha256(target / name) for name in ("GGOcra.ttf", output.name)},
-        "modifications": "GG Ocra unchanged. OCR-B primary names changed to CodeGlyphX Scan B; outlines, metrics and layout tables unchanged."
+        "modifications": "GG Ocra unchanged. OCR-B primary names changed to CodeGlyphX Scan B and full OFL/copyright notice retained in name ID 13; outlines, metrics and layout tables unchanged."
     }
     (target / "provenance.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(manifest["outputs"], indent=2))

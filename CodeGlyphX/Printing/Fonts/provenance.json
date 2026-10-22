@@ -20,7 +20,7 @@
   },
   "outputs": {
     "GGOcra.ttf": "c9c2658009c0ce6086165610ada58db852a78be0acd89c9870dacffd91b8e979",
-    "CodeGlyphXScanB-Regular.ttf": "3e97d1f9544f0b2af32b584b56443197c5103f591ad7f0f8664dc92dd9bb06a6"
+    "CodeGlyphXScanB-Regular.ttf": "1f8acbf6204b172ac3bb44d2c5043d6c37d5febdec7235169eb31defb1c10e85"
   },
-  "modifications": "GG Ocra unchanged. OCR-B primary names changed to CodeGlyphX Scan B; outlines, metrics and layout tables unchanged."
+  "modifications": "GG Ocra unchanged. OCR-B primary names changed to CodeGlyphX Scan B and full OFL/copyright notice retained in name ID 13; outlines, metrics and layout tables unchanged."
 }

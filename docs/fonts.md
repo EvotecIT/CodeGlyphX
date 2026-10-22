@@ -16,7 +16,9 @@ label.Save("label.pdf");
 GG Ocra is distributed unchanged under CC0 1.0. CodeGlyphX Scan B retains the original
 outlines and metrics under SIL OFL 1.1; its primary names are changed to respect the
 upstream reserved font name. The package includes both font files, their full licenses
-and a hash-pinned provenance manifest. See [third-party notices](../THIRD-PARTY-NOTICES.md).
+and a hash-pinned provenance manifest. The Scan B font also retains the full copyright
+and OFL text in its metadata. The browser print studio links to both notices.
+See [third-party notices](../THIRD-PARTY-NOTICES.md).
 These are text faces, not an OCR reader or a certification of printed output. Choose
 size and module width using preflight and qualify the physical label with its printer
 and scanner. The existing renderers retain their defaults.

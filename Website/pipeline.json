@@ -345,7 +345,7 @@
       "source": "./_temp/playground/wwwroot",
       "destination": "./_site/playground",
       "clean": false,
-      "include": "_framework/**, _content/**, css/playground*.css*, CodeGlyphX.Website.styles*"
+      "include": "_framework/**, _content/**, css/playground*.css*, CodeGlyphX.Website.styles*, licenses/**"
     },
     {
       "task": "exec",
