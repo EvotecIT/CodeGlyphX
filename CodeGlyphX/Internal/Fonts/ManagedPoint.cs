@@ -23,6 +23,7 @@ internal struct ManagedPoint : IEquatable<ManagedPoint> {
     }
 
     /// <inheritdoc />
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Value equality must match GetHashCode and remain transitive; approximate geometric proximity is not point identity.")]
     public bool Equals(ManagedPoint other) => X.Equals(other.X) && Y.Equals(other.Y);
 
     /// <inheritdoc />

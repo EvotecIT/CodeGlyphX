@@ -21,6 +21,7 @@ internal static class BarcodePrintRasterizer {
         internal Crossing(double x, int winding, int path) { X = x; Winding = winding; Path = path; }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Only exactly horizontal edges are omitted from scan conversion; an epsilon would erase valid shallow edges and alter ink.")]
     internal static byte[] Render(BarcodePrintLayout layout, BarcodePrintPlacement? placement, out int width, out int height) {
         var transform = PrintTransform.Resolve(layout, placement, out var mmWidth, out var mmHeight, out _);
         var scale = layout.Dpi / 25.4;

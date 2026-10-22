@@ -7,6 +7,7 @@ namespace CodeGlyphX.Internal.Fonts;
 
 /// <summary>Shared OpenType variation-region scalar semantics for metrics and CFF2 blends.</summary>
 internal static class ManagedOpenTypeVariationRegion {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Tuple endpoints and non-participating zero peaks are exact encoded fixed-point coordinates; tolerance changes the OpenType piecewise region.")]
     internal static double CalculateTupleScalar(
         double coordinate,
         double peak,
@@ -34,6 +35,7 @@ internal static class ManagedOpenTypeVariationRegion {
         return Math.Abs(coordinate) < Math.Abs(peak) ? coordinate / peak : 1D;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "The OpenType region uses exact encoded peaks and endpoints; near-equal coordinates must still interpolate.")]
     internal static double CalculateScalar(double coordinate, double start, double peak, double end) {
         // OpenType 1.9.1 defines malformed or cross-zero nonzero-peak axis records as
         // non-participating. They therefore contribute a neutral multiplier of one.

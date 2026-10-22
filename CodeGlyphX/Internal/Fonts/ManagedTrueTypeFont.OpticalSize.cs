@@ -11,6 +11,7 @@ internal sealed partial class ManagedTrueTypeFont {
     private readonly object _opticalSizeSync = new();
     private Dictionary<float, ManagedTrueTypeFont>? _opticalSizeFonts;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Exact authored optical-size identity controls instance caching; adjacent sizes must remain distinct.")]
     internal ManagedTrueTypeFont ForOpticalSize(double authoredSize) {
         if (!_variationModel.TryGetOpticalSize(authoredSize, out float size) ||
             _variationModel.DesignCoordinates["opsz"] == size) return this;

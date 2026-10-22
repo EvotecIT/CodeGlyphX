@@ -343,6 +343,7 @@ internal sealed class ManagedType2CharStringInterpreter {
         _stack.Clear();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "The Type 2 CharString eq operator requires exact operand equality, as specified by the font bytecode.")]
     private void ExecuteEscaped(int operation) {
         switch (operation) {
             case 0:
@@ -686,6 +687,7 @@ internal sealed class ManagedType2CharStringInterpreter {
         if (_stack.Count < minimum || _stack.Count % divisor != 0) throw new InvalidDataException("A CFF CharString operator has an invalid operand count.");
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "CharString indices and counts must be exact integers; accepting a tolerance would admit invalid fractional operands.")]
     private static int ToInteger(double value, string description) {
         if (value < int.MinValue || value > int.MaxValue || value != Math.Truncate(value)) {
             throw new InvalidDataException(description + " is not an integer.");

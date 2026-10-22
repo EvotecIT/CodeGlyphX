@@ -43,6 +43,7 @@ internal sealed class ManagedFontVariationModel {
     internal IReadOnlyDictionary<string, float> DesignCoordinates => _designCoordinates;
 
     // Size is supplied in the author's text units, before output scaling. Explicit opsz wins.
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "An identical authored optical size reuses the current instance; nearby sizes are distinct cache and variation coordinates.")]
     internal ManagedFontVariationModel ForOpticalSize(ManagedOpenTypeReader reader, double size) {
         if (!TryGetOpticalSize(size, out float value)) return this;
         if (_designCoordinates["opsz"] == value) return this;
@@ -195,6 +196,7 @@ internal sealed class ManagedFontVariationModel {
         if (cursor != end) throw new InvalidDataException("The OpenType avar table contains trailing data.");
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "OpenType avar requires exact fixed-point identity anchors at minus one, zero and one.")]
     private static bool ContainsMapping(double[] from, double[] to, double source, double target) {
         for (int index = 0; index < from.Length; index++) {
             if (from[index] == source && to[index] == target) return true;
@@ -215,6 +217,7 @@ internal sealed class ManagedFontVariationModel {
         return value;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Only the exact authored default is the variation origin; nearby axis values must retain their displacement.")]
     private static double Normalize(Axis axis, double value) {
         if (value == axis.Default) return 0D;
         if (value < axis.Default) {

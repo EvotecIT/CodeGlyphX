@@ -148,6 +148,8 @@ internal static partial class SpecialistImageDecoder {
         return true;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S4158:Empty collections should not be accessed or iterated", Justification = "BinaryImageComponents.Visit synchronously populates the captured sizes and points collections for each qualifying component.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S2583:Conditionally executed code should be reachable", Justification = "The component visitor mutates the captured sizes list; both empty and populated component sets are reachable.")]
     private static System.Collections.Generic.List<SymbolPoint> CollectDotComponents(byte[] mask, ImageRegion region,
         CancellationToken token, out System.Collections.Generic.List<int> diameters) {
         var points = new System.Collections.Generic.List<SymbolPoint>();

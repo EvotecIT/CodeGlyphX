@@ -125,6 +125,7 @@ internal static partial class CodeOnePayloadEncoder {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S2583:Conditionally executed code should be reachable", Justification = "The local Append function mutates the captured bit list; the latch and decimal groups populate it before byte extraction.")]
     private static void EmitDecimal(byte[] source, bool gs1, Step step, List<int> output) {
         var bits = new List<bool>(step.Length * 8);
         void Append(int value, int count) { for (var shift = count - 1; shift >= 0; shift--) bits.Add((value & (1 << shift)) != 0); }

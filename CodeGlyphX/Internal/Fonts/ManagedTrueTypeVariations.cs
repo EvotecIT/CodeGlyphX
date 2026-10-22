@@ -444,6 +444,7 @@ internal sealed class ManagedTrueTypeVariations {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Coincident OpenType reference coordinates and deltas are exact encoded values; distinct coordinates must retain their interpolation interval.")]
     private static double Interpolate(double value, double first, double firstDelta, double second, double secondDelta) {
         if (first == second) return firstDelta == secondDelta ? firstDelta : 0D;
         if (first > second) {

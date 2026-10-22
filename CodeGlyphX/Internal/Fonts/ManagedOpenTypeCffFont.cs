@@ -187,7 +187,7 @@ internal sealed class ManagedOpenTypeCffFont : IManagedCffBoundedFontProgram, IM
             glyphIds.Add(glyph);
             scalars.Add(scalar);
         }
-        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(glyphIds, scalars);
+        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(glyphIds, scalars, cancellationToken);
 
         for (int index = 0; index < glyphs.Count; index++) {
             cancellationToken.ThrowIfCancellationRequested();

@@ -17,7 +17,7 @@ public static partial class BarcodePrint {
             options = options?.Snapshot() ?? new BarcodePrintOptions();
             options.TextStyle = BarcodePrintTextStyle.Gs1;
         }
-        if (IsRetail(format) && TryRetail(symbol, format!.Value, out var retail)) return Retail(symbol, retail, options);
+        if (format is SymbolFormat retailFormat && IsRetail(retailFormat) && TryRetail(symbol, retailFormat, out var retail)) return Retail(symbol, retail, options);
         if (symbol.TotalModules > 1048576) throw new ArgumentException("The print symbol exceeds the module limit.", nameof(symbol));
         var nominal = format == SymbolFormat.Code32 ? .25 : format == SymbolFormat.Gs1Code128 ? .495 : .330;
         var min = format == SymbolFormat.Gs1Code128 ? .170 : 0;

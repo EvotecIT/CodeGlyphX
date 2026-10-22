@@ -116,6 +116,7 @@ internal sealed partial class ManagedTrueTypeFont : IManagedBoundedFontProgram, 
     }
 
     /// <inheritdoc />
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Exact unit scale identifies the unscaled font fingerprint; an epsilon would collide distinct authored tracking scales.")]
     public string Fingerprint => _trackingEvaluationScale == 1D ? _fingerprint
         : _fingerprint + ":tracking-scale=" + _trackingEvaluationScale.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
     IReadOnlyDictionary<string, float> IManagedVariableFontProgram.VariationCoordinatesForShaping =>
@@ -364,7 +365,7 @@ internal sealed partial class ManagedTrueTypeFont : IManagedBoundedFontProgram, 
             scalars.Add(scalar);
         }
         bool[]? boundaries = TrackingBoundaries(text, textIndexes);
-        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(glyphIds, scalars);
+        ManagedOpenTypeGlyphPositioning[] positioning = _kerning.PositionRun(glyphIds, scalars, cancellationToken);
 
         for (int index = 0; index < glyphs.Count; index++) {
             cancellationToken.ThrowIfCancellationRequested();

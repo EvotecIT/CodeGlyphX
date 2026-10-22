@@ -87,7 +87,6 @@ internal static class ManagedTextShaper {
         foreach (T element in elements) completeText.Append(textSelector(element));
         var groups = new List<DirectionalElementGroup<T>>();
         var current = new List<T>();
-        TextElementDirection? direction = null;
         ManagedTextDirection baseDirection = requestedDirection == ManagedTextDirection.Auto
             ? ManagedTextElements.ResolveBaseDirection(completeText.ToString())
             : requestedDirection;
@@ -95,22 +94,23 @@ internal static class ManagedTextShaper {
             baseDirection == ManagedTextDirection.RightToLeft
                 ? TextElementDirection.RightToLeft
                 : TextElementDirection.LeftToRight;
+        TextElementDirection direction = neutralDefault;
         int elementIndex = 0;
         foreach (T element in elements) {
             if ((elementIndex++ & 255) == 0) cancellationToken.ThrowIfCancellationRequested();
             TextElementDirection resolved = ResolveDirection(textSelector(element));
             if (resolved == TextElementDirection.Neutral) {
-                resolved = direction ?? neutralDefault;
+                resolved = direction;
             }
-            if (direction.HasValue && direction.Value != resolved) {
-                groups.Add(new DirectionalElementGroup<T>(current.ToArray(), direction.Value));
+            if (current.Count > 0 && direction != resolved) {
+                groups.Add(new DirectionalElementGroup<T>(current.ToArray(), direction));
                 current.Clear();
             }
             direction = resolved;
             current.Add(element);
         }
         if (current.Count > 0) {
-            groups.Add(new DirectionalElementGroup<T>(current.ToArray(), direction ?? neutralDefault));
+            groups.Add(new DirectionalElementGroup<T>(current.ToArray(), direction));
         }
 
         if (baseDirection == ManagedTextDirection.RightToLeft) groups.Reverse();

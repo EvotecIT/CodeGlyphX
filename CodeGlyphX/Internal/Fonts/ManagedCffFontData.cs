@@ -402,7 +402,8 @@ internal sealed partial class ManagedCffFontData {
             offset += 4;
             if (rangeCountValue == 0 || rangeCountValue > int.MaxValue) throw new InvalidDataException("The CFF FDSelect range count is invalid.");
             int rangeCount = (int)rangeCountValue;
-            EnsureRange(offset, checked(rangeCount * 6 + 4), 0, end, "The CFF FDSelect format 4 table is truncated.");
+            long encodedRangeBytes = (long)rangeCount * 6 + 4;
+            if (encodedRangeBytes > end - offset) throw new InvalidDataException("The CFF FDSelect format 4 table is truncated.");
             int previousGlyph = -1;
             int previousFd = -1;
             for (int range = 0; range < rangeCount; range++) {
@@ -554,6 +555,7 @@ internal sealed partial class ManagedCffFontData {
 
         internal bool ContainsOperation(int operation) => _values.ContainsKey(operation);
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "CFF operands must be exact integers; accepting a tolerance would admit fractional offsets or counts.")]
         internal bool HasNonNegativeIntegerOperands(int operation, int count) {
             if (!_values.TryGetValue(operation, out double[]? operands) || operands.Length != count) return false;
             for (int index = 0; index < operands.Length; index++) {
@@ -563,6 +565,7 @@ internal sealed partial class ManagedCffFontData {
             return true;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "CFF offsets must be exact integers; accepting a tolerance would admit a fractional offset.")]
         internal bool TryGetInteger(int operation, out int value) {
             value = 0;
             if (!_values.TryGetValue(operation, out double[]? operands) || operands.Length < 1) return false;
@@ -574,6 +577,7 @@ internal sealed partial class ManagedCffFontData {
             return true;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Both CFF range operands must be exact integers before conversion; fractional values are invalid.")]
         internal bool TryGetPair(int operation, out int first, out int second) {
             first = second = 0;
             if (!_values.TryGetValue(operation, out double[]? operands) || operands.Length < 2) return false;

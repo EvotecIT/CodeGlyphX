@@ -79,6 +79,7 @@ public partial class BarcodePrintStudio : ComponentBase {
         };
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "S5693:Make sure that this file upload is safe", Justification = "This browser-local font stream has a fixed 16 MiB limit and the managed parser independently bounds font tables, shaping work and outlines; it is not an HTTP request to a server.")]
     private async Task LoadFont(InputFileChangeEventArgs args) {
         ClearOutput(); UploadedFont = null; FontChoice = "None"; Busy = true;
         try {

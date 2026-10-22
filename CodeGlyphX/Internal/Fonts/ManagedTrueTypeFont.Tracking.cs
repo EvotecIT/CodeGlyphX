@@ -10,6 +10,7 @@ internal sealed partial class ManagedTrueTypeFont {
     private double _trackingEvaluationScale = 1D;
 
     // A raster resolution change scales geometry, while tracking retains the authored text size.
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "S1244:Floating point numbers should not be tested for equality", Justification = "Only the exact current output scale can reuse its tracking instance and fingerprint.")]
     internal ManagedTrueTypeFont ForOutputScale(double scale) {
         if (_tracking == null || scale == _trackingEvaluationScale) return this;
         if (scale <= 0 || double.IsNaN(scale) || double.IsInfinity(scale)) throw new ArgumentOutOfRangeException(nameof(scale));
