@@ -8,6 +8,65 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class NativeFontCffContractTests {
+    [Theory]
+    [InlineData("TestCffCid.otf")]
+    [InlineData("TestCffCidFormat0.otf")]
+    [InlineData("TestCff2Dictionaries.otf")]
+    public void CidFontDictionaries_UseTheSelectedGlyphsLocalSubroutines(string fixture) {
+        var font = BarcodeFont.FromBytes(BarcodeFontCollectionTests.Bytes(fixture));
+        var first = font.Shape("A", 10);
+        var second = font.Shape("B", 10);
+        Assert.Equal(6, first.AdvanceWidth, 6);
+        Assert.Equal(6, second.AdvanceWidth, 6);
+        Assert.Equal(3, first.InkBounds.Width, 6);
+        Assert.Equal(5, second.InkBounds.Width, 6);
+        Assert.Equal(.2, first.InkBounds.X, 6);
+        Assert.Equal(.2, second.InkBounds.X, 6);
+        Assert.Equal(9.5, first.InkBounds.Height, 6); // Outer glyph continues after both local and global calls.
+        Assert.Equal(9.5, second.InkBounds.Height, 6);
+        Assert.Single(first.Contours);
+        Assert.Single(second.Contours);
+        // Reuse the first dictionary after reading the other one.
+        Assert.Equal(first.InkBounds.Width, font.Shape("A", 10).InkBounds.Width);
+    }
+
+    [Fact]
+    public void Cff1Subroutines_StillRequireExplicitReturn() {
+        var font = BarcodeFont.FromBytes(BarcodeFontCollectionTests.Bytes("TestCffCidUnterminated.otf"));
+        Assert.Throws<System.IO.InvalidDataException>(() => font.Shape("A", 10));
+    }
+
+    [Fact]
+    public void ComposedCffAccent_RetainsBaseHoleAccentTranslationAndMetrics() {
+        var font = BarcodeFont.FromBytes(BarcodeFontCollectionTests.Bytes("TestCffSeac.otf"));
+        var shape = font.Shape("é", 10);
+        Assert.Equal(5, shape.AdvanceWidth, 6);
+        Assert.Equal(.2, shape.InkBounds.X, 6);
+        Assert.Equal(-1, shape.InkBounds.Y, 6);
+        Assert.Equal(5.4, shape.InkBounds.Width, 6);
+        Assert.Equal(9, shape.InkBounds.Height, 6);
+        Assert.Equal(3, shape.Contours.Count); // Two base contours preserve the hole; the accent is separate.
+        Assert.Equal(6, font.Shape("A", 10).AdvanceWidth, 6);
+    }
+
+    [Theory]
+    [InlineData(400, 600, 560)]
+    [InlineData(650, 650, 610)]
+    [InlineData(900, 700, 660)]
+    public void VariableCff2_BlendOutlinesAndAdvancesMatchIndependentInstances(int weight, int advance, int right) {
+        var data = BarcodeFontCollectionTests.Bytes("TestVariableCff2.otf");
+        var axes = new System.Collections.Generic.Dictionary<string, float> { ["wght"] = weight };
+        var font = ManagedOpenTypeCffFont.TryLoad(data, axes, out var error);
+        Assert.Null(error);
+        Assert.NotNull(font);
+        Assert.Equal(advance / 100.0, font!.Measure("A", 10), 6);
+        var points = font.GetTextContoursBounded("A", 0, 0, 10, 1000, default).SelectMany(contour => contour).ToArray();
+        Assert.Equal(.2, points.Min(point => point.X), 6);
+        Assert.Equal(right / 100.0, points.Max(point => point.X), 6);
+        Assert.Equal(7, points.Max(point => point.Y) - points.Min(point => point.Y), 6);
+        Assert.Equal(6, BarcodeFont.FromBytes(data).Shape("A", 10).AdvanceWidth, 6); // Public loader selects the default instance.
+    }
+
     // Independent BoundsPen measurements; arithmetic/subroutine cases draw an authored 540x700 box.
     [Theory]
     [InlineData(57344, 20, 0, 560, 700)]

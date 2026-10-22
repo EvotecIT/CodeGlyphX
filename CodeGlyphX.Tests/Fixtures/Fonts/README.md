@@ -38,6 +38,13 @@ variation selectors, normal tracking, and variable outlines/metrics with and wit
 subroutines; the arithmetic programs draw an explicitly authored 540 by 700 design-unit box.
 Both tools use fontTools 4.67.0 and run only when a maintainer chooses to regenerate fixtures.
 
+The same CFF generator creates original CID fonts with two local-subroutine dictionaries
+and FDSelect formats 0, 3 and 4, a composed accent, and a variable CFF2 font. The CFF2
+dictionary fixture continues drawing after both local and global subroutine calls,
+which end implicitly in CFF2. An unterminated CFF1 variant verifies that CFF1 still
+requires an explicit return. Their hashes and independent variable-instance bounds
+are recorded in `test-cff-program-metadata.json`.
+
 `BidiMirroring-17.0.0.txt` is the unchanged Unicode 17.0 mirroring data from
 https://www.unicode.org/Public/17.0.0/ucd/BidiMirroring.txt (SHA-256
 `a2f16fb873ab4fcdf3221cb1a8a85a134ddd6ed03603181823ff5206af3741ce`). It supplies independent

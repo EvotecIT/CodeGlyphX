@@ -421,7 +421,8 @@ internal sealed class ManagedType2CharStringInterpreter {
         int biased = checked(operand + SubroutineBias(index.Count));
         if (biased < 0 || biased >= index.Count) throw new InvalidDataException("A CFF subroutine index is outside the INDEX.");
         ExecutionResult result = Execute(index[biased], depth + 1);
-        if (result == ExecutionResult.Exhausted) {
+        // CFF2 removes the return operator: the end of a subroutine resumes its caller.
+        if (result == ExecutionResult.Exhausted && !_font.IsCff2) {
             throw new InvalidDataException("A CFF CharString subroutine does not terminate with return.");
         }
         return result;

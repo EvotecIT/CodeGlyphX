@@ -4,13 +4,19 @@ The programs are authored here; BoundsPen supplies an independent outline oracle
 for curve operators. Arithmetic programs draw the same explicit 540 by 700 box.
 """
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import hashlib
 import json
 import fontTools
 from fontTools.fontBuilder import FontBuilder
 from fontTools.misc.psCharStrings import T2CharString
-from fontTools.cffLib import SubrsIndex
+from fontTools.cffLib import SubrsIndex, FDArrayIndex, FDSelect, FontDict, PrivateDict
 from fontTools.pens.boundsPen import BoundsPen
+from fontTools.ttLib import TTFont
+from fontTools.cffLib.CFFToCFF2 import convertCFFToCFF2
+from fontTools.designspaceLib import DesignSpaceDocument, AxisDescriptor, SourceDescriptor
+from fontTools.varLib import build
+from fontTools.varLib.instancer import instantiateVariableFont
 
 ROOT = Path(__file__).resolve().parents[1] / "CodeGlyphX.Tests/Fixtures/Fonts"
 MOVE = [600, 20, 0, "rmoveto"]
@@ -39,6 +45,115 @@ PROGRAMS = {
     "stack": MOVE + [270, "dup", "add", 0, "exch", "exch", "rlineto"] + BOX_END,
     "conditional": MOVE + [540, 999, 1, 2, "ifelse", 0, "rlineto"] + BOX_END,
 }
+
+
+def cid_fixture():
+    names = [".notdef", "cid00001", "cid00002"]
+    builder = FontBuilder(1000, isTTF=False)
+    builder.setupGlyphOrder(names)
+    builder.setupCharacterMap({65: names[1], 66: names[2]})
+    builder.setupHorizontalMetrics({name: (600, 20) for name in names})
+    builder.setupHorizontalHeader(ascent=800, descent=-200)
+    builder.setupNameTable({"familyName": "CodeGlyphX Original CID", "styleName": "Regular",
+                           "psName": "CodeGlyphX-TestCID", "fullName": "CodeGlyphX Test CID"})
+    builder.setupOS2(sTypoAscender=800, sTypoDescender=-200, usWinAscent=900, usWinDescent=200)
+    builder.setupPost()
+    strings = {name: T2CharString(program=MOVE + [-107, "callsubr", 100, 100, "rlineto", -107, "callgsubr", 0, 50, "rlineto", "endchar"]) for name in names}
+    strings[".notdef"] = T2CharString(program=[600, "endchar"])
+    builder.setupCFF("CodeGlyphX-TestCID", {"FullName": "CodeGlyphX Test CID"}, strings, {})
+    cff = builder.font["CFF "].cff
+    cff.GlobalSubrs.append(T2CharString(program=[0, 100, "rlineto", "return"], globalSubrs=cff.GlobalSubrs))
+    top = cff.topDictIndex[0]
+    top.ROS, top.CIDCount = ("Adobe", "Identity", 0), 3
+    top.FDArray = FDArrayIndex()
+    top.FDArray.GlobalSubrs = cff.GlobalSubrs
+    for index, width in enumerate((300, 500)):
+        dictionary = FontDict(GlobalSubrs=cff.GlobalSubrs)
+        dictionary.FontName = "CodeGlyphX-CID-" + str(index)
+        dictionary.Private = PrivateDict()
+        dictionary.Private.Subrs = SubrsIndex()
+        dictionary.Private.Subrs.append(T2CharString(
+            program=[width, 0, 0, 700, -width, 0, "rlineto", "return"],
+            private=dictionary.Private, globalSubrs=cff.GlobalSubrs))
+        top.FDArray.append(dictionary)
+    del top.Private
+    top.FDSelect = FDSelect(format=3)
+    top.FDSelect.gidArray = [0, 0, 1]
+    top.CharStrings.fdArray, top.CharStrings.fdSelect = top.FDArray, top.FDSelect
+    for index, name in enumerate(names):
+        top.CharStrings[name].fdSelectIndex = top.FDSelect.gidArray[index]
+        top.CharStrings[name].private = top.FDArray[top.FDSelect.gidArray[index]].Private
+        top.CharStrings[name].globalSubrs = cff.GlobalSubrs
+    builder.font["head"].created = builder.font["head"].modified = 3406620153
+    builder.font.recalcBBoxes = False
+    top.FontBBox = [20, 0, 520, 950]
+    path = ROOT / "TestCffCid.otf"
+    builder.save(path)
+    first_subroutine = top.FDArray[0].Private.Subrs[0]
+    first_subroutine.decompile()
+    terminated = list(first_subroutine.program)
+    first_subroutine.setProgram(terminated[:-1])
+    builder.save(ROOT / "TestCffCidUnterminated.otf")
+    first_subroutine.setProgram(terminated)
+    top.FDSelect.format = 0
+    builder.save(ROOT / "TestCffCidFormat0.otf")
+    top.FDSelect.format = 3
+    convertCFFToCFF2(builder.font)
+    cff2_top = builder.font["CFF2"].cff.topDictIndex[0]
+    cff2_top.FDSelect.format = 4
+    for dictionary in cff2_top.FDArray:
+        if hasattr(dictionary, "FontName"):
+            del dictionary.FontName  # CFF2 Font DICTs omit the CFF1-only name key.
+    builder.save(ROOT / "TestCff2Dictionaries.otf")
+    return path
+
+
+def seac_fixture():
+    font = TTFont(ROOT / "TestOutlines.otf", recalcTimestamp=False)
+    top = font["CFF "].cff.topDictIndex[0]
+    # StandardEncoding A plus acute shifted 300 units to the right.
+    top.CharStrings["eacute"] = T2CharString(program=[500, 300, 0, 65, 194, "endchar"],
+                                           private=top.Private, globalSubrs=font["CFF "].cff.GlobalSubrs)
+    path = ROOT / "TestCffSeac.otf"
+    font.save(path)
+    pen = BoundsPen(font.getGlyphSet())
+    font.getGlyphSet()["eacute"].draw(pen)
+    return path, pen.bounds
+
+
+def variable_cff_fixture():
+    with TemporaryDirectory() as temp:
+        work = Path(temp)
+        document = DesignSpaceDocument()
+        axis = AxisDescriptor()
+        axis.name, axis.tag = "Weight", "wght"
+        axis.minimum, axis.default, axis.maximum = 400, 400, 900
+        document.addAxis(axis)
+        for weight, delta in ((400, 0), (900, 100)):
+            font = TTFont(ROOT / "TestOutlines.otf", recalcTimestamp=False)
+            top = font["CFF "].cff.topDictIndex[0]
+            top.CharStrings["A"] = T2CharString(
+                program=[600 + delta, 20, 0, "rmoveto", 540 + delta, 0, 0, 700, -540 - delta, 0, "rlineto", "endchar"],
+                private=top.Private, globalSubrs=font["CFF "].cff.GlobalSubrs)
+            font["hmtx"].metrics["A"] = (600 + delta, 20)
+            path = work / f"cff-master-{weight}.otf"
+            font.save(path)
+            source = SourceDescriptor()
+            source.path, source.name = str(path), path.stem
+            source.location = {"Weight": weight}
+            document.addSource(source)
+        variable, _, _ = build(document)
+        variable.recalcTimestamp = False
+        variable["head"].created = variable["head"].modified = 3406620153
+        path = ROOT / "TestVariableCff2.otf"
+        variable.save(path)
+    samples = []
+    for weight in (400, 650, 900):
+        instance = instantiateVariableFont(TTFont(path), {"wght": weight}, inplace=False)
+        pen = BoundsPen(instance.getGlyphSet())
+        instance.getGlyphSet()["A"].draw(pen)
+        samples.append({"weight": weight, "A": instance["hmtx"].metrics["A"][0], "bounds": pen.bounds})
+    return path, samples
 
 
 def main():
@@ -83,6 +198,14 @@ def main():
             bounds = (20, 0, 560, 700)
         cases.append({"scalar": 0xE000 + index, "program": name, "bounds": bounds})
     manifest = {"tool": "fontTools 4.67.0; BoundsPen and authored rectangle arithmetic", "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "cases": cases}
+    cid = cid_fixture()
+    seac, bounds = seac_fixture()
+    manifest["cid"] = {"sha256": hashlib.sha256(cid.read_bytes()).hexdigest(), "A_bounds": [20, 0, 320, 950], "B_bounds": [20, 0, 520, 950]}
+    manifest["seac"] = {"sha256": hashlib.sha256(seac.read_bytes()).hexdigest(), "bounds": bounds}
+    variable, samples = variable_cff_fixture()
+    manifest["variable_cff2"] = {"sha256": hashlib.sha256(variable.read_bytes()).hexdigest(), "instances": samples}
+    manifest["dictionary_variants"] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                                      for p in (ROOT / "TestCffCidFormat0.otf", ROOT / "TestCff2Dictionaries.otf", ROOT / "TestCffCidUnterminated.otf")}
     (ROOT / "test-cff-program-metadata.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
 
