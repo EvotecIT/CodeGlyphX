@@ -27,6 +27,20 @@ public sealed class RenderingContractRegressionTests {
             ModuleSize = 8, QuietZone = 4, Eyes = new QrEyeOptions { UseFrame = true }
         }));
         var size = qr.Modules.Width;
+        if (format != OutputFormat.Html || HasCanonicalContours(svg)) {
+            var coverage = ReadVectorCoverage(svg, size);
+            foreach (var origin in new[] { (4, 4), (size - 3, 4), (4, size - 3) }) {
+                for (var y = 0; y < 7; y++) for (var x = 0; x < 7; x++) {
+                    var dark = x == 0 || y == 0 || x == 6 || y == 6 || (x >= 2 && x <= 4 && y >= 2 && y <= 4);
+                    foreach (var fraction in new[] { 0.25, 0.75 })
+                        Assert.Equal(dark ? Rgba32.Black : Rgba32.White,
+                            coverage(origin.Item1 + x + fraction, origin.Item2 + y + fraction));
+                }
+                Assert.Equal(Rgba32.White, coverage(origin.Item1 - 0.5, origin.Item2 + 3.5));
+                Assert.Equal(Rgba32.White, coverage(origin.Item1 + 3.5, origin.Item2 - 0.5));
+            }
+            return;
+        }
         foreach (var origin in new[] { (4, 4), (size - 3, 4), (4, size - 3) }) {
             AssertRect(svg, origin.Item1, origin.Item2, 7, "#000000");
             AssertRect(svg, origin.Item1 + 1, origin.Item2 + 1, 5, "#FFFFFF");
@@ -38,9 +52,19 @@ public sealed class RenderingContractRegressionTests {
     [InlineData(OutputFormat.Svg)]
     [InlineData(OutputFormat.Html)]
     public void FancyFindersKeepTheOpeningAtTheQuietZoneOffset(OutputFormat format) {
-        var svg = ReadSvg(QR.Encode("FANCY-FINDER").Render(format, new QrRenderOptions {
+        var qr = QR.Encode("FANCY-FINDER");
+        var svg = ReadSvg(qr.Render(format, new QrRenderOptions {
             ModuleSize = 8, QuietZone = 4, Style = QrRenderStyle.Fancy
         }));
+        if (format != OutputFormat.Html || HasCanonicalContours(svg)) {
+            var coverage = ReadVectorCoverage(svg, qr.Size);
+            Assert.Equal(Rgba32.White, coverage(7.5, 3.5));
+            Assert.Equal(Rgba32.White, coverage(5.5, 7.5));
+            Assert.Equal(Rgba32.White, coverage(9.5, 7.5));
+            Assert.Equal(Rgba32.Black, coverage(7.5, 7.5));
+            Assert.NotEqual(Rgba32.White, coverage(7.5, 4.5));
+            return;
+        }
         var opening = svg.Descendants().First(e => e.Name.LocalName == "rect"
             && (string?)e.Attribute("fill") == "#FFFFFF" && (string?)e.Attribute("width") == "5");
         Assert.Equal("5", (string?)opening.Attribute("x"));
@@ -57,21 +81,19 @@ public sealed class RenderingContractRegressionTests {
             QuietZone = 4,
             Eyes = new QrEyeOptions {
                 UseFrame = true,
-                OuterGradient = new QrGradientOptions { Type = QrGradientType.Horizontal },
-                InnerGradient = new QrGradientOptions { Type = QrGradientType.Vertical }
+                OuterGradient = new QrGradientOptions { Type = QrGradientType.Horizontal, EndColor = new Rgba32(128, 0, 0) },
+                InnerGradient = new QrGradientOptions { Type = QrGradientType.Vertical, EndColor = new Rgba32(0, 0, 128) }
             }
         }));
-        var gradients = svg.Descendants().Where(e => e.Name.LocalName == "linearGradient").ToArray();
+        var coverage = ReadVectorCoverage(svg, qr.Size);
         var size = qr.Modules.Width;
         for (var i = 0; i < 3; i++) {
             var x = i == 1 ? size - 3 : 4;
             var y = i == 2 ? size - 3 : 4;
-            Assert.Equal(x.ToString(CultureInfo.InvariantCulture), (string?)gradients[i * 2].Attribute("x1"));
-            Assert.Equal(y.ToString(CultureInfo.InvariantCulture), (string?)gradients[i * 2].Attribute("y1"));
-            Assert.Equal((x + 7).ToString(CultureInfo.InvariantCulture), (string?)gradients[i * 2].Attribute("x2"));
-            Assert.Equal((x + 2).ToString(CultureInfo.InvariantCulture), (string?)gradients[i * 2 + 1].Attribute("x1"));
-            Assert.Equal((y + 2).ToString(CultureInfo.InvariantCulture), (string?)gradients[i * 2 + 1].Attribute("y1"));
-            Assert.Equal((y + 5).ToString(CultureInfo.InvariantCulture), (string?)gradients[i * 2 + 1].Attribute("y2"));
+            Assert.True(coverage(x + 0.5, y + 3.5).R < coverage(x + 6.5, y + 3.5).R);
+            Assert.True(coverage(x + 3.5, y + 2.1).B < coverage(x + 3.5, y + 4.9).B);
+            Assert.Equal(Rgba32.White, coverage(x + 1.5, y + 3.5));
+            Assert.Equal(Rgba32.White, coverage(x - 0.5, y + 3.5));
         }
     }
 
@@ -79,13 +101,31 @@ public sealed class RenderingContractRegressionTests {
     [InlineData(OutputFormat.Svg)]
     [InlineData(OutputFormat.Svgz)]
     [InlineData(OutputFormat.Html)]
-    public void StyledExportsKeepTimingAlignmentFormatAndVersionCellsSolid(OutputFormat format) {
+    public void StyledExportsPreserveProtectedMetadataAndSupportedPatternGeometry(OutputFormat format) {
         var qr = CreateVersionSeven();
         var options = new QrRenderOptions {
             ModuleSize = 8, QuietZone = 4, ModuleShape = QrModuleShape.Circle, ModuleScale = 0.5,
+            ArtGuardrailsEnabled = false,
             ForegroundGradient = new QrGradientOptions { StartColor = new Rgba32(255, 0, 0), EndColor = new Rgba32(0, 0, 255) }
         };
         var protectedSvg = ReadSvg(qr.Render(format, options));
+        if (format != OutputFormat.Html || HasCanonicalContours(protectedSvg)) {
+            var coverage = ReadVectorCoverage(protectedSvg, qr.Size);
+            // Encoded format/version/fixed-dark cells stay solid; timing and alignment are
+            // deliberately styled in Wave1, so their distinct geometry is checked separately.
+            foreach (var cell in FunctionalCells(qr).Skip(3))
+                foreach (var fraction in new[] { 0.1, 0.5, 0.9 })
+                    Assert.Equal(Rgba32.Black, coverage(cell.x + 4 + fraction, cell.y + 4 + fraction));
+            Assert.NotEqual(Rgba32.White, coverage(12.5, 10.5));
+            Assert.Equal(Rgba32.White, coverage(12.05, 10.05));
+            Assert.NotEqual(Rgba32.White, coverage(26.5, 26.5));
+            Assert.Equal(Rgba32.White, coverage(25.5, 26.5));
+            options.ProtectFunctionalPatterns = false;
+            var unprotected = ReadVectorCoverage(ReadSvg(qr.Render(format, options)), qr.Size);
+            var formatCell = FunctionalCells(qr)[4];
+            Assert.Equal(Rgba32.White, unprotected(formatCell.x + 4.05, formatCell.y + 4.05));
+            return;
+        }
         foreach (var cell in FunctionalCells(qr)) {
             Assert.True(HasSolidSvgModule(protectedSvg, cell.x + 4, cell.y + 4), $"Unprotected functional cell ({cell.x}, {cell.y}).");
         }
@@ -102,10 +142,20 @@ public sealed class RenderingContractRegressionTests {
     public void PlainGeometryGradientKeepsProtectedCellsInSolidForeground(OutputFormat format) {
         var qr = CreateVersionSeven();
         var svg = ReadSvg(qr.Render(format, new QrRenderOptions {
-            QuietZone = 4, ForegroundGradient = new QrGradientOptions {
+            QuietZone = 4, ArtGuardrailsEnabled = false, ForegroundGradient = new QrGradientOptions {
                 StartColor = new Rgba32(255, 0, 0), EndColor = new Rgba32(0, 0, 255)
             }
         }));
+        if (format != OutputFormat.Html || HasCanonicalContours(svg)) {
+            var coverage = ReadVectorCoverage(svg, qr.Size);
+            foreach (var cell in FunctionalCells(qr).Skip(3))
+                Assert.Equal(Rgba32.Black, coverage(cell.x + 4.5, cell.y + 4.5));
+            // The timing center retains its intended gradient instead of becoming plain black.
+            var coloredTiming = coverage(12.5, 10.5);
+            Assert.True(coloredTiming.R > 0 || coloredTiming.B > 0);
+            Assert.Equal(Rgba32.White, coverage(12.5, 11.5));
+            return;
+        }
         foreach (var cell in FunctionalCells(qr)) {
             Assert.True(HasSolidSvgModule(svg, cell.x + 4, cell.y + 4));
         }
@@ -215,6 +265,45 @@ public sealed class RenderingContractRegressionTests {
             && (string?)e.Attribute("width") == size.ToString(CultureInfo.InvariantCulture)
             && (string?)e.Attribute("height") == size.ToString(CultureInfo.InvariantCulture)
             && (string?)e.Attribute("fill") == fill);
+    }
+
+    private static bool HasCanonicalContours(XElement svg) {
+        var viewBox = ((string?)svg.Attribute("viewBox") ?? "").Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        return viewBox.Length == 4 && viewBox[2] == (string?)svg.Attribute("width")
+            && svg.Descendants().Where(e => e.Name.LocalName == "path")
+                .All(e => Regex.IsMatch((string?)e.Attribute("fill") ?? "", @"^#[0-9a-fA-F]{6}$"));
+    }
+
+    // Interpret the complete rectangular subpaths emitted by canonical SVG contours. Requiring
+    // every command to be consumed prevents a missing/unsupported path from becoming white pixels
+    // and passing a negative assertion. Sampling the exported geometry avoids XML element coupling.
+    internal static Func<double, double, Rgba32> ReadVectorCoverage(XElement svg, int moduleCount) {
+        var width = int.Parse((string)svg.Attribute("width")!, CultureInfo.InvariantCulture);
+        var height = int.Parse((string)svg.Attribute("height")!, CultureInfo.InvariantCulture);
+        var pixels = new Rgba32[width * height];
+        var paths = svg.Descendants().Where(e => e.Name.LocalName == "path").ToArray();
+        Assert.NotEmpty(paths);
+        foreach (var path in paths) {
+            var fill = (string)path.Attribute("fill")!;
+            Assert.Matches(@"^#[0-9a-fA-F]{6}$", fill);
+            var color = uint.Parse(fill.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            var alpha = (string?)path.Attribute("fill-opacity");
+            var ink = new Rgba32((byte)(color >> 16), (byte)(color >> 8), (byte)color,
+                alpha is null ? (byte)255 : (byte)Math.Round(double.Parse(alpha, CultureInfo.InvariantCulture) * 255));
+            var data = (string)path.Attribute("d")!;
+            var rectangles = Regex.Matches(data, @"M(\d+) (\d+)h(\d+)v(\d+)h-(\d+)z");
+            Assert.Equal(data, string.Concat(rectangles.Cast<Match>().Select(m => m.Value)));
+            foreach (Match rectangle in rectangles) {
+                int Value(int group) => int.Parse(rectangle.Groups[group].Value, CultureInfo.InvariantCulture);
+                var x = Value(1); var y = Value(2); var w = Value(3); var h = Value(4);
+                Assert.Equal(w, Value(5));
+                Assert.InRange(x + w, 1, width);
+                Assert.InRange(y + h, 1, height);
+                for (var yy = y; yy < y + h; yy++) for (var xx = x; xx < x + w; xx++) pixels[yy * width + xx] = ink;
+            }
+        }
+        var scale = width / (double)(moduleCount + 8);
+        return (x, y) => pixels[(int)(y * scale) * width + (int)(x * scale)];
     }
 
     private static bool HasSolidSvgModule(XElement svg, int x, int y) {

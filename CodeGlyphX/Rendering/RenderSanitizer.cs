@@ -48,7 +48,7 @@ internal static class RenderSanitizer {
         }
         for (var i = start; i < value.Length - 1; i++) {
             var c = value[i];
-            if (!(char.IsDigit(c) || c == ' ' || c == ',' || c == '.' || c == '%' || c == '\t')) {
+            if (!(char.IsDigit(c) || c == ' ' || c == ',' || c == '.' || c == '%' || c == '/' || c == '\t')) {
                 return false;
             }
         }

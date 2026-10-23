@@ -11,6 +11,7 @@ public static partial class QrPngRenderer {
     private static bool CanRenderSimpleRgba(QrPngRenderOptions opts) {
         if (opts is null) throw new ArgumentNullException(nameof(opts));
         return opts.BackgroundGradient is null
+            && opts.ExactSizePx == 0
             && opts.BackgroundPattern is null
             && opts.BackgroundSupersample == 1
             && opts.ForegroundGradient is null

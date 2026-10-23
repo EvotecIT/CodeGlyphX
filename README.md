@@ -123,6 +123,29 @@ QR.Save("https://codeglyphx.com", "styled.png", options,
 
 `QR.EvaluateScanHeuristics` reports static contrast, quiet-zone, module-scale, and related concerns before rendering. It does not decode the output or guarantee scanner interoperability; validate final artifacts on the real devices and applications you support.
 
+Finder eyes are whole rings and balls: a 7×7 outer shape surrounds a 5×5 light opening and a 3×3 dark ball. Timing modules follow the body shape, and alignment patterns use the same finder treatment at 5×5. Format/version bits and the fixed dark module retain their protected geometry.
+
+```csharp
+var ink = new QrRenderOptions {
+    TargetSizePx = 1024,
+    ModuleShape = QrModuleShape.Liquid,
+    Eyes = new QrEyeOptions {
+        OuterShape = QrModuleShape.Rounded,
+        InnerShape = QrModuleShape.Circle
+    }
+};
+QR.Save("https://example.com", "ink.png", ink,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+QR.Save("https://example.com", "ink.svg", ink,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+```
+
+`Liquid` joins neighbouring dark modules and fills concave corners. `Classy` rounds one corner, `ExtraRounded` uses half-cell radii, and `BarsVertical` / `BarsHorizontal` create joined capsules. Curved raster edges use subpixel coverage at the selected size. An unframed `TargetSizePx` centres integer-sized modules in exact pixel bounds; spare pixels extend the quiet zone.
+
+`DotGrid`, `Plus`, `Star` and `Heart` are decorative – verify before print. They are not scan-safe preset choices. A shape's appearance alone does not establish that a particular eye/body/palette combination survives reduction, blur or rotation. Guarded rendering preserves the selected body shape while keeping ink dark on a light QR background and limiting disruptive textures. Set `ArtGuardrailsEnabled = false` only when deliberately producing an unguarded composition for separate verification.
+
+SVG and SVGZ accept the same high-level body, eye, canvas, palette and pattern options as PNG. Styled exports contain coloured vector coverage contours, with no embedded QR bitmap. Those contours preserve the selected raster resolution; select an appropriate `TargetSizePx` or `ModuleSize` before exporting for print. The HTML table renderer retains its narrower appearance support.
+
 ### Colorful QR gallery
 
 ![Prism, candy, neon, aurora, tropical and solar QR designs](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-colorful-gallery.png)
@@ -151,6 +174,8 @@ var png = QR.Render("https://example.com", OutputFormat.Png,
 ```
 
 `PngCompressionLevel` also applies to generic matrix and linear-barcode rendering. Use `0` for stored data or `1` through `9` for compression. Leaving it unset preserves each renderer's existing default.
+
+QR PNG output defaults to compression level 6. Typical monochrome styled codes fit a 60 KB budget; photographs, textured scenes and large high-detail canvases can require more space. Compression is lossless and does not change module coverage.
 
 ### Compose QR artwork from an image
 

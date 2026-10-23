@@ -1,5 +1,8 @@
 using System;
 using System.Text;
+using System.IO;
+using System.IO.Compression;
+using System.Xml.Linq;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -90,16 +93,37 @@ public sealed class QrApiTests {
         Assert.Equal(1, builder.Encode().Mask);
     }
 
+    [Fact]
+    public void HtmlOutput_RejectsAppearanceItCannotRepresent() {
+        var options = new QrRenderOptions { ForegroundPalette = new QrPaletteOptions() };
+        var error = Assert.Throws<NotSupportedException>(() => QR.Render("VECTOR", OutputFormat.Html, options));
+
+        Assert.Contains(nameof(QrRenderOptions.ForegroundPalette), error.Message);
+        Assert.Contains(nameof(OutputFormat.Html), error.Message);
+    }
+
     [Theory]
     [InlineData(OutputFormat.Svg)]
     [InlineData(OutputFormat.Svgz)]
-    [InlineData(OutputFormat.Html)]
-    public void VectorOutputs_RejectAppearanceTheyCannotRepresent(OutputFormat format) {
-        var options = new QrRenderOptions { ForegroundPalette = new QrPaletteOptions() };
-        var error = Assert.Throws<NotSupportedException>(() => QR.Render("VECTOR", format, options));
-
-        Assert.Contains(nameof(QrRenderOptions.ForegroundPalette), error.Message);
-        Assert.Contains(format.ToString(), error.Message);
+    public void SvgOutputs_PreservePaletteColorsInVectorArtwork(OutputFormat format) {
+        var options = new QrRenderOptions {
+            ModuleShape = QrModuleShape.Liquid,
+            ForegroundPalette = new QrPaletteOptions { Colors = new[] { new Rgba32(128, 0, 0), new Rgba32(0, 0, 128) } }
+        };
+        var output = QR.Render("VECTOR", format, options);
+        string text;
+        if (format == OutputFormat.Svgz) {
+            using var compressed = new MemoryStream(output.Data.ToArray());
+            using var gzip = new GZipStream(compressed, CompressionMode.Decompress);
+            using var reader = new StreamReader(gzip, Encoding.UTF8);
+            text = reader.ReadToEnd();
+        } else text = output.GetText();
+        var root = XElement.Parse(text);
+        var fills = root.Descendants().Attributes("fill").Select(a => a.Value).ToArray();
+        Assert.Contains(fills, fill => string.Equals(fill, "#800000", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(fills, fill => string.Equals(fill, "#000080", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(root.Descendants(), e => e.Name.LocalName == "path");
+        Assert.DoesNotContain(root.Descendants(), e => e.Name.LocalName is "image" or "foreignObject");
     }
 
     [Fact]

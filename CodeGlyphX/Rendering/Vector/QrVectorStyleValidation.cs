@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace CodeGlyphX.Rendering.Vector;
 
-/// <summary>Rejects QR appearance settings that the SVG and HTML renderers cannot preserve.</summary>
+/// <summary>Rejects QR appearance settings that the legacy HTML renderer cannot preserve.</summary>
 internal static class QrVectorStyleValidation {
     internal static void Validate(OutputFormat format, QrRenderOptions options) {
-        if (format != OutputFormat.Svg && format != OutputFormat.Svgz && format != OutputFormat.Html) return;
+        if (format != OutputFormat.Html) return;
         var unsupported = new List<string>();
         if (options.Art is not null) unsupported.Add(nameof(options.Art));
         if (options.BackgroundGradient is not null) unsupported.Add(nameof(options.BackgroundGradient));
@@ -21,12 +21,6 @@ internal static class QrVectorStyleValidation {
         if (options.Debug is not null) unsupported.Add(nameof(options.Debug));
         AddUnsupportedModuleAndEyeStyles(unsupported, options.ModuleShape, options.Eyes);
         ThrowIfUnsupported(format, unsupported);
-    }
-
-    internal static void ValidateSvg(QrModuleShape moduleShape, QrEyeOptions? eyes) {
-        var unsupported = new List<string>();
-        AddUnsupportedModuleAndEyeStyles(unsupported, moduleShape, eyes);
-        ThrowIfUnsupported(OutputFormat.Svg, unsupported);
     }
 
     private static void AddUnsupportedModuleAndEyeStyles(List<string> unsupported, QrModuleShape? moduleShape, QrEyeOptions? eyes) {

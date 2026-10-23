@@ -7,10 +7,9 @@ namespace CodeGlyphX;
 /// Appearance and layout for a previously encoded QR symbol. Encoding settings belong to <see cref="QrEncodingOptions"/>.
 /// </summary>
 /// <remarks>
-/// Raster outputs support all appearance options. SVG, SVGZ and HTML support layout, colors,
-/// basic shapes, foreground gradients, simple finder styling and logos. They reject unsupported
-/// effects, including canvas art, palettes, procedural maps, connected shapes and decorative finder effects,
-/// with <see cref="System.NotSupportedException"/> instead of silently omitting them.
+/// Raster, SVG and SVGZ outputs support all appearance options. Styled SVG exports preserve the
+/// canonical renderer's coverage as coloured vector contours at the selected output resolution.
+/// HTML supports a smaller appearance subset and rejects unsupported effects explicitly.
 /// </remarks>
 public sealed class QrRenderOptions {
     /// <summary>
@@ -106,7 +105,8 @@ public sealed class QrRenderOptions {
 
 
     /// <summary>
-    /// When true, keeps non-eye functional patterns at a conventional style.
+    /// When true, preserves format/version bits and the fixed dark module at full size.
+    /// Timing follows the body style and alignment patterns use whole finder geometry.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 

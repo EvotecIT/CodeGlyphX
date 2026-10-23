@@ -6,6 +6,9 @@ namespace CodeGlyphX.Rendering.Png;
 /// Options for <see cref="QrPngRenderer"/>.
 /// </summary>
 public sealed partial class QrPngRenderOptions {
+    // Optional outer bounds from the high-level target-size contract. Integer modules are centred,
+    // with the unused pixels extending the quiet zone rather than resampling the QR grid.
+    internal int ExactSizePx { get; set; }
     /// <summary>
     /// Minimum allowed background supersample factor.
     /// </summary>
@@ -103,8 +106,8 @@ public sealed partial class QrPngRenderOptions {
 
 
     /// <summary>
-    /// When true, keeps non-eye functional patterns (timing/alignment/format/version/dark module)
-    /// at full scale and a stable foreground color to preserve conventional geometry.
+    /// When true, keeps format/version bits and the fixed dark module at full scale and stable colour.
+    /// Timing follows the body style; alignment uses whole 5x5 finder geometry.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 
@@ -136,5 +139,5 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
     /// </summary>
-    public int PngCompressionLevel { get; set; }
+    public int PngCompressionLevel { get; set; } = 6;
 }

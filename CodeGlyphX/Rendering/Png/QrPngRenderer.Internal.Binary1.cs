@@ -195,6 +195,7 @@ public static partial class QrPngRenderer {
     }
 
     private static bool CanRenderAsBinary(QrPngRenderOptions opts) {
+        if (opts.ExactSizePx > 0) return false;
         if (opts.BackgroundGradient is not null) return false;
         if (opts.BackgroundPattern is not null) return false;
         if (opts.BackgroundSupersample > 1) return false;

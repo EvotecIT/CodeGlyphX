@@ -53,7 +53,26 @@ public enum QrModuleShape {
     /// </summary>
     Dot,
     /// <summary>
-    /// Dot grid modules (four small dots per cell).
+    /// Dot grid modules (four small dots per cell). Decorative – verify before print;
+    /// excluded from scan-safe presets because the cell centre is light.
     /// </summary>
     DotGrid,
+    /// <summary>Joined ink strokes with rounded outer corners and concave inner-corner fills.</summary>
+    Liquid,
+    /// <summary>Square modules with the top-left diagonal corner rounded.</summary>
+    Classy,
+    /// <summary>Modules with half-cell corner radii.</summary>
+    ExtraRounded,
+    /// <summary>Vertical capsules joining dark neighbours above and below.</summary>
+    BarsVertical,
+    /// <summary>Horizontal capsules joining dark neighbours to either side.</summary>
+    BarsHorizontal,
+    /// <summary>Plus symbols. Decorative – verify before print; excluded from scan-safe presets.</summary>
+    Plus,
+    /// <summary>Star symbols. Decorative – verify before print; excluded from scan-safe presets.</summary>
+    Star,
+    /// <summary>Heart symbols. Decorative – verify before print; excluded from scan-safe presets.</summary>
+    Heart,
+    /// <summary>Squares with diagonally cut corners, also suitable for whole finder rings.</summary>
+    CutCorner,
 }

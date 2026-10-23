@@ -237,7 +237,7 @@ internal static class QrArtPresets {
             CornerSize = 9,
             CornerPalette = new QrPaletteOptions {
                 Mode = QrPaletteMode.Checker,
-                ApplyToEyes = true,
+                ApplyToEyes = false,
                 Colors = new[] {
                     new Rgba32(22, 36, 84),
                     new Rgba32(40, 60, 140),
