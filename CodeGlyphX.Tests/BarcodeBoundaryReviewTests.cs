@@ -62,9 +62,21 @@ public sealed class BarcodeBoundaryReviewTests {
         var qr = QrCodeEncoder.EncodeBytes(Encoding.UTF8.GetBytes(payload.ToString()), minVersion: version, maxVersion: version);
         var symbol = new SwissQrSymbol(qr, payload);
         var svg = XDocument.Parse(symbol.Render(OutputFormat.Svg, moduleSize: 46).GetText());
-        var logo = Assert.Single(svg.Descendants(), element => element.Name.LocalName == "image");
-        // SVG child geometry uses module coordinates; the root maps them to output pixels.
-        Assert.Equal(qr.Modules.Width * 7.0 / 46, double.Parse(logo.Attribute("width")!.Value, CultureInfo.InvariantCulture), 3);
+        var coverage = new SvgCoverageTestReader(svg);
+        // At 46 px/module the 46 mm QR core makes a 7 mm logo exactly N * 7 pixels wide.
+        var side = qr.Size * 7;
+        var offset = (coverage.Width - side) / 2;
+        foreach (var ux in new[] { 1, 5, 7, 10, 17, 19, 33, 35, 41, 48, 50, 64, 66, 76, 78, 81 })
+            foreach (var uy in new[] { 1, 5, 7, 10, 17, 19, 33, 35, 41, 48, 50, 64, 66, 76, 78, 81 }) {
+                var x = ux * side / 83;
+                var y = uy * side / 83;
+                var unitX = x * 83 / side;
+                var unitY = y * 83 / side;
+                var square = unitX >= 6 && unitX < 77 && unitY >= 6 && unitY < 77;
+                var cross = (unitX >= 34 && unitX < 49 && unitY >= 18 && unitY < 65)
+                    || (unitX >= 18 && unitX < 65 && unitY >= 34 && unitY < 49);
+                Assert.Equal(square && !cross ? Rgba32.Black : Rgba32.White, coverage.Sample(offset + x, offset + y));
+            }
         Assert.Equal((qr.Modules.Width + 8) * 46, double.Parse(svg.Root!.Attribute("width")!.Value, CultureInfo.InvariantCulture));
     }
 

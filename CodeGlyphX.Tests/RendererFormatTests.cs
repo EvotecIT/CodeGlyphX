@@ -445,6 +445,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Vector_Mode_Falls_Back_To_Raster_When_Gradient() {
         var opts = new QrRenderOptions {
+            ArtGuardrailsEnabled = false, // Qualify the format fallback independently of contrast remediation.
             ForegroundGradient = new QrGradientOptions {
                 Type = QrGradientType.Horizontal,
                 StartColor = new Rgba32(0, 0, 0),

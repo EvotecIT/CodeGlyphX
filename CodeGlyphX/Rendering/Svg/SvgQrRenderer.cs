@@ -27,7 +27,7 @@ public static class SvgQrRenderer {
         if (opts.ModuleScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleScale));
         opts.ForegroundGradient?.Validate();
         opts.Eyes?.Validate();
-        if (opts.ModuleShape != QrModuleShape.Square || opts.Eyes is not null || opts.ModuleScale != 1
+        if (opts.ModuleShape != QrModuleShape.Square || opts.Eyes is not null || !(opts.ModuleScale >= 1)
             || opts.ModuleCornerRadiusPx != 0 || opts.ForegroundGradient is not null) {
             return SvgQrAppearance.Render(modules, SvgQrAppearance.Resolve(opts));
         }

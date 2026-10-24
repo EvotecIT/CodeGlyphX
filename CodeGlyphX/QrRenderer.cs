@@ -9,6 +9,8 @@ internal static partial class QrRenderer {
     internal static QrArtHeuristicReport EvaluateScanHeuristics(QrCode qr, QrRenderOptions? options) {
         var opts = options is null ? new QrRenderOptions() : CloneOptions(options);
         ValidateOptions(opts);
+        // A diagnostic describes the requested appearance before automatic remediation.
+        opts.ArtGuardrailsEnabled = false;
         return QrArtHeuristics.Evaluate(qr, BuildPngOptions(opts, qr));
     }
 

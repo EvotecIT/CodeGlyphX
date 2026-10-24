@@ -340,7 +340,7 @@ internal static partial class QrRenderer {
         ApplyEyeArtGuardrails(render, guardrailMode);
 
         var report = QrArtHeuristics.Evaluate(qr, render);
-        if (HasLowContrastWarnings(report)) {
+        if (HasLowContrastWarnings(report) && !HasTranslucentArtPaint(render)) {
             ApplyLowContrastFallback(render);
             report = QrArtHeuristics.Evaluate(qr, render);
         }

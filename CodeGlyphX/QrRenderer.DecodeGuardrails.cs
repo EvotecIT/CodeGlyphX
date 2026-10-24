@@ -19,6 +19,11 @@ internal static partial class QrRenderer {
     /// <summary>Checks canonical appearance pixels with the native decoder's standard profile.
     /// No transforms, stylized sampling or independent-reader dependencies are used.</summary>
     private static void VerifyRenderedArt(QrCode qr, byte[] pixels, int width, int height, int stride) {
+        for (var p = 3; p < pixels.Length; p += 4) {
+            if (pixels[p] == 255) continue;
+            pixels = QrArt.CompositeValidationPixelsOnWhite((byte[])pixels.Clone());
+            break;
+        }
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
             DisableTransforms = true,

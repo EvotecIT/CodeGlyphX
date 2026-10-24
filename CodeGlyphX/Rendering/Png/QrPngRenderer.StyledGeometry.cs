@@ -72,7 +72,9 @@ public static partial class QrPngRenderer {
         var defaultShape = opts.ModuleShape == QrModuleShape.Square ? QrModuleShape.Square : QrModuleShape.Rounded;
         var outerShape = FinderShape(eye?.OuterShape ?? defaultShape);
         var ballShape = FinderShape(eye?.InnerShape ?? defaultShape);
-        if (eye?.FrameStyle == QrEyeFrameStyle.CutCorner) outerShape = QrModuleShape.CutCorner;
+        var frame = eye?.UseFrame == true ? eye.FrameStyle : QrEyeFrameStyle.Single;
+        if (frame == QrEyeFrameStyle.CutCorner) outerShape = QrModuleShape.CutCorner;
+        if (frame == QrEyeFrameStyle.Badge) outerShape = QrModuleShape.Squircle;
         var outer = GetEyeOuterColor(opts, index);
         var inner = GetEyeInnerColor(opts, index);
         var outerGrad = GetEyeOuterGradient(opts, index);
@@ -89,7 +91,7 @@ public static partial class QrPngRenderer {
         var outerRadius = (eye?.OuterCornerRadiusPx ?? 0) / (double)(cells * m);
         var holeRadius = eye?.OuterCornerRadiusPx > 0 ? Math.Max(1e-9, (eye.OuterCornerRadiusPx - m) / (double)((cells - 2) * m)) : 0;
         var ballRadius = (eye?.InnerCornerRadiusPx ?? 0) / (double)((cells - 4) * m);
-        if (index >= 0 && eye?.FrameStyle == QrEyeFrameStyle.Glow) {
+        if (index >= 0 && frame == QrEyeFrameStyle.Glow && eye is not null) {
             var glowRadius = eye.GlowRadiusPx > 0 ? eye.GlowRadiusPx : m * 2;
             var glow = eye.GlowColor ?? outer;
             var glowInk = new Rgba32(glow.R, glow.G, glow.B, (byte)(glow.A * eye.GlowAlpha / 255));
@@ -106,7 +108,8 @@ public static partial class QrPngRenderer {
                         var xx = (x + (sx + 0.5) / 4) / m;
                         var yy = (y + (sy + 0.5) / 4) / m;
                         if (QrShapeGeometry.Contains(outerShape, xx / cells, yy / cells, radius: outerRadius)
-                            && !QrShapeGeometry.Contains(outerShape, (xx - 1) / (cells - 2), (yy - 1) / (cells - 2), radius: holeRadius)) ringHits++;
+                            && !QrShapeGeometry.Contains(outerShape, (xx - 1) / (cells - 2), (yy - 1) / (cells - 2), radius: holeRadius)
+                            && StyledFrameRingVisible(frame, xx, yy, cells)) ringHits++;
                         if (QrShapeGeometry.Contains(ballShape, (xx - 2) / (cells - 4), (yy - 2) / (cells - 4), radius: ballRadius)) ballHits++;
                     }
                 var p = (top + y) * (stride + 1) + 1 + (left + x) * 4;

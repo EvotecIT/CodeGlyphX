@@ -9,19 +9,19 @@ public enum QrEyeFrameStyle {
     /// </summary>
     Single,
     /// <summary>
-    /// Two concentric rings (no center dot).
+    /// Outer ring with a fine separating groove and a retained dark finder ball.
     /// </summary>
     DoubleRing,
     /// <summary>
-    /// Two concentric rings with a center dot.
+    /// Target-style outer ring with two fine grooves and a dark finder ball.
     /// </summary>
     Target,
     /// <summary>
-    /// Corner brackets (L-shapes) around the eye.
+    /// Bold corner brackets joined by a continuous inner finder stroke.
     /// </summary>
     Bracket,
     /// <summary>
-    /// Bold badge frame with thicker border.
+    /// Bold squircle badge silhouette with a retained dark finder ball.
     /// </summary>
     Badge,
     /// <summary>
@@ -29,7 +29,7 @@ public enum QrEyeFrameStyle {
     /// </summary>
     Glow,
     /// <summary>
-    /// Outer ring with an inset inner ring and a clear center.
+    /// Outer ring with a fine inset groove and a retained dark finder ball.
     /// </summary>
     InsetRing,
     /// <summary>

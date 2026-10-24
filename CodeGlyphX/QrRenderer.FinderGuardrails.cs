@@ -6,7 +6,8 @@ namespace CodeGlyphX;
 internal static partial class QrRenderer {
     // Finder rings and balls are dark evidence, even when a decorative legacy frame used a white centre.
     private static void NormalizeFinderContrast(QrPngRenderOptions render) {
-        if (Luminance(render.Background) < 160) render.Background = Rgba32.White;
+        if (render.Background.A != 0 && Luminance(render.Background) < 160)
+            render.Background = new Rgba32(255, 255, 255, render.Background.A);
         render.Foreground = DarkFinderColor(render.Foreground);
         NormalizeGradient(render.ForegroundGradient);
         Normalize(render.ForegroundPalette?.Colors);
@@ -42,10 +43,27 @@ internal static partial class QrRenderer {
 
     private static Rgba32 DarkFinderColor(Rgba32 color) {
         var luminance = Luminance(color);
-        if (luminance <= 90) return new Rgba32(color.R, color.G, color.B);
+        if (luminance <= 90) return color;
         var scale = 90.0 / luminance;
-        return new Rgba32((byte)(color.R * scale), (byte)(color.G * scale), (byte)(color.B * scale));
+        return new Rgba32((byte)(color.R * scale), (byte)(color.G * scale), (byte)(color.B * scale), color.A);
     }
 
     private static int Luminance(Rgba32 color) => (299 * color.R + 587 * color.G + 114 * color.B) / 1000;
+
+    // Preserve declared opacity instead of converting translucent or invisible paint to opaque ink.
+    // The native pixel gate evaluates the resulting appearance over white and rejects unreadable ink.
+    private static bool HasTranslucentArtPaint(QrPngRenderOptions render) =>
+        render.Foreground.A < 255 || render.Background.A < 255
+        || Translucent(render.ForegroundGradient) || Translucent(render.BackgroundGradient)
+        || Translucent(render.ForegroundPalette?.Colors)
+        || Translucent(render.ForegroundPaletteZones?.CenterPalette?.Colors)
+        || Translucent(render.ForegroundPaletteZones?.CornerPalette?.Colors);
+
+    private static bool Translucent(QrGradientOptions? gradient) => gradient is not null
+        && (gradient.StartColor.A < 255 || gradient.EndColor.A < 255);
+
+    private static bool Translucent(Rgba32[]? colors) {
+        if (colors is not null) foreach (var color in colors) if (color.A < 255) return true;
+        return false;
+    }
 }
