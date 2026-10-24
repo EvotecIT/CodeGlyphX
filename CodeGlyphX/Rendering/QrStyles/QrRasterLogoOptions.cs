@@ -29,6 +29,12 @@ public sealed class QrRasterLogoOptions {
     /// </summary>
     public double Scale { get; set; } = 0.20;
 
+    /// <summary>Optional logo left offset in pixels from the QR core's origin. Null centers it.</summary>
+    public int? OffsetXPx { get; set; }
+
+    /// <summary>Optional logo top offset in pixels from the QR core's origin. Null centers it.</summary>
+    public int? OffsetYPx { get; set; }
+
     /// <summary>
     /// Padding in pixels around the logo (filled with <see cref="Background"/> when <see cref="DrawBackground"/> is true).
     /// </summary>

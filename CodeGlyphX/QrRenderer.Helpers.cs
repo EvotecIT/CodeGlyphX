@@ -162,6 +162,8 @@ internal static partial class QrRenderer {
         if (opts.LogoPng is null || opts.LogoPng.Length == 0) return null;
         var logo = QrRasterLogoOptions.FromPng(opts.LogoPng);
         logo.Scale = opts.LogoScale;
+        logo.OffsetXPx = opts.LogoOffsetXPx;
+        logo.OffsetYPx = opts.LogoOffsetYPx;
         logo.PaddingPx = opts.LogoPaddingPx;
         logo.DrawBackground = opts.LogoDrawBackground;
         logo.Background = opts.LogoBackground ?? opts.Background;

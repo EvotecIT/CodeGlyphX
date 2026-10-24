@@ -1,0 +1,89 @@
+using System;
+using CodeGlyphX.Rendering;
+
+namespace CodeGlyphX.Rendering.Png;
+
+public static partial class QrPngRenderer {
+    private static void ApplyLogo(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int originX,
+        int originY,
+        int qrSizePx,
+        QrRasterLogoOptions logo) {
+        if (logo.Rgba.Length == 0) return;
+        if (logo.Scale <= 0) return;
+
+        var maxLogoPx = (int)Math.Round(qrSizePx * logo.Scale);
+        if (maxLogoPx <= 0) return;
+        if (maxLogoPx > qrSizePx) maxLogoPx = qrSizePx;
+
+        var scale = Math.Min(maxLogoPx / (double)logo.Width, maxLogoPx / (double)logo.Height);
+        if (scale <= 0) return;
+
+        var targetW = Math.Max(1, (int)Math.Round(logo.Width * scale));
+        var targetH = Math.Max(1, (int)Math.Round(logo.Height * scale));
+        if (targetW <= 0 || targetH <= 0) return;
+
+        var logoX = logo.OffsetXPx ?? (qrSizePx - targetW) / 2;
+        var logoY = logo.OffsetYPx ?? (qrSizePx - targetH) / 2;
+        if (logoX < 0 || logoX > qrSizePx - targetW) throw new ArgumentOutOfRangeException(nameof(logo.OffsetXPx));
+        if (logoY < 0 || logoY > qrSizePx - targetH) throw new ArgumentOutOfRangeException(nameof(logo.OffsetYPx));
+        var x0 = originX + logoX;
+        var y0 = originY + logoY;
+
+        if (logo.DrawBackground) {
+            var pad = Math.Max(0, logo.PaddingPx);
+            var bgX = x0 - pad;
+            var bgY = y0 - pad;
+            var bgW = targetW + pad * 2;
+            var bgH = targetH + pad * 2;
+            FillRoundedRect(scanlines, widthPx, heightPx, stride, bgX, bgY, bgW, bgH, logo.Background, logo.CornerRadiusPx);
+        }
+
+        BlitLogo(scanlines, widthPx, heightPx, stride, x0, y0, targetW, targetH, logo);
+    }
+
+    private static void BlitLogo(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x0,
+        int y0,
+        int targetW,
+        int targetH,
+        QrRasterLogoOptions logo) {
+        var x1 = Math.Min(widthPx, x0 + targetW);
+        var y1 = Math.Min(heightPx, y0 + targetH);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        for (var y = y0; y < y1; y++) {
+            var ty = (y - y0) * logo.Height / targetH;
+            var srcRow = ty * logo.Width * 4;
+            for (var x = x0; x < x1; x++) {
+                var tx = (x - x0) * logo.Width / targetW;
+                var src = srcRow + tx * 4;
+
+                var sr = logo.Rgba[src + 0];
+                var sg = logo.Rgba[src + 1];
+                var sb = logo.Rgba[src + 2];
+                var sa = logo.Rgba[src + 3];
+                if (sa == 0) continue;
+
+                var dst = y * (stride + 1) + 1 + x * 4;
+                if (sa == 255) {
+                    scanlines[dst + 0] = sr;
+                    scanlines[dst + 1] = sg;
+                    scanlines[dst + 2] = sb;
+                    scanlines[dst + 3] = 255;
+                    continue;
+                }
+
+                BlendPixelAt(scanlines, dst, new Rgba32(sr, sg, sb, sa));
+            }
+        }
+    }
+}
