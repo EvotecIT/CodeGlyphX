@@ -91,7 +91,15 @@ public sealed class QrCanvasOptions {
     /// </summary>
     public Rgba32 ShadowColor { get; set; } = new(0, 0, 0, 48);
 
+    /// <summary>Optional single-line caption, rendered with portable font outlines.</summary>
+    public QrCanvasCaptionOptions? Caption { get; set; }
+
+    /// <summary>Optional call-to-action frame. Replaces the decorative Frame, Band, Badge and Border treatments.</summary>
+    public QrCanvasTemplate Template { get; set; }
+
     internal void Validate() {
+        if (!Enum.IsDefined(typeof(QrCanvasTemplate), Template)) throw new ArgumentOutOfRangeException(nameof(Template));
+        Caption?.Validate();
         if (PaddingPx < 0) throw new ArgumentOutOfRangeException(nameof(PaddingPx));
         if (CornerRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(CornerRadiusPx));
         if (BorderPx < 0) throw new ArgumentOutOfRangeException(nameof(BorderPx));

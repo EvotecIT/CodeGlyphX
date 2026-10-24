@@ -527,8 +527,8 @@ public static partial class QrPngRenderer {
         out int qrOffsetY,
         out int qrFullPx,
         out int qrSizePx) {
-        qrSizePx = size * opts.ModuleSize;
-        qrFullPx = (size + opts.QuietZone * 2) * opts.ModuleSize;
+        qrSizePx = checked(size * opts.ModuleSize);
+        qrFullPx = checked((size + opts.QuietZone * 2) * opts.ModuleSize);
         if (opts.Canvas is null) {
             widthPx = Math.Max(qrFullPx, opts.ExactSizePx);
             heightPx = widthPx;
@@ -538,9 +538,10 @@ public static partial class QrPngRenderer {
         }
 
         var canvas = opts.Canvas;
-        var pad = Math.Max(0, canvas.PaddingPx);
-        var canvasW = qrFullPx + pad * 2;
-        var canvasH = canvasW;
+        var pad = CaptionCanvasPadding(canvas);
+        var canvasW = checked(qrFullPx + pad * 2);
+        var captionHeight = CaptionCanvasHeight(canvas);
+        var canvasH = checked(canvasW + captionHeight);
 
         var shadowX = canvas.ShadowOffsetX;
         var shadowY = canvas.ShadowOffsetY;
@@ -549,10 +550,10 @@ public static partial class QrPngRenderer {
         var extraTop = Math.Max(0, -shadowY);
         var extraBottom = Math.Max(0, shadowY);
 
-        widthPx = canvasW + extraLeft + extraRight;
-        heightPx = canvasH + extraTop + extraBottom;
+        widthPx = checked(canvasW + extraLeft + extraRight);
+        heightPx = checked(canvasH + extraTop + extraBottom);
         qrOffsetX = extraLeft + pad;
-        qrOffsetY = extraTop + pad;
+        qrOffsetY = extraTop + pad + (canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? captionHeight : 0);
     }
 
     private static void DrawCanvas(
@@ -567,11 +568,12 @@ public static partial class QrPngRenderer {
         var canvas = opts.Canvas;
         if (canvas is null) return;
 
-        var pad = Math.Max(0, canvas.PaddingPx);
-        var canvasW = qrFullPx + pad * 2;
-        var canvasH = canvasW;
+        var pad = CaptionCanvasPadding(canvas);
+        var canvasW = checked(qrFullPx + pad * 2);
+        var captionHeight = CaptionCanvasHeight(canvas);
+        var canvasH = checked(canvasW + captionHeight);
         var canvasX = qrOffsetX - pad;
-        var canvasY = qrOffsetY - pad;
+        var canvasY = qrOffsetY - pad - (canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? captionHeight : 0);
         var radius = Math.Max(0, canvas.CornerRadiusPx);
 
         if (canvas.ShadowColor.A > 0 && (canvas.ShadowOffsetX != 0 || canvas.ShadowOffsetY != 0)) {
@@ -588,7 +590,7 @@ public static partial class QrPngRenderer {
                 radius);
         }
 
-        if (canvas.BorderPx > 0) {
+        if (canvas.BorderPx > 0 && canvas.Template == QrCanvasTemplate.None) {
             var borderColor = canvas.BorderColor ?? canvas.Background;
             FillRoundedRect(scanlines, widthPx, heightPx, stride, canvasX, canvasY, canvasW, canvasH, borderColor, radius);
             var inner = Math.Max(0, canvas.BorderPx);
@@ -657,7 +659,7 @@ public static partial class QrPngRenderer {
                 canvas.Splash);
         }
 
-        if (canvas.Frame is { ThicknessPx: > 0 } frame
+        if (canvas.Template == QrCanvasTemplate.None && canvas.Frame is { ThicknessPx: > 0 } frame
             && (frame.Color.A != 0 || frame.Gradient is not null || frame.InnerGradient is not null
                 || frame.EdgePattern is not null || frame.InnerEdgePattern is not null)) {
             DrawCanvasFrame(
@@ -676,7 +678,7 @@ public static partial class QrPngRenderer {
                 frame);
         }
 
-        if (canvas.Band is { BandPx: > 0 } band
+        if (canvas.Template == QrCanvasTemplate.None && canvas.Band is { BandPx: > 0 } band
             && (band.Color.A != 0 || band.Gradient is not null || band.EdgePattern is not null)) {
             DrawCanvasBand(
                 scanlines,
@@ -694,7 +696,7 @@ public static partial class QrPngRenderer {
                 band);
         }
 
-        if (canvas.Badge is not null
+        if (canvas.Template == QrCanvasTemplate.None && canvas.Badge is not null
             && (canvas.Badge.Color.A != 0 || canvas.Badge.Gradient is not null || canvas.Badge.EdgePattern is not null)) {
             DrawCanvasBadge(
                 scanlines,
@@ -711,6 +713,8 @@ public static partial class QrPngRenderer {
                 qrFullPx,
                 canvas.Badge);
         }
+        DrawCaptionCanvas(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY,
+            canvasW, canvasH, qrOffsetX, qrOffsetY, qrFullPx);
     }
 
     private static void DrawCanvasFill(
@@ -1887,7 +1891,8 @@ public static partial class QrPngRenderer {
         var outerX = qrX - outerGap;
         var outerY = qrY - outerGap;
 
-        var baseRadius = ClampRadius(frame.RadiusPx, outerSize);
+        // A square QR panel must not cover rounded frame corners, even at one pixel thickness.
+        var baseRadius = ClampRadius(Math.Min(frame.RadiusPx, outerGap), outerSize);
         var innerSize = qrSize + gap * 2;
         var innerX = qrX - gap;
         var innerY = qrY - gap;
@@ -2160,7 +2165,8 @@ public static partial class QrPngRenderer {
         for (var y = minY; y <= maxY; y++) {
             for (var x = minX; x <= maxX; x++) {
                 if (outerRadius > 0 && !InsideRounded(x, y, outerX, outerY, outerX1, outerY1, outerRadius, outerRadiusSq)) continue;
-                if (innerSize > 0 && InsideRounded(x, y, innerX, innerY, innerX1, innerY1, innerRadius, innerRadiusSq)) continue;
+                if (innerSize > 0 && x >= innerX && x <= innerX1 && y >= innerY && y <= innerY1
+                    && InsideRounded(x, y, innerX, innerY, innerX1, innerY1, innerRadius, innerRadiusSq)) continue;
                 if (clipRadius > 0 && !InsideRounded(x, y, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
 
                 var drawColor = gradient.HasValue
@@ -2537,7 +2543,8 @@ public static partial class QrPngRenderer {
         int clipRadius,
         int clipRadiusSq) {
         if (outerRadius > 0 && !InsideRounded(x, y, outerX, outerY, outerX1, outerY1, outerRadius, outerRadiusSq)) return false;
-        if (InsideRounded(x, y, innerX, innerY, innerX1, innerY1, innerRadius, innerRadiusSq)) return false;
+        if (x >= innerX && x <= innerX1 && y >= innerY && y <= innerY1
+            && InsideRounded(x, y, innerX, innerY, innerX1, innerY1, innerRadius, innerRadiusSq)) return false;
         if (clipRadius > 0 && !InsideRounded(x, y, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) return false;
         return true;
     }

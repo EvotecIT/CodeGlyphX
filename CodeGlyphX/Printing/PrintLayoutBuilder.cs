@@ -210,7 +210,7 @@ internal sealed class PrintLayoutBuilder {
     }
     private static bool ValidPoints(double value) => BarcodeBounds.Finite(value) && value > 0 && value <= 10000;
 
-    private static BarcodeTextShape Strengthen(BarcodeTextShape shape, double radius) {
+    internal static BarcodeTextShape Strengthen(BarcodeTextShape shape, double radius) {
         var count = 0;
         foreach (var contour in shape.Contours) count = checked(count + contour.Count);
         if (count > 1048576 / 9) throw new ArgumentException("Synthetic bold would exceed the text-outline limit. Use an actual bold face.");
