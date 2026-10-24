@@ -68,8 +68,11 @@ public sealed class QrRenderOptions {
     public QrArtOptions? Art { get; set; }
 
     /// <summary>
-    /// When true, applies conservative static guardrails for art-heavy styles.
-    /// This does not validate the rendered output with a decoder.
+    /// When true, applies conservative geometry/contrast guardrails for art-heavy styles and
+    /// checks their canonical pixels with the native decoder's Balanced profile, without transforms
+    /// or stylized sampling. Rendering throws if the original payload cannot be recovered within
+    /// the cooperative decode budget. This does not certify lossy exports, resizing or printed output.
+    /// Legacy targets use the limited managed decoder and can reject artwork accepted on newer targets.
     /// </summary>
     public bool ArtGuardrailsEnabled { get; set; } = true;
 

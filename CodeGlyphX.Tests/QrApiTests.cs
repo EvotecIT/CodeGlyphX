@@ -51,7 +51,10 @@ public sealed class QrApiTests {
     public void Render_LeavesTheEncodedSymbolUnchanged() {
         var qr = QR.Encode("HELLO", new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.L, ForceMask = 0 });
         var before = qr.Modules.Clone();
-        var appearance = new QrRenderOptions { Art = QrArt.Theme(QrArtTheme.NeonGlow), ModuleSize = 4 };
+        // This test covers symbol immutability, independently of appearance qualification.
+        var appearance = new QrRenderOptions {
+            Art = QrArt.Theme(QrArtTheme.NeonGlow), ModuleSize = 4, ArtGuardrailsEnabled = false
+        };
 
         var pixels = qr.RenderPixels(out var width, out var height, out var stride, appearance);
 

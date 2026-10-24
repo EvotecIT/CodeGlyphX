@@ -34,7 +34,7 @@ internal static partial class QrRenderer {
         ValidateFormatStyles(format, opts);
         switch (format) {
             case OutputFormat.Png: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 if (outputOptions is not null) render.PngCompressionLevel = outputOptions.ResolvePngCompression(render.PngCompressionLevel);
                 return RenderedOutput.FromOwnedBinary(format, QrPngRenderer.Render(qr.Modules, render));
             }
@@ -47,7 +47,7 @@ internal static partial class QrRenderer {
                 return RenderedOutput.FromBinary(format, QrSvgzRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Html: {
-                var baseRender = BuildPngOptions(opts, qr);
+                var baseRender = BuildGuardedPngOptions(opts, qr);
                 var render = new QrHtmlRenderOptions {
                     ModuleSize = baseRender.ModuleSize,
                     QuietZone = baseRender.QuietZone,
@@ -70,7 +70,7 @@ internal static partial class QrRenderer {
                 return RenderedOutput.FromText(format, html);
             }
             case OutputFormat.Jpeg: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 var jpegOptions = outputOptions?.JpegOptions;
                 var data = jpegOptions is null
                     ? QrJpegRenderer.Render(qr.Modules, render, outputOptions?.JpegQuality ?? 85)
@@ -78,7 +78,7 @@ internal static partial class QrRenderer {
                 return RenderedOutput.FromBinary(format, data);
             }
             case OutputFormat.Webp: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 var quality = outputOptions?.WebpQuality ?? 100;
                 if (RenderAnimationHelpers.TryRenderQrWebp(outputOptions, render, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
@@ -86,59 +86,59 @@ internal static partial class QrRenderer {
                 return RenderedOutput.FromBinary(format, QrWebpRenderer.Render(qr.Modules, render, quality));
             }
             case OutputFormat.Tiff: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 var compression = outputOptions?.TiffCompression ?? TiffCompressionMode.Auto;
                 return RenderedOutput.FromBinary(format, QrTiffRenderer.Render(qr.Modules, render, compression));
             }
             case OutputFormat.Bmp: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrBmpRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Gif: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 if (RenderAnimationHelpers.TryRenderQrGif(outputOptions, render, out var gif)) {
                     return RenderedOutput.FromBinary(format, gif);
                 }
                 return RenderedOutput.FromBinary(format, QrGifRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Ppm: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrPpmRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Pbm: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrPbmRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Pgm: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrPgmRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Pam: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrPamRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Xbm: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromText(format, QrXbmRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Xpm: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromText(format, QrXpmRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Tga: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrTgaRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Ico: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrIcoRenderer.Render(qr.Modules, render, BuildIcoOptions(outputOptions)));
             }
             case OutputFormat.Pdf: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrPdfRenderer.Render(qr.Modules, render, outputOptions?.VectorMode ?? RenderMode.Vector));
             }
             case OutputFormat.Eps: {
-                var render = BuildPngOptions(opts, qr);
+                var render = BuildGuardedPngOptions(opts, qr);
                 var eps = QrEpsRenderer.Render(qr.Modules, render, outputOptions?.VectorMode ?? RenderMode.Vector);
                 return RenderedOutput.FromText(format, eps, Encoding.ASCII);
             }

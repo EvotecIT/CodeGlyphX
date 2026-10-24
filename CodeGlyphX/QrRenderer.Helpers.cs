@@ -97,7 +97,7 @@ internal static partial class QrRenderer {
     }
 
     private static QrSvgRenderOptions BuildSvgOptions(QrRenderOptions opts, QrCode qr) {
-        var styled = BuildPngOptions(opts, qr);
+        var styled = BuildGuardedPngOptions(opts, qr);
         return new QrSvgRenderOptions {
             Appearance = styled,
             ModuleSize = styled.ModuleSize, QuietZone = styled.QuietZone,
@@ -534,20 +534,6 @@ internal static partial class QrRenderer {
 
     private static Rgba32? CapAlpha(Rgba32? color, byte alphaCap) {
         return color is null ? null : WithAlpha(color.Value, Math.Min(color.Value.A, alphaCap));
-    }
-
-    private static QrModuleShape MapToConnectedShape(QrModuleShape shape) {
-        return shape switch {
-            QrModuleShape.Rounded => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Squircle => QrModuleShape.ConnectedSquircle,
-            QrModuleShape.Circle => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Dot => QrModuleShape.ConnectedRounded,
-            QrModuleShape.DotGrid => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Leaf => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Wave => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Blob => QrModuleShape.ConnectedRounded,
-            _ => shape,
-        };
     }
 
     private static double Clamp01(double value) => Clamp(value, 0, 1);

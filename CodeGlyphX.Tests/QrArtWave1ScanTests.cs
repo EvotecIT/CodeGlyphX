@@ -279,6 +279,7 @@ public sealed class QrArtWave1ScanTests {
     }
 
     private void ReportDecorativeScans(QrRenderOptions options) {
+        options.ArtGuardrailsEnabled = false; // Observe unqualified artwork without the runtime gate rejecting it.
         var results = ScanMatrix(options).ToArray();
         Assert.Equal(9, results.Length);
         _output.WriteLine("DECORATIVE: verify before print. These observations are not scan-safety acceptance passes.");
@@ -320,6 +321,7 @@ public sealed class QrArtWave1ScanTests {
 
     internal static QrRenderOptions BodyOptions(QrModuleShape body, int eyeProfile) => new() {
         TargetSizePx = 1024, QuietZone = 4, ModuleShape = body, ModuleScale = 1,
+        ArtGuardrailsEnabled = !IsDecorativeBody(body),
         Eyes = eyeProfile < 0 ? null : new QrEyeOptions {
             OuterShape = EyeProfiles[eyeProfile].Outer, InnerShape = EyeProfiles[eyeProfile].Inner
         }

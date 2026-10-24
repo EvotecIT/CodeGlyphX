@@ -83,6 +83,7 @@
     <Compile Include="QrFormatVariantsTests.cs" />
     <Compile Include="QrFormatDistanceTests.cs" />
     <Compile Include="QrApiTests.cs" />
+    <Compile Include="QrNativeArtGuardrailTests.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="EncodingContractRegressionTests.cs" />
