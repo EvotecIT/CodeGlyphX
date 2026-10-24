@@ -167,6 +167,30 @@ public sealed class QrCanvasCaptionTests {
         Assert.True(found);
     }
 
+    [Theory]
+    [InlineData(1)] [InlineData(2)] [InlineData(3)] [InlineData(4)]
+    public void Caption_MinimumSizeUsesFinalPixels_WhenBackgroundSupersampled(int scale) {
+        var qr = QR.Encode("A");
+        Assert.Equal(21, qr.Size);
+        var caption = new QrCanvasCaptionOptions {
+            Text = new string('B', 60), Font = BarcodeFont.OcrB, FontSizePx = 24,
+            Weight = QrCanvasCaptionWeight.Regular, PaddingPx = 16
+        };
+        var options = new QrPngRenderOptions {
+            ModuleSize = 10, QuietZone = 4, BackgroundSupersample = scale,
+            Canvas = new QrCanvasOptions { PaddingPx = 32, Caption = caption }
+        };
+        var error = Assert.Throws<ArgumentException>(() => QrPngRenderer.Render(qr.Modules, options));
+        Assert.Contains("fit readably", error.Message);
+        Assert.Throws<ArgumentException>(() => SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
+        // This run also shrinks to fit, but remains above eight final pixels.
+        caption.Text = new string('B', 30);
+        Assert.NotEmpty(QrPngRenderer.Render(qr.Modules, options));
+        Assert.Contains("<svg", SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
+        Assert.Equal(24, caption.FontSizePx);
+        Assert.Equal(16, caption.PaddingPx);
+    }
+
     private static byte[] ReadSvg(XElement root, int width, int height) {
         var pixels = new byte[width * height * 4];
         foreach (var path in root.Elements()) {

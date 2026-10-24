@@ -39,6 +39,9 @@ public sealed class QrCanvasCaptionOptions {
     /// <summary>Reject unavailable glyphs or unsupported shaping instead of substituting text.</summary>
     public bool StrictText { get; set; } = true;
 
+    // Internal raster units per final output pixel; copied with supersampled geometry.
+    internal int RasterScale { get; private set; } = 1;
+
     internal void Validate() {
         if (Text is null || Text.Length > 256) throw new ArgumentException("Caption text must contain at most 256 characters.", nameof(Text));
         if (Font is null) throw new ArgumentNullException(nameof(Font));
@@ -50,7 +53,8 @@ public sealed class QrCanvasCaptionOptions {
 
     internal QrCanvasCaptionOptions Copy(int scale = 1) => new() {
         Text = Text, Font = Font, FontSizePx = checked(FontSizePx * scale), Weight = Weight,
-        Color = Color, Position = Position, PaddingPx = checked(PaddingPx * scale), StrictText = StrictText
+        Color = Color, Position = Position, PaddingPx = checked(PaddingPx * scale), StrictText = StrictText,
+        RasterScale = checked(RasterScale * scale)
     };
 }
 

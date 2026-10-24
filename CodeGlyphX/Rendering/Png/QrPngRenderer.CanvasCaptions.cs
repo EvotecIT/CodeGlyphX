@@ -84,7 +84,7 @@ public static partial class QrPngRenderer {
         if (caption.Weight == QrCanvasCaptionWeight.Bold) shape = PrintLayoutBuilder.Strengthen(shape, size * .02);
         var available = w - 2 * pad - 2 * caption.PaddingPx;
         var ratio = Math.Min(1, available / Math.Max(1, shape.InkBounds.Width));
-        if (available <= 0 || size * ratio < 8) throw new ArgumentException("Caption cannot fit readably. Shorten it, reduce padding or enlarge the code.");
+        if (available <= 0 || size * ratio < 8 * caption.RasterScale) throw new ArgumentException("Caption cannot fit readably. Shorten it, reduce padding or enlarge the code.");
         var tw = Math.Max(1, (int)Math.Ceiling(shape.InkBounds.Width * ratio));
         var th = Math.Max(1, (int)Math.Ceiling(shape.InkBounds.Height * ratio));
         var contours = new List<IReadOnlyList<BarcodePoint>>();
