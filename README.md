@@ -145,6 +145,33 @@ QR.Save("https://example.com", "ink.svg", ink,
 `DotGrid`, `Plus`, `Star` and `Heart` are decorative – verify before print. They are not scan-safe preset choices. A shape's appearance alone does not establish that a particular eye/body/palette combination survives reduction, blur or rotation. Guarded rendering preserves the selected body shape while keeping ink dark on a light QR background and limiting disruptive textures. It also checks the canonical appearance pixels with CodeGlyphX's native Balanced decoder, without transforms or stylized sampling, and compares the recovered payload with the encoded symbol. If decoding fails or exceeds its cooperative one-second budget, rendering throws; increase the output size or simplify the artwork. This check does not certify lossy exports, resized images or printed output. Legacy targets use the limited managed decoder and can reject artwork accepted on newer targets; the check fails closed on those targets too. Set `ArtGuardrailsEnabled = false` only when deliberately producing an unguarded composition for separate verification. Independent ZXing comparisons run in the test suite; they add no runtime dependency.
 
 SVG and SVGZ accept the same high-level body, eye, canvas, palette and pattern options as PNG. Styled exports contain coloured vector coverage contours, with no embedded QR bitmap. Those contours preserve the selected raster resolution; select an appropriate `TargetSizePx` or `ModuleSize` before exporting for print. The HTML table renderer retains its narrower appearance support.
+### Size a centered logo by its correction budget
+
+`QrArt.FitLogo` measures the codewords a centered square knockout can affect in each Reed-Solomon block. The measurement includes padding and parity codewords, reserves two additional codeword errors per block by default, and keeps every functional pattern uncovered. The returned dimensions are in modules, excluding the quiet zone.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
+using System.IO;
+
+var qr = QR.Encode("https://example.com", new QrEncodingOptions {
+    ErrorCorrectionLevel = QrErrorCorrectionLevel.H
+});
+var budget = QrArt.FitLogo(qr, paddingModules: 1, reservedErrorsPerBlock: 2);
+if (!budget.CanPlace)
+    throw new System.InvalidOperationException("No centered logo fits; use another QR version or omit the logo.");
+
+const int moduleSize = 16;
+var logo = QrRasterLogoOptions.FromPng(File.ReadAllBytes("logo.png"));
+logo.Scale = budget.LogoSideModules / (double)qr.Size;
+logo.PaddingPx = budget.PaddingModules * moduleSize;
+logo.DrawBackground = true;
+File.WriteAllBytes("brand.png", QrPngRenderer.Render(qr.Modules,
+    new QrPngRenderOptions { ModuleSize = moduleSize, Logo = logo }));
+```
+
+Some QR versions have an alignment pattern at the center, so even a small centered logo cannot fit. Check `CanPlace` before using the dimensions. The budget assumes integer module sizing and the stated padding; resizing, additional overlays and damage to functional patterns need separate validation. Always scan the final exported and printed asset.
 
 ### Colorful QR gallery
 
