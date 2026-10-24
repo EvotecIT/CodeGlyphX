@@ -28,7 +28,8 @@ public static class SvgQrRenderer {
         opts.ForegroundGradient?.Validate();
         opts.Eyes?.Validate();
         if (opts.ModuleShape != QrModuleShape.Square || opts.Eyes is not null || !(opts.ModuleScale >= 1)
-            || opts.ModuleCornerRadiusPx != 0 || opts.ForegroundGradient is not null) {
+            || opts.ModuleCornerRadiusPx != 0 || opts.ForegroundGradient is not null
+            || opts.Logo?.OffsetXPx is not null || opts.Logo?.OffsetYPx is not null) {
             return SvgQrAppearance.Render(modules, SvgQrAppearance.Resolve(opts));
         }
 

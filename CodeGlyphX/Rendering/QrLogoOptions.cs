@@ -18,6 +18,12 @@ public sealed class QrLogoOptions {
     /// </summary>
     public double Scale { get; set; } = 0.20;
 
+    /// <summary>Logo left edge in pixels from the QR core; null centres it horizontally.</summary>
+    public int? OffsetXPx { get; set; }
+
+    /// <summary>Logo top edge in pixels from the QR core; null centres it vertically.</summary>
+    public int? OffsetYPx { get; set; }
+
     /// <summary>
     /// Padding in pixels around the logo.
     /// </summary>

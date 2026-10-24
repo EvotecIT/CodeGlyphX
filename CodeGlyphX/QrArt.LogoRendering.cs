@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Art;
+using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX;
 
@@ -55,7 +56,7 @@ public static partial class QrArt {
         if (design.Placement == LogoPlacement.CenterOverAlignment && design.IndependentDecoder is null)
             throw new ArgumentException("CenterOverAlignment requires an independent decoder in addition to native verification.", nameof(design));
         if (design.IndependentDecoder is not null && (string.IsNullOrWhiteSpace(design.IndependentDecoderName)
-            || string.Equals(design.IndependentDecoderName.Trim(), "CodeGlyphX", StringComparison.OrdinalIgnoreCase)))
+            || string.Equals(design.IndependentDecoderName!.Trim(), "CodeGlyphX", StringComparison.OrdinalIgnoreCase)))
             throw new ArgumentException("Provide the name of a distinct independent decoder implementation.", nameof(design));
         // Validate the supplied image before an encoding retry can turn an invalid logo into a no-fit error.
         Rendering.Png.PngDecoder.DecodeRgba32(logoPng, out _, out _);
@@ -70,9 +71,19 @@ public static partial class QrArt {
         render.LogoPng = (byte[])logoPng.Clone();
         render.LogoScale = budget.LogoSideModules / (double)qr.Size;
         render.LogoPaddingPx = checked(budget.PaddingModules * render.ModuleSize);
-        render.LogoOffsetXPx = checked((budget.XModules + budget.PaddingModules) * render.ModuleSize);
-        render.LogoOffsetYPx = checked((budget.YModules + budget.PaddingModules) * render.ModuleSize);
+        var maximum = checked(budget.LogoSideModules * render.ModuleSize);
+        PngDecoder.DecodeRgba32(logoPng, out var sourceWidth, out var sourceHeight);
+        var scale = Math.Min(maximum / (double)sourceWidth, maximum / (double)sourceHeight);
+        var targetWidth = Math.Max(1, (int)Math.Round(sourceWidth * scale));
+        var targetHeight = Math.Max(1, (int)Math.Round(sourceHeight * scale));
+        render.LogoOffsetXPx = checked((budget.XModules + budget.PaddingModules) * render.ModuleSize + (maximum - targetWidth) / 2);
+        render.LogoOffsetYPx = checked((budget.YModules + budget.PaddingModules) * render.ModuleSize + (maximum - targetHeight) / 2);
         render.LogoDrawBackground = true;
+        if (!LogoHasVisibleSample(logoPng, checked(budget.LogoSideModules * render.ModuleSize),
+            render.LogoBackground ?? render.Background)) {
+            reason = "The logo has no visible sampled ink against its background. Supply visible artwork or choose a contrasting LogoBackground.";
+            return null;
+        }
         if (!QrDecoder.TryDecode(qr.Modules, out var expected)) {
             reason = "The source symbol does not contain a decodable payload.";
             return null;
@@ -95,5 +106,24 @@ public static partial class QrArt {
             ? new[] { "The logo covers the central alignment pattern. Native and independent decoders verified this PNG; verify the intended printed or camera workflow separately." }
             : Array.Empty<string>();
         return new QrLogoComposition(qr, budget, png, warnings, decoders.ToArray());
+    }
+
+    // Match the renderer's nearest-neighbor logo sampling so sparse/transparent artwork
+    // cannot vanish during scaling while still receiving a successful placement report.
+    private static bool LogoHasVisibleSample(byte[] png, int maximum, Rgba32 background) {
+        var rgba = Rendering.Png.PngDecoder.DecodeRgba32(png, out var width, out var height);
+        var scale = Math.Min(maximum / (double)width, maximum / (double)height);
+        var targetWidth = Math.Max(1, (int)Math.Round(width * scale));
+        var targetHeight = Math.Max(1, (int)Math.Round(height * scale));
+        var visibleBackground = Rgba32Compositor.ComposeOver(background, Rgba32.White);
+        for (var y = 0; y < targetHeight; y++) {
+            for (var x = 0; x < targetWidth; x++) {
+                var source = ((y * height / targetHeight) * width + x * width / targetWidth) * 4;
+                var color = Rgba32Compositor.ComposeOver(new Rgba32(rgba[source], rgba[source + 1], rgba[source + 2], rgba[source + 3]), background);
+                color = Rgba32Compositor.ComposeOver(color, Rgba32.White);
+                if (color.R != visibleBackground.R || color.G != visibleBackground.G || color.B != visibleBackground.B) return true;
+            }
+        }
+        return false;
     }
 }

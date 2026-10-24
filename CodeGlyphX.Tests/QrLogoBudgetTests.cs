@@ -64,8 +64,17 @@ public sealed class QrLogoBudgetTests {
         Assert.True(result.LogoSideModules >= 3);
         Assert.True(result.XModules != (qr.Size - result.KnockoutSideModules) / 2
             || result.YModules != (qr.Size - result.KnockoutSideModules) / 2);
-        Assert.InRange(Math.Abs(result.XModules * 2 + result.KnockoutSideModules - qr.Size), 0, qr.Size / 2);
-        Assert.InRange(Math.Abs(result.YModules * 2 + result.KnockoutSideModules - qr.Size), 0, qr.Size / 2);
+        Assert.InRange(Math.Abs(result.XModules * 2 + result.KnockoutSideModules - qr.Size), 0, qr.Size / 3);
+        Assert.InRange(Math.Abs(result.YModules * 2 + result.KnockoutSideModules - qr.Size), 0, qr.Size / 3);
+    }
+
+    [Fact]
+    public void Auto_PrefersACentralReadableLogo_OverALargerEdgeSpace() {
+        var qr = QrCodeEncoder.EncodeText("BRAND", QrErrorCorrectionLevel.H, 3, 3);
+        var result = QrArt.FitLogo(qr);
+        Assert.Equal(qr.Size, result.XModules * 2 + result.KnockoutSideModules);
+        Assert.Equal(qr.Size, result.YModules * 2 + result.KnockoutSideModules);
+        Assert.True(result.LogoSideModules >= 3);
     }
     [Fact]
     public void PaddingIsIncludedInTheKnockout_AndTheReserveCanExhaustItsBudget() {

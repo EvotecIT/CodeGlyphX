@@ -5,7 +5,8 @@ using CodeGlyphX.Rendering.Art;
 namespace CodeGlyphX;
 
 public static partial class QrArt {
-    /// <summary>Finds the largest pattern-free square logo knockout, choosing the location
+    /// <summary>Finds the largest pattern-free square logo knockout with its center in the
+    /// central third of the QR core, choosing the location
     /// nearest the center among equally sized candidates. Padding counts against each
     /// interleaved block's unknown-error budget. Functional patterns remain intact.
     /// Throws when a readable logo cannot fit; a requested logo is never silently omitted.</summary>
@@ -65,6 +66,8 @@ public static partial class QrArt {
                 for (var x = first; x <= last; x++) {
                     var dx = x * 2 + side - size;
                     var dy = y * 2 + side - size;
+                    // A larger gap at an edge is not a central brand mark.
+                    if (Math.Abs(dx) > size / 3 || Math.Abs(dy) > size / 3) continue;
                     var distance = dx * dx + dy * dy;
                     if (distance >= bestDistance || Blocked(x, y, side) != 0 || !Fits(x, y, side)) continue;
                     var coversAlignment = centerAlignment && x <= center + 2 && y <= center + 2

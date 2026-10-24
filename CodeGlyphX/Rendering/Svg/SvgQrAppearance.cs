@@ -20,6 +20,7 @@ internal static class SvgQrAppearance {
             options.Logo.Validate();
             var logo = QrRasterLogoOptions.FromPng(options.Logo.Png);
             logo.Scale = options.Logo.Scale; logo.PaddingPx = options.Logo.PaddingPx;
+            logo.OffsetXPx = options.Logo.OffsetXPx; logo.OffsetYPx = options.Logo.OffsetYPx;
             logo.DrawBackground = options.Logo.DrawBackground; logo.Background = options.Logo.Background;
             logo.CornerRadiusPx = options.Logo.CornerRadiusPx;
             appearance.Logo = logo;
