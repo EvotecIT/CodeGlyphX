@@ -306,7 +306,7 @@ QR.Save("https://example.com", "scan-me.svg", appearance);
 
 PNG and canonical SVG share the same managed text outlines and pixel coverage. Captions use the embedded Scan B font by default; assign `BarcodeFont.FromBytes(...)` to `Caption.Font` for another licensed face and its supported Unicode characters. Unsupported glyphs or shaping fail clearly by default. Set `Caption.Color` explicitly or leave it null for contrasting template text; `Canvas.Frame.Color` supplies the template accent. Regular and synthetic bold weights require no installed fonts or graphics services.
 
-Captions contain one line of at most 256 UTF-16 characters. Requested sizes are 8–256 pixels and caption padding is 4–256 pixels. Long text shrinks to fit; a line that would fall below 8 pixels is rejected. Templates reserve at least 32 pixels of canvas padding outside the quiet zone. Software decoding does not establish phone-camera or printed acceptance; the legacy native image recognizer has limited support for decorated canvases.
+Captions contain one line of at most 256 UTF-16 characters. Requested sizes are 8–256 pixels and caption padding is 4–256 pixels. Long text shrinks to fit; a line that would fall below 8 pixels is rejected. Templates reserve at least 32 pixels of canvas padding outside the quiet zone. Software decoding does not establish phone-camera or printed acceptance; the legacy native image recognizer has limited support for decorated canvases. On legacy runtimes, guarded rendering can throw a native-validation failure for these templates. Explicitly setting `ArtGuardrailsEnabled = false` permits rendering for separate exported-image validation; it does not certify native recognition.
 
 ### Protect a subject and compare artistic alternatives
 

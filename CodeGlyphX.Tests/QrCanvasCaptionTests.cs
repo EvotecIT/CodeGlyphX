@@ -13,6 +13,8 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class QrCanvasCaptionTests {
+    private readonly Xunit.Abstractions.ITestOutputHelper _output;
+    public QrCanvasCaptionTests(Xunit.Abstractions.ITestOutputHelper output) => _output = output;
     private const string Payload = "https://evotec.xyz";
     public static IEnumerable<object[]> Templates() {
         foreach (QrCanvasTemplate template in Enum.GetValues(typeof(QrCanvasTemplate)))
@@ -46,6 +48,25 @@ public sealed class QrCanvasCaptionTests {
         Assert.True(QR.TryDecodePng(png, out var decoded));
         Assert.Equal(Payload, decoded.Text);
 #endif
+        var facade = new QrRenderOptions { ModuleSize = 10, QuietZone = 4, Canvas = options.Canvas };
+#if NETFRAMEWORK
+        if (template is QrCanvasTemplate.TicketStub or QrCanvasTemplate.PhoneOutline) {
+            // Keep the real legacy guarded-rendering limitation visible and fail closed.
+            var error = Assert.Throws<InvalidOperationException>(() => qr.Render(OutputFormat.Png, facade));
+            Assert.Contains("native decode validation", error.Message);
+            Assert.Throws<InvalidOperationException>(() => qr.Render(OutputFormat.Svg, facade));
+            var report = QrArt.ValidateImage(png, Payload, 250);
+            _output.WriteLine($"{template}/{position}: guarded PNG and SVG throw: {error.Message}; native exported PNG decode={QR.TryDecodePng(png, out _)}; image validation={report.AllPassed}; checks={string.Join(";", report.Checks.Select(c => c.Name + "=" + c.Passed))}");
+        } else {
+            Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
+            qr.Render(OutputFormat.Svg, facade);
+            _output.WriteLine($"{template}/{position}: guarded PNG and SVG succeeded; native exported PNG decode={QR.TryDecodePng(png, out _)}");
+        }
+        facade.ArtGuardrailsEnabled = false;
+#else
+        Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
+#endif
+        Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
         var reader = new ZXing.BarcodeReaderGeneric { AutoRotate = false, Options = new ZXing.Common.DecodingOptions {
             TryHarder = false, TryInverted = false, PureBarcode = false, PossibleFormats = new[] { ZXing.BarcodeFormat.QR_CODE } } };
         Assert.Equal(Payload, reader.Decode(new ZXing.RGBLuminanceSource(actual, w, h, ZXing.RGBLuminanceSource.BitmapFormat.RGBA32))?.Text);
@@ -56,7 +77,7 @@ public sealed class QrCanvasCaptionTests {
         using var stream = typeof(QrCanvasCaptionTests).Assembly.GetManifestResourceStream("CodeGlyphX.Tests.Fixtures.Fonts.OfficeIMOBaselineSans-Regular.ttf")!;
         using var memory = new System.IO.MemoryStream(); stream.CopyTo(memory);
         var font = BarcodeFont.FromBytes(memory.ToArray());
-        var input = new QrRenderOptions { Canvas = Options(QrCanvasTemplate.CornerViewfinder, QrCanvasCaptionPosition.Top).Canvas };
+        var input = new QrRenderOptions { ArtGuardrailsEnabled = false, Canvas = Options(QrCanvasTemplate.CornerViewfinder, QrCanvasCaptionPosition.Top).Canvas };
         input.Canvas!.Caption!.Font = font; input.Canvas.Caption.Text = "Zażółć gęślą jaźń";
         var copy = QrRenderer.CloneOptions(input);
         Assert.NotSame(input.Canvas, copy.Canvas); Assert.NotSame(input.Canvas.Caption, copy.Canvas!.Caption);
