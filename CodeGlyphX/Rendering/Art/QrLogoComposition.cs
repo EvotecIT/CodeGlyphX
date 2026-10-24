@@ -20,7 +20,7 @@ public sealed class QrLogoComposition {
 
     /// <summary>Returns an independent copy of the resolved appearance, including actual module sizing,
     /// protected quiet zone and logo offsets. Use it with the unchanged Symbol to export another format.
-    /// Only the original PNG is certified by VerifiedDecoders; validate final delivery assets separately.</summary>
+    /// The named decoders verified only the original PNG; validate final delivery assets separately.</summary>
     public QrRenderOptions GetRenderOptions() => QrRenderer.CloneOptions(_appearance);
 
     internal QrLogoComposition(QrCode symbol, QrLogoBudget budget, byte[] png, string[] warnings, string[] decoders, QrRenderOptions appearance) {

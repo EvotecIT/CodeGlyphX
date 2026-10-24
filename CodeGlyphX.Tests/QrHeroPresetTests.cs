@@ -23,6 +23,7 @@ public sealed class QrHeroPresetTests {
     }
 
     [Theory]
+    [Trait("Category", "CorpusTiming")]
     [MemberData(nameof(HeroCases))]
     public void Heroes_DecodeWithNativeAndStrictIndependentReaders_AcrossSizeRotationAndBlur(QrHeroPreset preset, bool darkPanel) {
         var options = QrArt.Hero(preset, darkPanel);
