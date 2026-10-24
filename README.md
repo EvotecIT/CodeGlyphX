@@ -239,6 +239,20 @@ if (report.AllPassed) File.WriteAllBytes("artistic-qr.png", png);
 
 `ColorModules` (the default) adapts the luminance of every image pixel to its QR module, with small contrasting centers for local-threshold readers. `ImageOverlay` reveals more image detail around contrasting square module centers; `CenterSize` controls their width when `Art` is not set. `Strength` ranges from 0 (plain black/white) to 1 (most image color). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
 
+`Halftone3x3` divides each data module into nine equal sub-cells. Error diffusion follows the supplied image, while the centre sub-cell is forced to the encoded dark or light value. All functional patterns and the quiet zone stay solid. Use a module size divisible by three; `Strength` controls the image's contribution before dithering. This is separate from the decorative stipple treatment named `Art.Style = Halftone`.
+
+```csharp
+var halftone = QrArt.Compose(payload, File.ReadAllBytes("portrait.png"),
+    new QrImageCompositionOptions {
+        Style = QrImageCompositionStyle.Halftone3x3,
+        ModuleSize = 18,
+        Strength = 0.75
+    });
+halftone.SavePng("portrait-qr.png");
+```
+
+`ImageBackground` retains the source colours around opaque module centres. Use `CenterSize` to balance image visibility and scanning contrast; for example, start at `0.7` with an 18-pixel module. Neither new treatment combines with `Art` silhouettes. Validate the exported PNG at the delivery size with `QrArt.ValidateImage`, then check an independent reader and the intended phones or printed media. The limited native decoder on legacy runtimes can reject compositions accepted by modern .NET; rendering support does not establish legacy scan validation.
+
 `ValidateImage` reads the exported image and attempts to recover the exact expected text from the original, a half-size copy, and a lightly blurred copy. Its report records each result, including failed or budget-limited attempts. It uses CodeGlyphX's decoder; legacy targets have limited image recognition. A passing report does not certify other readers or printed output. Check the actual delivery size, compression, and target devices before distributing artwork.
 
 The [image-composition example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrImageCompositionExample.cs) generates these illustrations and both treatments without an external service:

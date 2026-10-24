@@ -47,7 +47,11 @@ public static partial class QrImageComposer {
             image, qrOffsetX + border - imageOriginX, qrOffsetY + border - imageOriginY, cancellationToken);
         var finders = options.Art is not null && options.Art.Finders != QrImageFinderStyle.Square && options.Strength > 0
             ? new FinderGeometry(moduleSize, options.Art) : null;
-        var centerSize = options.Style == QrImageCompositionStyle.ImageOverlay ? options.CenterSize : 0.35;
+        var halftone = options.Style == QrImageCompositionStyle.Halftone3x3 && options.Strength > 0
+            ? DitherSubCells(image, qr.Modules, moduleSize, qrOffsetX + border - imageOriginX,
+                qrOffsetY + border - imageOriginY, options.Strength, cancellationToken) : null;
+        var centerSize = options.Style == QrImageCompositionStyle.ImageOverlay || options.Style == QrImageCompositionStyle.ImageBackground
+            ? options.CenterSize : 0.35;
         var centerMargin = (int)Math.Floor(moduleSize * (1 - centerSize) / 2);
         for (var y = 0; y < side; y++) {
             cancellationToken.ThrowIfCancellationRequested();
@@ -82,12 +86,29 @@ public static partial class QrImageComposer {
                     continue;
                 }
                 image.Sample(x - imageOriginX, y - imageOriginY, out var r, out var g, out var b);
+                if (halftone is not null) {
+                    var sx = px % moduleSize * 3 / moduleSize;
+                    var sy = py % moduleSize * 3 / moduleSize;
+                    var isCenter = sx == 1 && sy == 1;
+                    var imageDark = halftone[(my * 3 + sy) * qr.Size * 3 + mx * 3 + sx];
+                    WriteGray(pixels, index, (isCenter ? dark : imageDark) ? (byte)0 : (byte)255);
+                    continue;
+                }
                 if (art is not null) {
                     art.Paint(pixels, index, mx, my, px % moduleSize, py % moduleSize, dark, r, g, b, options.Strength);
                     continue;
                 }
                 var insideCenter = px % moduleSize >= centerMargin && px % moduleSize < moduleSize - centerMargin
                     && py % moduleSize >= centerMargin && py % moduleSize < moduleSize - centerMargin;
+                if (options.Style == QrImageCompositionStyle.ImageBackground) {
+                    if (insideCenter) WriteGray(pixels, index, dark ? (byte)0 : (byte)255);
+                    else {
+                        pixels[index] = Adapt(r, dark, options.Strength);
+                        pixels[index + 1] = Adapt(g, dark, options.Strength);
+                        pixels[index + 2] = Adapt(b, dark, options.Strength);
+                    }
+                    continue;
+                }
                 var overlayEdge = options.Style == QrImageCompositionStyle.ImageOverlay && !insideCenter;
                 // Strong centers also give block-thresholding readers local contrast within flat colored regions.
                 // Overlay edges allow more of the image through than full-module color adaptation.
