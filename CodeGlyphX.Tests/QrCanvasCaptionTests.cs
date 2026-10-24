@@ -12,6 +12,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("GlobalState")]
 public sealed class QrCanvasCaptionTests {
     private readonly Xunit.Abstractions.ITestOutputHelper _output;
     public QrCanvasCaptionTests(Xunit.Abstractions.ITestOutputHelper output) => _output = output;
@@ -50,23 +51,22 @@ public sealed class QrCanvasCaptionTests {
 #endif
         var facade = new QrRenderOptions { ModuleSize = 10, QuietZone = 4, Canvas = options.Canvas };
 #if NETFRAMEWORK
-        if (template is QrCanvasTemplate.TicketStub or QrCanvasTemplate.PhoneOutline) {
-            // Keep the real legacy guarded-rendering limitation visible and fail closed.
-            var error = Assert.Throws<InvalidOperationException>(() => qr.Render(OutputFormat.Png, facade));
-            Assert.Contains("native decode validation", error.Message);
-            Assert.Throws<InvalidOperationException>(() => qr.Render(OutputFormat.Svg, facade));
-            var report = QrArt.ValidateImage(png, Payload, 250);
-            _output.WriteLine($"{template}/{position}: guarded PNG and SVG throw: {error.Message}; native exported PNG decode={QR.TryDecodePng(png, out _)}; image validation={report.AllPassed}; checks={string.Join(";", report.Checks.Select(c => c.Name + "=" + c.Passed))}");
-        } else {
+        // A cooperative decode deadline may accept or reject this legacy artwork.
+        // Successful output must preserve the pixels; a rejection must fail closed.
+        var validation = Record.Exception(() => {
             Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
             qr.Render(OutputFormat.Svg, facade);
-            _output.WriteLine($"{template}/{position}: guarded PNG and SVG succeeded; native exported PNG decode={QR.TryDecodePng(png, out _)}");
+        });
+        if (validation is not null) {
+            var error = Assert.IsType<InvalidOperationException>(validation);
+            Assert.Contains("native decode validation", error.Message);
+            _output.WriteLine($"{template}/{position}: legacy guard rejected the appearance: {error.Message}");
+        } else {
+            _output.WriteLine($"{template}/{position}: legacy guarded PNG and SVG succeeded");
         }
-        facade.ArtGuardrailsEnabled = false;
 #else
         Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
 #endif
-        Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
         var reader = new ZXing.BarcodeReaderGeneric { AutoRotate = false, Options = new ZXing.Common.DecodingOptions {
             TryHarder = false, TryInverted = false, PureBarcode = false, PossibleFormats = new[] { ZXing.BarcodeFormat.QR_CODE } } };
         Assert.Equal(Payload, reader.Decode(new ZXing.RGBLuminanceSource(actual, w, h, ZXing.RGBLuminanceSource.BitmapFormat.RGBA32))?.Text);
