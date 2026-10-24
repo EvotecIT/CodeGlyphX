@@ -9,6 +9,8 @@ using CodeGlyphX.Website.Specimens;
 using CodeGlyphX.Rendering;
 
 var website = Path.GetFullPath(args.Length > 0 ? args[0] : "Website");
+HeroSpecimens.Render(website);
+if (args.Contains("--heroes-only", StringComparer.Ordinal)) return;
 var output = Path.Combine(website, "static", "specimens");
 Directory.CreateDirectory(output);
 var utf8 = new UTF8Encoding(false);

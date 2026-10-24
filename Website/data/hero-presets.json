@@ -1,0 +1,330 @@
+{
+  "presets": [
+    {
+      "id": "ink",
+      "name": "Ink",
+      "description": "Expressive monochrome marks and print.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/ink-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/ink-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Ink);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "dotmatrix",
+      "name": "Dot Matrix",
+      "description": "Technology, inventory and compact labels.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/dotmatrix-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/dotmatrix-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.DotMatrix);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "sunset",
+      "name": "Sunset",
+      "description": "Events, menus and hospitality.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/sunset-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/sunset-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Sunset);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "ocean",
+      "name": "Ocean",
+      "description": "Calm digital products and packaging.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/ocean-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/ocean-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Ocean);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "monoclassy",
+      "name": "Mono Classy",
+      "description": "Editorial layouts and premium print.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/monoclassy-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/monoclassy-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.MonoClassy);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "brand",
+      "name": "Brand",
+      "description": "A host\u0027s two colors and a budgeted logo.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/brand-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": {
+            "XModules": 10,
+            "YModules": 10,
+            "Placement": 0,
+            "CoversAlignment": false,
+            "KnockoutSideModules": 9,
+            "LogoSideModules": 7,
+            "PaddingModules": 1,
+            "CorrectableErrorsPerBlock": 11,
+            "ReservedErrorsPerBlock": 2,
+            "CoveredCodewordsPerBlock": [
+              8,
+              7
+            ],
+            "BlocksTouched": 2,
+            "MarginPerBlock": [
+              3,
+              4
+            ]
+          }
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/brand-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": {
+            "XModules": 10,
+            "YModules": 10,
+            "Placement": 0,
+            "CoversAlignment": false,
+            "KnockoutSideModules": 9,
+            "LogoSideModules": 7,
+            "PaddingModules": 1,
+            "CorrectableErrorsPerBlock": 11,
+            "ReservedErrorsPerBlock": 2,
+            "CoveredCodewordsPerBlock": [
+              8,
+              7
+            ],
+            "BlocksTouched": 2,
+            "MarginPerBlock": [
+              3,
+              4
+            ]
+          }
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Brand);\nvar result = QrArt.RenderLogo(\u0022https://codeglyphx.com\u0022,\n    File.ReadAllBytes(\u0022logo.png\u0022),\n    new QrLogoRenderOptions { Appearance = appearance });\nFile.WriteAllBytes(\u0022brand.png\u0022, result.GetPng());"
+    },
+    {
+      "id": "neon",
+      "name": "Neon",
+      "description": "Evening events and screen displays.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/neon-light.png",
+          "width": 688,
+          "height": 688,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/neon-dark.png",
+          "width": 688,
+          "height": 688,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Neon);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "papercutout",
+      "name": "Paper Cutout",
+      "description": "Cards, invitations and stationery.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/papercutout-light.png",
+          "width": 674,
+          "height": 676,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/papercutout-dark.png",
+          "width": 674,
+          "height": 676,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.PaperCutout);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "retropixel",
+      "name": "Retro Pixel",
+      "description": "Playful packaging and retro graphics.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/retropixel-light.png",
+          "width": 666,
+          "height": 666,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/retropixel-dark.png",
+          "width": 666,
+          "height": 666,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.RetroPixel);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "minimalline",
+      "name": "Minimal Line",
+      "description": "Quiet labels and minimal layouts.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/minimalline-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/minimalline-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.MinimalLine);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "botanical",
+      "name": "Botanical",
+      "description": "Natural products and outdoor experiences.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/botanical-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/botanical-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Botanical);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    },
+    {
+      "id": "berry",
+      "name": "Berry",
+      "description": "Invitations and personal products.",
+      "variants": [
+        {
+          "name": "Light",
+          "src": "/assets/hero-presets/berry-light.png",
+          "width": 592,
+          "height": 592,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        },
+        {
+          "name": "Dark panel",
+          "src": "/assets/hero-presets/berry-dark.png",
+          "width": 672,
+          "height": 672,
+          "decoded": "https://codeglyphx.com",
+          "budget": null
+        }
+      ],
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Berry);\nQR.Save(\u0022https://codeglyphx.com\u0022, \u0022qr.png\u0022, appearance,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+    }
+  ]
+}

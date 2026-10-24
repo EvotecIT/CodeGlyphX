@@ -28,7 +28,31 @@ QR.Save("https://example.com", "qr.png", encodingOptions: new QrEncodingOptions 
 
 Encoding controls belong to `QrEncodingOptions`; appearance belongs to `QrRenderOptions`. An encoded `QrCode` can be rendered repeatedly without changing its payload or version. See the [3.0 migration guide](/docs/migration-3/) for the option and result changes.
 
-SVG, SVGZ and HTML reject explicit raster-only effects with `NotSupportedException`. Use PNG or raster-mode PDF/EPS to preserve those effects.
+SVG and SVGZ preserve body shapes, eyes, palettes and canvas artwork through vector coverage contours at the selected render resolution. Choose the module or target pixel size before exporting for print. HTML supports a narrower appearance set and rejects unsupported effects with `NotSupportedException`.
+
+## Coordinated looks
+
+The [showcase](/showcase/#hero-presets) includes twelve coordinated looks, each with a light and a dark-panel variant. The code stays dark on a light background in both variants. `QrArt.Hero` returns editable rendering options:
+
+```csharp
+var appearance = QrArt.Hero(QrHeroPreset.Sunset, darkPanel: true);
+QR.Save("https://example.com/menu", "menu.png", appearance,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+```
+
+For a logo, use `QrArt.RenderLogo` with the Brand appearance. Auto placement keeps functional patterns intact and sizes the knockout against each affected Reed–Solomon block. The result reports the chosen placement, logo modules, touched blocks and remaining margins. If no readable logo fits, rendering throws rather than omitting it. Version and correction-level increases are attempted only when enabled.
+
+```csharp
+var result = QrArt.RenderLogo("https://example.com", File.ReadAllBytes("logo.png"),
+    new CodeGlyphX.Rendering.Art.QrLogoRenderOptions {
+        Appearance = QrArt.Hero(QrHeroPreset.Brand),
+        AllowErrorCorrectionUpgrade = true,
+        AllowVersionUpgrade = true
+    });
+File.WriteAllBytes("brand.png", result.GetPng());
+```
+
+`LogoPlacement.CenterOverAlignment` is an explicit alternative that requires native and independent decoder verification, with a warning when the alignment pattern is covered. No external decoder ships with the library. Software checks do not replace checking the final design on the phones and printed media you intend to use.
 
 ## Error Correction Levels
 
