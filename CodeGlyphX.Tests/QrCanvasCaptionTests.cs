@@ -14,8 +14,6 @@ namespace CodeGlyphX.Tests;
 
 [Collection("GlobalState")]
 public sealed class QrCanvasCaptionTests {
-    private readonly Xunit.Abstractions.ITestOutputHelper _output;
-    public QrCanvasCaptionTests(Xunit.Abstractions.ITestOutputHelper output) => _output = output;
     private const string Payload = "https://evotec.xyz";
     public static IEnumerable<object[]> Templates() {
         foreach (QrCanvasTemplate template in Enum.GetValues(typeof(QrCanvasTemplate)))
@@ -90,29 +88,11 @@ public sealed class QrCanvasCaptionTests {
         Assert.Equal(h, (int)root.Attribute("height")!);
         Assert.Equal(actual, ReadSvg(root, w, h));
         var png = QrPngRenderer.Render(qr.Modules, options);
-#if !NETFRAMEWORK
-        // Legacy native decoding cannot locate a code inside a tall decorated canvas.
-        Assert.True(QR.TryDecodePng(png, out var decoded));
+        Assert.True(QrImageDecoder.TryDecodeImage(png, out var decoded));
         Assert.Equal(Payload, decoded.Text);
-#endif
         var facade = new QrRenderOptions { ModuleSize = 10, QuietZone = 4, Canvas = options.Canvas };
-#if NETFRAMEWORK
-        // A cooperative decode deadline may accept or reject this legacy artwork.
-        // Successful output must preserve the pixels; a rejection must fail closed.
-        var validation = Record.Exception(() => {
-            Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
-            qr.Render(OutputFormat.Svg, facade);
-        });
-        if (validation is not null) {
-            var error = Assert.IsType<InvalidOperationException>(validation);
-            Assert.Contains("native decode validation", error.Message);
-            _output.WriteLine($"{template}/{position}: legacy guard rejected the appearance: {error.Message}");
-        } else {
-            _output.WriteLine($"{template}/{position}: legacy guarded PNG and SVG succeeded");
-        }
-#else
+
         Assert.Equal(png, qr.Render(OutputFormat.Png, facade).Data.ToArray());
-#endif
         var reader = new ZXing.BarcodeReaderGeneric { AutoRotate = false, Options = new ZXing.Common.DecodingOptions {
             TryHarder = false, TryInverted = false, PureBarcode = false, PossibleFormats = new[] { ZXing.BarcodeFormat.QR_CODE } } };
         Assert.Equal(Payload, reader.Decode(new ZXing.RGBLuminanceSource(actual, w, h, ZXing.RGBLuminanceSource.BitmapFormat.RGBA32))?.Text);

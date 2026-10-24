@@ -1070,6 +1070,8 @@ public static partial class QrImageDecoder {
         decoded = null!;
         info = default;
 
+        if (TryDecodeFinderRegion(gray, width, height, threshold, options, cancellationToken, out decoded, out info)) return true;
+
         if (!TryFindDarkBounds(gray, width, height, threshold, out var minX, out var minY, out var maxX, out var maxY, cancellationToken)) {
             return false;
         }

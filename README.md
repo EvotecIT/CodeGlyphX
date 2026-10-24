@@ -253,6 +253,8 @@ halftone.SavePng("portrait-qr.png");
 
 `ImageBackground` retains the source colours around opaque module centres. Use `CenterSize` to balance image visibility and scanning contrast; for example, start at `0.7` with an 18-pixel module. Neither new treatment combines with `Art` silhouettes. Validate the exported PNG at the delivery size with `QrArt.ValidateImage`, then check an independent reader and the intended phones or printed media. The limited native decoder on legacy runtimes can reject compositions accepted by modern .NET; rendering support does not establish legacy scan validation.
 
+The legacy `QrImageDecoder` also locates axis-aligned QR finder patterns in the actual image. Captions, frame borders and detailed logos no longer have to share the QR's dark bounding rectangle. It still samples the supplied pixels and performs the normal module/error-correction checks; this does not replace checking camera images or printed output.
+
 `ValidateImage` reads the exported image and attempts to recover the exact expected text from the original, a half-size copy, and a lightly blurred copy. Its report records each result, including failed or budget-limited attempts. It uses CodeGlyphX's decoder; legacy targets have limited image recognition. A passing report does not certify other readers or printed output. Check the actual delivery size, compression, and target devices before distributing artwork.
 
 The [image-composition example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrImageCompositionExample.cs) generates these illustrations and both treatments without an external service:
