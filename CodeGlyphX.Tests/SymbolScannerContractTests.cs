@@ -28,7 +28,7 @@ public sealed class SymbolScannerContractTests {
         Assert.Equal(ScanOptions.Balanced().TimeoutMilliseconds, new ScanOptions().TimeoutMilliseconds);
         Assert.Equal(0, new ScanOptions { TimeoutMilliseconds = 0 }.TimeoutMilliseconds);
         var png = QR.Render("DEFAULT-OPTIONS", OutputFormat.Png).ToArray();
-        var result = SymbolScanner.Scan(png);
+        var result = SymbolScanner.Scan(png, new ScanOptions { TimeoutMilliseconds = 0 });
         Assert.Equal("DEFAULT-OPTIONS", Assert.Single(result.Symbols).Text);
         Assert.NotEqual(ScanCompletionReason.Cancelled, result.CompletionReason);
     }

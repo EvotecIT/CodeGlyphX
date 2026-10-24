@@ -32,6 +32,10 @@ public static partial class QrPngRenderer {
         opts.Debug?.Validate();
 
         var size = modules.Width;
+        var sideModules = (long)size + (long)opts.QuietZone * 2;
+        if (sideModules > int.MaxValue / (long)opts.ModuleSize) {
+            throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize), "QR dimensions exceed the supported pixel dimensions.");
+        }
         ComputeLayout(size, opts, out widthPx, out heightPx, out _, out _, out _, out _);
         const string limitMessage = "QR rendering exceeds output limits.";
         RenderGuards.EnsureOutputPixels(widthPx, heightPx, limitMessage);

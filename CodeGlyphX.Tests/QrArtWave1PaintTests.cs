@@ -252,6 +252,39 @@ public sealed class QrArtWave1PaintTests {
         } finally { RenderGuards.MaxOutputBytes = originalLimit; }
     }
 
+    [Theory]
+    [InlineData("NeonSparkle")]
+    [InlineData("Sunburst")]
+    [InlineData("MinimalRing")]
+    [InlineData("RetroTarget")]
+    public void NamedEyePresets_PreserveAccentAndFinderPixelsInSvg(string name) {
+        var eyes = name switch {
+            "NeonSparkle" => QrEyePresets.NeonSparkle(),
+            "Sunburst" => QrEyePresets.Sunburst(),
+            "MinimalRing" => QrEyePresets.MinimalRing(),
+            "RetroTarget" => QrEyePresets.RetroTarget(),
+            _ => throw new System.ArgumentOutOfRangeException(nameof(name))
+        };
+        var qr = QR.Encode("PRESET-EXPORT-PARITY");
+        var options = new QrPngRenderOptions { ModuleSize = 8, ModuleShape = QrModuleShape.Rounded, Eyes = eyes };
+        var expected = Read(qr.Modules, options);
+        var svg = XElement.Parse(SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
+        Assert.DoesNotContain(svg.Descendants(), element => element.Name.LocalName == "image");
+        AssertVectorPixels(svg, qr.Size, expected);
+    }
+    [Theory]
+    [InlineData(148102321, 4)]
+    [InlineData(int.MaxValue, int.MaxValue)]
+    public void OversizedQrDimensions_RejectBeforeLayoutOrPixelAllocation(int moduleSize, int quietZone) {
+        var modules = QR.Encode("X").Modules;
+        var options = new QrPngRenderOptions { ModuleSize = moduleSize, QuietZone = quietZone };
+        var error = Assert.Throws<System.ArgumentOutOfRangeException>(() =>
+            QrPngRenderer.GetScanlineLength(modules, options, out _, out _, out _));
+        Assert.Equal(nameof(QrPngRenderOptions.ModuleSize), error.ParamName);
+        error = Assert.Throws<System.ArgumentOutOfRangeException>(() =>
+            QrPngRenderer.RenderPixels(modules, options, out _, out _, out _));
+        Assert.Equal(nameof(QrPngRenderOptions.ModuleSize), error.ParamName);
+    }
     private sealed record PaintImage(byte[] Pixels, int Width, int Height, int ModuleSize, int Quiet) {
         internal Rgba32 Sample(int mx, int my, int dx, int dy) {
             var p = (((my + Quiet) * ModuleSize + dy) * Width + (mx + Quiet) * ModuleSize + dx) * 4;
