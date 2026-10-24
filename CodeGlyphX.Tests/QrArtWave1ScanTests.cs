@@ -70,12 +70,14 @@ public sealed class QrArtWave1ScanTests {
 
     [Theory]
     [MemberData(nameof(BodyAndEyeCases))]
+    [Trait("Category", "CorpusTiming")]
     public void BodyAndEyes_DecodeWithStrictZxingAndLibrary_AfterResizingRotationAndBlur(QrModuleShape body, int eyeProfile) {
         AssertScanMatrix(BodyOptions(body, eyeProfile));
     }
 
     [Theory]
     [MemberData(nameof(EyePairCases))]
+    [Trait("Category", "CorpusTiming")]
     public void EyePairs_DecodeWithStrictZxingAndLibrary_AfterResizingRotationAndBlur(QrModuleShape ring, QrModuleShape ball) {
         var options = BodyOptions(QrModuleShape.Square, -1);
         options.Eyes = new QrEyeOptions { OuterShape = ring, InnerShape = ball };
@@ -85,12 +87,14 @@ public sealed class QrArtWave1ScanTests {
     [Theory]
     [Trait("ScanClassification", "DecorativeVerifyBeforePrint")]
     [MemberData(nameof(DecorativeBodyCases))]
+    [Trait("Category", "CorpusTiming")]
     public void DecorativeBodies_ReportObservedScans_AndNeverReturnADifferentPayload(QrModuleShape body, int eyeProfile) {
         ReportDecorativeScans(BodyOptions(body, eyeProfile));
     }
 
     [Fact]
     [Trait("ScanClassification", "DecorativeVerifyBeforePrint")]
+    [Trait("Category", "CorpusTiming")]
     public void DecorativeSquareRingDiamondBall_ReportsObservedScans_AndNeverReturnsADifferentPayload() {
         var options = BodyOptions(QrModuleShape.Square, -1);
         options.Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Square, InnerShape = QrModuleShape.Diamond };
@@ -99,18 +103,21 @@ public sealed class QrArtWave1ScanTests {
 
     [Theory]
     [MemberData(nameof(PresetCases))]
+    [Trait("Category", "CorpusTiming")]
     public void ArtPresets_DecodeWithStrictZxingAndLibrary_AfterResizingRotationAndBlur(QrArtTheme theme, QrArtVariant variant) {
         AssertScanMatrix(new QrRenderOptions { TargetSizePx = 1024, Art = QrArt.Theme(theme, variant) });
     }
 
     [Theory]
     [MemberData(nameof(StyleCases))]
+    [Trait("Category", "CorpusTiming")]
     public void RenderStyles_DecodeWithStrictZxingAndLibrary_AfterResizingRotationAndBlur(QrRenderStyle style) {
         AssertScanMatrix(new QrRenderOptions { TargetSizePx = 1024, Style = style });
     }
 
     [Theory]
     [MemberData(nameof(FrameCases))]
+    [Trait("Category", "CorpusTiming")]
     public void EyeFrames_DecodeWithStrictZxingAndLibrary_AfterResizingRotationAndBlur(QrEyeFrameStyle frame) {
         var options = BodyOptions(QrModuleShape.Rounded, -1);
         options.Eyes = new QrEyeOptions { UseFrame = true, FrameStyle = frame,
@@ -120,6 +127,7 @@ public sealed class QrArtWave1ScanTests {
 
     [Theory]
     [MemberData(nameof(EyePresetCases))]
+    [Trait("Category", "CorpusTiming")]
     public void EyePresets_DecodeWithStrictZxingAndLibrary_AfterResizingRotationAndBlur(string preset) {
         var options = BodyOptions(QrModuleShape.Rounded, -1);
         options.Eyes = EyePreset(preset);
@@ -128,6 +136,7 @@ public sealed class QrArtWave1ScanTests {
 
     [Theory]
     [MemberData(nameof(ArtPaletteCases))]
+    [Trait("Category", "CorpusTiming")]
     public void ArtPalettes_DecodeWithStrictZxingAndLibrary_AfterResizingRotationAndBlur(string paletteName) {
         AssertScanMatrix(PaletteOptions(paletteName));
     }

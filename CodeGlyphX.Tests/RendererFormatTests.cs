@@ -96,7 +96,8 @@ public sealed class RendererFormatTests {
         };
 
         foreach (var art in arts) {
-            var png = QR.Render(payload, OutputFormat.Png, new QrRenderOptions { Art = art }).Data.Span;
+            // Container dispatch is independent of the separately exercised native scan gate.
+            var png = QR.Render(payload, OutputFormat.Png, new QrRenderOptions { Art = art, ArtGuardrailsEnabled = false }).Data.Span;
             Assert.True(ImageReader.TryDetectFormat(png, out var format));
             Assert.Equal(ImageFormat.Png, format);
         }

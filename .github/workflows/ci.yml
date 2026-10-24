@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
     # Linux runs both full corpora; Windows also runs the .NET Framework suite.
     # Allow build and shutdown headroom for those longer validation jobs.
-    timeout-minutes: ${{ matrix.os == 'macos-latest' && 20 || 30 }}
+    timeout-minutes: ${{ matrix.os == 'windows-latest' && 45 || matrix.os == 'macos-latest' && 20 || 30 }}
     env:
       # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
       CODEGLYPHX_TEST_BUDGET_MULTIPLIER: ${{ matrix.testBudgetMultiplier }}
