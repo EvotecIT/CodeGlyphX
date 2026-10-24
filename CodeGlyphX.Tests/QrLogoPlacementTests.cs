@@ -157,6 +157,39 @@ public sealed class QrLogoPlacementTests {
 
     private static byte[] Logo() => PngImageEncoder.EncodeRgba32(new byte[] { 20, 60, 110, 255 }, 1, 1);
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(2)]
+    [InlineData(4)]
+    public void TargetSize_UsesTheProtectedQuietZone_BeforePlacingTheLogo(int quietZone) {
+        var qr = QR.Encode("BRAND", Encoding(3));
+        var appearance = new QrRenderOptions { ModuleSize = 20, QuietZone = quietZone, TargetSizePx = 300,
+            ModuleShape = QrModuleShape.Rounded };
+        var result = QrArt.RenderLogo(qr, Logo(), new QrLogoRenderOptions { Appearance = appearance });
+        ImageReader.DecodeRgba32(result.GetPng(), out var width, out var height);
+        Assert.Equal(300, width);
+        Assert.Equal(300, height);
+        var resolved = result.GetRenderOptions();
+        Assert.Equal(4, resolved.QuietZone);
+        Assert.Equal(300 / (qr.Size + 8), resolved.ModuleSize);
+        Assert.Equal("BRAND", IndependentDecode(result.GetPng()));
+        var svg = System.Xml.Linq.XElement.Parse(qr.Render(OutputFormat.Svg, resolved).GetText());
+        Assert.Equal(300, (int)svg.Attribute("width")!);
+        Assert.Equal(quietZone, appearance.QuietZone);
+        Assert.Equal(20, appearance.ModuleSize);
+        resolved.LogoPng![0] = 0;
+        resolved.QuietZone = 0;
+        Assert.Equal(4, result.GetRenderOptions().QuietZone);
+        Assert.Equal(137, result.GetRenderOptions().LogoPng![0]);
+    }
+
+    [Fact]
+    public void TargetSize_RejectsACodeThatCannotFitEvenOnePixelPerProtectedModule() {
+        var appearance = new QrRenderOptions { TargetSizePx = 21, QuietZone = 0, ModuleShape = QrModuleShape.Rounded };
+        Assert.Throws<ArgumentOutOfRangeException>(() => QrArt.RenderLogo(QR.Encode("BRAND", Encoding(3)), Logo(),
+            new QrLogoRenderOptions { Appearance = appearance }));
+    }
+
     internal static string? IndependentDecode(byte[] png) {
         var pixels = ImageReader.DecodeRgba32(png, out var width, out var height);
         var reader = new BarcodeReaderGeneric {

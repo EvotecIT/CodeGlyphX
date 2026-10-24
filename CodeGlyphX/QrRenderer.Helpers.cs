@@ -25,6 +25,12 @@ using System.Linq;
 namespace CodeGlyphX;
 
 internal static partial class QrRenderer {
+    // Use the same protected quiet zone and target-size rules as final rendering.
+    internal static void ResolveLogoSizing(QrRenderOptions options, QrCode qr) {
+        var resolved = BuildPngOptions(options, qr);
+        options.ModuleSize = resolved.ModuleSize;
+        options.QuietZone = resolved.QuietZone;
+    }
     private static QrPngRenderOptions BuildPngOptions(QrRenderOptions opts, QrCode qr) {
         var moduleCount = qr.Modules.Width;
         var render = new QrPngRenderOptions {

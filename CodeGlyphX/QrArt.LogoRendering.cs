@@ -51,8 +51,6 @@ public static partial class QrArt {
         if (logoPng.Length == 0) throw new ArgumentException("A logo PNG is required.", nameof(logoPng));
         if (design.Placement is < LogoPlacement.Auto or > LogoPlacement.CenterOverAlignment)
             throw new ArgumentOutOfRangeException(nameof(design.Placement));
-        if (design.Appearance?.TargetSizePx > 0)
-            throw new ArgumentException("Budgeted logos require integer ModuleSize sizing, without TargetSizePx.", nameof(design));
         if (design.Placement == LogoPlacement.CenterOverAlignment && design.IndependentDecoder is null)
             throw new ArgumentException("CenterOverAlignment requires an independent decoder in addition to native verification.", nameof(design));
         if (design.IndependentDecoder is not null && (string.IsNullOrWhiteSpace(design.IndependentDecoderName)
@@ -68,6 +66,8 @@ public static partial class QrArt {
             design.ReservedErrorsPerBlock, design.MinimumLogoSideModules, design.Placement);
         if (budget is null) return null;
         var render = design.Appearance is null ? new QrRenderOptions { ModuleSize = 16 } : QrRenderer.CloneOptions(design.Appearance);
+        render.LogoPng = null;
+        QrRenderer.ResolveLogoSizing(render, qr);
         render.LogoPng = (byte[])logoPng.Clone();
         render.LogoScale = budget.LogoSideModules / (double)qr.Size;
         render.LogoPaddingPx = checked(budget.PaddingModules * render.ModuleSize);
@@ -105,7 +105,7 @@ public static partial class QrArt {
         var warnings = budget.CoversAlignment
             ? new[] { "The logo covers the central alignment pattern. Native and independent decoders verified this PNG; verify the intended printed or camera workflow separately." }
             : Array.Empty<string>();
-        return new QrLogoComposition(qr, budget, png, warnings, decoders.ToArray());
+        return new QrLogoComposition(qr, budget, png, warnings, decoders.ToArray(), render);
     }
 
     // Match the renderer's nearest-neighbor logo sampling so sparse/transparent artwork

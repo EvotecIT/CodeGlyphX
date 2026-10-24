@@ -169,6 +169,8 @@ File.WriteAllBytes("brand.png", result.GetPng());
 
 `QrArt.FitLogo` exposes the pattern-preserving placement calculation separately. Use its X/Y coordinates as well as its size; the logo may move slightly to avoid alignment patterns. The result counts both data and parity codewords and reserves two additional unknown errors per block by default.
 
+`RenderLogo` also accepts `Appearance.TargetSizePx`: it resolves the protected quiet zone before choosing the integer module size and logo offsets. `result.GetRenderOptions()` returns an independent copy of that resolved appearance for another export, such as `result.Symbol.Render(OutputFormat.Svg, result.GetRenderOptions())`. The recorded decoder results cover the original PNG; check final delivery assets separately.
+
 `LogoPlacement.CenterOverAlignment` is an explicit brand-first option for `RenderLogo`. It requires both native validation and a caller-supplied decoder from a different implementation, configured through `IndependentDecoder` and `IndependentDecoderName`. A verified result includes a warning when alignment is covered and names the decoders that checked the PNG. The library ships no external decoder. Coding margins and software decodes do not replace testing the final asset on the intended phones and printed media.
 ### Choose a coordinated look
 
