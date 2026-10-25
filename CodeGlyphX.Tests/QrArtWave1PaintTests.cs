@@ -265,12 +265,15 @@ public sealed class QrArtWave1PaintTests {
             "RetroTarget" => QrEyePresets.RetroTarget(),
             _ => throw new System.ArgumentOutOfRangeException(nameof(name))
         };
+        eyes.SparkleSeed = eyes.AccentRingSeed = eyes.AccentRaySeed = eyes.AccentStripeSeed = 42;
         var qr = QR.Encode("PRESET-EXPORT-PARITY");
-        var options = new QrPngRenderOptions { ModuleSize = 8, ModuleShape = QrModuleShape.Rounded, Eyes = eyes };
+        var options = new QrPngRenderOptions { ModuleSize = 8, ModuleShape = QrModuleShape.Rounded, Eyes = eyes,
+            Canvas = new QrCanvasOptions { PaddingPx = 32, Background = new Rgba32(40, 45, 55) } };
         var expected = Read(qr.Modules, options);
         var svg = XElement.Parse(SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
         Assert.DoesNotContain(svg.Descendants(), element => element.Name.LocalName == "image");
-        AssertVectorPixels(svg, qr.Size, expected);
+        var canvasModules = 2 * options.Canvas!.PaddingPx / options.ModuleSize;
+        AssertVectorPixels(svg, qr.Size + canvasModules, expected);
     }
     [Theory]
     [InlineData(148102321, 4)]
