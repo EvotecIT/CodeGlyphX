@@ -1282,7 +1282,9 @@ public static partial class QrPngRenderer {
     private static QrCanvasOptions? ScaleCanvas(QrCanvasOptions? canvas, int scale) {
         if (canvas is null) return null;
         return new QrCanvasOptions {
-            PaddingPx = canvas.PaddingPx * scale,
+            Caption = canvas.Caption?.Copy(scale),
+            Template = canvas.Template,
+            PaddingPx = CaptionCanvasPadding(canvas) * scale,
             CornerRadiusPx = canvas.CornerRadiusPx * scale,
             Background = canvas.Background,
             BackgroundGradient = canvas.BackgroundGradient,

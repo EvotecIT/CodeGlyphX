@@ -282,6 +282,32 @@ The [expressive-art example](https://github.com/EvotecIT/CodeGlyphX/blob/master/
 | Waves | Geometric | Earth photograph |
 | ![Waves composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-waves.png) | ![Geometric composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-geometric.png) | ![Earth composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-earth.png) |
 
+### Captions and call-to-action frames
+
+Canvas captions sit above or below the complete QR quiet zone. Choose `ScanMePill`, `SpeechBubble`, `TicketStub`, `PhoneOutline`, `RoundedCardHeader` or `CornerViewfinder`; each template replaces the independent canvas frame, band, badge and border so the result has one framing treatment.
+
+```csharp
+var appearance = new QrRenderOptions {
+    ModuleSize = 16,
+    QuietZone = 4,
+    Canvas = new QrCanvasOptions {
+        Template = QrCanvasTemplate.ScanMePill,
+        Caption = new QrCanvasCaptionOptions {
+            Text = "Scan to explore",
+            Position = QrCanvasCaptionPosition.Bottom,
+            FontSizePx = 28,
+            Weight = QrCanvasCaptionWeight.Bold
+        }
+    }
+};
+QR.Save("https://example.com", "scan-me.png", appearance);
+QR.Save("https://example.com", "scan-me.svg", appearance);
+```
+
+PNG and canonical SVG share the same managed text outlines and pixel coverage. Captions use the embedded Scan B font by default; assign `BarcodeFont.FromBytes(...)` to `Caption.Font` for another licensed face and its supported Unicode characters. Unsupported glyphs or shaping fail clearly by default. Set `Caption.Color` explicitly or leave it null for contrasting template text; `Canvas.Frame.Color` supplies the template accent. Regular and synthetic bold weights require no installed fonts or graphics services.
+
+Captions contain one line of at most 256 UTF-16 characters. Requested sizes are 8–256 pixels and caption padding is 4–256 pixels. Long text shrinks to fit; a line that would fall below 8 pixels is rejected. Templates reserve at least 32 pixels of canvas padding outside the quiet zone. Software decoding does not establish phone-camera or printed acceptance; the legacy native image recognizer has limited support for decorated canvases. On legacy runtimes, guarded rendering can throw a native-validation failure for these templates. Explicitly setting `ArtGuardrailsEnabled = false` permits rendering for separate exported-image validation; it does not certify native recognition.
+
 ### Protect a subject and compare artistic alternatives
 
 ![Engraving, halftone, contour, mosaic and botanical QR treatments](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-art-studio-styles.png)

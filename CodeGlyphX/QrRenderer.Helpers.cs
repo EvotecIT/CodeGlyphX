@@ -321,7 +321,9 @@ internal static partial class QrRenderer {
     }
 
     private static bool HasCanvasArt(QrCanvasOptions? canvas) {
-        return canvas?.Splash is not null
+        return canvas?.Caption is not null
+            || (canvas is not null && canvas.Template != QrCanvasTemplate.None)
+            || canvas?.Splash is not null
             || canvas?.Halo is not null
             || canvas?.Pattern is not null
             || canvas?.Vignette is not null

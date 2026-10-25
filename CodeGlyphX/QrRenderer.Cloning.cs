@@ -221,6 +221,8 @@ internal static partial class QrRenderer {
     internal static QrCanvasOptions? CloneCanvas(QrCanvasOptions? canvas) {
         if (canvas is null) return null;
         return new QrCanvasOptions {
+            Caption = canvas.Caption?.Copy(),
+            Template = canvas.Template,
             PaddingPx = canvas.PaddingPx,
             CornerRadiusPx = canvas.CornerRadiusPx,
             Background = canvas.Background,
