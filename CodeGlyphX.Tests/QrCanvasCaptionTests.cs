@@ -22,6 +22,52 @@ public sealed class QrCanvasCaptionTests {
             foreach (QrCanvasCaptionPosition position in Enum.GetValues(typeof(QrCanvasCaptionPosition)))
                 yield return new object[] { template, position };
     }
+    public static IEnumerable<object[]> CaptionGeometryCases() {
+        foreach (var frame in Templates())
+            foreach (var padding in new[] { 4, 16 })
+                foreach (var supersample in new[] { 1, 3 })
+                    yield return new[] { frame[0], frame[1], padding, supersample };
+    }
+
+    [Theory]
+    [MemberData(nameof(CaptionGeometryCases))]
+    public void Captions_ClearFrameStrokes_AndStayInsideFilledBands(QrCanvasTemplate template,
+        QrCanvasCaptionPosition position, int captionPadding, int supersample) {
+        var qr = QR.Encode(Payload);
+        var options = Options(template, position);
+        options.BackgroundSupersample = supersample;
+        options.Canvas!.Frame = new QrCanvasFrameOptions { Color = new Rgba32(0, 0, 255) };
+        options.Canvas.Caption!.Text = "SCAN ME";
+        options.Canvas.Caption.FontSizePx = 28;
+        options.Canvas.Caption.PaddingPx = captionPadding;
+        options.Canvas.Caption.Color = new Rgba32(255, 0, 255);
+        var actual = QrPngRenderer.RenderPixels(qr.Modules, options, out var width, out var height, out _);
+        options.Canvas.Caption.Color = Rgba32.Transparent;
+        var frame = QrPngRenderer.RenderPixels(qr.Modules, options, out var frameWidth, out var frameHeight, out _);
+        Assert.Equal(width, frameWidth);
+        Assert.Equal(height, frameHeight);
+        var textPixels = new List<(int X, int Y)>();
+        for (var y = 0; y < height; y++) for (var x = 0; x < width; x++) {
+            var p = (y * width + x) * 4;
+            if (actual[p] > actual[p + 1]) textPixels.Add((x, y));
+        }
+        Assert.NotEmpty(textPixels);
+        bool IsFrame(int x, int y) {
+            var p = (y * width + x) * 4;
+            return frame[p + 2] > frame[p] && frame[p + 2] > frame[p + 1];
+        }
+        if (template is QrCanvasTemplate.ScanMePill or QrCanvasTemplate.SpeechBubble or QrCanvasTemplate.RoundedCardHeader) {
+            Assert.All(textPixels, point => Assert.True(IsFrame(point.X, point.Y), "Caption ink must stay inside its filled band."));
+        } else {
+            var clearance = template == QrCanvasTemplate.PhoneOutline ? 4 : 0;
+            var left = Math.Max(0, textPixels.Min(point => point.X) - clearance);
+            var right = Math.Min(width - 1, textPixels.Max(point => point.X) + clearance);
+            var top = Math.Max(0, textPixels.Min(point => point.Y) - clearance);
+            var bottom = Math.Min(height - 1, textPixels.Max(point => point.Y) + clearance);
+            for (var y = top; y <= bottom; y++) for (var x = left; x <= right; x++)
+                Assert.False(IsFrame(x, y), $"{template}/{position}: frame stroke at {x},{y} enters the caption's protected area (gap={clearance}).");
+        }
+    }
     private static QrPngRenderOptions Options(QrCanvasTemplate template, QrCanvasCaptionPosition position) => new() {
         ModuleSize = 10, QuietZone = 4,
         Canvas = new QrCanvasOptions { PaddingPx = 32, Template = template,

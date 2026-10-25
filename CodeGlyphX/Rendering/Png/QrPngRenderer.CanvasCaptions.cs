@@ -8,6 +8,14 @@ public static partial class QrPngRenderer {
     private static int CaptionCanvasPadding(QrCanvasOptions canvas) => canvas.Template == QrCanvasTemplate.None
         ? canvas.PaddingPx : Math.Max(canvas.PaddingPx, 32);
 
+    private static int PhoneCaptionInset(QrCanvasOptions canvas) {
+        if (canvas.Template != QrCanvasTemplate.PhoneOutline || canvas.Caption is null) return 0;
+        var stroke = Math.Max(2, CaptionCanvasPadding(canvas) / 10);
+        var gap = Math.Max(4 * canvas.Caption.RasterScale, canvas.Caption.PaddingPx / 2);
+        // Bars occupy the second-to-third stroke from the inner frame edge.
+        return checked(stroke * 3 + gap);
+    }
+
     private static int CaptionCanvasHeight(QrCanvasOptions canvas) {
         var caption = canvas.Caption;
         if (caption is null || caption.Text.Length == 0) return 0;
@@ -15,7 +23,7 @@ public static partial class QrPngRenderer {
         var height = Math.Ceiling(Math.Max(shape.InkBounds.Height, caption.FontSizePx) + caption.FontSizePx * .04);
         if (height > 4096) throw new ArgumentException("Caption font metrics exceed the supported height.");
         var strip = checked((int)height + caption.PaddingPx * 2);
-        return canvas.Template == QrCanvasTemplate.None ? strip : Math.Max(strip, CaptionCanvasPadding(canvas));
+        return checked((canvas.Template == QrCanvasTemplate.None ? strip : Math.Max(strip, CaptionCanvasPadding(canvas))) + PhoneCaptionInset(canvas));
     }
 
     private static void DrawCaptionCanvas(byte[] pixels, int width, int height, int stride, QrCanvasOptions canvas,
@@ -98,7 +106,9 @@ public static partial class QrPngRenderer {
         var layout = new BarcodePrintLayout(null, 254, .1, new BarcodeBounds(0, 0, tw / 10D, th / 10D), paths,
             new List<BarcodePrintText>(), new List<BarcodePrintFinding>(), BarcodePaint.Solid(Rgba32.Transparent));
         var textPixels = BarcodePrintRasterizer.Render(layout, null, out var rw, out var rh);
-        var tx = x + (w - tw) / 2; var ty = sy + (strip - th) / 2;
+        var inset = PhoneCaptionInset(canvas);
+        var textStripY = sy + (top ? inset : 0);
+        var tx = x + (w - tw) / 2; var ty = textStripY + (strip - inset - th) / 2;
         for (var py = 0; py < rh; py++) for (var px = 0; px < rw; px++) {
             var at = (py * rw + px) * 4;
             if (tx + px < 0 || ty + py < 0 || tx + px >= width || ty + py >= height) continue;
