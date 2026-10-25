@@ -25,6 +25,12 @@ using System.Linq;
 namespace CodeGlyphX;
 
 internal static partial class QrRenderer {
+    // Use the same protected quiet zone and target-size rules as final rendering.
+    internal static void ResolveLogoSizing(QrRenderOptions options, QrCode qr) {
+        var resolved = BuildPngOptions(options, qr);
+        options.ModuleSize = resolved.ModuleSize;
+        options.QuietZone = resolved.QuietZone;
+    }
     private static QrPngRenderOptions BuildPngOptions(QrRenderOptions opts, QrCode qr) {
         var moduleCount = qr.Modules.Width;
         var render = new QrPngRenderOptions {
@@ -162,6 +168,8 @@ internal static partial class QrRenderer {
         if (opts.LogoPng is null || opts.LogoPng.Length == 0) return null;
         var logo = QrRasterLogoOptions.FromPng(opts.LogoPng);
         logo.Scale = opts.LogoScale;
+        logo.OffsetXPx = opts.LogoOffsetXPx;
+        logo.OffsetYPx = opts.LogoOffsetYPx;
         logo.PaddingPx = opts.LogoPaddingPx;
         logo.DrawBackground = opts.LogoDrawBackground;
         logo.Background = opts.LogoBackground ?? opts.Background;
@@ -173,6 +181,8 @@ internal static partial class QrRenderer {
         if (opts.LogoPng is null || opts.LogoPng.Length == 0) return null;
         return new QrLogoOptions(opts.LogoPng) {
             Scale = opts.LogoScale,
+            OffsetXPx = opts.LogoOffsetXPx,
+            OffsetYPx = opts.LogoOffsetYPx,
             PaddingPx = opts.LogoPaddingPx,
             DrawBackground = opts.LogoDrawBackground,
             Background = opts.LogoBackground ?? opts.Background,

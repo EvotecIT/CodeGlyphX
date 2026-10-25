@@ -786,6 +786,16 @@ pre.code-block > .copy-btn.copied { color: var(--good); }
 .style-board-card img { display: block; width: 100%; height: auto; border-radius: 9px; }
 .style-board-label { margin-top: 10px; color: var(--ink); font-size: .875rem; font-weight: 600; }
 .style-board-fallback { padding: 16px; color: var(--ink-muted); }
+.cgx-hero-presets { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 24px; }
+.cgx-hero-presets .style-board-card { padding: 20px; min-width: 0; }
+.cgx-hero-presets h3 { margin: 0; }
+.cgx-hero-presets p { margin: 6px 0 16px; color: var(--ink-muted); }
+.cgx-hero-presets__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.cgx-hero-presets__pair figure { margin: 0; }
+.cgx-hero-presets__pair figcaption { margin-top: 8px; color: var(--ink-muted); font-size: .8125rem; }
+.cgx-hero-presets details { margin-top: 20px; }
+.cgx-hero-presets summary { cursor: pointer; min-height: 32px; }
+.cgx-hero-presets pre { overflow-x: auto; font-size: .8125rem; }
 @media (max-width: 520px) { .style-board-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
 
 .cgx-callout { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 40px; padding: clamp(24px, 3vw, 36px); border: 1px solid var(--line); border-radius: var(--cgx-radius); background: var(--surface); }

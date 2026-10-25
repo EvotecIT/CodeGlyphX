@@ -36,6 +36,8 @@ internal static partial class QrRenderer {
             Debug = CloneDebug(opts.Debug),
             LogoPng = opts.LogoPng is null ? null : (byte[])opts.LogoPng.Clone(),
             LogoScale = opts.LogoScale,
+            LogoOffsetXPx = opts.LogoOffsetXPx,
+            LogoOffsetYPx = opts.LogoOffsetYPx,
             LogoPaddingPx = opts.LogoPaddingPx,
             LogoDrawBackground = opts.LogoDrawBackground,
             LogoBackground = opts.LogoBackground,

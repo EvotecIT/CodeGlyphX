@@ -168,6 +168,12 @@ public sealed class QrRenderOptions {
     /// </summary>
     public double LogoScale { get; set; } = 0.20;
 
+    /// <summary>Optional logo left offset in pixels from the QR core, excluding the quiet zone.</summary>
+    public int? LogoOffsetXPx { get; set; }
+
+    /// <summary>Optional logo top offset in pixels from the QR core, excluding the quiet zone.</summary>
+    public int? LogoOffsetYPx { get; set; }
+
     /// <summary>
     /// Padding around the logo in pixels.
     /// </summary>

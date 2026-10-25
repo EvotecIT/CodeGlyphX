@@ -145,6 +145,44 @@ QR.Save("https://example.com", "ink.svg", ink,
 `DotGrid`, `Plus`, `Star` and `Heart` are decorative – verify before print. They are not scan-safe preset choices. A shape's appearance alone does not establish that a particular eye/body/palette combination survives reduction, blur or rotation. Guarded rendering preserves the selected body shape while keeping ink dark on a light QR background and limiting disruptive textures. It also checks the canonical appearance pixels with CodeGlyphX's native Balanced decoder, without transforms or stylized sampling, and compares the recovered payload with the encoded symbol. If decoding fails or exceeds its cooperative one-second budget, rendering throws; increase the output size or simplify the artwork. This check does not certify lossy exports, resized images or printed output. Legacy targets use the limited managed decoder and can reject artwork accepted on newer targets; the check fails closed on those targets too. Set `ArtGuardrailsEnabled = false` only when deliberately producing an unguarded composition for separate verification. Independent ZXing comparisons run in the test suite; they add no runtime dependency.
 
 SVG and SVGZ accept the same high-level body, eye, canvas, palette and pattern options as PNG. Styled exports contain coloured vector coverage contours, with no embedded QR bitmap. Those contours preserve the selected raster resolution; select an appropriate `TargetSizePx` or `ModuleSize` before exporting for print. The HTML table renderer retains its narrower appearance support.
+### Place a logo without losing functional patterns
+
+`QrArt.RenderLogo` keeps a requested logo visible. `LogoPlacement.Auto` finds the largest pattern-free area whose center stays in the central third of the symbol, preferring the placement nearest the center. Padding is included in the correction budget for each Reed-Solomon block. It throws when the requested minimum readable size cannot fit. Version and correction-level increases are optional and remain within the supplied encoding limits.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering.Art;
+using System.IO;
+
+var result = QrArt.RenderLogo("https://example.com", File.ReadAllBytes("logo.png"),
+    new QrLogoRenderOptions {
+        Placement = LogoPlacement.Auto,
+        MinimumLogoSideModules = 5,
+        AllowErrorCorrectionUpgrade = true,
+        AllowVersionUpgrade = true
+    },
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MaxVersion = 10 });
+File.WriteAllBytes("brand.png", result.GetPng());
+// result.Symbol reports the actual version and correction level.
+// result.Budget reports coordinates, logo modules, blocks touched and remaining margins.
+```
+
+`QrArt.FitLogo` exposes the pattern-preserving placement calculation separately. Use its X/Y coordinates as well as its size; the logo may move slightly to avoid alignment patterns. The result counts both data and parity codewords and reserves two additional unknown errors per block by default.
+
+`RenderLogo` also accepts `Appearance.TargetSizePx`: it resolves the protected quiet zone before choosing the integer module size and logo offsets. `result.GetRenderOptions()` returns an independent copy of that resolved appearance for another export, such as `result.Symbol.Render(OutputFormat.Svg, result.GetRenderOptions())`. The recorded decoder results cover the original PNG; check final delivery assets separately.
+
+`LogoPlacement.CenterOverAlignment` is an explicit brand-first option for `RenderLogo`. It requires both native validation and a caller-supplied decoder from a different implementation, configured through `IndependentDecoder` and `IndependentDecoderName`. A verified result includes a warning when alignment is covered and names the decoders that checked the PNG. The library ships no external decoder. Coding margins and software decodes do not replace testing the final asset on the intended phones and printed media.
+### Choose a coordinated look
+
+`QrArt.Hero` returns editable options for Ink, Dot Matrix, Sunset, Ocean, Mono Classy, Brand, Neon, Paper Cutout, Retro Pixel, Minimal Line, Botanical and Berry. Each look has a light and a dark-panel variant; the QR itself stays dark on a light background. `QrArt.DescribeHero` gives a short suggested use.
+
+```csharp
+var appearance = QrArt.Hero(QrHeroPreset.Sunset, darkPanel: true);
+QR.Save("https://example.com/menu", "menu.png", appearance,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+```
+
+For Brand, pass the returned options as `QrLogoRenderOptions.Appearance` to `QrArt.RenderLogo` along with your logo. The placement result describes the exported PNG. Check the final output on the phones and printed media you intend to use.
 
 ### Colorful QR gallery
 
