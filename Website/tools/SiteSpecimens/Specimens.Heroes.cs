@@ -36,10 +36,11 @@ internal static class HeroSpecimens {
                 variants.Add(new { name = dark ? "Dark panel" : "Light", src = "/assets/hero-presets/" + file, width, height, decoded = payload, budget });
             }
             var code = preset == QrHeroPreset.Brand
-                ? "var appearance = QrArt.Hero(QrHeroPreset.Brand);\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\",\n    File.ReadAllBytes(\"logo.png\"),\n    new QrLogoRenderOptions { Appearance = appearance });\nFile.WriteAllBytes(\"brand.png\", result.GetPng());"
+                ? "var appearance = QrArt.Hero(QrHeroPreset.Brand);\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\",\n    File.ReadAllBytes(\"logo.png\"),\n    new CodeGlyphX.Rendering.Art.QrLogoRenderOptions { Appearance = appearance });\nFile.WriteAllBytes(\"brand.png\", result.GetPng());"
                 : $"var appearance = QrArt.Hero(QrHeroPreset.{preset});\nQR.Save(\"https://codeglyphx.com\", \"qr.png\", appearance,\n    new QrEncodingOptions {{ ErrorCorrectionLevel = QrErrorCorrectionLevel.H }});";
             presets.Add(new { id = preset.ToString().ToLowerInvariant(), name = DisplayName(preset), description = QrArt.DescribeHero(preset), variants, code });
         }
+        Directory.CreateDirectory(Path.Combine(website, "data"));
         File.WriteAllText(Path.Combine(website, "data", "hero-presets.json"),
             JsonSerializer.Serialize(new { presets }, new JsonSerializerOptions { WriteIndented = true }) + "\n", new UTF8Encoding(false));
         Console.WriteLine("Rendered and native-validated 24 curated QR specimens.");

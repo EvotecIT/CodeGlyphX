@@ -8,7 +8,7 @@ using CodeGlyphX.Printing;
 using CodeGlyphX.Website.Specimens;
 using CodeGlyphX.Rendering;
 
-var website = Path.GetFullPath(args.Length > 0 ? args[0] : "Website");
+var website = Path.GetFullPath(args.FirstOrDefault(arg => !arg.StartsWith("-", StringComparison.Ordinal)) ?? "Website");
 HeroSpecimens.Render(website);
 if (args.Contains("--heroes-only", StringComparer.Ordinal)) return;
 var output = Path.Combine(website, "static", "specimens");

@@ -180,7 +180,7 @@
           }
         }
       ],
-      "code": "var appearance = QrArt.Hero(QrHeroPreset.Brand);\nvar result = QrArt.RenderLogo(\u0022https://codeglyphx.com\u0022,\n    File.ReadAllBytes(\u0022logo.png\u0022),\n    new QrLogoRenderOptions { Appearance = appearance });\nFile.WriteAllBytes(\u0022brand.png\u0022, result.GetPng());"
+      "code": "var appearance = QrArt.Hero(QrHeroPreset.Brand);\nvar result = QrArt.RenderLogo(\u0022https://codeglyphx.com\u0022,\n    File.ReadAllBytes(\u0022logo.png\u0022),\n    new CodeGlyphX.Rendering.Art.QrLogoRenderOptions { Appearance = appearance });\nFile.WriteAllBytes(\u0022brand.png\u0022, result.GetPng());"
     },
     {
       "id": "neon",
