@@ -288,6 +288,37 @@ public sealed class QrArtWave1PaintTests {
             QrPngRenderer.RenderPixels(modules, options, out _, out _, out _));
         Assert.Equal(nameof(QrPngRenderOptions.ModuleSize), error.ParamName);
     }
+    public static System.Collections.Generic.IEnumerable<object[]> ArtPresetExportCases() {
+        foreach (var theme in System.Enum.GetValues<QrArtTheme>())
+            foreach (var variant in System.Enum.GetValues<QrArtVariant>())
+                yield return new object[] { theme, variant };
+    }
+
+    [Theory]
+    [MemberData(nameof(ArtPresetExportCases))]
+    public void ArtPresets_PreserveCompleteCanvasAndPaintInVectorExport(QrArtTheme theme, QrArtVariant variant) {
+        var qr = QR.Encode("THEME-EXPORT-PARITY");
+        // This checks export coverage independently of the timed native scan gate.
+        var options = new QrRenderOptions {
+            TargetSizePx = 256, Art = QrArt.Theme(theme, variant), ArtGuardrailsEnabled = false
+        };
+        var png = PngTestDecoder.DecodeRgba32(qr.Render(OutputFormat.Png, options).Data.ToArray());
+        var svg = XElement.Parse(qr.Render(OutputFormat.Svg, options).GetText());
+        Assert.Equal(png.width, (int)svg.Attribute("width")!);
+        Assert.Equal(png.height, (int)svg.Attribute("height")!);
+        Assert.DoesNotContain(svg.Descendants(), element => element.Name.LocalName == "image");
+        // Use pixel coordinates for the complete canvas, including any shadow or padding.
+        var sample = RenderingContractRegressionTests.ReadVectorCoverage(svg, png.width - 8);
+        var vector = new byte[png.rgba.Length];
+        for (var y = 0; y < png.height; y++) for (var x = 0; x < png.width; x++) {
+            var color = sample(x + 0.5, y + 0.5);
+            var p = (y * png.width + x) * 4;
+            vector[p] = color.R; vector[p + 1] = color.G; vector[p + 2] = color.B; vector[p + 3] = color.A;
+        }
+        Assert.Equal(png.rgba, vector);
+        Assert.Equal(theme, options.Art!.Theme);
+        Assert.Equal(variant, options.Art.Variant);
+    }
     private sealed record PaintImage(byte[] Pixels, int Width, int Height, int ModuleSize, int Quiet) {
         internal Rgba32 Sample(int mx, int my, int dx, int dy) {
             var p = (((my + Quiet) * ModuleSize + dy) * Width + (mx + Quiet) * ModuleSize + dx) * 4;
