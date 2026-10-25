@@ -7,7 +7,11 @@ public enum QrImageCompositionStyle {
     /// <summary>Adjust every image pixel to its module polarity, with a small high-contrast center.</summary>
     ColorModules,
     /// <summary>Reveal more of the image around contrasting square module centers.</summary>
-    ImageOverlay
+    ImageOverlay,
+    /// <summary>Dither the supplied image into 3 by 3 sub-cells per module, forcing the centre sub-cell to the encoded bit.</summary>
+    Halftone3x3,
+    /// <summary>Keep the source image behind opaque, contrasting data-module centres.</summary>
+    ImageBackground
 }
 
 /// <summary>How a source image fits its square composition area.</summary>
@@ -23,7 +27,7 @@ public enum QrImageFit {
 /// and the quiet zone remains uniformly light (white by default). These constraints do not guarantee camera readability.
 /// </summary>
 public sealed class QrImageCompositionOptions {
-    /// <summary>Pixels per module (6..64); defaults to 12.</summary>
+    /// <summary>Pixels per module (6..64); defaults to 12. Halftone3x3 requires a multiple of three.</summary>
     public int ModuleSize { get; set; } = 12;
 
     /// <summary>Uniform light border in modules (4..16), white by default.</summary>
@@ -43,7 +47,7 @@ public sealed class QrImageCompositionOptions {
 
     /// <summary>
     /// Width of the protected square center relative to a data module (0.5..1).
-    /// Used only by overlay mode when Art is null; rounded up to a centered whole-pixel footprint.
+    /// Used by overlay and image-background modes when Art is null; rounded up to a centered whole-pixel footprint.
     /// </summary>
     public double CenterSize { get; set; } = 0.6;
 
@@ -75,9 +79,13 @@ public sealed class QrImageCompositionOptions {
         QrImageCanvasOptions.ValidatePosition(ImagePositionY, nameof(ImagePositionY));
         if (double.IsNaN(ImageZoom) || ImageZoom < 1 || ImageZoom > 4) throw new ArgumentOutOfRangeException(nameof(ImageZoom));
         if (ModuleSize is < 6 or > 64) throw new ArgumentOutOfRangeException(nameof(ModuleSize));
+        if (Style == QrImageCompositionStyle.Halftone3x3 && ModuleSize % 3 != 0)
+            throw new ArgumentException("Halftone3x3 needs a module size divisible by three for equal sub-cells.", nameof(ModuleSize));
         if (QuietZone is < 4 or > 16) throw new ArgumentOutOfRangeException(nameof(QuietZone));
-        if (Style != QrImageCompositionStyle.ColorModules && Style != QrImageCompositionStyle.ImageOverlay)
+        if (Style is < QrImageCompositionStyle.ColorModules or > QrImageCompositionStyle.ImageBackground)
             throw new ArgumentOutOfRangeException(nameof(Style));
+        if ((Style == QrImageCompositionStyle.Halftone3x3 || Style == QrImageCompositionStyle.ImageBackground) && Art is not null)
+            throw new ArgumentException("Image sub-cell and background treatments cannot be combined with module silhouettes.", nameof(Art));
         if (Fit != QrImageFit.Cover && Fit != QrImageFit.Contain) throw new ArgumentOutOfRangeException(nameof(Fit));
         if (double.IsNaN(Strength) || Strength < 0 || Strength > 1) throw new ArgumentOutOfRangeException(nameof(Strength));
         if (double.IsNaN(CenterSize) || CenterSize < 0.5 || CenterSize > 1) throw new ArgumentOutOfRangeException(nameof(CenterSize));

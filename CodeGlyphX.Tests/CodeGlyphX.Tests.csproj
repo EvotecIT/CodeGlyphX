@@ -90,6 +90,8 @@
     <Compile Include="TestHelpers/SvgCoverageTestReader.cs" />
     <Compile Include="QrLogoBudgetTests.cs" />
     <Compile Include="QrLogoPlacementTests.cs" />
+    <Compile Include="QrFallbackFinderTests.cs" />
+    <Compile Include="QrPhotoTreatmentTests.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="EncodingContractRegressionTests.cs" />
