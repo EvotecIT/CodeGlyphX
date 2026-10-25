@@ -75,6 +75,16 @@ internal static partial class QrRenderer {
         if (logo is not null) render.Logo = logo;
 
         ApplyArtGuardrails(qr, render, opts);
+        if (opts.ArtGuardrailsEnabled && HasArtHints(render, opts)) NormalizeFinderContrast(render);
+        if (opts.TargetSizePx > 0) {
+            var targetModules = moduleCount + (opts.TargetSizeIncludesQuietZone ? render.QuietZone * 2 : 0);
+            if (opts.TargetSizePx < targetModules)
+                throw new ArgumentOutOfRangeException(nameof(opts.TargetSizePx), "Target size must allow at least one pixel per module.");
+            render.ModuleSize = opts.TargetSizePx / targetModules;
+            if (render.Canvas is null)
+                render.ExactSizePx = opts.TargetSizeIncludesQuietZone ? opts.TargetSizePx
+                    : checked(opts.TargetSizePx + render.QuietZone * render.ModuleSize * 2);
+        }
 
         return render;
     }
@@ -87,8 +97,9 @@ internal static partial class QrRenderer {
     }
 
     private static QrSvgRenderOptions BuildSvgOptions(QrRenderOptions opts, QrCode qr) {
-        var styled = BuildPngOptions(opts, qr);
+        var styled = BuildGuardedPngOptions(opts, qr);
         return new QrSvgRenderOptions {
+            Appearance = styled,
             ModuleSize = styled.ModuleSize, QuietZone = styled.QuietZone,
             DarkColor = ToCss(styled.Foreground), LightColor = ToCss(styled.Background),
             ModuleShape = styled.ModuleShape, ModuleScale = styled.ModuleScale,
@@ -288,6 +299,9 @@ internal static partial class QrRenderer {
 
     private static bool HasArtHints(QrPngRenderOptions render, QrRenderOptions opts) {
         return opts.Art is not null
+            || render.ModuleShape != QrModuleShape.Square || render.Eyes is not null
+            || render.ForegroundGradient is not null || render.ForegroundPalette is not null
+            || render.ModuleScaleMap is not null
             || render.ForegroundPattern is not null
             || render.ModuleShapeMap is not null
             || render.ModuleJitter is not null
@@ -326,7 +340,7 @@ internal static partial class QrRenderer {
         ApplyEyeArtGuardrails(render, guardrailMode);
 
         var report = QrArtHeuristics.Evaluate(qr, render);
-        if (HasLowContrastWarnings(report)) {
+        if (HasLowContrastWarnings(report) && !HasTranslucentArtPaint(render)) {
             ApplyLowContrastFallback(render);
             report = QrArtHeuristics.Evaluate(qr, render);
         }
@@ -347,7 +361,6 @@ internal static partial class QrRenderer {
             _ => 0.86,
         };
 
-        render.ModuleShape = MapToConnectedShape(render.ModuleShape);
         render.ModuleScale = Math.Max(render.ModuleScale, minScale);
 
         if (render.ModuleScaleMap is not null) {
@@ -521,20 +534,6 @@ internal static partial class QrRenderer {
 
     private static Rgba32? CapAlpha(Rgba32? color, byte alphaCap) {
         return color is null ? null : WithAlpha(color.Value, Math.Min(color.Value.A, alphaCap));
-    }
-
-    private static QrModuleShape MapToConnectedShape(QrModuleShape shape) {
-        return shape switch {
-            QrModuleShape.Rounded => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Squircle => QrModuleShape.ConnectedSquircle,
-            QrModuleShape.Circle => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Dot => QrModuleShape.ConnectedRounded,
-            QrModuleShape.DotGrid => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Leaf => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Wave => QrModuleShape.ConnectedRounded,
-            QrModuleShape.Blob => QrModuleShape.ConnectedRounded,
-            _ => shape,
-        };
     }
 
     private static double Clamp01(double value) => Clamp(value, 0, 1);

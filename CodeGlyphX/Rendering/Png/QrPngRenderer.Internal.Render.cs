@@ -32,9 +32,15 @@ public static partial class QrPngRenderer {
         opts.Debug?.Validate();
 
         var size = modules.Width;
+        var sideModules = (long)size + (long)opts.QuietZone * 2;
+        if (sideModules > int.MaxValue / (long)opts.ModuleSize) {
+            throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize), "QR dimensions exceed the supported pixel dimensions.");
+        }
         ComputeLayout(size, opts, out widthPx, out heightPx, out _, out _, out _, out _);
-        stride = widthPx * 4;
-        return heightPx * (stride + 1);
+        const string limitMessage = "QR rendering exceeds output limits.";
+        RenderGuards.EnsureOutputPixels(widthPx, heightPx, limitMessage);
+        stride = RenderGuards.EnsureOutputBytes((long)widthPx * 4, limitMessage);
+        return RenderGuards.EnsureOutputBytes((long)heightPx * (stride + 1L), limitMessage);
     }
 
     internal static byte[] RenderScanlines(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
@@ -125,7 +131,8 @@ public static partial class QrPngRenderer {
         var functionMask = opts.ProtectFunctionalPatterns && QrStructureAnalysis.TryGetVersionFromSize(size, out var version)
             ? QrStructureAnalysis.BuildFunctionMask(version, size)
             : null;
-        var useFrame = opts.Eyes is not null && opts.Eyes.UseFrame;
+        var useFrame = QrStructureAnalysis.TryGetVersionFromSize(size, out _) && HasStandardFinders(modules);
+        var alignmentCenters = useFrame ? GetStyledAlignmentCenters(size) : new List<(int X, int Y)>();
         var background = opts.Background;
         var gradientInfo = opts.ForegroundGradient is null
             ? (GradientInfo?)null
@@ -142,7 +149,7 @@ public static partial class QrPngRenderer {
         // Eye detection is needed for styling decisions (eyes/palettes/scale maps),
         // but we keep it decoupled from functional protection so gradients can still
         // apply to eyes when no eye-specific styling is configured.
-        var detectEyesForStyling = opts.Eyes is not null
+        var detectEyesForStyling = useFrame || opts.Eyes is not null
             || paletteInfo.HasValue
             || zoneInfo.HasValue
             || scaleMapInfo.HasValue
@@ -156,7 +163,7 @@ public static partial class QrPngRenderer {
 
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
-                if (!modules[mx, my]) continue;
+                if (!modules[mx, my] || IsStyledAlignmentCell(mx, my, alignmentCenters)) continue;
                 var eyeKind = EyeKind.None;
                 var eyeX = 0;
                 var eyeY = 0;
@@ -173,7 +180,7 @@ public static partial class QrPngRenderer {
                 if (useFrame && eyeKind != EyeKind.None) continue;
 
                 var isFunctional = functionMask is not null && functionMask[mx, my];
-                var protectFunctional = isFunctional && !isEye;
+                var protectFunctional = isFunctional && !isEye && mx != 6 && my != 6;
                 var eyeIndex = eyeKind == EyeKind.None ? -1 : GetEyeIndex(eyeX, eyeY, size);
 
                 var useMask = protectFunctional
@@ -189,16 +196,7 @@ public static partial class QrPngRenderer {
                         EyeKind.Inner => GetEyeInnerColor(opts, eyeIndex),
                         _ => opts.Foreground,
                     };
-                PaletteInfo? palette = null;
-                if (!protectFunctional) {
-                    if (zoneInfo.HasValue
-                        && zoneInfo.Value.TryGetPalette(mx, my, out var zonePalette)
-                        && (eyeKind == EyeKind.None || zonePalette.ApplyToEyes)) {
-                        palette = zonePalette;
-                    } else if (paletteInfo.HasValue && (eyeKind == EyeKind.None || paletteInfo.Value.ApplyToEyes)) {
-                        palette = paletteInfo;
-                    }
-                }
+                var palette = protectFunctional ? null : ResolveStyledPalette(paletteInfo, zoneInfo, mx, my, eyeKind != EyeKind.None);
                 var usePalette = palette.HasValue;
                 if (usePalette) {
                     useColor = GetPaletteColor(palette!.Value, mx, my);
@@ -313,37 +311,32 @@ public static partial class QrPngRenderer {
                 }
 
                 var useGradient = !protectFunctional && !usePalette && (eyeKind == EyeKind.None || opts.Eyes is null) ? gradientInfo : null;
-                if (useGradient is null && useMaskSolid && usePattern is null && moduleJitterX == 0 && moduleJitterY == 0) {
+                if (useShape == QrModuleShape.Square && useScale >= 1 && useGradient is null && useMaskSolid && usePattern is null && moduleJitterX == 0 && moduleJitterY == 0) {
                     var solid = useColor.A == 255 ? useColor : CompositeColor(useColor, background);
                     DrawModuleSolid(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone, qrOffsetX, qrOffsetY, solid);
                     continue;
                 }
 
-                DrawModule(
-                    buffer,
-                    stride,
-                    opts.ModuleSize,
-                    mx,
-                    my,
-                    opts.QuietZone,
-                    qrOffsetX,
-                    qrOffsetY,
-                    useColor,
-                    useGradient,
-                    usePattern,
-                    useMask,
-                    qrOriginX,
-                    qrOriginY,
-                    qrSizePx,
-                    moduleJitterX,
-                    moduleJitterY);
+                DrawCoverageModule(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone,
+                    qrOffsetX, qrOffsetY, useColor, useGradient, usePattern,
+                    protectFunctional ? QrModuleShape.Square : useShape,
+                    protectFunctional ? 1 : useScale, opts.ModuleCornerRadiusPx,
+                    GetNeighborMask(modules, mx, my), qrOriginX, qrOriginY, qrSizePx,
+                    moduleJitterX, moduleJitterY);
+
             }
         }
 
-        if (useFrame && opts.Eyes is not null) {
-            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrOriginX, qrOriginY, qrSizePx, 0, 0);
-            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrOriginX, qrOriginY, qrSizePx, size - 7, 0);
-            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrOriginX, qrOriginY, qrSizePx, 0, size - 7);
+        if (opts.ModuleShape == QrModuleShape.Liquid || opts.ModuleShapeMap?.PrimaryShape == QrModuleShape.Liquid
+            || opts.ModuleShapeMap?.SecondaryShape == QrModuleShape.Liquid) {
+            DrawLiquidInnerCorners(buffer, stride, modules, opts, qrOriginX, qrOriginY, qrSizePx, alignmentCenters);
+        }
+        if (useFrame) {
+            DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, 0, 0, 7, 0);
+            DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, size - 7, 0, 7, 1);
+            DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, 0, size - 7, 7, 2);
+            foreach (var center in alignmentCenters)
+                DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, center.X - 2, center.Y - 2, 5, -1);
         }
 
         if (opts.Logo is not null) {
@@ -537,10 +530,10 @@ public static partial class QrPngRenderer {
         qrSizePx = size * opts.ModuleSize;
         qrFullPx = (size + opts.QuietZone * 2) * opts.ModuleSize;
         if (opts.Canvas is null) {
-            widthPx = qrFullPx;
-            heightPx = qrFullPx;
-            qrOffsetX = 0;
-            qrOffsetY = 0;
+            widthPx = Math.Max(qrFullPx, opts.ExactSizePx);
+            heightPx = widthPx;
+            qrOffsetX = (widthPx - qrFullPx) / 2;
+            qrOffsetY = qrOffsetX;
             return;
         }
 
@@ -3320,7 +3313,7 @@ public static partial class QrPngRenderer {
     }
 
     private static bool IsConnectedShape(QrModuleShape shape) {
-        return shape is QrModuleShape.ConnectedRounded or QrModuleShape.ConnectedSquircle;
+        return QrShapeGeometry.Connected(shape);
     }
 
     private static int GetRingIndex(int x, int y, int center, int ringSize) {
@@ -3608,169 +3601,6 @@ public static partial class QrPngRenderer {
         var dx2 = dx * dx;
         var dy2 = dy * dy;
         return dx2 * dx2 + dy2 * dy2 <= 1.0;
-    }
-
-    /// <summary>Shared raster geometry for PNG styling and image-composition silhouettes.</summary>
-    internal static bool[] BuildModuleMask(
-        int moduleSize,
-        QrModuleShape shape,
-        double scale,
-        int cornerRadiusPx) {
-        var mask = new bool[moduleSize * moduleSize];
-        if (moduleSize <= 0) return mask;
-
-        if (shape == QrModuleShape.ConnectedRounded) shape = QrModuleShape.Rounded;
-        if (shape == QrModuleShape.ConnectedSquircle) shape = QrModuleShape.Squircle;
-        if (scale < 0.1) scale = 0.1;
-        if (scale > 1.0) scale = 1.0;
-        if (shape == QrModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
-        if (shape == QrModuleShape.DotGrid) scale *= QrPngShapeDefaults.DotGridScale;
-
-        var inset = (int)Math.Round((moduleSize - moduleSize * scale) / 2.0);
-        if (inset < 0) inset = 0;
-        if (inset > moduleSize / 2) inset = moduleSize / 2;
-        var inner = moduleSize - inset * 2;
-        if (inner <= 0) return mask;
-
-        var radius = cornerRadiusPx;
-        if (radius <= 0) radius = inner / 4;
-        if (radius > inner / 2) radius = inner / 2;
-        var r2 = radius * radius;
-        var center = (inner - 1) / 2.0;
-        var circleR = inner / 2.0;
-        var circleR2 = circleR * circleR;
-
-        var dotGridCenter0 = 0.0;
-        var dotGridCenter1 = 0.0;
-        var dotGridRadius = 0.0;
-        var dotGridRadiusSq = 0.0;
-        if (shape == QrModuleShape.DotGrid) {
-            dotGridCenter0 = (inner - 1) * QrPngShapeDefaults.DotGridCenterFactor;
-            dotGridCenter1 = (inner - 1) * (1.0 - QrPngShapeDefaults.DotGridCenterFactor);
-            dotGridRadius = Math.Max(QrPngShapeDefaults.DotGridMinRadius, inner * QrPngShapeDefaults.DotGridRadiusFactor);
-            dotGridRadiusSq = dotGridRadius * dotGridRadius;
-        }
-
-        for (var y = 0; y < moduleSize; y++) {
-            for (var x = 0; x < moduleSize; x++) {
-                if (x < inset || x >= inset + inner || y < inset || y >= inset + inner) {
-                    mask[y * moduleSize + x] = false;
-                    continue;
-                }
-                var lx = x - inset;
-                var ly = y - inset;
-                var inside = shape switch {
-                    QrModuleShape.Square => true,
-                    QrModuleShape.Circle => InsideCircle(lx, ly, center, circleR2),
-                    QrModuleShape.Rounded => InsideRoundedLocal(lx, ly, inner, radius, r2),
-                    QrModuleShape.Diamond => InsideDiamond(lx, ly, center, circleR),
-                    QrModuleShape.SoftDiamond => InsideSoftDiamond(lx, ly, center, circleR),
-                    QrModuleShape.Squircle => InsideSquircle(lx, ly, center, circleR),
-                    QrModuleShape.Leaf => InsideLeaf(lx, ly, center, circleR),
-                    QrModuleShape.Wave => InsideWave(lx, ly, center, circleR),
-                    QrModuleShape.Blob => InsideBlob(lx, ly, center, circleR),
-                    QrModuleShape.Dot => InsideCircle(lx, ly, center, circleR2),
-                    QrModuleShape.DotGrid => InsideDotGrid(lx, ly, dotGridCenter0, dotGridCenter1, dotGridRadiusSq),
-                    _ => true,
-                };
-                mask[y * moduleSize + x] = inside;
-            }
-        }
-
-        return mask;
-    }
-
-    private static bool InsideCircle(int x, int y, double center, double radiusSq) {
-        var dx = x - center;
-        var dy = y - center;
-        return dx * dx + dy * dy <= radiusSq;
-    }
-
-    private static bool InsideDiamond(int x, int y, double center, double radius) {
-        var dx = Math.Abs(x - center);
-        var dy = Math.Abs(y - center);
-        return dx + dy <= radius;
-    }
-
-    private static bool InsideSoftDiamond(int x, int y, double center, double radius) {
-        if (radius <= 0) return false;
-        var dx = Math.Abs(x - center);
-        var dy = Math.Abs(y - center);
-        var p = QrPngShapeDefaults.SoftDiamondExponent;
-        return Math.Pow(dx, p) + Math.Pow(dy, p) <= Math.Pow(radius, p);
-    }
-
-    private static bool InsideSquircle(int x, int y, double center, double radius) {
-        if (radius <= 0) return false;
-        var dx = Math.Abs(x - center) / radius;
-        var dy = Math.Abs(y - center) / radius;
-        var dx2 = dx * dx;
-        var dy2 = dy * dy;
-        return dx2 * dx2 + dy2 * dy2 <= 1.0;
-    }
-
-    private static bool InsideLeaf(int x, int y, double center, double radius) {
-        if (radius <= 0) return false;
-        var r = radius * QrPngShapeDefaults.LeafRadiusFactor;
-        var d = radius * QrPngShapeDefaults.LeafOffsetFactor;
-        if (r <= 0) return false;
-        var dx = x - center;
-        var dy = y - center;
-        var r2 = r * r;
-        var dx1 = dx + d;
-        var dx2 = dx - d;
-        return dx1 * dx1 + dy * dy <= r2 && dx2 * dx2 + dy * dy <= r2;
-    }
-
-    private static bool InsideWave(int x, int y, double center, double radius) {
-        if (radius <= 0) return false;
-        var dx = x - center;
-        var dy = y - center;
-        var dist = Math.Sqrt(dx * dx + dy * dy);
-        var angle = Math.Atan2(dy, dx);
-        var boundary = radius * (1.0 + QrPngShapeDefaults.WaveAmplitude * Math.Sin(QrPngShapeDefaults.WaveFrequency * angle));
-        var min = radius * 0.2;
-        if (boundary < min) boundary = min;
-        return dist <= boundary;
-    }
-
-    private static bool InsideBlob(int x, int y, double center, double radius) {
-        if (radius <= 0) return false;
-        var dx = x - center;
-        var dy = y - center;
-        var dist = Math.Sqrt(dx * dx + dy * dy);
-        var angle = Math.Atan2(dy, dx);
-        var wave = Math.Sin(QrPngShapeDefaults.BlobFrequencyA * angle) +
-                   0.5 * Math.Sin(QrPngShapeDefaults.BlobFrequencyB * angle);
-        var boundary = radius * (1.0 + QrPngShapeDefaults.BlobAmplitude * (wave / 1.5));
-        var min = radius * 0.2;
-        if (boundary < min) boundary = min;
-        return dist <= boundary;
-    }
-
-    private static bool InsideDotGrid(int x, int y, double c0, double c1, double radiusSq) {
-        return InsideCircle(x, y, c0, radiusSq) ||
-               InsideCircle(x, y, c1, radiusSq) ||
-               InsideCircle(x, y, c0, radiusSq, c1) ||
-               InsideCircle(x, y, c1, radiusSq, c0);
-    }
-
-    private static bool InsideCircle(int x, int y, double cx, double radiusSq, double cy) {
-        var dx = x - cx;
-        var dy = y - cy;
-        return dx * dx + dy * dy <= radiusSq;
-    }
-
-    private static bool InsideRoundedLocal(int x, int y, int size, int radius, int radiusSq) {
-        if (radius <= 0) return true;
-        if (x >= radius && x < size - radius) return true;
-        if (y >= radius && y < size - radius) return true;
-
-        var cx = x < radius ? radius - 1 : size - radius;
-        var cy = y < radius ? radius - 1 : size - radius;
-        var dx = x - cx;
-        var dy = y - cy;
-        return dx * dx + dy * dy <= radiusSq;
     }
 
     private static Rgba32 GetGradientColor(GradientInfo gradient, int px, int py, int originX, int originY) {

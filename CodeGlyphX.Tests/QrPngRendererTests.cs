@@ -1768,7 +1768,7 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
-    public void Render_With_Eye_InsetRing_Leaves_Center_Light_And_Ring_Dark() {
+    public void Render_With_Eye_InsetRing_Preserves_Dark_Ball_And_Light_Separator() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 
         var opts = new QrPngRenderOptions {
@@ -1803,13 +1803,16 @@ public sealed class QrPngRendererTests {
         var ringPy = baseY + opts.ModuleSize / 2;
         var ring = ringPy * stride + ringPx * 4;
 
-        Assert.Equal(255, rgba[center + 0]);
-        Assert.Equal(255, rgba[center + 1]);
-        Assert.Equal(255, rgba[center + 2]);
+        Assert.Equal(0, rgba[center + 0]);
+        Assert.Equal(0, rgba[center + 1]);
+        Assert.Equal(0, rgba[center + 2]);
 
         Assert.Equal(0, rgba[ring + 0]);
         Assert.Equal(0, rgba[ring + 1]);
         Assert.Equal(0, rgba[ring + 2]);
+        var separator = (baseY + opts.ModuleSize * 3 + opts.ModuleSize / 2) * stride
+            + (baseX + opts.ModuleSize + opts.ModuleSize / 2) * 4;
+        Assert.Equal(255, rgba[separator]);
     }
 
     [Fact]
@@ -1857,7 +1860,7 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
-    public void Render_With_ScaleMap_ApplyToEyes_Affects_Eye_Modules() {
+    public void Render_With_ScaleMap_DoesNotFragmentWholeFinders() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 
         var scaleMap = new QrModuleScaleMapOptions {
@@ -1890,21 +1893,8 @@ public sealed class QrPngRendererTests {
         var pngEyes = QrPngRenderer.Render(qr.Modules, optsEyes);
         var (rgbaEyes, _, _, strideEyes) = PngTestDecoder.DecodeRgba32(pngEyes);
 
-        var moduleX = optsEyes.QuietZone + 1;
-        var moduleY = optsEyes.QuietZone + 0;
-        var px = moduleX * optsEyes.ModuleSize + 1;
-        var py = moduleY * optsEyes.ModuleSize + 1;
-
-        var pNoEyes = py * strideNoEyes + px * 4;
-        var pEyes = py * strideEyes + px * 4;
-
-        Assert.Equal(0, rgbaNoEyes[pNoEyes + 0]);
-        Assert.Equal(0, rgbaNoEyes[pNoEyes + 1]);
-        Assert.Equal(0, rgbaNoEyes[pNoEyes + 2]);
-
-        Assert.Equal(255, rgbaEyes[pEyes + 0]);
-        Assert.Equal(255, rgbaEyes[pEyes + 1]);
-        Assert.Equal(255, rgbaEyes[pEyes + 2]);
+        Assert.Equal(strideNoEyes, strideEyes);
+        Assert.Equal(rgbaNoEyes, rgbaEyes);
     }
 
     [Fact]

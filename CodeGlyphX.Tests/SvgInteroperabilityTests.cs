@@ -42,10 +42,12 @@ public sealed class SvgInteroperabilityTests {
 
         var svg = SvgQrRenderer.Render(qr.Modules, options);
         var document = XDocument.Parse(svg);
-        var background = document.Root!.Elements(SvgNamespace + "rect").First();
-
-        Assert.Equal((qr.Modules.Width + 6).ToString(), background.Attribute("width")!.Value);
-        Assert.NotEmpty(document.Descendants(SvgNamespace + "circle"));
+        var coverage = new SvgCoverageTestReader(document);
+        Assert.Equal((qr.Modules.Width + 6) * options.ModuleSize, coverage.Width);
+        Assert.Equal(coverage.Width, coverage.Height);
+        Assert.Equal(Rgba32.White, coverage.Sample(0, 0));
+        Assert.Equal(Rgba32.Black, coverage.Sample((3 * options.ModuleSize) + (int)(3.5 * options.ModuleSize),
+            (3 * options.ModuleSize) + (int)(3.5 * options.ModuleSize)));
         Assert.DoesNotContain('%', svg);
     }
 

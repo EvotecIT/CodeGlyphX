@@ -83,6 +83,10 @@
     <Compile Include="QrFormatVariantsTests.cs" />
     <Compile Include="QrFormatDistanceTests.cs" />
     <Compile Include="QrApiTests.cs" />
+    <Compile Include="QrNativeArtGuardrailTests.cs" />
+    <Compile Include="QrGuardrailTransparencyTests.cs" />
+    <Compile Include="QrFrameAppearanceTests.cs" />
+    <Compile Include="TestHelpers/SvgCoverageTestReader.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="EncodingContractRegressionTests.cs" />
@@ -153,6 +157,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="ZXing.Net" Version="0.16.9" PrivateAssets="all" />
     <PackageReference Include="coverlet.collector" Version="10.1.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

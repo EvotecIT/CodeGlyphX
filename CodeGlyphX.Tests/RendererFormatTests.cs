@@ -96,7 +96,8 @@ public sealed class RendererFormatTests {
         };
 
         foreach (var art in arts) {
-            var png = QR.Render(payload, OutputFormat.Png, new QrRenderOptions { Art = art }).Data.Span;
+            // Container dispatch is independent of the separately exercised native scan gate.
+            var png = QR.Render(payload, OutputFormat.Png, new QrRenderOptions { Art = art, ArtGuardrailsEnabled = false }).Data.Span;
             Assert.True(ImageReader.TryDetectFormat(png, out var format));
             Assert.Equal(ImageFormat.Png, format);
         }
@@ -445,6 +446,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Vector_Mode_Falls_Back_To_Raster_When_Gradient() {
         var opts = new QrRenderOptions {
+            ArtGuardrailsEnabled = false, // Qualify the format fallback independently of contrast remediation.
             ForegroundGradient = new QrGradientOptions {
                 Type = QrGradientType.Horizontal,
                 StartColor = new Rgba32(0, 0, 0),

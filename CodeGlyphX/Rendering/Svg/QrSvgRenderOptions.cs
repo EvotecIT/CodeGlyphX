@@ -7,6 +7,8 @@ namespace CodeGlyphX.Rendering.Svg;
 /// Options for <see cref="SvgQrRenderer"/>.
 /// </summary>
 public sealed partial class QrSvgRenderOptions {
+    // High-level rendering supplies the complete, already resolved appearance through the canonical owner.
+    internal QrPngRenderOptions? Appearance { get; set; }
     /// <summary>
     /// Gets or sets the size of a single QR module in pixels.
     /// </summary>
@@ -35,7 +37,7 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Gets or sets the module shape.
     /// </summary>
-    /// <remarks>Connected module shapes require raster output and are rejected by the SVG renderer.</remarks>
+    /// <remarks>Styled geometry uses canonical coverage contours; no bitmap wrapper is required.</remarks>
     public QrModuleShape ModuleShape { get; set; } = QrModuleShape.Square;
 
     /// <summary>
@@ -44,9 +46,9 @@ public sealed partial class QrSvgRenderOptions {
     public double ModuleScale { get; set; } = 1.0;
 
     /// <summary>
-    /// Gets or sets whether non-eye functional patterns retain full square modules and the solid dark color.
+    /// Gets or sets whether format/version bits and the fixed dark module retain full square geometry and a stable dark color.
     /// </summary>
-    /// <remarks>Applies to timing, alignment, format, version and fixed dark modules in standard QR matrices.</remarks>
+    /// <remarks>Timing follows the body style, and alignment uses whole 5x5 finder geometry.</remarks>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 
     /// <summary>
@@ -62,6 +64,6 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Optional eye (finder) styling overrides.
     /// </summary>
-    /// <remarks>Raster frame effects, per-eye arrays, accents and connected shapes are rejected rather than silently omitted.</remarks>
+    /// <remarks>Whole finder rings, balls, per-eye arrays and decorative accents share the raster appearance owner.</remarks>
     public QrEyeOptions? Eyes { get; set; }
 }

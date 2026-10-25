@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 
@@ -55,13 +56,25 @@ internal static class PngTestDecoder {
         if (idat.Count < 6) throw new FormatException("Missing IDAT.");
 
         var rowBytes = bitDepth == 1 ? (width + 7) / 8 : width * ChannelsFor(colorType);
-        var scanlines = InflateZlibStored(CollectionsMarshal.AsSpan(idat), expectedLen: height * (rowBytes + 1));
+        var scanlines = InflateZlib(CollectionsMarshal.AsSpan(idat), expectedLen: height * (rowBytes + 1));
         var stride = width * 4;
         var rgba = new byte[height * stride];
 
         for (var y = 0; y < height; y++) {
             var rowStart = y * (rowBytes + 1);
-            if (scanlines[rowStart] != 0) throw new FormatException("Unexpected PNG filter.");
+            var filter = scanlines[rowStart];
+            var bpp = bitDepth == 1 ? 1 : ChannelsFor(colorType);
+            for (var x = 0; x < rowBytes; x++) {
+                var current = rowStart + 1 + x;
+                var a = x >= bpp ? scanlines[current - bpp] : 0;
+                var b = y > 0 ? scanlines[current - rowBytes - 1] : 0;
+                var c = y > 0 && x >= bpp ? scanlines[current - rowBytes - 1 - bpp] : 0;
+                var prediction = filter switch {
+                    0 => 0, 1 => a, 2 => b, 3 => (a + b) / 2, 4 => Paeth(a, b, c),
+                    _ => throw new FormatException("Unexpected PNG filter.")
+                };
+                scanlines[current] = unchecked((byte)(scanlines[current] + prediction));
+            }
             DecodeRow(scanlines.AsSpan(rowStart + 1, rowBytes), rgba, y, width, stride, bitDepth, colorType, palette);
         }
 
@@ -141,36 +154,18 @@ internal static class PngTestDecoder {
         throw new FormatException("Unexpected IHDR parameters.");
     }
 
-    private static byte[] InflateZlibStored(ReadOnlySpan<byte> zlib, int expectedLen) {
-        if (zlib.Length < 6) throw new FormatException("Invalid zlib stream.");
-        // Minimal: accept common header 0x78 0x01 but don't require it.
-        var offset = 2;
+    private static int Paeth(int a, int b, int c) {
+        var p = a + b - c;
+        var pa = Math.Abs(p - a); var pb = Math.Abs(p - b); var pc = Math.Abs(p - c);
+        return pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
+    }
 
+    private static byte[] InflateZlib(ReadOnlySpan<byte> zlib, int expectedLen) {
+        using var source = new MemoryStream(zlib.ToArray());
+        using var inflater = new ZLibStream(source, CompressionMode.Decompress);
         var output = new byte[expectedLen];
-        var outPos = 0;
-
-        while (true) {
-            if (offset >= zlib.Length) throw new FormatException("Truncated deflate stream.");
-            var header = zlib[offset++];
-            var bfinal = (header & 1) != 0;
-            var btype = (header >> 1) & 0x03;
-            if (btype != 0) throw new FormatException("Only stored blocks are supported.");
-
-            if (offset + 4 > zlib.Length) throw new FormatException("Truncated stored block header.");
-            var len = zlib[offset] | (zlib[offset + 1] << 8);
-            var nlen = zlib[offset + 2] | (zlib[offset + 3] << 8);
-            offset += 4;
-            if (((len ^ 0xFFFF) & 0xFFFF) != nlen) throw new FormatException("Stored block length mismatch.");
-
-            if (offset + len > zlib.Length) throw new FormatException("Truncated stored block data.");
-            zlib.Slice(offset, len).CopyTo(output.AsSpan(outPos));
-            offset += len;
-            outPos += len;
-
-            if (bfinal) break;
-        }
-
-        if (outPos != expectedLen) throw new FormatException("Unexpected decompressed length.");
+        inflater.ReadExactly(output);
+        if (inflater.ReadByte() != -1) throw new FormatException("Unexpected decompressed length.");
         return output;
     }
 }

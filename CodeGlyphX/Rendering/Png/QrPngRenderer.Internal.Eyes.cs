@@ -326,6 +326,8 @@ public static partial class QrPngRenderer {
 
         for (var py = minY; py <= maxY; py++) {
             for (var px = minX; px <= maxX; px++) {
+                // A glow is a halo, not a tint over the finder separator or ball.
+                if (px >= rectX0 && px <= rectX1 && py >= rectY0 && py <= rectY1) continue;
                 var cx = px < rectX0 ? rectX0 : px > rectX1 ? rectX1 : px;
                 var cy = py < rectY0 ? rectY0 : py > rectY1 ? rectY1 : py;
                 var dx = px - cx;

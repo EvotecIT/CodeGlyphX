@@ -52,7 +52,11 @@ public static partial class QrArt {
 
     private static byte[] DecodeValidationPixels(byte[] image, ImageDecodeOptions? imageOptions, CancellationToken cancellationToken, out int width, out int height) {
         var pixels = ImageReader.DecodeRgba32(image, imageOptions, out width, out height);
-        // Validate what a reader sees on white, including alpha in externally supplied exports.
+        return CompositeValidationPixelsOnWhite(pixels, cancellationToken);
+    }
+
+    // Callers own this validation buffer. Rendering callers clone first so output alpha is retained.
+    internal static byte[] CompositeValidationPixelsOnWhite(byte[] pixels, CancellationToken cancellationToken = default) {
         for (var i = 0; i < pixels.Length; i += 4) {
             if ((i & 65535) == 0) cancellationToken.ThrowIfCancellationRequested();
             var alpha = pixels[i + 3];

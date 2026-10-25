@@ -7,7 +7,8 @@ namespace CodeGlyphX.Rendering;
 /// </summary>
 public sealed class QrEyeOptions {
     /// <summary>
-    /// Gets or sets whether to draw each eye as a single frame (outer ring + inner dot).
+    /// Legacy framing switch, retained for source compatibility. Finder rings and balls are always
+    /// whole shapes; <see cref="FrameStyle"/> selects the decorative treatment.
     /// </summary>
     public bool UseFrame { get; set; }
 
@@ -17,22 +18,24 @@ public sealed class QrEyeOptions {
     public QrEyeFrameStyle FrameStyle { get; set; } = QrEyeFrameStyle.Single;
 
     /// <summary>
-    /// Gets or sets the outer (7x7) eye module shape.
+    /// Gets or sets the whole outer (7x7) finder shape, surrounding a 5x5 light aperture.
     /// </summary>
     public QrModuleShape OuterShape { get; set; } = QrModuleShape.Square;
 
     /// <summary>
-    /// Gets or sets the inner (3x3) eye module shape.
+    /// Gets or sets the whole inner (3x3) finder ball shape.
     /// </summary>
+    /// <remarks>A square outer ring with a diamond ball is decorative – verify before print;
+    /// this pair can fail independent readers at small delivery sizes and is excluded from scan-safe presets.</remarks>
     public QrModuleShape InnerShape { get; set; } = QrModuleShape.Square;
 
     /// <summary>
-    /// Gets or sets the scale of the outer modules inside their cells (0.1..1.0).
+    /// Legacy per-module scale (0.1..1.0). Whole finders retain the standard 7/5/3 proportions.
     /// </summary>
     public double OuterScale { get; set; } = 1.0;
 
     /// <summary>
-    /// Gets or sets the scale of the inner modules inside their cells (0.1..1.0).
+    /// Legacy per-module scale (0.1..1.0). Whole finders retain the standard 7/5/3 proportions.
     /// </summary>
     public double InnerScale { get; set; } = 1.0;
 

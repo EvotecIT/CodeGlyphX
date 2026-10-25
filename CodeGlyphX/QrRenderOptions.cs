@@ -7,10 +7,9 @@ namespace CodeGlyphX;
 /// Appearance and layout for a previously encoded QR symbol. Encoding settings belong to <see cref="QrEncodingOptions"/>.
 /// </summary>
 /// <remarks>
-/// Raster outputs support all appearance options. SVG, SVGZ and HTML support layout, colors,
-/// basic shapes, foreground gradients, simple finder styling and logos. They reject unsupported
-/// effects, including canvas art, palettes, procedural maps, connected shapes and decorative finder effects,
-/// with <see cref="System.NotSupportedException"/> instead of silently omitting them.
+/// Raster, SVG and SVGZ outputs support all appearance options. Styled SVG exports preserve the
+/// canonical renderer's coverage as coloured vector contours at the selected output resolution.
+/// HTML supports a smaller appearance subset and rejects unsupported effects explicitly.
 /// </remarks>
 public sealed class QrRenderOptions {
     /// <summary>
@@ -69,8 +68,11 @@ public sealed class QrRenderOptions {
     public QrArtOptions? Art { get; set; }
 
     /// <summary>
-    /// When true, applies conservative static guardrails for art-heavy styles.
-    /// This does not validate the rendered output with a decoder.
+    /// When true, applies conservative geometry/contrast guardrails for art-heavy styles and
+    /// checks their canonical pixels with the native decoder's Balanced profile, without transforms
+    /// or stylized sampling. Rendering throws if the original payload cannot be recovered within
+    /// the cooperative decode budget. This does not certify lossy exports, resizing or printed output.
+    /// Legacy targets use the limited managed decoder and can reject artwork accepted on newer targets.
     /// </summary>
     public bool ArtGuardrailsEnabled { get; set; } = true;
 
@@ -106,7 +108,8 @@ public sealed class QrRenderOptions {
 
 
     /// <summary>
-    /// When true, keeps non-eye functional patterns at a conventional style.
+    /// When true, preserves format/version bits and the fixed dark module at full size.
+    /// Timing follows the body style and alignment patterns use whole finder geometry.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 

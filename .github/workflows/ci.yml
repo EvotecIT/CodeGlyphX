@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
     # Linux runs both full corpora; Windows also runs the .NET Framework suite.
     # Allow build and shutdown headroom for those longer validation jobs.
-    timeout-minutes: ${{ matrix.os == 'macos-latest' && 20 || 30 }}
+    timeout-minutes: ${{ matrix.os == 'macos-latest' && 20 || 45 }}
     env:
       # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
       CODEGLYPHX_TEST_BUDGET_MULTIPLIER: ${{ matrix.testBudgetMultiplier }}
@@ -155,7 +155,8 @@ jobs:
     name: Coverage (linux)
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
-    timeout-minutes: 20
+    # Keep upload/shutdown headroom after the profiled full suite.
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

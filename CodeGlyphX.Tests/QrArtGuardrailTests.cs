@@ -9,7 +9,7 @@ namespace CodeGlyphX.Tests;
 
 public sealed class QrArtGuardrailTests {
     [Fact]
-    public void Art_Guardrails_Enforce_Core_Geometry_And_Connections() {
+    public void Art_Guardrails_Enforce_Core_Geometry_And_Preserve_Requested_Shape() {
         var payload = "https://example.com/auto-tune-core";
         var options = new QrRenderOptions {
             Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Bold, intensity: 95, guardrailMode: QrArtGuardrailMode.Bold),
@@ -27,7 +27,7 @@ public sealed class QrArtGuardrailTests {
         Assert.True(render.QuietZone >= 4, $"QuietZone should be at least 4 (was {render.QuietZone}).");
         Assert.True(render.ProtectFunctionalPatterns, "ProtectFunctionalPatterns should be enforced by auto-tune.");
         Assert.True(render.ProtectQuietZone, "ProtectQuietZone should be enforced by auto-tune.");
-        Assert.Equal(QrModuleShape.ConnectedRounded, render.ModuleShape);
+        Assert.Equal(QrModuleShape.Rounded, render.ModuleShape);
         Assert.True(render.ModuleScale >= 0.86, $"ModuleScale should be clamped by the art guardrails (was {render.ModuleScale:0.00}).");
     }
 
