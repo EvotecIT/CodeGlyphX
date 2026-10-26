@@ -24,32 +24,34 @@ public sealed class QrArtScenePatternScanTests {
     public static IEnumerable<object[]> PatternCases() =>
         Enum.GetValues<QrArtPattern>().SelectMany(pattern => new[] { new object[] { pattern, ShortUrl }, new object[] { pattern, LongUrl } });
 
-    // Scenes never resample their code: each delivery size is rendered on its own module grid.
+    // Scenes never resample their code: each delivery size is rendered on its own module grid. A scene needs at
+    // least three pixels per module, so the long URL is gated at the sizes it can render (1024 and 512 pixels).
     [Theory]
     [MemberData(nameof(SceneCases))]
     public void Scenes_DecodeWithStrictZxingAndLibrary_AtEachRenderSize(QrSceneStyle style, string payload) {
         foreach (var size in Sizes) {
-            var scene = QrArt.ComposeScene(payload, QrScenePresets.Create(style, size));
-            var pixels = scene.Image.GetPixels();
-            var modulePixels = scene.Image.QrSize / (double)(scene.QrVersion * 4 + 17 + 8);
-            AssertMatrix(pixels, size, payload, $"{style}", modulePixels);
+            var design = QrScenePresets.Create(style, size);
+            if (payload == LongUrl && size == 256) {
+                Assert.Throws<ArgumentException>(() => QrArt.ComposeScene(payload, design));
+                continue;
+            }
+            var scene = QrArt.ComposeScene(payload, design);
+            Assert.True(scene.Image.QrSize / (scene.QrVersion * 4 + 17 + 8) >= 3);
+            AssertMatrix(scene.Image.GetPixels(), size, payload, $"{style}");
         }
     }
 
+    // Patterns are rendered natively at 18, 12 and 6 pixels per module (6 is the API minimum), without resampling.
     [Theory]
     [MemberData(nameof(PatternCases))]
-    public void Patterns_DecodeWithStrictZxingAndLibrary_AfterResizing(QrArtPattern pattern, string payload) {
-        var result = QrArt.ComposePattern(payload, QrArtPatternPresets.CreatePatternOptions(pattern, 2026), QrArtPatternPresets.CreateCompositionOptions(pattern));
-        var source = result.GetPixels();
-        foreach (var size in Sizes) {
-            var modulePixels = 18.0 * size / result.Size;
-            AssertMatrix(ResizeArea(source, result.Size, size), size, payload, $"{pattern}", modulePixels);
+    public void Patterns_DecodeWithStrictZxingAndLibrary_AtEachModuleSize(QrArtPattern pattern, string payload) {
+        foreach (var module in new[] { 18, 12, 6 }) {
+            var result = QrArt.ComposePattern(payload, QrArtPatternPresets.CreatePatternOptions(pattern, 2026), QrArtPatternPresets.CreateCompositionOptions(pattern, module));
+            AssertMatrix(result.GetPixels(), result.Size, payload, $"{pattern} m{module}");
         }
     }
 
-    // Below three pixels per module (a long URL in a 256-pixel scene) strict ZXing is not reliable after
-    // rotation or blur even for a plain black-on-white symbol, so those two observations are reported only.
-    private void AssertMatrix(byte[] pixels, int size, string payload, string name, double modulePixels) {
+    private void AssertMatrix(byte[] pixels, int size, string payload, string name) {
         foreach (var transform in Transforms) {
             var image = transform == "rotate2deg" ? Rotate2Degrees(pixels, size) : transform == "blur121" ? Blur(pixels, size) : pixels;
             var reader = new BarcodeReaderGeneric {
@@ -58,30 +60,12 @@ public sealed class QrArtScenePatternScanTests {
             };
             var strict = reader.Decode(new RGBLuminanceSource(image, size, size, RGBLuminanceSource.BitmapFormat.RGBA32))?.Text;
             var native = QrDecoder.TryDecode(image, size, size, size * 4, PixelFormat.Rgba32, out var decoded) ? decoded.Text : null;
-            _output.WriteLine($"{name} {size}/{transform} module={modulePixels:0.0}px: ZXing={strict == payload}; library={native == payload}");
+            _output.WriteLine($"{name} {size}/{transform}: ZXing={strict == payload}; library={native == payload}");
             Assert.Equal(payload, native);
-            if (modulePixels >= 3 || transform == "plain") Assert.Equal(payload, strict);
+            Assert.Equal(payload, strict);
         }
     }
-
     // Independent pixel transforms intentionally do not call the production scaler or filters.
-    private static byte[] ResizeArea(byte[] source, int sourceSize, int size) {
-        var target = new byte[size * size * 4];
-        var scale = sourceSize / (double)size;
-        for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
-            double x0 = x * scale, x1 = (x + 1) * scale, y0 = y * scale, y1 = (y + 1) * scale;
-            for (var channel = 0; channel < 3; channel++) {
-                var sum = 0.0;
-                for (var sy = (int)y0; sy < Math.Ceiling(y1) && sy < sourceSize; sy++)
-                    for (var sx = (int)x0; sx < Math.Ceiling(x1) && sx < sourceSize; sx++)
-                        sum += source[(sy * sourceSize + sx) * 4 + channel] * (Math.Min(x1, sx + 1) - Math.Max(x0, sx)) * (Math.Min(y1, sy + 1) - Math.Max(y0, sy));
-                target[(y * size + x) * 4 + channel] = (byte)Math.Clamp((int)Math.Round(sum / (scale * scale)), 0, 255);
-            }
-            target[(y * size + x) * 4 + 3] = 255;
-        }
-        return target;
-    }
-
     private static byte[] Rotate2Degrees(byte[] source, int size) {
         var target = new byte[source.Length];
         var radians = Math.PI / 90; var cos = Math.Cos(radians); var sin = Math.Sin(radians); var center = (size - 1) / 2.0;
