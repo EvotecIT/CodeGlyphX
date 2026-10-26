@@ -13,8 +13,8 @@ internal sealed class QrPatternRasterizer {
     private readonly Rgba32 _paper;
     private readonly int _seed;
     private readonly double _scale, _cos, _sin, _phase;
-    private readonly double[] _depths = new double[9];
-    private readonly int[] _order = new int[9];
+    private readonly double[] _depths = new double[25];
+    private readonly int[] _order = new int[25];
     private double _pixel;
 
     internal QrPatternRasterizer(QrArtPatternOptions options) {
@@ -165,17 +165,19 @@ internal sealed class QrPatternRasterizer {
         const double cell = 1 / 3.4;
         var gx = (int)Math.Floor(x / cell); var gy = (int)Math.Floor(y / cell);
         var color = Color.Mix(_paper, Role(2), 0.16);
-        for (var n = 0; n < 9; n++) {
+        // A 5 x 5 neighbourhood holds every leaf that can reach this point, so no leaf is cut at a cell line.
+        for (var n = 0; n < 25; n++) {
             _order[n] = n;
-            _depths[n] = Hash((gx - 1 + n % 3) * 7 + 1, (gy - 1 + n / 3) * 13 + 5);
+            _depths[n] = Hash((gx - 2 + n % 5) * 7 + 1, (gy - 2 + n / 5) * 13 + 5);
         }
-        for (var a = 1; a < 9; a++) for (var b = a; b > 0 && _depths[_order[b - 1]] > _depths[_order[b]]; b--)
+        for (var a = 1; a < 25; a++) for (var b = a; b > 0 && _depths[_order[b - 1]] > _depths[_order[b]]; b--)
             (_order[b - 1], _order[b]) = (_order[b], _order[b - 1]);
-        for (var n = 0; n < 9; n++) {
-            var i = gx - 1 + _order[n] % 3; var j = gy - 1 + _order[n] / 3;
+        for (var n = 0; n < 25; n++) {
+            var i = gx - 2 + _order[n] % 5; var j = gy - 2 + _order[n] / 5;
             var cx = (i + 0.2 + 0.6 * Hash(i, j * 3 + 1)) * cell; var cy = (j + 0.2 + 0.6 * Hash(i * 5 + 2, j)) * cell;
-            // Leaves crowd one side and open up toward the other.
-            if (Hash(i + 61, j - 3) > 0.3 + 0.7 * SmoothStep(-0.6, 0.6, -cx - 0.3 * cy)) continue;
+            // An even scatter with gaps, so leaves fill every side of the canvas.
+            if (Hash(i + 61, j - 3) > 0.72) continue;
+            if (Math.Abs(x - cx) > cell * 1.6 || Math.Abs(y - cy) > cell * 1.6) continue;
             var angle = -0.9 + 0.8 * (Hash(i + 9, j - 4) - 0.5) + (Hash(i - 3, j + 8) < 0.5 ? 0 : Math.PI * 0.85);
             var length = cell * (0.95 + 0.45 * Hash(i + 21, j + 2)); var width = length * 0.36;
             var dx = x - cx; var dy = y - cy;

@@ -89,7 +89,7 @@ public static class QrArtPatternPresets {
         };
         var options = new QrImageCompositionOptions {
             ModuleSize = moduleSize, Strength = 0.96,
-            Canvas = new QrImageCanvasOptions { PaddingModules = padding, PositionX = x, PositionY = y, ArtOpacity = opacity, FadeModules = 2.5 },
+            Canvas = new QrImageCanvasOptions { PaddingModules = padding, PositionX = x, PositionY = y, ArtOpacity = opacity, FadeModules = 5 },
             Art = new QrImageArtOptions {
                 Style = style, Shape = shape, Scale = 0.95, DetailProtection = 0.3, FunctionalTint = 1,
                 Finders = finders, FunctionalBackground = paper, FunctionalForeground = ink, LightModuleSaturation = saturation,
@@ -97,9 +97,9 @@ public static class QrArtPatternPresets {
             }
         };
         if (pattern == QrArtPattern.Sunburst) {
-            // Frame the burst so its vanishing point sits just above and left of the off-centre code.
+            // Frame the burst so its vanishing point sits clearly up and to the left of the code, inside the composition.
             options.ImageZoom = 1.5;
-            options.ImagePositionX = 0.72; options.ImagePositionY = 0.57;
+            options.ImagePositionX = 0.92; options.ImagePositionY = 0.78;
         }
         return options;
     }
