@@ -70,7 +70,11 @@ internal sealed class QrPatternRasterizer {
         var presence = SmoothStep(-0.25, 0.35, Fbm(qx * 0.45 - 7, qy * 0.45 + 2, 3));
         color = Color.Mix(color, Role(2), 0.28 * Math.Pow(minor, 9) * presence);
         color = Color.Mix(color, Role(2), Math.Min(1, 0.32 * Math.Pow(major, 3) + 0.75 * Math.Pow(major, 18)));
-        return Color.Mix(color, Role(3), 0.8 * Math.Pow(accent, 30) * SmoothStep(0.0, 0.3, Fbm(qx * 0.5 + 20, qy * 0.5 - 13, 2)));
+        color = Color.Mix(color, Role(3), 0.8 * Math.Pow(accent, 30) * SmoothStep(0.0, 0.3, Fbm(qx * 0.5 + 20, qy * 0.5 - 13, 2)));
+        // Thin crisp veins on top, so the stone still reads inside the code where values are lifted.
+        var thin = Math.Abs(Math.Sin((qx * 0.55 + qy * 0.32 + 1.2 * Turbulence(qx * 1.1 + 3.3, qy * 1.1 - 6.1, 5)) * Math.PI * 1.6));
+        var cover = Coverage(thin / 9.0 - 0.0011) * SmoothStep(-0.3, 0.2, Fbm(qx * 0.5 + 9, qy * 0.5 + 4, 2));
+        return Color.Mix(color, Color.Mix(Role(2), Black, 0.35), 0.9 * cover);
     }
 
     private double Turbulence(double x, double y, int octaves) {
@@ -122,9 +126,8 @@ internal sealed class QrPatternRasterizer {
         var light = Color.Mix(Role(0), Role(1), t);
         var deep = Color.Mix(Role(1), Role(2), t);
         var color = Color.Mix(deep, light, Coverage(-signed));
-        color = Color.Mix(color, Role(3), 0.3 * SmoothStep(0.42, 0.8, radius));
-        // A soft halo keeps the middle of the code calm.
-        return Color.Mix(color, Role(0), 0.4 * (1 - SmoothStep(0, 0.22, radius)));
+        // Rays stay crisp all the way into the centre.
+        return Color.Mix(color, Role(3), 0.3 * SmoothStep(0.42, 0.8, radius));
     }
 
     // Bauhaus tiles: quarter and half discs, triangles, rings and dots, each tile a two-colour composition.
@@ -134,6 +137,8 @@ internal sealed class QrPatternRasterizer {
         var tx = (int)Math.Floor(x); var ty = (int)Math.Floor(y);
         var u = x - tx; var v = y - ty;
         var h = Hash(tx, ty);
+        // Shapes cluster toward one corner and thin out toward the other, giving the tiles a direction.
+        var busy = Hash(tx - 29, ty + 41) < 0.25 + 0.75 * SmoothStep(-0.7, 0.7, (x + y) / cells);
         var backgroundRole = Hash(tx + 37, ty - 11) < 0.3 ? -1 : (int)(Hash(tx - 5, ty + 23) * 4);
         var foregroundRole = (int)(Hash(tx + 13, ty + 7) * 4);
         if (foregroundRole == backgroundRole) foregroundRole++;
@@ -147,10 +152,11 @@ internal sealed class QrPatternRasterizer {
         else if (h < 0.72) distance = (corner % 2 == 0 ? u + v - 1 : u - v) * (corner < 2 ? 1 : -1) / Math.Sqrt(2);
         else if (h < 0.88) distance = Math.Abs(Length(u - 0.5, v - 0.5) - 0.3) - 0.11;
         else distance = Length(u - 0.5, v - 0.5) - 0.2;
+        if (!busy) return background;
         return Color.Mix(background, foreground, Math.Max(0, Math.Min(1, 0.5 - distance / (_pixel * cells))));
     }
 
-    // Overlapping lance leaves with midribs on short stems, and a few berries.
+    // Overlapping lance leaves with dark rims and midribs on short stems.
     private Color Botanical(double x, double y) {
         const double cell = 1 / 3.4;
         var gx = (int)Math.Floor(x / cell); var gy = (int)Math.Floor(y / cell);
@@ -164,6 +170,8 @@ internal sealed class QrPatternRasterizer {
         for (var n = 0; n < 9; n++) {
             var i = gx - 1 + _order[n] % 3; var j = gy - 1 + _order[n] / 3;
             var cx = (i + 0.2 + 0.6 * Hash(i, j * 3 + 1)) * cell; var cy = (j + 0.2 + 0.6 * Hash(i * 5 + 2, j)) * cell;
+            // Leaves crowd one side and open up toward the other.
+            if (Hash(i + 61, j - 3) > 0.3 + 0.7 * SmoothStep(-0.6, 0.6, -cx - 0.3 * cy)) continue;
             var angle = -0.9 + 0.8 * (Hash(i + 9, j - 4) - 0.5) + (Hash(i - 3, j + 8) < 0.5 ? 0 : Math.PI * 0.85);
             var length = cell * (0.95 + 0.45 * Hash(i + 21, j + 2)); var width = length * 0.36;
             var dx = x - cx; var dy = y - cy;
@@ -176,8 +184,11 @@ internal sealed class QrPatternRasterizer {
             var coverage = Coverage(Math.Min(leaf, stem));
             if (coverage > 0) {
                 var shaded = Color.Mix(tone, Black, 0.16 * SmoothStep(0, width / 2, ly));
-                var rib = Coverage(Math.Max(Math.Abs(ly) - length * 0.012, Math.Abs(lx) - length * 0.42));
-                shaded = Color.Mix(shaded, Color.Mix(tone, White, 0.45), 0.85 * rib);
+                // A darker rim and midrib keep each leaf readable once the code lifts its values.
+                var rim = Coverage(-leaf - width * 0.05);
+                shaded = Color.Mix(Color.Mix(tone, Black, 0.42), shaded, rim);
+                var rib = Coverage(Math.Max(Math.Abs(ly) - length * 0.011, Math.Abs(lx) - length * 0.42));
+                shaded = Color.Mix(shaded, Color.Mix(tone, Black, 0.38), 0.9 * rib);
                 color = Color.Mix(color, shaded, coverage);
             }
         }
@@ -202,8 +213,8 @@ internal sealed class QrPatternRasterizer {
         var color = Color.Mix(_paper, Role(0), 0.26);
         var grid = Math.Min(Math.Abs(u), Math.Abs(v));
         color = Color.Mix(color, Role(0), 0.06 * Math.Max(0, Math.Min(1, 0.5 - (grid - 0.006) / pixel)));
-        var left = Link(tx, ty, true); var right = Link(tx + 1, ty, true);
-        var up = Link(tx, ty, false); var down = Link(tx, ty + 1, false);
+        var left = Link(tx, ty, true, cells); var right = Link(tx + 1, ty, true, cells);
+        var up = Link(tx, ty, false, cells); var down = Link(tx, ty + 1, false, cells);
         var links = (left ? 1 : 0) + (right ? 1 : 0) + (up ? 1 : 0) + (down ? 1 : 0);
         var turn = links > 1 && !((left && right) || (up && down));
         var inset = turn ? chamfer : 0;
@@ -221,14 +232,17 @@ internal sealed class QrPatternRasterizer {
         color = Color.Mix(color, Role(0), Math.Max(0, Math.Min(1, 0.5 - (distance - width) / pixel)));
         var centre = Length(u, v);
         double shape; int role;
-        if (links == 1) { shape = Math.Abs(centre - 0.15) - 0.07; role = 1; }
-        else if (links >= 3) { shape = centre - 0.13; role = 2; }
-        else if (links == 0 && Hash(tx + 51, ty - 19) < 0.35) { shape = Math.Abs(centre - 0.08) - 0.035; role = 3; }
+        // Small pads and vias, so they read as rings rather than blobs inside the code.
+        if (links == 1) { shape = Math.Abs(centre - 0.105) - 0.04; role = 1; }
+        else if (links >= 3) { shape = centre - 0.09; role = 2; }
+        else if (links == 0 && Hash(tx + 51, ty - 19) < 0.35) { shape = Math.Abs(centre - 0.06) - 0.022; role = 3; }
         else return color;
         return Color.Mix(color, Role(role), Math.Max(0, Math.Min(1, 0.5 - shape / pixel)));
     }
 
-    private bool Link(int x, int y, bool horizontal) => Hash(x * 2 + (horizontal ? 0 : 1) + 101, y * 3 - 7) < (horizontal ? 0.58 : 0.34);
+    // Traces are dense toward one edge and sparse toward the other.
+    private bool Link(int x, int y, bool horizontal, double cells) => Hash(x * 2 + (horizontal ? 0 : 1) + 101, y * 3 - 7)
+        < (horizontal ? 0.58 : 0.34) * (0.45 + 0.75 * SmoothStep(-0.6, 0.6, y / cells));
 
     private static readonly Color White = new(255, 255, 255);
     private static readonly Color Black = new(0, 0, 0);

@@ -61,18 +61,17 @@ public static class QrArtPatternPresets {
             QrArtPattern.Geometric => QrImageFinderStyle.Chamfered,
             _ => QrImageFinderStyle.Rounded
         };
-        // Placement, wash and fade width differ per family: centred stone with a wide soft field, waves breaking
-        // toward the lower right, a centred burst, a tight Bauhaus field in the lower left, leaves to the right and
-        // a circuit near the top edge.
-        var (x, y, opacity, fade) = pattern switch {
-            QrArtPattern.Marble => (0.5, 0.5, 0.9, 6.0),
-            QrArtPattern.Waves => (0.72, 0.64, 0.6, 3.0),
-            QrArtPattern.Sunburst => (0.5, 0.5, 0.55, 5.0),
-            QrArtPattern.Geometric => (0.3, 0.7, 0.65, 1.5),
-            QrArtPattern.Botanical => (0.64, 0.42, 0.7, 4.0),
-            _ => (0.5, 0.28, 0.8, 2.0)
+        // Each family has its own composition: the code sits off-centre in a margin sized for its motif, and the
+        // art's density gradient runs away from the code. Only the code's footprint is lifted, on its module grid.
+        var (padding, x, y, opacity, saturation) = pattern switch {
+            QrArtPattern.Marble => (10, 0.68, 0.34, 0.92, 0.75),
+            QrArtPattern.Waves => (12, 0.74, 0.7, 0.75, 0.7),
+            QrArtPattern.Sunburst => (9, 0.36, 0.62, 0.7, 0.8),
+            QrArtPattern.Geometric => (12, 0.28, 0.72, 0.72, 0.35),
+            QrArtPattern.Botanical => (12, 0.7, 0.4, 0.92, 0.85),
+            _ => (10, 0.42, 0.24, 0.85, 0.9)
         };
-        // The quiet zone and the canvas wash share one light tone matched to each palette's temperature.
+        // The canvas wash shares one light tone matched to each palette's temperature.
         var paper = pattern switch {
             QrArtPattern.Marble => new Rgba32(252, 250, 246),
             QrArtPattern.Waves => new Rgba32(246, 249, 252),
@@ -80,19 +79,30 @@ public static class QrArtPatternPresets {
             QrArtPattern.Circuit => new Rgba32(245, 249, 248),
             _ => new Rgba32(255, 248, 238)
         };
-        return new QrImageCompositionOptions {
+        // Palette-owned dark tones where a deep tone of the art would read muddy: Geometric's deep teal, the
+        // Sunburst's aubergine on the warm rays, and a teal-black for Waves rather than navy on mid-blue.
+        var ink = pattern switch {
+            QrArtPattern.Geometric => new Rgba32(18, 52, 58),
+            QrArtPattern.Sunburst => new Rgba32(62, 16, 54),
+            QrArtPattern.Waves => new Rgba32(6, 38, 50),
+            _ => new Rgba32(21, 26, 47)
+        };
+        var options = new QrImageCompositionOptions {
             ModuleSize = moduleSize, Strength = 0.96,
-            Canvas = new QrImageCanvasOptions { PaddingModules = 8, PositionX = x, PositionY = y, ArtOpacity = opacity, FadeModules = fade },
+            Canvas = new QrImageCanvasOptions { PaddingModules = padding, PositionX = x, PositionY = y, ArtOpacity = opacity },
             Art = new QrImageArtOptions {
                 Style = style, Shape = shape, Scale = 0.95, DetailProtection = 0.3, FunctionalTint = 1,
-                Finders = finders, FunctionalBackground = paper,
-                // Geometric uses its palette's own deep teal for every dark module instead of darkened tile colours.
-                FunctionalForeground = pattern == QrArtPattern.Geometric ? new Rgba32(18, 52, 58) : new Rgba32(21, 26, 47),
-                DarkModuleArt = pattern switch { QrArtPattern.Geometric => 0, QrArtPattern.Marble => 0.5, _ => 1 }
+                Finders = finders, FunctionalBackground = paper, FunctionalForeground = ink, LightModuleSaturation = saturation,
+                DarkModuleArt = pattern switch { QrArtPattern.Geometric or QrArtPattern.Sunburst or QrArtPattern.Waves => 0, QrArtPattern.Marble => 0.5, _ => 1 }
             }
         };
+        if (pattern == QrArtPattern.Sunburst) {
+            // Frame the burst so its centre falls on the off-centre code (for a typical 33-module symbol).
+            options.ImageZoom = 1.5;
+            options.ImagePositionX = 0.586; options.ImagePositionY = 0.426;
+        }
+        return options;
     }
-
     private static void ValidatePattern(QrArtPattern pattern) {
         if (!Enum.IsDefined(typeof(QrArtPattern), pattern)) throw new ArgumentOutOfRangeException(nameof(pattern));
     }

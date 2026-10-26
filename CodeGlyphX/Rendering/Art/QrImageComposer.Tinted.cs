@@ -6,47 +6,67 @@ namespace CodeGlyphX.Rendering.Art;
 public static partial class QrImageComposer {
     /// <summary>
     /// The tinted colour model shared by the canvas, the quiet zone and every module. The whole image is the washed
-    /// artwork with its own crisp regions. Around the code, a light field lifts only the art's darker areas to a
-    /// luminance floor, so the quiet zone stays light without a card silhouette; the floor rises in rounded fields
-    /// around the finders and fades out softly beyond the quiet zone. Dark modules are deep tones of the art.
+    /// artwork with its own crisp regions. Behind and between modules, and across the quiet zone, the art's darker
+    /// areas are lifted to a luminance floor, so the code's footprint stays light without a veil or halo; the lift
+    /// fades out over a short distance beyond the quiet zone. Dark modules are deep tones of the art.
     /// </summary>
     private sealed class TintModel {
-        internal const double BodyFloor = 194, FinderFloor = 214, DeepCeiling = 52;
+        internal const double BodyFloor = 202, DeepCeiling = 52;
         private readonly Rgba32 _ink, _paper, _base;
-        private readonly double _tint, _darkArt, _strength, _opacity, _module, _symbol, _border, _fade;
+        private readonly double _tint, _darkArt, _saturation, _strength, _opacity, _module, _symbol, _border, _fade;
 
         internal TintModel(QrImageArtOptions options, double strength, double opacity, Rgba32 canvasBase,
             int moduleSize, int symbolModules, int border, double fade) {
             _ink = options.FunctionalForeground; _paper = options.FunctionalBackground; _base = canvasBase;
-            _tint = options.FunctionalTint; _darkArt = options.DarkModuleArt; _strength = strength; _opacity = opacity;
+            _tint = options.FunctionalTint; _darkArt = options.DarkModuleArt; _saturation = options.LightModuleSaturation; _strength = strength; _opacity = opacity;
             _module = moduleSize; _symbol = symbolModules * (double)moduleSize; _border = border; _fade = fade;
         }
 
-        /// <summary>Luminance floor at a pixel, in symbol coordinates (the symbol's top-left module corner is 0,0).</summary>
-        internal double Floor(double px, double py) {
+        /// <summary>
+        /// Weight of the light field at a pixel, in symbol coordinates (the symbol's top-left module corner is 0,0).
+        /// The field is built from the code's own footprint on the module grid: the symbol and its whole quiet zone are
+        /// lifted, and beyond the quiet zone a fringe of module-sized light tiles thins out over three rings, so the
+        /// field ends in the code's own pixel language instead of a straight edge or a veil.
+        /// </summary>
+        internal double Field(double px, double py) {
             px += 0.5; py += 0.5;
-            // A squircle (|u|^4 + |v|^4 = 2) just encloses the quiet-zone square, so the field is a soft cushion, not a box.
-            var half = _symbol / 2 + _border;
-            var u = Math.Abs(px - _symbol / 2) / half; var v = Math.Abs(py - _symbol / 2) / half;
-            var outside = Math.Max(0, (Math.Pow(u * u * u * u + v * v * v * v, 0.25) - Math.Pow(2, 0.25)) * half);
-            var t = _fade <= 0 ? (outside > 0 ? 1 : 0) : Smooth(outside / _fade);
-            var floor = BodyFloor * (1 - t);
-            var near = 3.5 * _module; var far = _symbol - 3.5 * _module;
-            var finder = Math.Min(Distance(px, py, near, near), Math.Min(Distance(px, py, far, near), Distance(px, py, near, far))) / _module;
-            return Math.Max(floor, FinderFloor * (1 - Smooth((finder - 4.6) / 3.2)));
+            var outside = Math.Max(Math.Max(-px, px - _symbol), Math.Max(-py, py - _symbol));
+            if (outside < _border) return 1;
+            var ring = (int)((outside - _border) / _module);
+            if (ring >= 3) return 0;
+            var cellX = (int)Math.Floor(px / _module); var cellY = (int)Math.Floor(py / _module);
+            var keep = ring == 0 ? 0.72 : ring == 1 ? 0.38 : 0.12;
+            if (CellHash(cellX, cellY) >= keep) return 0;
+            // A crisp rounded tile, one module wide, like a light module that drifted out of the code.
+            var u = Mod(px, _module) / _module - 0.5; var v = Mod(py, _module) / _module - 0.5;
+            const double corner = 0.22, halfTile = 0.47;
+            var qx = Math.Max(Math.Abs(u) - (halfTile - corner), 0); var qy = Math.Max(Math.Abs(v) - (halfTile - corner), 0);
+            var edge = (Math.Sqrt(qx * qx + qy * qy) - corner) * _module;
+            return Math.Max(0, Math.Min(1, 0.5 - edge));
         }
 
-        internal void Light(double r, double g, double b, double floor, out double lr, out double lg, out double lb) {
+        private static double CellHash(int x, int y) {
+            unchecked {
+                var value = (uint)x * 0x9e3779b9u ^ (uint)y * 0x85ebca6bu ^ 0x5bd1e995u;
+                value ^= value >> 16; value *= 0x7feb352du; value ^= value >> 15; value *= 0x846ca68bu; value ^= value >> 16;
+                return (value & 0xffffff) / 16777216.0;
+            }
+        }
+        private static double Mod(double value, double size) => value - Math.Floor(value / size) * size;
+        internal void Light(double r, double g, double b, double field, out double lr, out double lg, out double lb) {
             r = _base.R + (r - _base.R) * _opacity; g = _base.G + (g - _base.G) * _opacity; b = _base.B + (b - _base.B) * _opacity;
             var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-            // A smooth maximum lifts only areas darker than the floor, keeping lighter art and every region edge intact.
+            // Inside the field the art may be desaturated, so modules win over busy colour.
+            var keep = 1 - (1 - _saturation) * field;
+            r = luminance + (r - luminance) * keep; g = luminance + (g - luminance) * keep; b = luminance + (b - luminance) * keep;
+            // A smooth maximum lifts only areas darker than the floor, keeping lighter art and every region edge crisp.
+            var floor = BodyFloor * field;
             var target = Math.Pow(Math.Pow(luminance, 8) + Math.Pow(floor, 8), 1 / 8.0);
             var amount = luminance >= 255 ? 0 : Math.Max(0, (255 - Math.Min(255, target)) / (255 - luminance));
             lr = Blend(_paper.R, 255 - (255 - r) * amount);
             lg = Blend(_paper.G, 255 - (255 - g) * amount);
             lb = Blend(_paper.B, 255 - (255 - b) * amount);
         }
-
         internal void Deep(double r, double g, double b, out double dr, out double dg, out double db) {
             var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
             var amount = (luminance > DeepCeiling ? DeepCeiling / luminance : 1) * _strength;
@@ -57,7 +77,7 @@ public static partial class QrImageComposer {
 
         /// <summary>Writes a light-to-deep mix at a symbol-relative pixel; coverage is the dark share of the pixel.</summary>
         internal void Write(byte[] pixels, int index, double px, double py, double r, double g, double b, double coverage) {
-            Light(r, g, b, Floor(px, py), out var lr, out var lg, out var lb);
+            Light(r, g, b, Field(px, py), out var lr, out var lg, out var lb);
             if (coverage > 0) {
                 Deep(r, g, b, out var dr, out var dg, out var db);
                 lr += (dr - lr) * coverage; lg += (dg - lg) * coverage; lb += (db - lb) * coverage;
@@ -67,7 +87,6 @@ public static partial class QrImageComposer {
 
         // FunctionalTint below one blends toward the solid functional colours.
         private double Blend(byte solid, double art) => solid + (art - solid) * _tint;
-        private static double Distance(double x, double y, double cx, double cy) => Math.Sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
         private static double Smooth(double t) { t = Math.Max(0, Math.Min(1, t)); return t * t * (3 - 2 * t); }
     }
 

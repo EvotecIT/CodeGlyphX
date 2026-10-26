@@ -43,7 +43,7 @@ public sealed class QrPatternWorkflowTests {
             edited.Canvas!.PaddingModules = 0;
             var other = QrArtPatternPresets.CreateCompositionOptions(pattern);
             Assert.Equal(0.95, other.Art!.Scale);
-            Assert.Equal(8, other.Canvas!.PaddingModules);
+            Assert.True(other.Canvas!.PaddingModules >= 8);
             Assert.Equal(18, other.ModuleSize);
         }
     }

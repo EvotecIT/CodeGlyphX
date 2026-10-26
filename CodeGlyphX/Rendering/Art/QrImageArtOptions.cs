@@ -36,8 +36,8 @@ public sealed class QrImageArtOptions {
 
     /// <summary>
     /// Tinted composition (0..1). Zero keeps the classic treatment: solid functional colours and a solid quiet zone.
-    /// Above zero, one colour model covers the whole symbol: light modules and the quiet zone keep the artwork's own
-    /// crisp regions compressed into a pale band (luminance 214..255), and dark modules, including finder, timing,
+    /// Above zero, one colour model covers the whole symbol: behind light modules and across the quiet zone the artwork
+    /// keeps its crisp regions, with darker areas lifted to luminance 202, and dark modules, including finder, timing,
     /// alignment, format and version modules, are deep tones of the art (luminance at most 52) drawn with the data
     /// silhouettes. Values below one blend toward the solid functional colours.
     /// </summary>
@@ -45,6 +45,9 @@ public sealed class QrImageArtOptions {
 
     /// <summary>Share of the artwork's hue in tinted dark modules (0..1). Zero uses FunctionalForeground, for a palette's own dark tone; one uses deep tones of the art.</summary>
     public double DarkModuleArt { get; set; } = 1;
+
+    /// <summary>Colour saturation (0..1) of tinted art behind light modules and in the quiet zone. Lower values keep busy art quiet inside the code.</summary>
+    public double LightModuleSaturation { get; set; } = 1;
 
     internal void Validate() {
         Subject?.Validate();
@@ -59,5 +62,6 @@ public sealed class QrImageArtOptions {
         if (double.IsNaN(DetailProtection) || DetailProtection < 0 || DetailProtection > 1) throw new ArgumentOutOfRangeException(nameof(DetailProtection));
         if (double.IsNaN(FunctionalTint) || FunctionalTint < 0 || FunctionalTint > 1) throw new ArgumentOutOfRangeException(nameof(FunctionalTint));
         if (double.IsNaN(DarkModuleArt) || DarkModuleArt < 0 || DarkModuleArt > 1) throw new ArgumentOutOfRangeException(nameof(DarkModuleArt));
+        if (double.IsNaN(LightModuleSaturation) || LightModuleSaturation < 0 || LightModuleSaturation > 1) throw new ArgumentOutOfRangeException(nameof(LightModuleSaturation));
     }
 }
