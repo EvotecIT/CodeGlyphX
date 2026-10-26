@@ -24,7 +24,7 @@ public static class QrScenePresets {
         var (qrX, qrY, qrScale, captionY, captionScale) = style switch {
             QrSceneStyle.TropicalGarden => (0.5, 0.43, 0.46, 0.737, 0.52),
             QrSceneStyle.ElectricCity => (0.5, 0.37, 0.5, 0.958, 0.72),
-            QrSceneStyle.MusicFestival => (0.5, 0.455, 0.5, 0.105, 0.8),
+            QrSceneStyle.MusicFestival => (0.5, 0.44, 0.5, 0.093, 0.8),
             QrSceneStyle.OceanReef => (0.5, 0.43, 0.5, 0.95, 0.66),
             QrSceneStyle.CosmicOrbit => (0.5, 0.44, 0.5, 0.95, 0.72),
             _ => (0.5, 0.4, 0.54, 0.79, 1.0)

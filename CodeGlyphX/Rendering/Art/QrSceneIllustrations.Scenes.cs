@@ -27,7 +27,7 @@ internal static partial class QrSceneIllustrations {
         s.Motifs();
         var deep = c[3]; var leaf = c[1]; var light = Mix(c[1], paper, 0.35);
         // Lower left: a tall monstera and a second, smaller one turned the other way.
-        Monstera(g, 0.03, 1.04, 0.44, -1.36 + r.Range(-0.05, 0.05), leaf, light);
+        Monstera(g, 0.03, 0.97, 0.44, -1.36 + r.Range(-0.05, 0.05), leaf, light);
         Monstera(g, -0.04, 0.78, 0.3, -0.62 + r.Range(-0.06, 0.06), deep, Mix(deep, paper, 0.35));
         // Upper right: a palm frond sweeping down across the corner.
         Frond(g, 1.03, -0.02, 0.52, -0.12, 1.95, deep, Mix(deep, c[1], 0.45));
@@ -192,9 +192,10 @@ internal static partial class QrSceneIllustrations {
         }
         // A rooftop mast rises in front of the sign and crosses its lower edge, stopping below the code.
         var mastX = f.X + f.Size * 0.1; var mastTop = f.Bottom + m * 0.45;
-        g.Rect(Solid(near), mastX - 0.004, mastTop, 0.008, roof - mastTop + 0.02);
+        g.Rect(Solid(near), mastX - 0.0065, mastTop, 0.013, roof - mastTop + 0.02);
+        for (var bar = mastTop + 0.045; bar < roof - 0.01; bar += 0.03) g.Stroke(Solid(near), 0.004, mastX - 0.012, bar, mastX + 0.012, bar + 0.022);
         g.Stroke(Solid(near), 0.004, mastX - 0.018, mastTop + 0.03, mastX + 0.018, mastTop + 0.03);
-        g.Circle(Solid(c[0], 0.35), mastX, mastTop, 0.012);
+        g.Circle(Solid(c[0], 0.35), mastX, mastTop, 0.017);
         g.Circle(Solid(c[0]), mastX, mastTop, 0.0055);
         // Street and light trails.
         g.Rect(Solid(Mix(night, s.Ink, 0.7)), 0, 0.885, 1, 0.115);
@@ -231,10 +232,20 @@ internal static partial class QrSceneIllustrations {
         var m = 0.03; var bezel = Mix(Mix(s.Ink, c[3], 0.35), paper, 0.18);
         g.RoundRect(Solid(bezel), f.X - m - 0.014, f.Y - m - 0.014, f.Size + 2 * m + 0.028, f.Size + 2 * m + 0.028, 0.03);
         g.RoundRect(Solid(paper), f.X - m, f.Y - m, f.Size + 2 * m, f.Size + 2 * m, 0.018);
-        var floor = Math.Max(f.Bottom + m + 0.03, 0.84);
+        var floor = Math.Max(f.Bottom + m + 0.05, 0.74);
         g.Rect(Solid(bezel), f.CenterX - 0.012, f.Bottom + m, 0.024, floor - f.Bottom - m);
 
         s.Motifs();
+        // Festoon lights across the top frame the title.
+        var festoon = new List<double>();
+        for (var i = 0; i <= 40; i++) { var t = i / 40.0; festoon.Add(-0.02 + 1.04 * t); festoon.Add(0.012 + 0.036 * 4 * t * (1 - t)); }
+        g.Stroke(Solid(Mix(s.Ink, c[3], 0.2)), 0.003, festoon.ToArray());
+        for (var i = 2; i <= 38; i += 3) {
+            var t = i / 40.0; var bx = -0.02 + 1.04 * t; var by = 0.012 + 0.036 * 4 * t * (1 - t) + 0.008;
+            var bulb = i % 9 == 2 ? c[0] : i % 9 == 5 ? c[1] : c[2];
+            g.Circle(Solid(bulb, 0.3), bx, by, 0.012);
+            g.Circle(Solid(Mix(bulb, paper, 0.35)), bx, by, 0.0055);
+        }
         // Stage deck.
         g.Rect(Solid(Mix(s.Ink, c[3], 0.15)), 0, floor, 1, 0.05);
         g.Rect(Solid(c[2]), 0, floor, 1, 0.006);
@@ -262,12 +273,24 @@ internal static partial class QrSceneIllustrations {
             g.Circle(Solid(k == 1 ? c[0] : c[2]), tower + 0.011, ly + 0.015, 0.009);
         }
         // Notes drifting up beside the screen.
-        Note(g, Math.Min(0.92, f.Right + m + 0.07), f.Y + 0.02, 0.05, -0.15, Mix(paper, c[2], 0.3));
-        Note(g, Math.Max(0.06, f.X - m - 0.07), f.Y + 0.06, 0.036, 0.2, Mix(paper, c[1], 0.25));
         // The crowd: a lighter back row and a darker front row with raised hands and phone lights.
         var back = Mix(s.Ink, c[3], 0.55); var front = Mix(s.Ink, c[3], 0.12);
         Crowd(g, r, floor + 0.035, 0.034, back, null, 0.25);
         Crowd(g, r, floor + 0.085, 0.044, front, c[2], 0.35);
+        Crowd(g, r, floor + 0.165, 0.056, Mix(s.Ink, c[3], 0.04), c[2], 0.3);
+        // Two fans on friends' shoulders reach up over the screen's lower bezel, stopping below the code.
+        foreach (var (rx, lean) in new[] { (f.X + f.Size * 0.22, -1.0), (f.Right - f.Size * 0.3, 1.0) }) {
+            var head = floor + 0.012; var reach = f.Bottom + 0.012;
+            var body = new List<double[]> { QrSceneGeometry.Ellipse(rx, head, 0.019, 0.022, 0, 28), QrSceneGeometry.RoundRectangle(rx - 0.03, head + 0.018, 0.06, 0.07, 0.022, 0) };
+            body.AddRange(QrSceneGeometry.StrokeContours(0.013, new[] { rx - 0.022, head + 0.03, rx - 0.04 + lean * 0.006, head - 0.03, rx - 0.03 + lean * 0.01, reach + 0.012 }));
+            body.AddRange(QrSceneGeometry.StrokeContours(0.013, new[] { rx + 0.022, head + 0.03, rx + 0.04 + lean * 0.006, head - 0.03, rx + 0.03 + lean * 0.01, reach + 0.012 }));
+            body.Add(QrSceneGeometry.Ellipse(rx - 0.03 + lean * 0.01, reach + 0.006, 0.01, 0.012, 0, 20));
+            body.Add(QrSceneGeometry.Ellipse(rx + 0.03 + lean * 0.01, reach + 0.006, 0.01, 0.012, 0, 20));
+            g.Fill(Solid(front), body.ToArray());
+        }
+        // A second beam crosses the screen's upper-left corner, left of and above the code.
+        g.Polygon(ScenePaint.Linear(f.X - 0.2, floor, f.X, 0, (0, Fade(Mix(c[1], paper, 0.5), 0.75)), (1, Fade(c[1], 0))),
+            f.X - 0.21, floor, f.X - 0.19, floor, f.X + 0.02, -0.02, f.X - 0.05, -0.02);
         // One spotlight from the stage floor sweeps across the screen's lower-right corner, clear of the code.
         g.Polygon(ScenePaint.Linear(f.Right, floor, f.Right + 0.25, 0, (0, Fade(Mix(c[2], paper, 0.55), 0.85)), (0.55, Fade(Mix(c[2], paper, 0.3), 0.45)), (1, Fade(c[2], 0))),
             f.Right - 0.002, floor, f.Right + 0.012, floor, f.Right + 0.33, -0.02, f.Right + 0.2, -0.02);
@@ -341,16 +364,20 @@ internal static partial class QrSceneIllustrations {
         // to the right at varied sizes, headings and depths. Farther, smaller fish are paler; an angelfish crosses the
         // bubble's rim on the side, well clear of the code.
         var fish = new List<(double Size, double X, double Y, double Heading, int Kind)>();
-        for (var attempt = 0; attempt < 400 && fish.Count < 10; attempt++) {
+        for (var attempt = 0; attempt < 900 && fish.Count < 12; attempt++) {
             var size = r.Range(0.018, 0.04);
-            var x = r.Range(f.CenterX + radius * 0.35, 0.96); var y = r.Range(0.05, 0.84);
+            // The first few go to the left and upper left, the rest anywhere in open water.
+            var left = fish.Count < 3;
+            var x = left ? r.Range(0.03, f.CenterX - radius * 0.45) : r.Range(0.03, 0.97);
+            var y = left ? r.Range(0.04, 0.5) : r.Range(0.04, 0.84);
+            if (x < 0.34 && y > 0.56 || x > 0.68 && y > 0.8) continue;
             if (Math.Sqrt((x - f.CenterX) * (x - f.CenterX) + (y - f.CenterY) * (y - f.CenterY)) < radius + 0.03 + size * 1.4) continue;
             var clear = true;
             foreach (var other in fish) if (Math.Abs(other.X - x) < (other.Size + size) * 1.9 && Math.Abs(other.Y - y) < (other.Size + size) * 1.4) clear = false;
             if (!clear) continue;
             fish.Add((size, x, y, (r.Next() < 0.7 ? -Math.PI / 2 - 0.5 : Math.PI) + r.Range(-0.45, 0.45), (int)(r.Next() * 3)));
         }
-        fish.Add((0.034, f.CenterX + (radius + 0.004) * Math.Cos(0.25), f.CenterY + (radius + 0.004) * Math.Sin(0.25), -Math.PI / 2 - 0.35, 1));
+        fish.Add((0.036, f.CenterX + (radius + 0.004) * Math.Cos(0.25), f.CenterY + (radius + 0.004) * Math.Sin(0.25), -Math.PI / 2 - 0.35, 1));
         fish.Sort((a, b) => a.Size.CompareTo(b.Size));
         var tint = 0;
         foreach (var (size, x, y, heading, kind) in fish) {
@@ -359,10 +386,8 @@ internal static partial class QrSceneIllustrations {
             Fish(g, x, y, size, heading, Mix(body, Mix(c[1], c[3], 0.4), 0.45 * depth), s.Ink, false, kind);
         }
         Fish(g, 0.11, 0.7, 0.05, -0.15, c[2], s.Ink, true);
-        for (var i = 0; i < 7; i++) {
-            var bx = 0.07 + 0.03 * Math.Sin(i * 1.9); var by = 0.6 - i * 0.07;
-            g.Ring(Solid(paper, 0.7), bx, by, 0.006 + 0.0025 * (i % 3), 0.0028);
-        }
+        // A few bubbles rising from the coral.
+        for (var i = 0; i < 4; i++) g.Ring(Solid(paper, 0.7), 0.05 + 0.012 * Math.Sin(i * 2.1), 0.66 - i * 0.045, 0.005 + 0.002 * (i % 2), 0.0026);
     }
     private static double[] Wave(double x0, double y, double amplitude, double frequency, double phase) {
         var path = new List<double>();
@@ -481,7 +506,7 @@ internal static partial class QrSceneIllustrations {
             g.Circle(Solid(Mix(paper, c[3], 0.14)), cx + size * 0.14, cy + size * 0.14, size * 0.68);
             var glint = new List<double>();
             for (var t = 0.1; t <= 1.45; t += 0.15) { glint.Add(cx + size * 0.86 * Math.Cos(t)); glint.Add(cy + size * 0.86 * Math.Sin(t)); }
-            g.Stroke(Solid(paper), size * 0.16, glint.ToArray());
+            g.Stroke(Solid(paper), size * 0.26, glint.ToArray());
         }
         var limb = new List<double>();
         for (var a = -0.35; a <= 2.0; a += 0.04) { limb.Add(f.CenterX + radius * Math.Cos(a)); limb.Add(f.CenterY + radius * Math.Sin(a)); }
