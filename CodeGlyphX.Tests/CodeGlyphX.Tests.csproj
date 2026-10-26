@@ -30,6 +30,7 @@
     <Compile Include="Net472\**\*.cs" />
     <Compile Include="BundledBarcodeFontTests.cs" />
     <Compile Include="QrCanvasCaptionTests.cs" />
+    <Compile Include="QrCaptionIntegrityTests.cs" />
     <Compile Include="BarcodeBoundaryReviewTests.cs" />
     <Compile Include="LinearControlConformanceTests.cs" />
     <Compile Include="AustraliaPostControlTests.cs" />

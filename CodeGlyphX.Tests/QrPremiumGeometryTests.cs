@@ -6,6 +6,25 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class QrPremiumGeometryTests {
+    [Fact]
+    public void Neon_HasSeparateVioletBloomOutsideTheMagentaRim_AndOneDarkComposition() {
+        var options = QrArt.Hero(QrHeroPreset.Neon);
+        var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+        var png = QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, options, encoding).ToArray();
+        Assert.Equal(png, QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, QrArt.Hero(QrHeroPreset.Neon, true), encoding).ToArray());
+        var pixels = ImageReader.DecodeRgba32(png, out var w, out var h);
+        var left = Enumerable.Range(0, w / 2).First(x => {
+            var p = ((h / 2) * w + x) * 4;
+            return pixels[p] == options.Background.R && pixels[p + 1] == options.Background.G && pixels[p + 2] == options.Background.B;
+        });
+        var control = QrRenderer.CloneOptions(options); control.Canvas!.SecondaryPanelGlowColor = null;
+        var baseline = ImageReader.DecodeRgba32(QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, control, encoding).ToArray(), out _, out _);
+        var outer = ((h / 2) * w + left - 60) * 4;
+        Assert.True(pixels[outer + 2] - baseline[outer + 2] > pixels[outer] - baseline[outer] + 25);
+        var rim = ((h / 2) * w + left - 5) * 4;
+        Assert.True(pixels[rim] > pixels[rim + 2]);
+    }
+
     public static IEnumerable<object[]> DarkHeroes() => Enum.GetValues<QrHeroPreset>().Select(h => new object[] { h });
 
     [Theory, MemberData(nameof(DarkHeroes))]
@@ -24,13 +43,15 @@ public sealed class QrPremiumGeometryTests {
         const int m = 40;
         var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
             ModuleSize = m, ModuleShape = QrModuleShape.Dot, ModuleScale = .8125,
-            Foreground = new Rgba32(31, 31, 31), TimingThicknessModules = .2
+            Foreground = new Rgba32(31, 31, 31), TimingThicknessModules = .22
         }, out var w, out _, out _);
         byte Red(double x, double y) => pixels[((int)((y + 4) * m) * w + (int)((x + 4) * m)) * 4];
         Assert.True(qr.Modules[8, 6]); Assert.False(qr.Modules[9, 6]);
         Assert.Equal(31, Red(8.5, 6.5));
-        Assert.InRange(Red(9.5, 6.5), 190, 220);
-        Assert.InRange(Red(10, 6.5), 190, 220);
+        Assert.Equal(31, Red(9.5, 6.5));
+        Assert.Equal(31, Red(10, 6.5));
+        Assert.Equal(31, Red(8.5, 6.25));
+        Assert.Equal(255, Red(9.5, 6.25));
         Assert.Equal(255, Red(9.5, 6.1));
     }
 
@@ -138,6 +159,7 @@ public sealed class QrPremiumGeometryTests {
         var rgba = ImageReader.DecodeRgba32(png, out var w, out var h);
         var control = QrRenderer.CloneOptions(options);
         control.Canvas!.PanelGlowColor = control.Canvas.SecondaryPanelGlowColor = null;
+        if (hero == QrHeroPreset.PaperCutout) control.Canvas.ShadowColor = Rgba32.Transparent;
         var baseline = ImageReader.DecodeRgba32(QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, control,
             new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray(), out var cw, out var ch);
         Assert.Equal(w, cw); Assert.Equal(h, ch);
@@ -180,6 +202,11 @@ public sealed class QrPremiumGeometryTests {
         foreach (var point in new[] { (.1, .1), (qr.Size - .1, .1), (.1, qr.Size - .1) }) {
             var x = (int)((point.Item1 + 4) * m); var y = (int)((point.Item2 + 4) * m);
             Assert.True(pixels[(y * w + x) * 4] < 32, "Each outer finder corner needs its leaf tip.");
+        }
+        // The opposite corner is visibly round, so the outward corner is the only tip.
+        foreach (var point in new[] { (6.7, 6.7), (qr.Size - 6.7, 6.7), (6.7, qr.Size - 6.7) }) {
+            var x = (int)((point.Item1 + 4) * m); var y = (int)((point.Item2 + 4) * m);
+            Assert.Equal(255, pixels[(y * w + x) * 4]);
         }
     }
 

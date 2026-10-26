@@ -4,24 +4,24 @@ namespace CodeGlyphX.Rendering.Png;
 
 public static partial class QrPngRenderer {
     private static void DrawCaptionCanvas(byte[] pixels, int width, int height, int stride, QrCanvasOptions canvas,
-        int x, int y, int w, int h, int qx, int qy, int qr, int moduleSize) {
+        int x, int y, int w, int h, int qx, int qy, int qr, int moduleSize, int quiet) {
         var caption = canvas.Caption;
-        var plan = MeasureCaption(canvas, qr);
+        var plan = MeasureCaption(canvas, qr, moduleSize, quiet);
         var top = caption?.Position == QrCanvasCaptionPosition.Top;
         var sy = top ? qy - plan.Height - plan.Gap : qy + qr + plan.Gap;
         var defaultInk = IsDark(canvas.Background) ? new Rgba32(230, 232, 244) : new Rgba32(20, 24, 40);
         var ink = canvas.StrokeColor ?? canvas.Frame?.Color ?? defaultInk;
         var band = canvas.BandColor ?? ink;
         var foreground = caption?.Color ?? ink;
-        var pad = CaptionCanvasPadding(canvas, qr);
-        var t = canvas.StrokeWidthPx > 0 ? canvas.StrokeWidthPx : Math.Max(2 * (caption?.RasterScale ?? 1), (int)Math.Round(moduleSize * .5));
+        var pad = CaptionCanvasPadding(canvas, qr, moduleSize, quiet);
+        var t = CaptionStrokeWidth(canvas, moduleSize);
         var left = x + pad / 2; var right = x + w - pad / 2;
         var upper = y + pad / 2; var lower = y + h - pad / 2;
         if (canvas.Template == QrCanvasTemplate.PhoneOutline) {
             left = x + t; right = x + w - t; upper = y + t; lower = y + h - t;
         }
         var radius = canvas.Template == QrCanvasTemplate.PhoneOutline ? w / 9 : (int)Math.Round(w * .06);
-        var pillWidth = Math.Min(qr, plan.Width + 2 * plan.Clearance);
+        var pillWidth = Math.Min(plan.CodeWidth, plan.Width + 2 * plan.HorizontalClearance);
         var pillLeft = qx + (qr - pillWidth) / 2;
         bool Rounded(double px, double py, double rx, double ry, double rw, double rh, double rr) {
             if (px < rx || px >= rx + rw || py < ry || py >= ry + rh) return false;
@@ -31,6 +31,14 @@ public static partial class QrPngRenderer {
             return dx * dx + dy * dy <= rr * rr;
         }
         var template = canvas.Template;
+        var notch = Math.Max(8, w * .045);
+        // Keep the complete stroked arc outside the square quiet-zone corner. Moving
+        // the divider within its gap preserves both code position and canvas dimensions.
+        var sideClearance = qx - left - t / 2.0;
+        var notchReach = notch + t / 2.0 + 2;
+        var notchGap = Math.Sqrt(Math.Max(0, notchReach * notchReach - sideClearance * sideClearance));
+        var dividerInset = Math.Max(0, Math.Min(plan.Gap / 2.0, plan.Gap - notchGap));
+        var divider = top ? sy + plan.Height + dividerInset : sy - dividerInset;
         if (template != QrCanvasTemplate.None) for (var py = y; py < y + h; py++) for (var px = x; px < x + w; px++) {
             if (px >= qx && px < qx + qr && py >= qy && py < qy + qr) continue;
             var hits = 0; var bandHits = 0;
@@ -48,20 +56,25 @@ public static partial class QrPngRenderer {
                                 var tail = plan.CapHeight;
                                 var distance = top ? yy - sy - plan.Height : sy - yy;
                                 var dxTail = xx - (qx + qr / 2.0);
-                                fill |= distance >= 0 && distance <= tail * .85 && Math.Abs(dxTail) <= (tail - distance) * .75;
-                                fill |= dxTail * dxTail + Math.Pow(distance - tail * .85, 2) <= Math.Pow(tail * .15, 2);
+                                // Tangent sides meet a circular tip without a pointed triangle showing through.
+                                var tipRadius = tail * .15;
+                                var tangentY = tail * .9336;
+                                var halfWidth = tail * .75;
+                                fill |= distance >= 0 && distance <= tangentY && Math.Abs(dxTail) <= halfWidth + (tail * .1249 - halfWidth) * distance / tangentY;
+                                fill |= dxTail * dxTail + Math.Pow(distance - tail * .85, 2) <= tipRadius * tipRadius;
                             }
                         }
                         break;
                     case QrCanvasTemplate.TicketStub:
-                        var divider = top ? sy + plan.Height + plan.Gap / 2 : sy - plan.Gap / 2;
-                        var notch = Math.Max(8, w * .045);
                         outer = Rounded(xx, yy, left, upper, right - left, lower - upper, notch * 1.1);
                         inner = Rounded(xx, yy, left + t, upper + t, right - left - 2 * t, lower - upper - 2 * t, notch * 1.1 - t);
-                        var dx = Math.Min(Math.Abs(xx - left), Math.Abs(xx - right));
+                        var dx = Math.Min(Math.Abs(xx - left - t / 2.0), Math.Abs(xx - right + t / 2.0));
                         var d = Math.Sqrt(dx * dx + (yy - divider) * (yy - divider));
-                        paint = d >= notch && outer && !inner;
-                        paint |= d >= notch && d <= notch + t && xx >= left && xx <= right;
+                        // Distance to one continuous centreline: side, inward semicircle, side.
+                        // Round joins at the arc endpoints use the same half-stroke radius.
+                        paint = outer && !inner && Math.Abs(yy - divider) >= notch;
+                        paint |= xx >= left + t / 2.0 && xx <= right - t / 2.0 && Math.Abs(d - notch) <= t / 2.0;
+                        paint |= dx * dx + Math.Pow(Math.Abs(yy - divider) - notch, 2) <= t * t / 4.0;
                         var dash = (xx - left - notch) % Math.Max(4, t * 4);
                         paint |= xx > left + notch && xx < right - notch && Rounded(dash, yy, t / 2.0, divider - t / 2.0, t * 2, t, t / 2.0);
                         break;
@@ -96,26 +109,29 @@ public static partial class QrPngRenderer {
         if (template is QrCanvasTemplate.ScanMePill or QrCanvasTemplate.SpeechBubble or QrCanvasTemplate.RoundedCardHeader)
             foreground = caption.Color ?? (IsDark(band) ? Rgba32.White : Rgba32.Black);
         var textY = sy + plan.Clearance;
-        foreach (var line in plan.Lines) {
+        for (var i = 0; i < plan.Lines.Count; i++) {
+            var line = plan.Lines[i];
             var lineWidth = (int)Math.Ceiling(line.Shape.InkBounds.Width);
-            var tx = qx + (qr - lineWidth - plan.IconWidth) / 2 + plan.IconWidth;
+            var iconWidth = i == 0 ? plan.IconWidth : 0;
+            var tx = qx + (qr - lineWidth - iconWidth) / 2 + iconWidth;
             PaintCaptionShape(pixels, width, height, stride, line.Shape, tx, textY, foreground);
             textY += (int)Math.Ceiling(line.Shape.InkBounds.Height) + plan.LineGap;
         }
         if (plan.IconWidth > 0) {
             var first = plan.Lines[0];
             var xHeight = caption.Font.Shape("x", first.Size, strict: false);
-            var iconSize = Math.Max(4, plan.IconWidth * 3 / 4);
+            var iconSize = plan.IconSize;
             var centre = xHeight.MissingGlyphs.Count == 0
                 ? xHeight.InkBounds.Y - first.Shape.InkBounds.Y + xHeight.InkBounds.Height / 2
                 : first.Shape.InkBounds.Height / 2;
-            DrawCaptionIcon(pixels, width, height, stride, canvas, qx + (qr - plan.Width) / 2,
+            var headlineWidth = (int)Math.Ceiling(first.Shape.InkBounds.Width) + plan.IconWidth;
+            DrawCaptionIcon(pixels, width, height, stride, canvas, qx + (qr - headlineWidth) / 2,
                 sy + plan.Clearance + (int)Math.Round(centre - iconSize / 2.0), iconSize, foreground);
         }
         if (caption.Url.Length > 0) {
             var size = plan.Lines[0].Size * .5;
             var url = caption.Font.Shape(caption.Url, size, caption.StrictText);
-            size *= Math.Min(1, (qr - 2 * plan.Clearance) / Math.Max(1, url.InkBounds.Width));
+            size *= Math.Min(1, (plan.CodeWidth - 2 * plan.Clearance) / Math.Max(1, url.InkBounds.Width));
             url = caption.Font.Shape(caption.Url, size, caption.StrictText);
             var uy = qy + qr + plan.Gap + (top ? 0 : plan.Height) + plan.Clearance;
             PaintCaptionShape(pixels, width, height, stride, url, qx + (qr - (int)Math.Ceiling(url.InkBounds.Width)) / 2, uy, ink);
@@ -124,20 +140,4 @@ public static partial class QrPngRenderer {
 
     private static bool IsDark(Rgba32 c) => c.R * 299 + c.G * 587 + c.B * 114 < 128000;
 
-    private static void DrawCaptionIcon(byte[] pixels, int width, int height, int stride, QrCanvasOptions canvas, int x, int y, int size, Rgba32 ink) {
-        if (canvas.BandLogoPng is not null) {
-            var logo = QrRasterLogoOptions.FromPng(canvas.BandLogoPng);
-            BlitLogo(pixels, width, height, stride, x, y, size, size, logo);
-            return;
-        }
-        var phone = canvas.Caption?.Icon == QrCanvasCaptionIcon.Phone;
-        var t = Math.Max(1, size / 12);
-        for (var yy = 0; yy < size; yy++) for (var xx = 0; xx < size; xx++) {
-            var ring = phone ? xx >= size / 4 && xx < size * 3 / 4 && (xx < size / 4 + t || xx >= size * 3 / 4 - t || yy < t || yy >= size - t)
-                : yy >= size / 5 && yy < size * 4 / 5 && (xx < t || xx >= size - t || yy < size / 5 + t || yy >= size * 4 / 5 - t);
-            var dx = xx - size / 2.0; var dy = yy - size / 2.0;
-            if (!phone) ring |= Math.Abs(Math.Sqrt(dx * dx + dy * dy) - size / 5.0) <= t;
-            if (ring) BlendPixel(pixels, stride, x + xx, y + yy, ink);
-        }
-    }
 }

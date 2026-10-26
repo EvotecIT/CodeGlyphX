@@ -550,10 +550,10 @@ public static partial class QrPngRenderer {
         }
 
         var canvas = opts.Canvas;
-        var pad = CaptionCanvasPadding(canvas, qrFullPx);
+        var pad = CaptionCanvasPadding(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasW = checked(qrFullPx + pad * 2);
-        var captionHeight = CaptionCanvasHeight(canvas, qrFullPx);
-        var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx);
+        var captionHeight = CaptionCanvasHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
+        var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
 
         var shadowX = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowOffsetX;
         var shadowY = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowOffsetY;
@@ -566,7 +566,7 @@ public static partial class QrPngRenderer {
         widthPx = checked(canvasW + extraLeft + extraRight);
         heightPx = checked(canvasH + extraTop + extraBottom);
         qrOffsetX = extraLeft + pad;
-        var mainCaption = MeasureCaption(canvas, qrFullPx);
+        var mainCaption = MeasureCaption(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var topCaption = canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? mainCaption.Height + mainCaption.Gap : 0;
         qrOffsetY = extraTop + pad + topCaption;
         if (canvas.Template == QrCanvasTemplate.PhoneOutline) qrOffsetY += (canvasH - qrFullPx - 2 * pad - captionHeight) / 2;
@@ -584,12 +584,12 @@ public static partial class QrPngRenderer {
         var canvas = opts.Canvas;
         if (canvas is null) return;
 
-        var pad = CaptionCanvasPadding(canvas, qrFullPx);
+        var pad = CaptionCanvasPadding(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasW = checked(qrFullPx + pad * 2);
-        var captionHeight = CaptionCanvasHeight(canvas, qrFullPx);
-        var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx);
+        var captionHeight = CaptionCanvasHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
+        var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasX = qrOffsetX - pad;
-        var mainCaption = MeasureCaption(canvas, qrFullPx);
+        var mainCaption = MeasureCaption(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasY = qrOffsetY - pad - (canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? mainCaption.Height + mainCaption.Gap : 0);
         if (canvas.Template == QrCanvasTemplate.PhoneOutline) canvasY -= (canvasH - qrFullPx - 2 * pad - captionHeight) / 2;
         var radius = Math.Max(0, canvas.CornerRadiusPx);
@@ -748,7 +748,7 @@ public static partial class QrPngRenderer {
                 qrFullPx, qrFullPx, canvas.StackedPanelColor, canvas.QrCornerRadiusPx);
         }
         DrawCaptionCanvas(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY,
-            canvasW, canvasH, qrOffsetX, qrOffsetY, qrFullPx, opts.ModuleSize);
+            canvasW, canvasH, qrOffsetX, qrOffsetY, qrFullPx, opts.ModuleSize, opts.QuietZone);
     }
 
     private static void DrawCanvasFill(

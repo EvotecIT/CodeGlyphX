@@ -35,7 +35,8 @@ public sealed class QrCanvasCaptionOptions {
     /// <summary>Immutable portable font. The bundled Manrope SemiBold default includes Latin Extended and Polish.
     /// Load a suitable face with BarcodeFont.FromBytes for other supported text.</summary>
     public BarcodeFont Font { get; set; } = BarcodeFont.ManropeSemiBold;
-    /// <summary>Requested em size in pixels, from 8 to 256; zero sizes cap height to 4.5% of the code width. Long text shrinks to a readable floor, then wraps to two lines.</summary>
+    /// <summary>Requested em size in pixels, from 8 to 256; zero sizes cap height to 5.5% of the visible code width.
+    /// The caption and its band stay within that width, excluding the quiet zone. Long text shrinks to a readable floor, then wraps to two lines.</summary>
     public int FontSizePx { get; set; } = 0;
     /// <summary>Outline weight.</summary>
     public QrCanvasCaptionWeight Weight { get; set; } = QrCanvasCaptionWeight.Regular;

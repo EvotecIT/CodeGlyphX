@@ -43,6 +43,8 @@ public static partial class QrPngRenderer {
         var y0 = offsetY + (my + quiet) * moduleSize;
         var horizontalTiming = timingThickness > 0 && my == 6 && mx >= 8 && mx < qrSize / moduleSize - 8;
         var verticalTiming = timingThickness > 0 && mx == 6 && my >= 8 && my < qrSize / moduleSize - 8;
+        // Dark timing nodes remain distinct from the solid connecting hairline after reduction.
+        if (shape == QrModuleShape.Dot && (horizontalTiming || verticalTiming)) scale = Math.Max(scale, .9375);
         for (var y = 0; y < moduleSize; y++) {
             for (var x = 0; x < moduleSize; x++) {
                 var hits = 0;
@@ -58,10 +60,8 @@ public static partial class QrPngRenderer {
                 if (hits == 0 && lineHits == 0) continue;
                 var ink = gradient.HasValue ? GetGradientColor(gradient.Value, x0 + x, y0 + y, originX, originY) : color;
                 if (!ApplyStyledPattern(pattern, moduleSize, x0 + x, y0 + y, originX, originY, qrSize, ref ink)) continue;
-                // Keep alternating timing dots legible over the continuous hairline.
-                // Replacing them with a solid line erases the timing signal on dense codes.
                 var covered = lineHits == 0 ? CoverageColor(ink, hits)
-                    : new Rgba32(ink.R, ink.G, ink.B, (byte)((ink.A * (hits + lineHits * .25) + 8) / 16));
+                    : new Rgba32(ink.R, ink.G, ink.B, (byte)((ink.A * (hits + lineHits) + 8) / 16));
                 BlendPixelAt(buffer, (y0 + y) * (stride + 1) + 1 + (x0 + x) * 4, covered);
             }
         }

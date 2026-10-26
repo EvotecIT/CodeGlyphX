@@ -260,7 +260,7 @@ public sealed class QrCanvasCaptionTests {
         Assert.Contains("fit readably", error.Message);
         Assert.Throws<ArgumentException>(() => SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
         // This run also shrinks to fit, but remains above eight final pixels.
-        caption.Text = new string('B', 12);
+        caption.Text = new string('B', 10);
         Assert.NotEmpty(QrPngRenderer.Render(qr.Modules, options));
         Assert.Contains("<svg", SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
         Assert.Equal(24, caption.FontSizePx);

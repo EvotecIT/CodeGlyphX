@@ -7,7 +7,7 @@ namespace CodeGlyphX.Rendering.Png;
 public static partial class QrPngRenderer {
     private sealed class CaptionPlan {
         internal readonly List<(BarcodeTextShape Shape, double Size)> Lines = new();
-        internal int Width, Height, Clearance, Gap, IconWidth, UrlHeight, LineGap, CapHeight;
+        internal int Width, Height, Clearance, HorizontalClearance, Gap, IconWidth, IconSize, UrlHeight, LineGap, CapHeight, CodeWidth;
     }
 
     private static int CaptionCanvasPadding(QrCanvasOptions canvas) {
@@ -17,30 +17,44 @@ public static partial class QrPngRenderer {
         return Math.Max(minimum, canvas.StackedPanelOffsetPx > 0 ? checked(canvas.StackedPanelOffsetPx + canvas.ShadowBlurPx + 2) : 0);
     }
 
-    private static int CaptionCanvasPadding(QrCanvasOptions canvas, int qr) => canvas.Template switch {
-        QrCanvasTemplate.PhoneOutline => Math.Max(CaptionCanvasPadding(canvas), (int)Math.Ceiling(qr * .161)),
+    private static int CaptionCanvasPadding(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
+        var t = CaptionStrokeWidth(canvas, moduleSize);
+        var minimum = CaptionCanvasPadding(canvas);
+        return canvas.Template switch {
+        QrCanvasTemplate.PhoneOutline => Math.Max(Math.Max(minimum, 4 * t), (int)Math.Ceiling(((qr - quiet * 2 * moduleSize) / .8 - qr + 4 * t) / 2)),
         // The inner edge of the corner stroke must clear the entire square quiet zone.
-        QrCanvasTemplate.TicketStub => Math.Max(CaptionCanvasPadding(canvas), (int)Math.Ceiling(qr * .066)),
-        QrCanvasTemplate.RoundedCardHeader => Math.Max(CaptionCanvasPadding(canvas), (int)Math.Ceiling(qr * .065)),
-        _ => CaptionCanvasPadding(canvas)
-    };
+        QrCanvasTemplate.TicketStub => Math.Max(minimum, (int)Math.Ceiling(qr * .066)),
+        QrCanvasTemplate.RoundedCardHeader => Math.Max(minimum, (int)Math.Ceiling(qr * .07)),
+        // A complete bracket sits outside the quiet zone, including its round stroke caps.
+        QrCanvasTemplate.CornerViewfinder => Math.Max(minimum, (int)Math.Ceiling(Math.Max(3, t * 1.5) + t + Math.Max(2, t))),
+        _ => minimum
+        };
+    }
 
-    private static CaptionPlan MeasureCaption(QrCanvasOptions canvas, int qr) {
-        var plan = new CaptionPlan();
+    private static int CaptionStrokeWidth(QrCanvasOptions canvas, int moduleSize) => canvas.StrokeWidthPx > 0
+        ? canvas.StrokeWidthPx : Math.Max(2 * (canvas.Caption?.RasterScale ?? 1), (int)Math.Round(moduleSize * .5));
+
+    private static CaptionPlan MeasureCaption(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
+        var plan = new CaptionPlan { CodeWidth = qr - 2 * quiet * moduleSize };
         var caption = canvas.Caption;
         if (caption is null || caption.Text.Length == 0) return plan;
         var capShape = caption.Font.Shape("H", 1, strict: false);
         var capUnit = Math.Max(.1, capShape.MissingGlyphs.Count == 0 ? capShape.InkBounds.Height
             : caption.Font.Shape(caption.Text, 1, caption.StrictText).InkBounds.Height);
-        var size = caption.FontSizePx > 0 ? caption.FontSizePx : qr * .045 / capUnit;
+        var size = caption.FontSizePx > 0 ? caption.FontSizePx : plan.CodeWidth * .055 / capUnit;
         var cap = size * capUnit;
         plan.Clearance = Math.Max(caption.PaddingPx, (int)Math.Ceiling(cap));
+        // Capsule ends curve inward. Reserve their radius as well as the cap-height
+        // vertical inset, so the first and last letters also clear the curved edge.
+        plan.HorizontalClearance = canvas.Template is QrCanvasTemplate.ScanMePill or QrCanvasTemplate.SpeechBubble
+            ? Math.Max(plan.Clearance, (int)Math.Ceiling(cap * 1.65)) : plan.Clearance;
         plan.Gap = Math.Max(4 * caption.RasterScale, (int)Math.Ceiling(qr * .012));
         if (canvas.Template == QrCanvasTemplate.SpeechBubble || canvas.CaptionTail) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(cap * 1.2));
         if (canvas.Template == QrCanvasTemplate.TicketStub) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(qr * .07));
-        if (canvas.Template == QrCanvasTemplate.CornerViewfinder) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(qr * .05));
+        if (canvas.Template == QrCanvasTemplate.CornerViewfinder)
+            plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(Math.Max(3, CaptionStrokeWidth(canvas, moduleSize) * 1.5) + CaptionStrokeWidth(canvas, moduleSize) + cap));
         plan.IconWidth = caption.Icon != QrCanvasCaptionIcon.None || canvas.BandLogoPng is not null ? (int)Math.Ceiling(cap * 1.6) : 0;
-        var available = qr - 2 * plan.Clearance - plan.IconWidth;
+        var available = plan.CodeWidth - 2 * plan.HorizontalClearance - plan.IconWidth;
         if (available <= 0) throw new ArgumentException("Caption padding leaves no readable text area.");
         BarcodeTextShape Shape(string text, double em) {
             var shaped = caption.Font.Shape(text, em, caption.StrictText);
@@ -67,6 +81,8 @@ public static partial class QrPngRenderer {
         }
         if (plan.Lines.Count == 0) plan.Lines.Add((Shape(caption.Text, size), size));
         plan.CapHeight = Math.Max(1, (int)Math.Ceiling(plan.Lines[0].Size * capUnit));
+        var xHeight = caption.Font.Shape("x", plan.Lines[0].Size, strict: false);
+        plan.IconSize = Math.Max(4, (int)Math.Round(xHeight.MissingGlyphs.Count == 0 ? xHeight.InkBounds.Height : plan.CapHeight * .75));
         if (caption.Subline.Length > 0) {
             var subSize = size * .65;
             var sub = Shape(caption.Subline, subSize);
@@ -78,17 +94,17 @@ public static partial class QrPngRenderer {
             plan.Lines.Add((sub, subSize));
         }
         var textHeight = 0.0;
-        foreach (var line in plan.Lines) {
-            plan.Width = Math.Max(plan.Width, (int)Math.Ceiling(line.Shape.InkBounds.Width));
+        for (var i = 0; i < plan.Lines.Count; i++) {
+            var line = plan.Lines[i];
+            plan.Width = Math.Max(plan.Width, (int)Math.Ceiling(line.Shape.InkBounds.Width) + (i == 0 ? plan.IconWidth : 0));
             textHeight += Math.Ceiling(line.Shape.InkBounds.Height) + Math.Ceiling(cap * .35);
         }
-        plan.Width += plan.IconWidth;
         plan.LineGap = (int)Math.Ceiling(cap * .35);
         plan.Height = checked((int)Math.Ceiling(textHeight - Math.Ceiling(cap * .35)) + 2 * plan.Clearance);
         if (caption.Url.Length > 0) {
             var urlSize = size * .5;
             var url = Shape(caption.Url, urlSize);
-            urlSize *= Math.Min(1, (qr - 2 * plan.Clearance) / Math.Max(1, url.InkBounds.Width));
+            urlSize *= Math.Min(1, (plan.CodeWidth - 2 * plan.Clearance) / Math.Max(1, url.InkBounds.Width));
             if (urlSize < 8 * caption.RasterScale) throw new ArgumentException("Fallback URL cannot fit readably. Shorten it or enlarge the code.");
             plan.UrlHeight = (int)Math.Ceiling(Shape(caption.Url, urlSize).InkBounds.Height) + 2 * plan.Clearance;
         }
@@ -96,15 +112,15 @@ public static partial class QrPngRenderer {
         return plan;
     }
 
-    private static int CaptionCanvasHeight(QrCanvasOptions canvas, int qr) {
-        var plan = MeasureCaption(canvas, qr);
+    private static int CaptionCanvasHeight(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
+        var plan = MeasureCaption(canvas, qr, moduleSize, quiet);
         return plan.Height == 0 ? 0 : checked(plan.Height + plan.Gap + plan.UrlHeight);
     }
 
-    private static int CaptionCanvasBodyHeight(QrCanvasOptions canvas, int qr) {
-        var ordinary = qr + 2 * CaptionCanvasPadding(canvas, qr) + CaptionCanvasHeight(canvas, qr);
+    private static int CaptionCanvasBodyHeight(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
+        var ordinary = qr + 2 * CaptionCanvasPadding(canvas, qr, moduleSize, quiet) + CaptionCanvasHeight(canvas, qr, moduleSize, quiet);
         return canvas.Template == QrCanvasTemplate.PhoneOutline
-            ? Math.Max(ordinary, (int)Math.Ceiling((qr + 2 * CaptionCanvasPadding(canvas, qr)) * 19.5 / 9)) : ordinary;
+            ? Math.Max(ordinary, (int)Math.Ceiling((qr + 2 * CaptionCanvasPadding(canvas, qr, moduleSize, quiet)) * 19.5 / 9)) : ordinary;
     }
 
     private static void PaintCaptionShape(byte[] pixels, int width, int height, int stride, BarcodeTextShape shape, int tx, int ty, Rgba32 color) {
