@@ -1,112 +1,142 @@
+using CodeGlyphX.Printing;
 using CodeGlyphX.Rendering;
 using System;
-using CodeGlyphX.Rendering.Png;
+using System.Collections.Generic;
 
 namespace CodeGlyphX.Rendering.Art;
 
-internal static class QrSceneIllustrations {
-    internal static QrSceneGeometry Build(QrSceneOptions options) {
-        var g = new QrSceneGeometry(); var c = options.Colors; var random = new SceneRandom(options.Seed);
-        g.Layer(options.Backdrop);
-        Backdrop(g, options, random);
-        g.Layer(options.Motifs);
+// Each scene is its own composition: a background, a light local backdrop that belongs to the illustration
+// and holds the code (its colour is the paper colour, so the quiet zone merges into it), and motifs that frame
+// the backdrop without entering the code. Bold editorial vector shapes with limited shading throughout.
+internal static partial class QrSceneIllustrations {
+    internal static QrSceneGeometry Build(QrSceneOptions options, QrSceneFrame frame) {
+        var g = new QrSceneGeometry(); var random = new SceneRandom(options.Seed);
+        var scene = new SceneContext(g, options, frame, random);
         switch (options.Style) {
-            case QrSceneStyle.TropicalGarden: Garden(g, c, random); break;
-            case QrSceneStyle.ElectricCity: City(g, c, options.Ink, random); break;
-            case QrSceneStyle.MusicFestival: Music(g, c, options.Ink); break;
-            case QrSceneStyle.OceanReef: Ocean(g, c, options.Ink); break;
-            case QrSceneStyle.CosmicOrbit: Cosmos(g, c, options.Ink, random); break;
-            default: Arcade(g, c, options.Ink, random); break;
+            case QrSceneStyle.TropicalGarden: Garden(scene); break;
+            case QrSceneStyle.ElectricCity: City(scene); break;
+            case QrSceneStyle.MusicFestival: Festival(scene); break;
+            case QrSceneStyle.OceanReef: Reef(scene); break;
+            case QrSceneStyle.CosmicOrbit: Cosmos(scene); break;
+            default: Arcade(scene); break;
         }
         return g;
     }
-    private static void Backdrop(QrSceneGeometry g, QrSceneOptions o, SceneRandom random) {
-        var c = o.Colors;
-        if (o.Style == QrSceneStyle.ElectricCity || o.Style == QrSceneStyle.CosmicOrbit) {
-            g.Rect(o.Ink, 0.025, 0.025, 0.95, 0.95);
-            for (var i = 10; i > 0; i--) g.Oval(QrSceneGeometry.Mix(o.Ink, c[3], 0.08 + (10 - i) * 0.04), .65, .35, .045 * i, .055 * i);
-            for (var i = 0; i < 80; i++) g.Oval(i % 3 == 0 ? c[2] : o.Paper, .05 + random.Next() * .9, .05 + random.Next() * .9, .001 + random.Next() * .002, .002);
-        } else if (o.Style == QrSceneStyle.OceanReef) {
-            for (var band = 0; band < 9; band++) {
-                var points = new double[86];
-                for (var x = 0; x < 41; x++) { points[x * 2] = x / 40.0; points[x * 2 + 1] = .08 + band * .1 + .04 * Math.Sin(x * .3 + band + o.Seed * .01); }
-                points[82] = 1; points[83] = 1; points[84] = 0; points[85] = 1;
-                g.Polygon(QrSceneGeometry.Mix(o.Paper, c[band % 4], .2 + band * .045), points);
+
+    /// <summary>Caption ink for each composition: dark on light grounds, paper on night scenes.</summary>
+    internal static Rgba32 CaptionColor(QrSceneOptions options) => options.Style switch {
+        QrSceneStyle.ElectricCity or QrSceneStyle.MusicFestival or QrSceneStyle.CosmicOrbit => options.Paper,
+        _ => options.Ink
+    };
+
+    internal static void Caption(QrSceneGeometry g, QrSceneOptions design, int size) {
+        var text = design.Caption.ToUpperInvariant();
+        if (!design.CaptionLayer.Visible || text.Trim().Length == 0) return;
+        g.Layer(design.CaptionLayer);
+        if (design.Style == QrSceneStyle.RetroArcade) PixelCaption(g, design, text, size);
+        else TypeCaption(g, design, text);
+    }
+
+    // Real outline type in the shared caption face, semibold with open tracking, centred on the caption layer.
+    private static void TypeCaption(QrSceneGeometry g, QrSceneOptions design, string text) {
+        const double em = 100;
+        var font = SceneCaptionFont;
+        var contours = new List<double[]>();
+        var pen = 0.0; var tracking = em * 0.09;
+        double left = double.MaxValue, right = double.MinValue, top = double.MaxValue, bottom = double.MinValue;
+        foreach (var character in text) {
+            var shape = font.Shape(character.ToString(), em, strict: false);
+            if (shape.Contours.Count > 0) {
+                shape = PrintLayoutBuilder.Strengthen(shape, em * 0.022);
+                foreach (var contour in shape.Contours) {
+                    var points = new double[contour.Count * 2];
+                    for (var i = 0; i < contour.Count; i++) {
+                        points[2 * i] = contour[i].X + pen; points[2 * i + 1] = contour[i].Y;
+                        left = Math.Min(left, points[2 * i]); right = Math.Max(right, points[2 * i]);
+                        top = Math.Min(top, points[2 * i + 1]); bottom = Math.Max(bottom, points[2 * i + 1]);
+                    }
+                    contours.Add(points);
+                }
             }
-        } else if (o.Style == QrSceneStyle.RetroArcade) {
-            for (var y = 0; y < 10; y++) for (var x = 0; x < 10; x++)
-                g.Rect(QrSceneGeometry.Mix(o.Paper, c[(x + y) % 4], .12), x * .1, y * .1, .096, .096);
-        } else {
-            g.Oval(QrSceneGeometry.Mix(o.Paper, c[2], .6), .85, .15, .2, .2);
-            g.Polygon(QrSceneGeometry.Mix(o.Paper, c[1], .4), 0, .35, .35, 0, .65, 0, 0, .65);
-            g.Polygon(QrSceneGeometry.Mix(o.Paper, c[0], .25), .45, 1, 1, .45, 1, 1);
-            for (var i = 0; i < 50; i++) g.Oval(c[i % 4], random.Next(), random.Next(), .003, .003);
+            pen += shape.AdvanceWidth + tracking;
         }
+        if (contours.Count == 0) return;
+        // Cap height of 4.4% of the canvas, narrowed to fit 92% of the caption layer width.
+        var scale = Math.Min(0.044 / Math.Max(1e-6, bottom - top), 0.92 / Math.Max(1e-6, right - left));
+        var cx = (left + right) / 2; var cy = (top + bottom) / 2;
+        foreach (var points in contours) for (var i = 0; i < points.Length; i += 2) {
+            points[i] = 0.5 + (points[i] - cx) * scale; points[i + 1] = 0.5 + (points[i + 1] - cy) * scale;
+        }
+        g.FillRaw(ScenePaint.Solid(CaptionColor(design)), contours);
     }
-    private static void Garden(QrSceneGeometry g, Rgba32[] c, SceneRandom r) {
-        for (var side = 0; side < 2; side++) {
-            var x = side == 0 ? .07 : .93;
-            g.Line(c[3], x, .78, x + (side == 0 ? .05 : -.05), .1, .008);
-            for (var i = 0; i < 7; i++) {
-                var y = .17 + i * .09; var offset = side == 0 ? .045 : -.045;
-                g.Oval(c[(i + side) % 2 + 1], x + offset, y, .078, .025, side == 0 ? -.55 : .55);
-                g.Line(c[3], x, y + .02, x + offset * 2, y - .03, .002);
+
+    // Pixel type on whole device pixels. Each glyph is one compound shape, so its cells join without seams.
+    private static void PixelCaption(QrSceneGeometry g, QrSceneOptions design, string text, int size) {
+        var columns = text.Length * 6 - 1;
+        var layer = design.CaptionLayer;
+        var cell = Math.Max(1, Math.Min(Math.Floor(size * 0.0125), Math.Floor(size * 0.52 / columns)));
+        var snapped = Math.Abs(layer.Scale - 1) < 1e-9 && Math.Abs(layer.RotationDegrees % 360) < 1e-9;
+        // With an identity scale and rotation the layer only translates, so choose local cells that land on pixels.
+        var originX = Math.Round(layer.X * size - columns * cell / 2); var originY = Math.Round(layer.Y * size - 3.5 * cell);
+        var shiftX = snapped ? (layer.X - 0.5) * size : 0; var shiftY = snapped ? (layer.Y - 0.5) * size : 0;
+        if (!snapped) { originX = Math.Round(size / 2.0 - columns * cell / 2); originY = Math.Round(size / 2.0 - 3.5 * cell); }
+        var paint = ScenePaint.Solid(CaptionColor(design));
+        for (var i = 0; i < text.Length; i++) {
+            var glyph = BarcodeLabelFont.GetGlyph(text[i]);
+            var cells = new List<double[]>();
+            for (var y = 0; y < 7; y++) for (var x = 0; x < 5; x++) if ((glyph[y] & (1 << (4 - x))) != 0) {
+                var px = (originX + (i * 6 + x) * cell - shiftX) / size; var py = (originY + y * cell - shiftY) / size; var w = cell / size;
+                cells.Add(new[] { px, py, px + w, py, px + w, py + w, px, py + w });
             }
-        }
-        for (var i = 0; i < 5; i++) {
-            var x = .08 + i * .2; var y = i % 2 == 0 ? .8 : .12;
-            for (var p = 0; p < 6; p++) { var a = p * Math.PI / 3 + r.Next() * .15; g.Oval(c[0], x + .022 * Math.Cos(a), y + .022 * Math.Sin(a), .018, .018); }
-            g.Oval(c[2], x, y, .013, .013);
+            if (cells.Count > 0) g.Fill(paint, cells.ToArray());
         }
     }
-    private static void City(QrSceneGeometry g, Rgba32[] c, Rgba32 ink, SceneRandom r) {
-        for (var i = 0; i < 15; i++) {
-            var x = .035 + i * .063; var h = .07 + r.Next() * .16;
-            g.Rect(QrSceneGeometry.Mix(ink, c[i % 4], .3), x, .84 - h, .049, h);
-            for (var row = 0; row < 5; row++) for (var col = 0; col < 3; col++)
-                if (row * .027 < h - .02 && r.Next() > .25) g.Rect(c[(i + row) % 4], x + .005 + col * .013, .825 - row * .027, .006, .012);
-        }
-        g.Oval(c[2], .18, .115, .07, .07);
-        for (var side = 0; side < 2; side++) for (var i = 0; i < 4; i++) {
-            var x = side == 0 ? .035 + i * .033 : .965 - i * .033;
-            g.Line(c[i % 4], x, .3, x, .58, .004); g.Line(c[i % 4], x, .58, x + (side == 0 ? .035 : -.035), .63, .004);
-            g.Oval(c[i % 4], x, .3, .009, .009);
+
+    // Scene captions follow the canvas caption default face, so a bundled caption font reaches both.
+    private static BarcodeFont SceneCaptionFont => new QrCanvasCaptionOptions().Font;
+
+    private static ScenePaint Solid(Rgba32 color, double opacity = 1) => ScenePaint.Solid(color, opacity);
+    private static Rgba32 Mix(Rgba32 a, Rgba32 b, double t) => QrSceneGeometry.Mix(a, b, t);
+    private static Rgba32 Rgb(int value) => new((byte)(value >> 16), (byte)(value >> 8), (byte)value);
+
+    /// <summary>A pointed leaf from its base along an angle; bend curves the whole blade sideways.</summary>
+    private static double[] Leaf(double baseX, double baseY, double length, double width, double angle, double bend = 0) {
+        var points = new List<double>();
+        var cos = Math.Cos(angle); var sin = Math.Sin(angle);
+        for (var i = 0; i <= 28; i++) Add(i / 28.0, 1);
+        for (var i = 27; i >= 1; i--) Add(i / 28.0, -1);
+        return points.ToArray();
+        void Add(double t, double side) {
+            var half = 0.5 * width * Math.Pow(Math.Sin(Math.PI * Math.Min(1, t * 1.05)), 0.9);
+            var u = t * length; var v = side * half + bend * length * Math.Sin(Math.PI * t);
+            points.Add(baseX + u * cos - v * sin); points.Add(baseY + u * sin + v * cos);
         }
     }
-    private static void Music(QrSceneGeometry g, Rgba32[] c, Rgba32 ink) {
-        for (var i = 0; i < 8; i++) g.Line(c[i % 4], -.1 + i * .065, .89, .3 + i * .065, .05, .025);
-        foreach (var x in new[] { .12, .88 }) {
-            g.Oval(ink, x, .2, .095, .095); g.Oval(c[3], x, .2, .069, .069); g.Oval(ink, x, .2, .057, .057);
-            g.Oval(c[0], x, .2, .035, .035); g.Oval(c[2], x, .2, .006, .006);
-            g.Line(ink, x - .035, .75, x - .035, .57, .009); g.Oval(ink, x - .06, .75, .029, .02, -.3);
-            g.Polygon(c[0], x - .035, .57, x + .035, .6, x + .035, .65, x - .035, .62);
-        }
-        for (var i = 0; i < 16; i++) g.Rect(c[i % 4], .22 + i * .037, .81 - .025 * Math.Sin(i), .022, .065 + .025 * Math.Sin(i));
+}
+
+/// <summary>The code's protected square (including its quiet zone) in normalized canvas coordinates.</summary>
+internal readonly struct QrSceneFrame {
+    internal readonly double X, Y, Size;
+    internal QrSceneFrame(double x, double y, double size) { X = x; Y = y; Size = size; }
+    internal double CenterX => X + Size / 2;
+    internal double CenterY => Y + Size / 2;
+    internal double Right => X + Size;
+    internal double Bottom => Y + Size;
+}
+
+internal sealed class SceneContext {
+    internal QrSceneGeometry G { get; }
+    internal QrSceneOptions Options { get; }
+    internal QrSceneFrame Frame { get; }
+    internal SceneRandom Random { get; }
+    internal Rgba32[] C => Options.Colors;
+    internal Rgba32 Paper => Options.Paper;
+    internal Rgba32 Ink => Options.Ink;
+    internal SceneContext(QrSceneGeometry g, QrSceneOptions options, QrSceneFrame frame, SceneRandom random) {
+        G = g; Options = options; Frame = frame; Random = random;
     }
-    private static void Ocean(QrSceneGeometry g, Rgba32[] c, Rgba32 ink) {
-        for (var side = 0; side < 2; side++) {
-            var x = side == 0 ? .09 : .91;
-            for (var i = 0; i < 4; i++) { var y = .17 + i * .17; g.Oval(c[(i + side) % 4], x, y, .049, .024); g.Polygon(c[(i + side) % 4], x + .035, y, x + .073, y - .032, x + .073, y + .032); g.Oval(ink, x - .027, y - .004, .004, .004); }
-            for (var i = 0; i < 4; i++) { var xx = x + (i - 2) * .025; g.Line(c[0], xx, .86, xx, .76 - i * .008, .011); g.Line(c[0], xx, .8, xx - .018, .775, .008); }
-        }
-        for (var i = 0; i < 16; i++) { var x = .08 + i * .056; g.Oval(c[1], x, .1 + .025 * Math.Sin(i), .012, .012); g.Oval(new Rgba32(245, 254, 252), x, .1 + .025 * Math.Sin(i), .008, .008); }
-    }
-    private static void Cosmos(QrSceneGeometry g, Rgba32[] c, Rgba32 ink, SceneRandom r) {
-        foreach (var x in new[] { .12, .88 }) {
-            g.Oval(c[1], x, .22, .092, .025, -.35); g.Oval(c[3], x, .22, .053, .053); g.Oval(c[0], x - .012, .2, .024, .015, -.3);
-            g.Polygon(c[2], x - .023, .65, x + .023, .65, x, .73);
-            g.Polygon(c[0], x - .027, .64, x - .05, .68, x - .04, .6, x, .53, x + .04, .6, x + .05, .68, x + .027, .64);
-            g.Oval(c[1], x, .61, .017, .025); g.Oval(ink, x, .61, .011, .017);
-        }
-        for (var i = 0; i < 24; i++) { var x = r.Next(); var y = i % 2 == 0 ? .11 : .81; g.Line(c[i % 4], x - .006, y, x + .006, y, .003); g.Line(c[i % 4], x, y - .006, x, y + .006, .003); }
-    }
-    private static void Arcade(QrSceneGeometry g, Rgba32[] c, Rgba32 ink, SceneRandom r) {
-        var creature = new[] { "00100100", "00011000", "00111100", "01111110", "11011011", "11111111", "10100101" };
-        for (var side = 0; side < 2; side++) for (var k = 0; k < 3; k++) {
-            var xx = side == 0 ? .035 : .835; var yy = .1 + k * .26; var color = c[(k + side) % 4];
-            for (var y = 0; y < creature.Length; y++) for (var x = 0; x < 8; x++) if (creature[y][x] == '1') g.Rect(color, xx + x * .016, yy + y * .016, .015, .015);
-            g.Rect(ink, xx + .033, yy + .05, .014, .014); g.Rect(ink, xx + .081, yy + .05, .014, .014);
-        }
-        for (var i = 0; i < 30; i++) g.Rect(c[i % 4], .03 + r.Next() * .92, i % 2 == 0 ? .025 : .82, .01, .01);
-    }
+    internal void Backdrop() => G.Layer(Options.Backdrop);
+    internal void Motifs() => G.Layer(Options.Motifs);
+    // The local backdrop follows the actual code placement and the backdrop layer's visibility only.
+    internal void Plate() => G.Layer(new QrSceneLayerOptions { Visible = Options.Backdrop.Visible });
 }

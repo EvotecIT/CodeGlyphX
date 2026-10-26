@@ -24,8 +24,8 @@ public static partial class QrArt {
         var qrSize = moduleSize * (code.Size + 8);
         if (!TryGetScenePlacement(design, qrSize, out var x, out var y))
             throw new ArgumentException("The QR and its full quiet zone must fit inside the canvas.", nameof(design));
-        var geometry = QrSceneIllustrations.Build(design);
-        AddSceneCaption(geometry, design);
+        var geometry = QrSceneIllustrations.Build(design, new QrSceneFrame(x / (double)design.Size, y / (double)design.Size, qrSize / (double)design.Size));
+        QrSceneIllustrations.Caption(geometry, design, design.Size);
         var qrOptions = new QrPngRenderOptions { ModuleSize = moduleSize, QuietZone = 4, Foreground = design.Ink,
             Background = design.Paper, ModuleShape = design.ModuleShape, ModuleCornerRadiusPx = moduleSize / 3, ProtectFunctionalPatterns = true };
         var qrPixels = QrPngRenderer.RenderPixels(code.Modules, qrOptions, out _, out _, out _);
@@ -54,20 +54,6 @@ public static partial class QrArt {
         x = (int)Math.Round(design.Qr.X * design.Size - qrSize / 2.0);
         y = (int)Math.Round(design.Qr.Y * design.Size - qrSize / 2.0);
         return x >= 0 && y >= 0 && x + qrSize <= design.Size && y + qrSize <= design.Size;
-    }
-
-    private static void AddSceneCaption(QrSceneGeometry geometry, QrSceneOptions design) {
-        var text = design.Caption; if (!design.CaptionLayer.Visible || text.Length == 0) return;
-        geometry.Layer(design.CaptionLayer);
-        var unit = Math.Min(.009, .8 / (text.Length * 6 - 1));
-        var origin = .5 - (text.Length * 6 - 1) * unit / 2;
-        // The portable caption stays readable on both light and night-scene backdrops.
-        geometry.Rect(design.Paper, origin - .018, .5 - 3.5 * unit - .014, (text.Length * 6 - 1) * unit + .036, 7 * unit + .028);
-        for (var i = 0; i < text.Length; i++) {
-            var glyph = BarcodeLabelFont.GetGlyph(text[i]);
-            for (var y = 0; y < 7; y++) for (var x = 0; x < 5; x++) if ((glyph[y] & (1 << (4 - x))) != 0)
-                geometry.Rect(design.Ink, origin + (i * 6 + x) * unit, .5 - 3.5 * unit + y * unit, unit, unit);
-        }
     }
 
     private static void PaintSceneLogo(byte[] pixels, QrSceneOptions design, CancellationToken token) {

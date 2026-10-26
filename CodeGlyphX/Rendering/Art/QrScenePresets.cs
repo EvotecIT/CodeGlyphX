@@ -11,13 +11,25 @@ public static class QrScenePresets {
         if (!Enum.IsDefined(typeof(QrSceneStyle), style)) throw new ArgumentOutOfRangeException(nameof(style));
         var options = new QrSceneOptions { Style = style, Size = size };
         options.Colors = style switch {
-            QrSceneStyle.TropicalGarden => Palette(0xEF4770, 0x17A887, 0xFFC857, 0x196F74),
+            QrSceneStyle.TropicalGarden => Palette(0xEF5466, 0x1F8F68, 0xFFC45C, 0x125B4C),
             QrSceneStyle.ElectricCity => Palette(0xEC36AF, 0x39DCD1, 0xFACD51, 0x6150DB),
             QrSceneStyle.MusicFestival => Palette(0xF1535D, 0x17A9BA, 0xF7C64C, 0x824CC5),
-            QrSceneStyle.OceanReef => Palette(0xEF718C, 0x35C5D0, 0xFFBC55, 0x3A75AF),
+            QrSceneStyle.OceanReef => Palette(0xEF718C, 0x35C5D0, 0xFFAA4C, 0x1F5C9E),
             QrSceneStyle.CosmicOrbit => Palette(0xDD4F97, 0x49C6D2, 0xFFCA67, 0x6D56BF),
             _ => Palette(0xED46AD, 0x33CDAA, 0xF4CD47, 0x6568D8)
         };
+        // Each composition places the code in its own local backdrop; captions sit where the scene leaves room.
+        // A scale of 0.56 keeps at least two pixels per module for long URLs at a 256-pixel render.
+        var (qrX, qrY, qrScale, captionY, captionScale) = style switch {
+            QrSceneStyle.TropicalGarden => (0.5, 0.44, 0.56, 0.795, 0.62),
+            QrSceneStyle.ElectricCity => (0.5, 0.37, 0.56, 0.958, 0.72),
+            QrSceneStyle.MusicFestival => (0.5, 0.47, 0.56, 0.08, 0.8),
+            QrSceneStyle.OceanReef => (0.5, 0.44, 0.56, 0.795, 0.5),
+            QrSceneStyle.CosmicOrbit => (0.5, 0.45, 0.56, 0.945, 0.75),
+            _ => (0.5, 0.54, 0.56, 0.15, 1.0)
+        };
+        options.Qr.X = qrX; options.Qr.Y = qrY; options.Qr.Scale = qrScale;
+        options.CaptionLayer.Y = captionY; options.CaptionLayer.Scale = captionScale;
         options.Caption = style switch {
             QrSceneStyle.TropicalGarden => "GROW SOMETHING GOOD",
             QrSceneStyle.ElectricCity => "CONNECT THE CITY",
