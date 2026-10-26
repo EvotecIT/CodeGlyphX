@@ -34,6 +34,13 @@ public sealed class QrImageArtOptions {
     /// <summary>Optional source-aligned subject protection, reducing decoration while retaining fixed scan anchors.</summary>
     public QrImageSubjectOptions? Subject { get; set; }
 
+    /// <summary>
+    /// Artwork carried into finder, timing, alignment, format and version modules (0..1). Zero keeps them in the solid
+    /// functional colours. One draws them as deep and pale tints of the underlying artwork, so the art continues through
+    /// the reserved zones, with antialiased finder rings and finer module edges. The quiet zone always stays solid.
+    /// </summary>
+    public double FunctionalTint { get; set; }
+
     internal void Validate() {
         Subject?.Validate();
         if (!Enum.IsDefined(typeof(QrImageFinderStyle), Finders)) throw new ArgumentOutOfRangeException(nameof(Finders));
@@ -45,5 +52,6 @@ public sealed class QrImageArtOptions {
         if (!Enum.IsDefined(typeof(QrModuleShape), Shape)) throw new ArgumentOutOfRangeException(nameof(Shape));
         if (double.IsNaN(Scale) || Scale < 0.65 || Scale > 1) throw new ArgumentOutOfRangeException(nameof(Scale));
         if (double.IsNaN(DetailProtection) || DetailProtection < 0 || DetailProtection > 1) throw new ArgumentOutOfRangeException(nameof(DetailProtection));
+        if (double.IsNaN(FunctionalTint) || FunctionalTint < 0 || FunctionalTint > 1) throw new ArgumentOutOfRangeException(nameof(FunctionalTint));
     }
 }

@@ -53,6 +53,10 @@ public static partial class QrImageComposer {
         var centerSize = options.Style == QrImageCompositionStyle.ImageOverlay || options.Style == QrImageCompositionStyle.ImageBackground
             ? options.CenterSize : 0.35;
         var centerMargin = (int)Math.Floor(moduleSize * (1 - centerSize) / 2);
+        var tint = options.Art is not null && options.Strength > 0 ? options.Art.FunctionalTint : 0;
+        var canvasOpacity = options.Canvas?.ArtOpacity ?? 1;
+        var cornerRadius = (options.Canvas?.CornerRadiusModules ?? 0) * moduleSize;
+        var canvasBase = options.Art is not null && options.Strength > 0 ? options.Art.FunctionalBackground : Rgba32.White;
         for (var y = 0; y < side; y++) {
             cancellationToken.ThrowIfCancellationRequested();
             for (var x = 0; x < side; x++) {
@@ -64,8 +68,16 @@ public static partial class QrImageComposer {
                 if (px < 0 || py < 0 || px >= imageSide || py >= imageSide) {
                     var inQuietZone = x >= qrOffsetX && y >= qrOffsetY
                         && x < qrOffsetX + qrFullSize && y < qrOffsetY + qrFullSize;
-                    if (hasCanvas && !inQuietZone) {
+                    var card = inQuietZone ? QuietZoneCoverage(x, y, qrOffsetX, qrOffsetY, qrFullSize, cornerRadius) : 0;
+                    if (hasCanvas && card < 1) {
                         image.Sample(x, y, out var cr, out var cg, out var cb);
+                        // Washed art blends toward the quiet-zone colour; rounded quiet-zone corners blend fully.
+                        var opacity = canvasOpacity * (1 - card);
+                        if (opacity < 1) {
+                            cr = canvasBase.R + (cr - canvasBase.R) * opacity;
+                            cg = canvasBase.G + (cg - canvasBase.G) * opacity;
+                            cb = canvasBase.B + (cb - canvasBase.B) * opacity;
+                        }
                         pixels[index] = (byte)Math.Round(cr);
                         pixels[index + 1] = (byte)Math.Round(cg);
                         pixels[index + 2] = (byte)Math.Round(cb);
@@ -75,7 +87,27 @@ public static partial class QrImageComposer {
                     }
                     continue;
                 }
-                if (finders is not null && finders.TryPaint(pixels, index, px, py, qr.Size)) continue;
+                var edgeFade = 1.0;
+                if (tint > 0) {
+                    // Pale tints settle into the quiet-zone colour over the outer two modules, so the symbol has no hard square edge.
+                    var edge = Math.Min(Math.Min(px, py), Math.Min(imageSide - 1 - px, imageSide - 1 - py)) + 0.5;
+                    var e = Math.Min(1, edge / (2.0 * moduleSize));
+                    edgeFade = e * e * (3 - 2 * e);
+                    if (finders is not null && finders.Contains(px, py, qr.Size)) {
+                        image.Sample(x - imageOriginX, y - imageOriginY, out var fr, out var fg, out var fb);
+                        finders.PaintTinted(pixels, index, px, py, qr.Size, fr, fg, fb, options.Strength, tint, edgeFade);
+                        continue;
+                    }
+                    var fx = px / moduleSize;
+                    var fy = py / moduleSize;
+                    if (functions[fx, fy]) {
+                        image.Sample(x - imageOriginX, y - imageOriginY, out var fr, out var fg, out var fb);
+                        var functionDark = qr.Modules[fx, fy];
+                        PaintTinted(pixels, index, fr, fg, fb, functionDark ? 1 : 0, options.Strength, tint,
+                            options.Art!.FunctionalForeground, options.Art.FunctionalBackground, edgeFade);
+                        continue;
+                    }
+                } else if (finders is not null && finders.TryPaint(pixels, index, px, py, qr.Size)) continue;
                 var mx = px / moduleSize;
                 var my = py / moduleSize;
                 var dark = qr.Modules[mx, my];
@@ -95,7 +127,7 @@ public static partial class QrImageComposer {
                     continue;
                 }
                 if (art is not null) {
-                    art.Paint(pixels, index, mx, my, px % moduleSize, py % moduleSize, dark, r, g, b, options.Strength);
+                    art.Paint(pixels, index, mx, my, px % moduleSize, py % moduleSize, dark, r, g, b, options.Strength, edgeFade);
                     continue;
                 }
                 var insideCenter = px % moduleSize >= centerMargin && px % moduleSize < moduleSize - centerMargin
@@ -124,6 +156,34 @@ public static partial class QrImageComposer {
             }
         }
         return new QrImageComposition(pixels, side, qrOffsetX, qrOffsetY, qrFullSize);
+    }
+
+    // Reserved modules become deep or pale tints of the artwork, using the tinted data-silhouette contrast limits.
+    // darkCoverage blends the two tints for antialiased finder edges; tint blends toward the solid colours.
+    private static void PaintTinted(byte[] pixels, int index, double r, double g, double b, double darkCoverage,
+        double strength, double tint, Rgba32 ink, Rgba32 paper, double lightFade) {
+        var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+        var darkAmount = (luminance > 40 ? 40 / luminance : 1) * strength;
+        var lightAmount = (luminance < 216 ? (255 - 216) / (255 - luminance) : 1) * strength;
+        pixels[index] = Channel(r, ink.R, paper.R);
+        pixels[index + 1] = Channel(g, ink.G, paper.G);
+        pixels[index + 2] = Channel(b, ink.B, paper.B);
+        byte Channel(double value, byte solidDark, byte solidLight) {
+            var art = 255 - (255 - value) * lightAmount;
+            art = solidLight + (art - solidLight) * lightFade;
+            art += (value * darkAmount - art) * darkCoverage;
+            var solid = solidLight + (solidDark - solidLight) * darkCoverage;
+            return (byte)Math.Round(Math.Max(0, Math.Min(255, solid + (art - solid) * tint)));
+        }
+    }
+
+    // Antialiased coverage of the quiet zone, whose outer corners may be rounded.
+    private static double QuietZoneCoverage(int x, int y, int left, int top, int size, double radius) {
+        if (radius <= 0) return 1;
+        var cx = Math.Max(left + radius, Math.Min(left + size - radius, x + 0.5));
+        var cy = Math.Max(top + radius, Math.Min(top + size - radius, y + 0.5));
+        var distance = Math.Sqrt((x + 0.5 - cx) * (x + 0.5 - cx) + (y + 0.5 - cy) * (y + 0.5 - cy));
+        return Math.Max(0, Math.Min(1, radius - distance + 0.5));
     }
 
     private static void WriteColor(byte[] pixels, int index, CodeGlyphX.Rendering.Rgba32 color) {

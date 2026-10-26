@@ -13,8 +13,22 @@ public sealed class QrImageCanvasOptions {
     /// <summary>Vertical QR placement in the available canvas space (0 = top, 1 = bottom).</summary>
     public double PositionY { get; set; } = 0.5;
 
+    /// <summary>
+    /// Artwork strength outside the quiet zone (0..1). Lower values wash the surrounding art toward the functional
+    /// background (white without art options), giving the code a calm field. One keeps the artwork unchanged.
+    /// </summary>
+    public double ArtOpacity { get; set; } = 1;
+
+    /// <summary>
+    /// Outer corner radius of the quiet zone, in modules (0..3). Rounded corners let the surrounding art meet the light
+    /// field softly; at most three modules keeps a clear quiet zone along every side of the code.
+    /// </summary>
+    public double CornerRadiusModules { get; set; }
+
     internal void Validate() {
+        if (double.IsNaN(CornerRadiusModules) || CornerRadiusModules < 0 || CornerRadiusModules > 3) throw new ArgumentOutOfRangeException(nameof(CornerRadiusModules));
         if (PaddingModules is < 0 or > 64) throw new ArgumentOutOfRangeException(nameof(PaddingModules));
+        if (double.IsNaN(ArtOpacity) || ArtOpacity < 0 || ArtOpacity > 1) throw new ArgumentOutOfRangeException(nameof(ArtOpacity));
         ValidatePosition(PositionX, nameof(PositionX));
         ValidatePosition(PositionY, nameof(PositionY));
     }
