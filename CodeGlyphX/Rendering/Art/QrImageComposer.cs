@@ -49,7 +49,7 @@ public static partial class QrImageComposer {
             ? new FinderGeometry(moduleSize, options.Art) : null;
         var halftone = options.Style == QrImageCompositionStyle.Halftone3x3 && options.Strength > 0
             ? DitherSubCells(image, qr.Modules, moduleSize, qrOffsetX + border - imageOriginX,
-                qrOffsetY + border - imageOriginY, Math.Min(options.Strength, MaxHalftoneImageWeight), cancellationToken) : null;
+                qrOffsetY + border - imageOriginY, Math.Min(options.Strength, MaxHalftoneImageWeight), options.Duotone is not null, cancellationToken) : null;
         var photo = options.Art is null && options.Strength > 0 && options.Style != QrImageCompositionStyle.Halftone3x3
             ? new PhotoPainter(qr, functions, options) : null;
         var duotone = options.Style == QrImageCompositionStyle.Halftone3x3 ? options.Duotone : null;
