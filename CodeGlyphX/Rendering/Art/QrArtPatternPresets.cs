@@ -30,15 +30,18 @@ public static class QrArtPatternPresets {
             QrArtPattern.Botanical => new Rgba32(250, 247, 238),
             _ => new Rgba32(252, 245, 234)
         };
-        return new QrArtPatternOptions { Pattern = pattern, Seed = seed, RotationDegrees = (int)pattern * 17, Colors = colors, Background = background };
+        // Each family has its own motif scale, so the six designs do not share one rhythm.
+        var density = pattern switch { QrArtPattern.Marble => 0.75, QrArtPattern.Waves => 0.9, QrArtPattern.Geometric => 1.25, QrArtPattern.Botanical => 0.8, QrArtPattern.Circuit => 1.1, _ => 1.0 };
+        return new QrArtPatternOptions { Pattern = pattern, Seed = seed, Scale = density, RotationDegrees = (int)pattern * 17, Colors = colors, Background = background };
     }
 
     /// <summary>
     /// Creates independent, editable rendering options. The default eighteen pixels per module
     /// supports comparison at the original and half size; inspect each result's scan checks.
     /// </summary>
-    /// <remarks>Presets carry the artwork through the finder, timing and format zones as tints, and wash the
-    /// surrounding canvas so the code stays the focus. The quiet zone remains a solid light colour.</remarks>
+    /// <remarks>Presets use one tinted colour model for the whole symbol: the quiet zone and light modules keep the art's
+    /// crisp regions in a pale band, and every dark module, reserved ones included, is a deep tone of the art. The
+    /// quiet-zone field fades softly into the washed canvas, and each family places the code differently.</remarks>
     public static QrImageCompositionOptions CreateCompositionOptions(QrArtPattern pattern, int moduleSize = 18) {
         ValidatePattern(pattern);
         if (moduleSize < 6 || moduleSize > 64) throw new ArgumentOutOfRangeException(nameof(moduleSize));
@@ -58,11 +61,16 @@ public static class QrArtPatternPresets {
             QrArtPattern.Geometric => QrImageFinderStyle.Chamfered,
             _ => QrImageFinderStyle.Rounded
         };
-        var opacity = pattern switch {
-            QrArtPattern.Marble => 0.9,
-            QrArtPattern.Circuit => 0.7,
-            QrArtPattern.Botanical => 0.55,
-            _ => 0.4
+        // Placement, wash and fade width differ per family: centred stone with a wide soft field, waves breaking
+        // toward the lower right, a centred burst, a tight Bauhaus field in the lower left, leaves to the right and
+        // a circuit near the top edge.
+        var (x, y, opacity, fade) = pattern switch {
+            QrArtPattern.Marble => (0.5, 0.5, 0.9, 6.0),
+            QrArtPattern.Waves => (0.72, 0.64, 0.6, 3.0),
+            QrArtPattern.Sunburst => (0.5, 0.5, 0.55, 5.0),
+            QrArtPattern.Geometric => (0.3, 0.7, 0.65, 1.5),
+            QrArtPattern.Botanical => (0.64, 0.42, 0.7, 4.0),
+            _ => (0.5, 0.28, 0.8, 2.0)
         };
         // The quiet zone and the canvas wash share one light tone matched to each palette's temperature.
         var paper = pattern switch {
@@ -74,10 +82,13 @@ public static class QrArtPatternPresets {
         };
         return new QrImageCompositionOptions {
             ModuleSize = moduleSize, Strength = 0.96,
-            Canvas = new QrImageCanvasOptions { PaddingModules = 8, ArtOpacity = opacity, CornerRadiusModules = 2 },
+            Canvas = new QrImageCanvasOptions { PaddingModules = 8, PositionX = x, PositionY = y, ArtOpacity = opacity, FadeModules = fade },
             Art = new QrImageArtOptions {
                 Style = style, Shape = shape, Scale = 0.95, DetailProtection = 0.3, FunctionalTint = 1,
-                Finders = finders, FunctionalForeground = new Rgba32(21, 26, 47), FunctionalBackground = paper
+                Finders = finders, FunctionalBackground = paper,
+                // Geometric uses its palette's own deep teal for every dark module instead of darkened tile colours.
+                FunctionalForeground = pattern == QrArtPattern.Geometric ? new Rgba32(18, 52, 58) : new Rgba32(21, 26, 47),
+                DarkModuleArt = pattern switch { QrArtPattern.Geometric => 0, QrArtPattern.Marble => 0.5, _ => 1 }
             }
         };
     }

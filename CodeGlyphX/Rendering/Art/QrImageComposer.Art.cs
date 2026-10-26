@@ -21,15 +21,17 @@ public static partial class QrImageComposer {
         private readonly Rgba32 _paper;
         private readonly int _samples;
         private readonly bool _tinted;
+        private readonly TintModel? _tint;
 
-        internal ArtGeometry(BitMatrix modules, BitMatrix functions, int moduleSize, QrImageArtOptions options,
+        internal ArtGeometry(BitMatrix modules, BitMatrix functions, int moduleSize, QrImageArtOptions options, TintModel? tint,
             QrImageSampler image, int imageX, int imageY, CancellationToken cancellationToken) {
             _style = options.Style;
             _nominalScale = options.Scale;
             _ink = options.FunctionalForeground;
             _paper = options.FunctionalBackground;
             _samples = options.FunctionalTint > 0 ? 4 : 2;
-            _tinted = options.FunctionalTint > 0;
+            _tint = tint;
+            _tinted = tint is not null;
             _modules = modules;
             _functions = functions;
             _moduleSize = moduleSize;
@@ -40,7 +42,8 @@ public static partial class QrImageComposer {
             for (var y = 0; y < modules.Height; y++) {
                 cancellationToken.ThrowIfCancellationRequested();
                 for (var x = 0; x < modules.Width; x++) {
-                    if (functions[x, y]) continue;
+                    // Tinted compositions draw reserved modules with the data silhouettes too.
+                    if (functions[x, y] && tint is null) continue;
                     var left = imageX + (x + 0.2) * moduleSize;
                     var right = imageX + (x + 0.8) * moduleSize;
                     var top = imageY + (y + 0.2) * moduleSize;
@@ -63,11 +66,11 @@ public static partial class QrImageComposer {
         }
 
         internal void Paint(byte[] pixels, int index, int mx, int my, int x, int y, bool dark,
-            double r, double g, double b, double strength, double lightFade = 1) {
+            double r, double g, double b, double strength) {
             var cell = _cells[my * _modules.Width + mx];
             ApplyTreatment(ref r, ref g, ref b, cell, mx, my, x, y);
             if (_tinted) {
-                PaintTinted(pixels, index, cell, mx, my, x, y, dark, r, g, b, strength, lightFade);
+                PaintTinted(pixels, index, cell, mx, my, x, y, dark, r, g, b);
                 return;
             }
             var coverage = 0.0;
@@ -93,38 +96,25 @@ public static partial class QrImageComposer {
             pixels[index + 2] = Adapt(b, dark, amount);
         }
 
-        // Tinted compositions read like a styled code printed on the artwork: every light cell is a pale tint of
-        // the art, and dark silhouettes are deep tints of it. The scan anchor stays fixed at each dark cell centre.
+        // Tinted compositions read like a styled code printed on the artwork: light cells keep the art's crisp regions
+        // in a pale band, and dark silhouettes are deep tones of it. The scan anchor stays fixed at each dark cell centre.
         private void PaintTinted(byte[] pixels, int index, CellGeometry cell, int mx, int my, int x, int y, bool dark,
-            double r, double g, double b, double strength, double lightFade) {
-            var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-            var light = ColorAmount(luminance, false, 0, 212) * strength;
-            var lr = Fade(Adapt(r, false, light), _paper.R, lightFade);
-            var lg = Fade(Adapt(g, false, light), _paper.G, lightFade);
-            var lb = Fade(Adapt(b, false, light), _paper.B, lightFade);
-            if (!dark) {
-                pixels[index] = lr; pixels[index + 1] = lg; pixels[index + 2] = lb;
-                return;
-            }
+            double r, double g, double b) {
             var coverage = 0.0;
-            var weight = 1.0 / (_samples * _samples);
-            for (var sy = 0; sy < _samples; sy++) for (var sx = 0; sx < _samples; sx++) {
-                var u = (x + (sx + 0.5) / _samples) / _moduleSize;
-                var v = (y + (sy + 0.5) / _samples) / _moduleSize;
-                if (Inside(cell, mx, my, u, v, true)) coverage += weight;
+            if (dark) {
+                var weight = 1.0 / (_samples * _samples);
+                for (var sy = 0; sy < _samples; sy++) for (var sx = 0; sx < _samples; sx++) {
+                    var u = (x + (sx + 0.5) / _samples) / _moduleSize;
+                    var v = (y + (sy + 0.5) / _samples) / _moduleSize;
+                    if (Inside(cell, mx, my, u, v, true)) coverage += weight;
+                }
+                var cx = (x + 0.5) / _moduleSize - 0.5;
+                var cy = (y + 0.5) / _moduleSize - 0.5;
+                var anchor = Math.Max(0, Math.Min(1, (0.24 - Math.Sqrt(cx * cx + cy * cy)) / 0.06));
+                coverage = Math.Max(coverage * (1 - 0.85 * cell.Protection), anchor);
             }
-            var cx = (x + 0.5) / _moduleSize - 0.5;
-            var cy = (y + 0.5) / _moduleSize - 0.5;
-            var anchor = Math.Max(0, Math.Min(1, (0.24 - Math.Sqrt(cx * cx + cy * cy)) / 0.06));
-            coverage = Math.Max(coverage * (1 - 0.85 * cell.Protection), anchor);
-            var deep = ColorAmount(luminance, true, 52, 0) * strength;
-            pixels[index] = Mix(lr, Adapt(r, true, deep), coverage);
-            pixels[index + 1] = Mix(lg, Adapt(g, true, deep), coverage);
-            pixels[index + 2] = Mix(lb, Adapt(b, true, deep), coverage);
+            _tint!.Write(pixels, index, mx * _moduleSize + x, my * _moduleSize + y, r, g, b, coverage);
         }
-
-        private static byte Fade(byte tint, byte paper, double amount) => (byte)Math.Round(paper + (tint - paper) * amount);
-
         private static byte Mix(byte from, byte to, double amount) => (byte)Math.Round(from + (to - from) * amount);
 
         private void ApplyTreatment(ref double r, ref double g, ref double b, CellGeometry cell, int mx, int my, int px, int py) {

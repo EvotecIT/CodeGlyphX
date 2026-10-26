@@ -35,11 +35,16 @@ public sealed class QrImageArtOptions {
     public QrImageSubjectOptions? Subject { get; set; }
 
     /// <summary>
-    /// Artwork carried into finder, timing, alignment, format and version modules (0..1). Zero keeps them in the solid
-    /// functional colours. One draws them as deep and pale tints of the underlying artwork, so the art continues through
-    /// the reserved zones, with antialiased finder rings and finer module edges. The quiet zone always stays solid.
+    /// Tinted composition (0..1). Zero keeps the classic treatment: solid functional colours and a solid quiet zone.
+    /// Above zero, one colour model covers the whole symbol: light modules and the quiet zone keep the artwork's own
+    /// crisp regions compressed into a pale band (luminance 214..255), and dark modules, including finder, timing,
+    /// alignment, format and version modules, are deep tones of the art (luminance at most 52) drawn with the data
+    /// silhouettes. Values below one blend toward the solid functional colours.
     /// </summary>
     public double FunctionalTint { get; set; }
+
+    /// <summary>Share of the artwork's hue in tinted dark modules (0..1). Zero uses FunctionalForeground, for a palette's own dark tone; one uses deep tones of the art.</summary>
+    public double DarkModuleArt { get; set; } = 1;
 
     internal void Validate() {
         Subject?.Validate();
@@ -53,5 +58,6 @@ public sealed class QrImageArtOptions {
         if (double.IsNaN(Scale) || Scale < 0.65 || Scale > 1) throw new ArgumentOutOfRangeException(nameof(Scale));
         if (double.IsNaN(DetailProtection) || DetailProtection < 0 || DetailProtection > 1) throw new ArgumentOutOfRangeException(nameof(DetailProtection));
         if (double.IsNaN(FunctionalTint) || FunctionalTint < 0 || FunctionalTint > 1) throw new ArgumentOutOfRangeException(nameof(FunctionalTint));
+        if (double.IsNaN(DarkModuleArt) || DarkModuleArt < 0 || DarkModuleArt > 1) throw new ArgumentOutOfRangeException(nameof(DarkModuleArt));
     }
 }

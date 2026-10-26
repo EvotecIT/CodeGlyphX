@@ -20,13 +20,13 @@ public sealed class QrImageCanvasOptions {
     public double ArtOpacity { get; set; } = 1;
 
     /// <summary>
-    /// Outer corner radius of the quiet zone, in modules (0..3). Rounded corners let the surrounding art meet the light
-    /// field softly; at most three modules keeps a clear quiet zone along every side of the code.
+    /// Width, in modules (0..16), of the soft fade from a tinted composition's pale quiet-zone field into the washed
+    /// canvas art. The field follows the code with softly rounded corners; zero gives a hard edge. Ignored without tinting.
     /// </summary>
-    public double CornerRadiusModules { get; set; }
+    public double FadeModules { get; set; }
 
     internal void Validate() {
-        if (double.IsNaN(CornerRadiusModules) || CornerRadiusModules < 0 || CornerRadiusModules > 3) throw new ArgumentOutOfRangeException(nameof(CornerRadiusModules));
+        if (double.IsNaN(FadeModules) || FadeModules < 0 || FadeModules > 16) throw new ArgumentOutOfRangeException(nameof(FadeModules));
         if (PaddingModules is < 0 or > 64) throw new ArgumentOutOfRangeException(nameof(PaddingModules));
         if (double.IsNaN(ArtOpacity) || ArtOpacity < 0 || ArtOpacity > 1) throw new ArgumentOutOfRangeException(nameof(ArtOpacity));
         ValidatePosition(PositionX, nameof(PositionX));

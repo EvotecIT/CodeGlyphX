@@ -69,7 +69,7 @@ internal sealed class QrPatternRasterizer {
         var accent = 1 - Math.Abs(Math.Sin((qx * 0.3 - qy * 0.75 + 1.5 * Turbulence(qx * 0.8 - 2.2, qy * 0.8 + 8.1, 5)) * Math.PI * 0.7));
         var presence = SmoothStep(-0.25, 0.35, Fbm(qx * 0.45 - 7, qy * 0.45 + 2, 3));
         color = Color.Mix(color, Role(2), 0.28 * Math.Pow(minor, 9) * presence);
-        color = Color.Mix(color, Role(2), 0.3 * Math.Pow(major, 4) + 0.62 * Math.Pow(major, 26));
+        color = Color.Mix(color, Role(2), Math.Min(1, 0.32 * Math.Pow(major, 3) + 0.75 * Math.Pow(major, 18)));
         return Color.Mix(color, Role(3), 0.8 * Math.Pow(accent, 30) * SmoothStep(0.0, 0.3, Fbm(qx * 0.5 + 20, qy * 0.5 - 13, 2)));
     }
 
@@ -152,7 +152,7 @@ internal sealed class QrPatternRasterizer {
 
     // Overlapping lance leaves with midribs on short stems, and a few berries.
     private Color Botanical(double x, double y) {
-        const double cell = 1 / 5.5;
+        const double cell = 1 / 3.4;
         var gx = (int)Math.Floor(x / cell); var gy = (int)Math.Floor(y / cell);
         var color = Color.Mix(_paper, Role(2), 0.16);
         for (var n = 0; n < 9; n++) {
@@ -179,10 +179,6 @@ internal sealed class QrPatternRasterizer {
                 var rib = Coverage(Math.Max(Math.Abs(ly) - length * 0.012, Math.Abs(lx) - length * 0.42));
                 shaded = Color.Mix(shaded, Color.Mix(tone, White, 0.45), 0.85 * rib);
                 color = Color.Mix(color, shaded, coverage);
-            }
-            if (Hash(i - 13, j + 17) < 0.22) {
-                var berry = Length(x - cx - Math.Cos(angle + 1.8) * length * 0.42, y - cy - Math.Sin(angle + 1.8) * length * 0.42) - cell * 0.075;
-                color = Color.Mix(color, Role(3), Coverage(berry));
             }
         }
         return color;

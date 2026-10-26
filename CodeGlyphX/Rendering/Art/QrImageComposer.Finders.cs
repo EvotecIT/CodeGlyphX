@@ -56,7 +56,7 @@ public static partial class QrImageComposer {
         }
 
         // Tinted finders use analytic signed distances, giving smooth ring and ball edges at any module size.
-        internal void PaintTinted(byte[] pixels, int index, int x, int y, int qrSize, double r, double g, double b, double strength, double tint, double lightFade) {
+        internal double DarkCoverage(int x, int y, int qrSize) {
             var far = (qrSize - 7) * _moduleSize;
             if (x >= far) x -= far;
             if (y >= far) y -= far;
@@ -64,7 +64,7 @@ public static partial class QrImageComposer {
             var dx = x + 0.5 - 3.5 * m; var dy = y + 0.5 - 3.5 * m;
             var ring = Coverage(dx, dy, 3.5 * m, 2 * m, m) * (1 - Coverage(dx, dy, 2.5 * m, m, m));
             var dark = System.Math.Min(1, ring + Coverage(dx, dy, 1.5 * m, m, m / 2));
-            QrImageComposer.PaintTinted(pixels, index, r, g, b, dark, strength, tint, _ink, _paper, lightFade);
+            return dark;
         }
 
         private double Coverage(double x, double y, double half, double radius, double chamfer) {
