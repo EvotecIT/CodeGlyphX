@@ -53,7 +53,7 @@ public static partial class QrArt {
                 if (best.Validation.AllPassed) return new QrSceneSearchResult(best, attempted, validated);
             }
         }
-        if (best is null) throw new ArgumentException("No QR candidate fits the canvas with at least two pixels per module. Increase scene size, adjust QR placement, or allow more candidates.", nameof(design));
+        if (best is null) throw new ArgumentException("No QR candidate fits the canvas with at least three pixels per module. Increase scene size, adjust QR placement, or allow more candidates.", nameof(design));
         return new QrSceneSearchResult(best, attempted, validated);
     }
 }

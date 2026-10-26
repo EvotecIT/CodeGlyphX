@@ -26,6 +26,7 @@ internal static partial class QrSceneIllustrations {
     /// <summary>Caption ink for each composition: dark on light grounds, paper on night scenes.</summary>
     internal static Rgba32 CaptionColor(QrSceneOptions options) => options.Style switch {
         QrSceneStyle.ElectricCity or QrSceneStyle.MusicFestival or QrSceneStyle.CosmicOrbit => options.Paper,
+        QrSceneStyle.RetroArcade => options.Colors[2],
         _ => options.Ink
     };
 

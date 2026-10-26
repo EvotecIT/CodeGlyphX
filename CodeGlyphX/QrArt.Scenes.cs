@@ -9,6 +9,7 @@ namespace CodeGlyphX;
 public static partial class QrArt {
     /// <summary>Draws a deterministic illustrated scene with high error correction, protected functional patterns
     /// and a complete four-module quiet zone. Illustrations, captions and logos cannot cover the QR.
+    /// The code needs at least three pixels per module; a smaller size or QR scale throws <see cref="ArgumentException"/>.
     /// Input settings are copied; no image service, model or network is used. Validate final delivery assets.</summary>
     public static QrSceneComposition ComposeScene(string payload, QrSceneOptions? options = null, CancellationToken cancellationToken = default) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
@@ -20,7 +21,7 @@ public static partial class QrArt {
 
     private static QrSceneComposition ComposeSceneCore(string payload, QrCode code, QrSceneOptions design, CancellationToken token) {
         var moduleSize = GetSceneModuleSize(design, code);
-        if (moduleSize < SceneMinimumModuleSize) throw new ArgumentException("Increase scene size or QR scale: at least two pixels per module are required.", nameof(design));
+        if (moduleSize < SceneMinimumModuleSize) throw new ArgumentException("Increase scene size or QR scale: at least three pixels per module are required (for the preset scale of 0.5, about 300 pixels for a short URL and 420 for a 130-character URL).", nameof(design));
         var qrSize = moduleSize * (code.Size + 8);
         if (!TryGetScenePlacement(design, qrSize, out var x, out var y))
             throw new ArgumentException("The QR and its full quiet zone must fit inside the canvas.", nameof(design));
@@ -48,7 +49,8 @@ public static partial class QrArt {
             new QrImageComposition(pixels, design.Size, x, y, qrSize));
     }
 
-    private const int SceneMinimumModuleSize = 2;
+    // Below three pixels per module even a plain symbol stops decoding reliably after slight rotation or blur.
+    private const int SceneMinimumModuleSize = 3;
     private static int GetSceneModuleSize(QrSceneOptions design, QrCode code) => (int)Math.Floor(design.Size * design.Qr.Scale / (code.Size + 8));
     private static bool TryGetScenePlacement(QrSceneOptions design, int qrSize, out int x, out int y) {
         x = (int)Math.Round(design.Qr.X * design.Size - qrSize / 2.0);

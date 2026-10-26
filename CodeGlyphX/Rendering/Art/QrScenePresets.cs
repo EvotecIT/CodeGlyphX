@@ -19,14 +19,15 @@ public static class QrScenePresets {
             _ => Palette(0xED46AD, 0x33CDAA, 0xF4CD47, 0x6568D8)
         };
         // Each composition places the code in its own local backdrop; captions sit where the scene leaves room.
-        // A scale of 0.56 keeps at least two pixels per module for long URLs at a 256-pixel render.
+        // A scale of 0.5 leaves room for the illustration and keeps three pixels per module from about 300 pixels
+        // (short URLs) or 420 pixels (130-character URLs); smaller renders throw instead of degrading the code.
         var (qrX, qrY, qrScale, captionY, captionScale) = style switch {
-            QrSceneStyle.TropicalGarden => (0.5, 0.44, 0.56, 0.795, 0.62),
-            QrSceneStyle.ElectricCity => (0.5, 0.37, 0.56, 0.958, 0.72),
-            QrSceneStyle.MusicFestival => (0.5, 0.47, 0.56, 0.08, 0.8),
-            QrSceneStyle.OceanReef => (0.5, 0.44, 0.56, 0.795, 0.5),
-            QrSceneStyle.CosmicOrbit => (0.5, 0.45, 0.56, 0.945, 0.75),
-            _ => (0.5, 0.54, 0.56, 0.15, 1.0)
+            QrSceneStyle.TropicalGarden => (0.5, 0.43, 0.5, 0.765, 0.56),
+            QrSceneStyle.ElectricCity => (0.5, 0.37, 0.5, 0.958, 0.72),
+            QrSceneStyle.MusicFestival => (0.5, 0.47, 0.5, 0.085, 0.8),
+            QrSceneStyle.OceanReef => (0.5, 0.43, 0.5, 0.95, 0.66),
+            QrSceneStyle.CosmicOrbit => (0.5, 0.44, 0.5, 0.95, 0.72),
+            _ => (0.5, 0.4, 0.54, 0.79, 1.0)
         };
         options.Qr.X = qrX; options.Qr.Y = qrY; options.Qr.Scale = qrScale;
         options.CaptionLayer.Y = captionY; options.CaptionLayer.Scale = captionScale;
