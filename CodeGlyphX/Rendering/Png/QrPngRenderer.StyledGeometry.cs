@@ -38,28 +38,32 @@ public static partial class QrPngRenderer {
     private static void DrawCoverageModule(byte[] buffer, int stride, int moduleSize, int mx, int my, int quiet,
         int offsetX, int offsetY, Rgba32 color, GradientInfo? gradient, QrForegroundPatternOptions? pattern,
         QrModuleShape shape, double scale, int radius, int neighbours, int originX, int originY, int qrSize,
-        int jitterX, int jitterY, double timingThickness = 0) {
+        int jitterX, int jitterY, double timingThickness = 0, bool moduleOn = true) {
         var x0 = offsetX + (mx + quiet) * moduleSize;
         var y0 = offsetY + (my + quiet) * moduleSize;
+        var horizontalTiming = timingThickness > 0 && my == 6 && mx >= 8 && mx < qrSize / moduleSize - 8;
+        var verticalTiming = timingThickness > 0 && mx == 6 && my >= 8 && my < qrSize / moduleSize - 8;
         for (var y = 0; y < moduleSize; y++) {
             for (var x = 0; x < moduleSize; x++) {
                 var hits = 0;
+                var lineHits = 0;
                 for (var sy = 0; sy < 4; sy++)
-                    for (var sx = 0; sx < 4; sx++)
-                        if (Contains((x - jitterX + (sx + .5) / 4) / moduleSize,
-                            (y - jitterY + (sy + .5) / 4) / moduleSize)) hits++;
-                if (hits == 0) continue;
+                    for (var sx = 0; sx < 4; sx++) {
+                        var u = (x - jitterX + (sx + .5) / 4) / moduleSize;
+                        var v = (y - jitterY + (sy + .5) / 4) / moduleSize;
+                        if (moduleOn && QrShapeGeometry.Contains(shape, u, v, scale, radius / (double)moduleSize, neighbours)) hits++;
+                        else if (horizontalTiming && Math.Abs(v - .5) <= timingThickness / 2
+                            || verticalTiming && Math.Abs(u - .5) <= timingThickness / 2) lineHits++;
+                    }
+                if (hits == 0 && lineHits == 0) continue;
                 var ink = gradient.HasValue ? GetGradientColor(gradient.Value, x0 + x, y0 + y, originX, originY) : color;
                 if (!ApplyStyledPattern(pattern, moduleSize, x0 + x, y0 + y, originX, originY, qrSize, ref ink)) continue;
-                BlendPixelAt(buffer, (y0 + y) * (stride + 1) + 1 + (x0 + x) * 4, CoverageColor(ink, hits));
+                // Keep alternating timing dots legible over the continuous hairline.
+                // Replacing them with a solid line erases the timing signal on dense codes.
+                var covered = lineHits == 0 ? CoverageColor(ink, hits)
+                    : new Rgba32(ink.R, ink.G, ink.B, (byte)((ink.A * (hits + lineHits * .25) + 8) / 16));
+                BlendPixelAt(buffer, (y0 + y) * (stride + 1) + 1 + (x0 + x) * 4, covered);
             }
-        }
-        bool Contains(double u, double v) {
-            if (timingThickness > 0 && my == 6 && mx >= 8 && mx < qrSize / moduleSize - 8)
-                return Math.Abs(v - .5) <= timingThickness / 2 && Math.Abs(u - .5) <= .275;
-            if (timingThickness > 0 && mx == 6 && my >= 8 && my < qrSize / moduleSize - 8)
-                return Math.Abs(u - .5) <= timingThickness / 2 && Math.Abs(v - .5) <= .275;
-            return QrShapeGeometry.Contains(shape, u, v, scale, radius / (double)moduleSize, neighbours);
         }
     }
 
@@ -115,6 +119,13 @@ public static partial class QrPngRenderer {
                     for (var sx = 0; sx < 4; sx++) {
                         var xx = (x + (sx + 0.5) / 4) / m;
                         var yy = (y + (sy + 0.5) / 4) / m;
+                        if (index < 0 && opts.ModuleShape == QrModuleShape.Dot && eye?.OuterShape == QrModuleShape.Rounded) {
+                            var cx = (int)xx; var cy = (int)yy;
+                            var dot = QrShapeGeometry.Contains(QrModuleShape.Circle, xx - cx, yy - cy, scale: .9);
+                            if (dot && (cx == 0 || cy == 0 || cx == cells - 1 || cy == cells - 1)) ringHits++;
+                            if (cx == 2 && cy == 2 && QrShapeGeometry.Contains(QrModuleShape.Circle, xx - cx, yy - cy)) ballHits++;
+                            continue;
+                        }
                         var thickness = eye?.RingThicknessModules ?? 1;
                         // Keep a thin stroke centred on the standard ring's centreline.
                         // Expanding only its aperture shifts the ring and breaks finder run ratios.

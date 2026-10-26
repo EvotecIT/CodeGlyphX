@@ -7,6 +7,32 @@ namespace CodeGlyphX.Tests;
 
 public sealed class QrNativeArtGuardrailTests {
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void GuardedExports_AcceptRoundedSquareRingWithCircularBall(bool dark) {
+        const string payload = "https://evotec.xyz";
+        var options = QrArt.Hero(QrHeroPreset.Brand, dark);
+        var png = QR.Render(payload, OutputFormat.Png, options,
+            new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
+        Assert.True(QrImageDecoder.TryDecodeImage(png, out var decoded, out _,
+            new QrPixelDecodeOptions { Profile = QrDecodeProfile.Balanced, DisableTransforms = true, BudgetMilliseconds = 1000 }));
+        Assert.Equal(payload, decoded.Text);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void GuardedExports_AcceptMirroredLeafRingsWithSquareBalls(bool dark) {
+        const string payload = "https://evotec.xyz/products/codeglyphx/docs/getting-started?utm_source=print&utm_medium=flyer&utm_campaign=autumn-2026&ref=gallery-audit";
+        var options = QrArt.Hero(QrHeroPreset.Botanical, dark);
+        options.Eyes!.InnerShape = QrModuleShape.Square;
+        var png = QR.Render(payload, OutputFormat.Png, options,
+            new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
+        Assert.True(QrImageDecoder.TryDecodeImage(png, out var decoded, out _,
+            new QrPixelDecodeOptions { Profile = QrDecodeProfile.Balanced, DisableTransforms = true, BudgetMilliseconds = 1000 }));
+        Assert.Equal(payload, decoded.Text);
+    }
+    [Theory]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
     public void GuardedExports_RejectArtworkThatFailsStandardNativeDecode(OutputFormat format) {

@@ -6,6 +6,8 @@ namespace CodeGlyphX.Rendering;
 /// Canvas options for sticker-style QR output.
 /// </summary>
 public sealed class QrCanvasOptions {
+    // Curated dark compositions keep paper shadows on the dark field, inside the canvas.
+    internal bool ShadowOnPanelsOnly { get; set; }
     /// <summary>Filled caption band's colour; null uses the frame accent.</summary>
     public Rgba32? BandColor { get; set; }
     /// <summary>Frame stroke colour; null uses Frame.Color or a contrasting default.</summary>
@@ -29,6 +31,10 @@ public sealed class QrCanvasOptions {
     public Rgba32? PanelGlowColor { get; set; }
     /// <summary>Bloom extent outside the QR panel, in pixels.</summary>
     public int PanelGlowRadiusPx { get; set; }
+    /// <summary>Optional wider bloom behind the primary panel glow.</summary>
+    public Rgba32? SecondaryPanelGlowColor { get; set; }
+    /// <summary>Extent of the secondary panel bloom in pixels.</summary>
+    public int SecondaryPanelGlowRadiusPx { get; set; }
 
     /// <summary>
     /// Padding around the QR (in pixels).
@@ -125,7 +131,7 @@ public sealed class QrCanvasOptions {
         if (!Enum.IsDefined(typeof(QrCanvasTemplate), Template)) throw new ArgumentOutOfRangeException(nameof(Template));
         Caption?.Validate();
         if (StrokeWidthPx < 0) throw new ArgumentOutOfRangeException(nameof(StrokeWidthPx));
-        if (QrCornerRadiusPx < 0 || ShadowBlurPx < 0 || StackedPanelOffsetPx < 0 || PanelGlowRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(QrCornerRadiusPx));
+        if (QrCornerRadiusPx < 0 || ShadowBlurPx < 0 || StackedPanelOffsetPx < 0 || PanelGlowRadiusPx < 0 || SecondaryPanelGlowRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(QrCornerRadiusPx));
         if (PaddingPx < 0) throw new ArgumentOutOfRangeException(nameof(PaddingPx));
         if (CornerRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(CornerRadiusPx));
         if (BorderPx < 0) throw new ArgumentOutOfRangeException(nameof(BorderPx));

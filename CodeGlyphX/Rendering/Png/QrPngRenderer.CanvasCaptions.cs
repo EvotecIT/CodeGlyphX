@@ -4,7 +4,7 @@ namespace CodeGlyphX.Rendering.Png;
 
 public static partial class QrPngRenderer {
     private static void DrawCaptionCanvas(byte[] pixels, int width, int height, int stride, QrCanvasOptions canvas,
-        int x, int y, int w, int h, int qx, int qy, int qr) {
+        int x, int y, int w, int h, int qx, int qy, int qr, int moduleSize) {
         var caption = canvas.Caption;
         var plan = MeasureCaption(canvas, qr);
         var top = caption?.Position == QrCanvasCaptionPosition.Top;
@@ -13,11 +13,14 @@ public static partial class QrPngRenderer {
         var ink = canvas.StrokeColor ?? canvas.Frame?.Color ?? defaultInk;
         var band = canvas.BandColor ?? ink;
         var foreground = caption?.Color ?? ink;
-        var pad = CaptionCanvasPadding(canvas);
-        var t = canvas.StrokeWidthPx > 0 ? canvas.StrokeWidthPx : Math.Max(3 * (caption?.RasterScale ?? 1), qr / 150);
+        var pad = CaptionCanvasPadding(canvas, qr);
+        var t = canvas.StrokeWidthPx > 0 ? canvas.StrokeWidthPx : Math.Max(2 * (caption?.RasterScale ?? 1), (int)Math.Round(moduleSize * .5));
         var left = x + pad / 2; var right = x + w - pad / 2;
         var upper = y + pad / 2; var lower = y + h - pad / 2;
-        var radius = canvas.Template == QrCanvasTemplate.PhoneOutline ? w / 9 : Math.Max(pad, qr / 20);
+        if (canvas.Template == QrCanvasTemplate.PhoneOutline) {
+            left = x + t; right = x + w - t; upper = y + t; lower = y + h - t;
+        }
+        var radius = canvas.Template == QrCanvasTemplate.PhoneOutline ? w / 9 : (int)Math.Round(w * .06);
         var pillWidth = Math.Min(qr, plan.Width + 2 * plan.Clearance);
         var pillLeft = qx + (qr - pillWidth) / 2;
         bool Rounded(double px, double py, double rx, double ry, double rw, double rh, double rr) {
@@ -40,41 +43,47 @@ public static partial class QrPngRenderer {
                     case QrCanvasTemplate.ScanMePill:
                     case QrCanvasTemplate.SpeechBubble:
                         if (plan.Height > 0) {
-                            fill = Rounded(xx, yy, pillLeft, sy, pillWidth, plan.Height, plan.Height / 2.0);
+                            fill = Rounded(xx, yy, pillLeft, sy, pillWidth, plan.Height, plan.Height * (plan.Lines.Count > 1 ? .35 : .5));
                             if (template == QrCanvasTemplate.SpeechBubble || canvas.CaptionTail) {
-                                var tail = Math.Max(1, (int)Math.Ceiling(qr * .025));
+                                var tail = plan.CapHeight;
                                 var distance = top ? yy - sy - plan.Height : sy - yy;
-                                fill |= distance >= 0 && distance < tail && Math.Abs(xx - (qx + qr / 2.0)) <= (tail - distance) * .65;
+                                var dxTail = xx - (qx + qr / 2.0);
+                                fill |= distance >= 0 && distance <= tail * .85 && Math.Abs(dxTail) <= (tail - distance) * .75;
+                                fill |= dxTail * dxTail + Math.Pow(distance - tail * .85, 2) <= Math.Pow(tail * .15, 2);
                             }
                         }
                         break;
                     case QrCanvasTemplate.TicketStub:
                         var divider = top ? sy + plan.Height + plan.Gap / 2 : sy - plan.Gap / 2;
-                        var notch = Math.Max(8, qr * .022);
+                        var notch = Math.Max(8, w * .045);
+                        outer = Rounded(xx, yy, left, upper, right - left, lower - upper, notch * 1.1);
+                        inner = Rounded(xx, yy, left + t, upper + t, right - left - 2 * t, lower - upper - 2 * t, notch * 1.1 - t);
                         var dx = Math.Min(Math.Abs(xx - left), Math.Abs(xx - right));
                         var d = Math.Sqrt(dx * dx + (yy - divider) * (yy - divider));
                         paint = d >= notch && outer && !inner;
                         paint |= d >= notch && d <= notch + t && xx >= left && xx <= right;
-                        paint |= Math.Abs(yy - divider) < t / 2.0 && xx > left + notch && xx < right - notch && (px - left) % Math.Max(4, t * 4) < t * 2;
+                        var dash = (xx - left - notch) % Math.Max(4, t * 4);
+                        paint |= xx > left + notch && xx < right - notch && Rounded(dash, yy, t / 2.0, divider - t / 2.0, t * 2, t, t / 2.0);
                         break;
                     case QrCanvasTemplate.PhoneOutline:
                         var bezel = Math.Max(t * 2, qr / 65);
                         paint = outer && !Rounded(xx, yy, left + bezel, upper + bezel, right - left - 2 * bezel, lower - upper - 2 * bezel, radius - bezel);
-                        paint |= Rounded(xx, yy, x + w * .36, upper + bezel, w * .28, bezel * 2.5, bezel);
+                        paint |= Rounded(xx, yy, x + w * .36, upper + bezel * 2, w * .28, bezel * 1.6, bezel * .8);
                         paint |= Rounded(xx, yy, x + w * .39, lower - bezel * 3, w * .22, bezel / 2.0, bezel / 4.0);
                         break;
                     case QrCanvasTemplate.RoundedCardHeader:
                         paint = outer && !inner;
-                        fill = outer && plan.Height > 0 && yy >= sy && yy < sy + plan.Height;
+                        fill = outer && plan.Height > 0 && yy >= (top ? upper : sy) && yy < (top ? sy + plan.Height : lower);
                         break;
                     case QrCanvasTemplate.CornerViewfinder:
                         var gap = Math.Max(3, t * 1.5);
                         var l = qx - gap - t; var r = qx + qr + gap + t;
                         var u = qy - gap - t; var b = qy + qr + gap + t;
                         var length = qr * .13;
-                        paint = xx >= l && xx < r && yy >= u && yy < b &&
-                            ((xx < l + t || xx >= r - t) && (yy < u + length || yy >= b - length)
-                            || (yy < u + t || yy >= b - t) && (xx < l + length || xx >= r - length));
+                        paint = Rounded(xx, yy, l, u, length, t, t / 2.0) || Rounded(xx, yy, l, u, t, length, t / 2.0)
+                            || Rounded(xx, yy, r - length, u, length, t, t / 2.0) || Rounded(xx, yy, r - t, u, t, length, t / 2.0)
+                            || Rounded(xx, yy, l, b - t, length, t, t / 2.0) || Rounded(xx, yy, l, b - length, t, length, t / 2.0)
+                            || Rounded(xx, yy, r - length, b - t, length, t, t / 2.0) || Rounded(xx, yy, r - t, b - length, t, length, t / 2.0);
                         break;
                 }
                 if (paint) hits++;
@@ -93,8 +102,16 @@ public static partial class QrPngRenderer {
             PaintCaptionShape(pixels, width, height, stride, line.Shape, tx, textY, foreground);
             textY += (int)Math.Ceiling(line.Shape.InkBounds.Height) + plan.LineGap;
         }
-        if (plan.IconWidth > 0) DrawCaptionIcon(pixels, width, height, stride, canvas, qx + (qr - plan.Width) / 2,
-            sy + plan.Clearance, Math.Max(4, plan.IconWidth * 3 / 4), foreground);
+        if (plan.IconWidth > 0) {
+            var first = plan.Lines[0];
+            var xHeight = caption.Font.Shape("x", first.Size, strict: false);
+            var iconSize = Math.Max(4, plan.IconWidth * 3 / 4);
+            var centre = xHeight.MissingGlyphs.Count == 0
+                ? xHeight.InkBounds.Y - first.Shape.InkBounds.Y + xHeight.InkBounds.Height / 2
+                : first.Shape.InkBounds.Height / 2;
+            DrawCaptionIcon(pixels, width, height, stride, canvas, qx + (qr - plan.Width) / 2,
+                sy + plan.Clearance + (int)Math.Round(centre - iconSize / 2.0), iconSize, foreground);
+        }
         if (caption.Url.Length > 0) {
             var size = plan.Lines[0].Size * .5;
             var url = caption.Font.Shape(caption.Url, size, caption.StrictText);

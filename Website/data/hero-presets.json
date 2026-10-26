@@ -8,16 +8,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/ink-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/ink-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1361,
+          "height": 1361,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -32,16 +32,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/dotmatrix-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/dotmatrix-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1379,
+          "height": 1379,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -56,16 +56,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/sunset-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/sunset-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1359,
+          "height": 1359,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -80,16 +80,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/ocean-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/ocean-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1359,
+          "height": 1359,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -104,16 +104,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/monoclassy-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/monoclassy-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1361,
+          "height": 1361,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -128,8 +128,8 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/brand-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": {
             "XModules": 10,
@@ -155,8 +155,8 @@
         {
           "name": "Dark",
           "src": "/assets/hero-presets/brand-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1361,
+          "height": 1361,
           "decoded": "https://codeglyphx.com",
           "budget": {
             "XModules": 10,
@@ -190,16 +190,16 @@
         {
           "name": "Dark design",
           "src": "/assets/hero-presets/neon-light.png",
-          "width": 688,
-          "height": 688,
+          "width": 1361,
+          "height": 1361,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark design",
           "src": "/assets/hero-presets/neon-dark.png",
-          "width": 688,
-          "height": 688,
+          "width": 1361,
+          "height": 1361,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -214,16 +214,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/papercutout-light.png",
-          "width": 732,
-          "height": 739,
+          "width": 1191,
+          "height": 1203,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/papercutout-dark.png",
-          "width": 732,
-          "height": 739,
+          "width": 1361,
+          "height": 1361,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -238,16 +238,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/retropixel-light.png",
-          "width": 668,
-          "height": 668,
+          "width": 1129,
+          "height": 1129,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/retropixel-dark.png",
-          "width": 668,
-          "height": 668,
+          "width": 1363,
+          "height": 1363,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -262,16 +262,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/minimalline-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/minimalline-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1367,
+          "height": 1367,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -286,16 +286,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/botanical-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/botanical-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1381,
+          "height": 1381,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -310,16 +310,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/berry-light.png",
-          "width": 592,
-          "height": 592,
+          "width": 1024,
+          "height": 1024,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
           "name": "Dark",
           "src": "/assets/hero-presets/berry-dark.png",
-          "width": 672,
-          "height": 672,
+          "width": 1361,
+          "height": 1361,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }

@@ -24,6 +24,9 @@ public sealed class QrGradientOptions {
     /// </summary>
     public Rgba32 EndColor { get; set; } = Rgba32.Black;
 
+    /// <summary>Position of the first stop, from zero to less than one. The start colour is held before this position.</summary>
+    public double StartOffset { get; set; }
+
     /// <summary>
     /// Radial gradient center (0..1) along X.
     /// </summary>
@@ -36,6 +39,7 @@ public sealed class QrGradientOptions {
 
     internal void Validate() {
         if (!Enum.IsDefined(typeof(QrGradientInterpolation), Interpolation)) throw new ArgumentOutOfRangeException(nameof(Interpolation));
+        if (double.IsNaN(StartOffset) || StartOffset < 0 || StartOffset >= 1) throw new ArgumentOutOfRangeException(nameof(StartOffset));
         if (CenterX is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(CenterX));
         if (CenterY is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(CenterY));
     }

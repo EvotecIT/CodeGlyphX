@@ -51,6 +51,8 @@ public static partial class QrPngRenderer {
             QrLogoPlateShape.Circle => QrModuleShape.Circle,
             QrLogoPlateShape.Squircle => QrModuleShape.Squircle,
             QrLogoPlateShape.Square => QrModuleShape.Square,
+            QrLogoPlateShape.Leaf => QrModuleShape.Leaf,
+            QrLogoPlateShape.Classy => QrModuleShape.Classy,
             _ => QrModuleShape.Rounded
         };
         var radius = logo.CornerRadiusPx > 0 ? logo.CornerRadiusPx / (double)Math.Min(w, h) : .2;
@@ -60,8 +62,8 @@ public static partial class QrPngRenderer {
                 var outer = 0; var inner = 0;
                 for (var sy = 0; sy < 4; sy++) for (var sx = 0; sx < 4; sx++) {
                     var xx = x - x0 + (sx + .5) / 4; var yy = y - y0 + (sy + .5) / 4;
-                    if (QrShapeGeometry.Contains(silhouette, xx / w, yy / h, radius: radius)) outer++;
-                    if (ring > 0 && QrShapeGeometry.Contains(silhouette, (xx - ring) / (w - 2 * ring), (yy - ring) / (h - 2 * ring), radius: radius)) inner++;
+                    if (QrShapeGeometry.ContainsEye(silhouette, xx / w, yy / h, radius: radius, outwardCorner: 0)) outer++;
+                    if (ring > 0 && QrShapeGeometry.ContainsEye(silhouette, (xx - ring) / (w - 2 * ring), (yy - ring) / (h - 2 * ring), radius: radius, outwardCorner: 0)) inner++;
                 }
                 var at = y * (stride + 1) + 1 + x * 4;
                 if (outer > 0) BlendPixelAt(pixels, at, CoverageColor(logo.Background, outer));

@@ -325,8 +325,8 @@ public sealed class QrArtWave1ScanTests {
                         PossibleFormats = new[] { BarcodeFormat.QR_CODE } }
                 };
                 var strict = reader.Decode(new RGBLuminanceSource(pixels, size, targetHeight, RGBLuminanceSource.BitmapFormat.RGBA32));
-                var decoded = QrDecoder.TryDecode(pixels, size, targetHeight, size * 4, PixelFormat.Rgba32,
-                    out var library);
+                var decoded = QrImageDecoder.TryDecode(pixels, size, targetHeight, size * 4, PixelFormat.Rgba32,
+                    new QrPixelDecodeOptions { BudgetMilliseconds = TestBudget.Adjust(10000) }, out var library);
                 yield return new ScanObservation(size, transform, strict?.Text, decoded ? library.Text : null, payload);
             }
         }

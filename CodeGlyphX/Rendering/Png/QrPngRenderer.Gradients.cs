@@ -55,6 +55,7 @@ public static partial class QrPngRenderer {
     }
 
     private static Rgba32 Lerp(GradientInfo gradient, double t) {
+        t = (t - gradient.StartOffset) / (1 - gradient.StartOffset);
         if (t <= 0) return gradient.StartColor;
         if (t >= 1) return gradient.EndColor;
         return gradient.Samples[(int)Math.Round(t * 1024)];
@@ -66,6 +67,7 @@ public static partial class QrPngRenderer {
         public Rgba32 StartColor { get; }
         public Rgba32 EndColor { get; }
         public double CenterX { get; }
+        public double StartOffset { get; }
         public double CenterY { get; }
         public double InvSizeX { get; }
         public double InvSizeY { get; }
@@ -80,6 +82,7 @@ public static partial class QrPngRenderer {
             StartColor = gradient.StartColor;
             EndColor = gradient.EndColor;
             CenterX = gradient.CenterX;
+            StartOffset = gradient.StartOffset;
             CenterY = gradient.CenterY;
             var sx = Math.Max(1, sizeX);
             var sy = Math.Max(1, sizeY);

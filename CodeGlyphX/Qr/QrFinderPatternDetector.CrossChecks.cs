@@ -651,7 +651,9 @@ internal static partial class QrFinderPatternDetector {
         // both finder axes, so this run count can be half the horizontal count.
         // Retain the upper mismatch bound and the five-run ratio check below.
         if ((long)total * 2 < originalTotal || (long)total * 5 >= (long)originalTotal * 7) return false;
-        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) return false;
+        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)
+            && !CircularBallDiagonal(s0, s1, s2, s3, s4, originalTotal)
+            && !SquareBallDiagonal(s0, s1, s2, s3, s4, originalTotal)) return false;
 
         return true;
     }

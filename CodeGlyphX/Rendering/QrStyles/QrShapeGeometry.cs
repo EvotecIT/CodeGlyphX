@@ -78,9 +78,11 @@ internal static class QrShapeGeometry {
         if (shape == QrModuleShape.Leaf && outwardCorner < 0) return Contains(shape, x, y, radius: radius);
         if (outwardCorner == 1) x = 1 - x;
         if (outwardCorner == 2) y = 1 - y;
-        if (shape is QrModuleShape.Leaf or QrModuleShape.Classy)
-            return x >= 0 && x <= 1 && y >= 0 && y <= 1 && Rounded(x, y,
-                shape == QrModuleShape.Leaf ? .35 : .25, false, true, true, true);
+        if (shape == QrModuleShape.Leaf)
+            return x >= 0 && x <= 1 && y >= 0 && y <= 1 && Rounded(x, y, .5, false, true, false, true)
+                && Rounded(x, y, .12, false, false, true, false);
+        if (shape == QrModuleShape.Classy)
+            return x >= 0 && x <= 1 && y >= 0 && y <= 1 && Rounded(x, y, .25, false, true, true, true);
         return Contains(shape, x, y, radius: radius);
     }
 

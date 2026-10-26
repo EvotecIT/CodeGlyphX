@@ -46,6 +46,21 @@ public sealed class QrHeroPresetTests {
     }
 
     [Fact]
+    public void MinimalDenseFallback_PreservesEditedInkAndDotScale() {
+        var options = QrArt.Hero(QrHeroPreset.MinimalLine);
+        options.TargetSizePx = 0; options.ModuleSize = 20;
+        options.Foreground = new Rgba32(20, 30, 40); options.ModuleScale = .5;
+        options.ArtGuardrailsEnabled = false;
+        var qr = QR.Encode(QrArtPremiumScanTests.LongUrl, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var pixels = qr.RenderPixels(out var w, out _, out _, options);
+        var y = Enumerable.Range(0, 6).First(row => qr.Modules[8, row]);
+        var center = (((y + 4) * 20 + 10) * w + 12 * 20 + 10) * 4;
+        Assert.Equal(new byte[] { 20, 30, 40 }, pixels.Skip(center).Take(3));
+        var outsideEditedDot = (((y + 4) * 20 + 10) * w + 12 * 20 + 5) * 4;
+        Assert.Equal(255, pixels[outsideEditedDot]);
+    }
+
+    [Fact]
     public void BotanicalDenseFallback_PreservesAnExplicitCallerBodyChoice() {
         var options = QrArt.Hero(QrHeroPreset.Botanical);
         var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };

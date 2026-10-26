@@ -68,17 +68,18 @@ public sealed class QrCanvasCaptionTests {
     }
     private static QrPngRenderOptions Options(QrCanvasTemplate template, QrCanvasCaptionPosition position) => new() {
         ModuleSize = 10, QuietZone = 4,
-        Canvas = new QrCanvasOptions { PaddingPx = 32, Template = template,
+        Canvas = new QrCanvasOptions { PaddingPx = template == QrCanvasTemplate.PhoneOutline ? 64 : 32, Template = template,
             Caption = new QrCanvasCaptionOptions { Text = "Scan to explore", Position = position } }
     };
 
     [Fact]
     public void DefaultCaptionFont_PreservesPolishAndRejectsUnavailableGlyphs() {
         var caption = new QrCanvasCaptionOptions();
-        Assert.Same(BarcodeFont.ManropeMedium, caption.Font);
+        Assert.Same(BarcodeFont.ManropeSemiBold, caption.Font);
         Assert.Equal(QrCanvasCaptionWeight.Regular, caption.Weight);
         Assert.Contains("Manrope", caption.Font.Name);
-        const string polish = "Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ";
+        Assert.Contains("SemiBold", caption.Font.Name);
+        const string polish = "Zeskanuj kod — Łódź. Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ";
         var shaped = caption.Font.Shape(polish, 32);
         Assert.Equal(polish, shaped.Text);
         Assert.Empty(shaped.MissingGlyphs);
@@ -95,17 +96,18 @@ public sealed class QrCanvasCaptionTests {
         var plain = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions { ModuleSize = 10 }, out var side, out _, out _);
         var actual = QrPngRenderer.RenderPixels(qr.Modules, options, out var w, out var h, out var stride);
         Assert.True(h > w);
-        var qy = position == QrCanvasCaptionPosition.Top ? h - 32 - side : 32;
+        var pad = options.Canvas!.PaddingPx;
+        var qy = position == QrCanvasCaptionPosition.Top ? h - pad - side : pad;
         if (template == QrCanvasTemplate.PhoneOutline) {
             var ordinary = options.Canvas!;
-            ordinary.Template = QrCanvasTemplate.CornerViewfinder;
+            ordinary.Template = QrCanvasTemplate.None;
             QrPngRenderer.RenderPixels(qr.Modules, options, out _, out var ordinaryHeight, out _);
             ordinary.Template = QrCanvasTemplate.PhoneOutline;
-            qy = (position == QrCanvasCaptionPosition.Top ? ordinaryHeight - 32 - side : 32) + (h - ordinaryHeight) / 2;
+            qy = (position == QrCanvasCaptionPosition.Top ? ordinaryHeight - pad - side : pad) + (h - ordinaryHeight) / 2;
             Assert.InRange(h / (double)w, 2.1, 2.2);
         }
         for (var y = 0; y < side; y++) for (var x = 0; x < side * 4; x++)
-            Assert.Equal(plain[y * side * 4 + x], actual[(y + qy) * stride + 32 * 4 + x]);
+            Assert.Equal(plain[y * side * 4 + x], actual[(y + qy) * stride + pad * 4 + x]);
         var root = XElement.Parse(SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
         Assert.Equal(w, (int)root.Attribute("width")!);
         Assert.Equal(h, (int)root.Attribute("height")!);
@@ -139,6 +141,30 @@ public sealed class QrCanvasCaptionTests {
         Assert.Equal(QrCanvasCaptionWeight.Bold, input.Canvas.Caption.Weight);
         copy.Canvas.Caption.Font = BarcodeFont.OcrB;
         Assert.False(regular.SequenceEqual(QR.Encode(Payload).Render(OutputFormat.Png, copy).Data.ToArray()));
+    }
+
+    [Fact]
+    public void LargeRoundedFrameCorners_KeepTheirCompleteStrokeOutsideTheCodePanel() {
+        var qr = QR.Encode(Payload);
+        foreach (var template in new[] { QrCanvasTemplate.TicketStub, QrCanvasTemplate.RoundedCardHeader })
+            foreach (var position in new[] { QrCanvasCaptionPosition.Top, QrCanvasCaptionPosition.Bottom }) {
+                const int m = 30;
+                var canvas = new QrCanvasOptions { Template = template, StrokeColor = new Rgba32(0, 0, 255),
+                    BandColor = Rgba32.Transparent, Caption = new QrCanvasCaptionOptions {
+                        Text = "SCAN ME", Position = position, Color = Rgba32.Transparent } };
+                var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions { ModuleSize = m, Canvas = canvas }, out var w, out var h, out _);
+                var pad = (w - (qr.Size + 8) * m) / 2;
+                var radius = template == QrCanvasTemplate.TicketStub ? w * .045 * 1.1 : Math.Round(w * .06);
+                var middle = radius - m * .25;
+                foreach (var right in new[] { false, true }) foreach (var bottom in new[] { false, true })
+                    for (var angle = 0; angle <= 90; angle += 5) {
+                        var theta = angle * Math.PI / 180;
+                        var x = (right ? w - pad / 2.0 - radius : pad / 2.0 + radius) + (right ? 1 : -1) * middle * Math.Cos(theta);
+                        var y = (bottom ? h - pad / 2.0 - radius : pad / 2.0 + radius) + (bottom ? 1 : -1) * middle * Math.Sin(theta);
+                        var at = ((int)y * w + (int)x) * 4;
+                        Assert.True(pixels[at + 2] > pixels[at] + 100, $"{template}/{position}: clipped corner stroke at {x:F1},{y:F1}.");
+                    }
+            }
     }
 
     [Fact]

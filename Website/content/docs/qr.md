@@ -32,7 +32,7 @@ SVG and SVGZ preserve body shapes, eyes, palettes and canvas artwork through vec
 
 ## Coordinated looks
 
-The [showcase](/showcase/#hero-presets) includes twelve coordinated looks, with coordinated light and dark compositions. Neon uses the same dark design for both choices. The code stays dark on a light background in both variants. `QrArt.Hero` returns editable rendering options:
+The [showcase](/showcase/#hero-presets) includes twelve editable looks with light and dark compositions. Neon uses the same dark design for both choices. Dark compositions use a palette-tinted light panel, a larger dark field and an accent bloom or wash. The code stays dark on a light background in both variants. `QrArt.Hero` starts at a 1024-pixel code size and returns editable rendering options:
 
 ```csharp
 var appearance = QrArt.Hero(QrHeroPreset.Sunset, darkPanel: true);
@@ -56,7 +56,7 @@ File.WriteAllBytes("brand.png", result.GetPng());
 
 ### Captions and call-to-action frames
 
-A caption stays outside the complete quiet zone. Its default cap height scales with the code width; long text shrinks to a readable floor and then wraps to two lines. `FontSizePx` sets an explicit em size when needed. The bundled default is Manrope Medium with Latin Extended, including Polish text such as `Zażółć gęślą jaźń`. Its Medium outlines render unchanged by default; `Weight = QrCanvasCaptionWeight.Bold` adds synthetic bold. Supply a licensed TTF or OTF for another face; captions use the managed outline engine and do not depend on installed fonts. Strict text handling rejects unavailable glyphs instead of silently substituting another face.
+A caption stays outside the complete quiet zone. Its default cap height scales with the code width; long text shrinks to a readable floor and then wraps to two lines. `FontSizePx` sets an explicit em size when needed. The bundled default is Manrope SemiBold with Latin Extended, including Polish text such as `Zażółć gęślą jaźń`. Its SemiBold outlines render unchanged by default; `Weight = QrCanvasCaptionWeight.Bold` adds synthetic bold. Supply a licensed TTF or OTF for another face; captions use the managed outline engine and do not depend on installed fonts. Strict text handling rejects unavailable glyphs instead of silently substituting another face.
 
 ```csharp
 using CodeGlyphX.Printing;

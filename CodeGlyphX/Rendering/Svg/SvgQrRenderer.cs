@@ -510,7 +510,7 @@ public static class SvgQrRenderer {
                 .Append("\" x2=\"").Append(Format(x2)).Append("\" y2=\"").Append(Format(y2)).Append("\">");
         }
 
-        sb.Append("<stop offset=\"0%\" stop-color=\"").Append(ToCssColor(gradient.StartColor)).Append("\"/>");
+        sb.Append("<stop offset=\"").Append(Format(gradient.StartOffset * 100)).Append("%\" stop-color=\"").Append(ToCssColor(gradient.StartColor)).Append("\"/>");
         sb.Append("<stop offset=\"100%\" stop-color=\"").Append(ToCssColor(gradient.EndColor)).Append("\"/>");
 
         if (gradient.Type == QrGradientType.Radial) sb.Append("</radialGradient>");

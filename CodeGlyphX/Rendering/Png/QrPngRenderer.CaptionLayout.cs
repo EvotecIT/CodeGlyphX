@@ -7,14 +7,23 @@ namespace CodeGlyphX.Rendering.Png;
 public static partial class QrPngRenderer {
     private sealed class CaptionPlan {
         internal readonly List<(BarcodeTextShape Shape, double Size)> Lines = new();
-        internal int Width, Height, Clearance, Gap, IconWidth, UrlHeight, LineGap;
+        internal int Width, Height, Clearance, Gap, IconWidth, UrlHeight, LineGap, CapHeight;
     }
 
     private static int CaptionCanvasPadding(QrCanvasOptions canvas) {
         var minimum = canvas.Template == QrCanvasTemplate.None ? canvas.PaddingPx : Math.Max(canvas.PaddingPx, 32 * (canvas.Caption?.RasterScale ?? 1));
         minimum = Math.Max(minimum, canvas.PanelGlowRadiusPx > 0 ? checked(canvas.PanelGlowRadiusPx + 2) : 0);
+        minimum = Math.Max(minimum, canvas.SecondaryPanelGlowRadiusPx > 0 ? checked(canvas.SecondaryPanelGlowRadiusPx + 2) : 0);
         return Math.Max(minimum, canvas.StackedPanelOffsetPx > 0 ? checked(canvas.StackedPanelOffsetPx + canvas.ShadowBlurPx + 2) : 0);
     }
+
+    private static int CaptionCanvasPadding(QrCanvasOptions canvas, int qr) => canvas.Template switch {
+        QrCanvasTemplate.PhoneOutline => Math.Max(CaptionCanvasPadding(canvas), (int)Math.Ceiling(qr * .161)),
+        // The inner edge of the corner stroke must clear the entire square quiet zone.
+        QrCanvasTemplate.TicketStub => Math.Max(CaptionCanvasPadding(canvas), (int)Math.Ceiling(qr * .066)),
+        QrCanvasTemplate.RoundedCardHeader => Math.Max(CaptionCanvasPadding(canvas), (int)Math.Ceiling(qr * .065)),
+        _ => CaptionCanvasPadding(canvas)
+    };
 
     private static CaptionPlan MeasureCaption(QrCanvasOptions canvas, int qr) {
         var plan = new CaptionPlan();
@@ -27,7 +36,9 @@ public static partial class QrPngRenderer {
         var cap = size * capUnit;
         plan.Clearance = Math.Max(caption.PaddingPx, (int)Math.Ceiling(cap));
         plan.Gap = Math.Max(4 * caption.RasterScale, (int)Math.Ceiling(qr * .012));
-        if (canvas.Template == QrCanvasTemplate.SpeechBubble || canvas.CaptionTail) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(qr * .025));
+        if (canvas.Template == QrCanvasTemplate.SpeechBubble || canvas.CaptionTail) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(cap * 1.2));
+        if (canvas.Template == QrCanvasTemplate.TicketStub) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(qr * .07));
+        if (canvas.Template == QrCanvasTemplate.CornerViewfinder) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(qr * .05));
         plan.IconWidth = caption.Icon != QrCanvasCaptionIcon.None || canvas.BandLogoPng is not null ? (int)Math.Ceiling(cap * 1.6) : 0;
         var available = qr - 2 * plan.Clearance - plan.IconWidth;
         if (available <= 0) throw new ArgumentException("Caption padding leaves no readable text area.");
@@ -55,6 +66,7 @@ public static partial class QrPngRenderer {
             } else throw new ArgumentException("Caption headline cannot fit above its subline. Shorten it or enlarge the code.");
         }
         if (plan.Lines.Count == 0) plan.Lines.Add((Shape(caption.Text, size), size));
+        plan.CapHeight = Math.Max(1, (int)Math.Ceiling(plan.Lines[0].Size * capUnit));
         if (caption.Subline.Length > 0) {
             var subSize = size * .65;
             var sub = Shape(caption.Subline, subSize);
@@ -90,9 +102,9 @@ public static partial class QrPngRenderer {
     }
 
     private static int CaptionCanvasBodyHeight(QrCanvasOptions canvas, int qr) {
-        var ordinary = qr + 2 * CaptionCanvasPadding(canvas) + CaptionCanvasHeight(canvas, qr);
+        var ordinary = qr + 2 * CaptionCanvasPadding(canvas, qr) + CaptionCanvasHeight(canvas, qr);
         return canvas.Template == QrCanvasTemplate.PhoneOutline
-            ? Math.Max(ordinary, (int)Math.Ceiling((qr + 2 * CaptionCanvasPadding(canvas)) * 19.5 / 9)) : ordinary;
+            ? Math.Max(ordinary, (int)Math.Ceiling((qr + 2 * CaptionCanvasPadding(canvas, qr)) * 19.5 / 9)) : ordinary;
     }
 
     private static void PaintCaptionShape(byte[] pixels, int width, int height, int stride, BarcodeTextShape shape, int tx, int ty, Rgba32 color) {

@@ -6,6 +6,93 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class QrPremiumGeometryTests {
+    public static IEnumerable<object[]> DarkHeroes() => Enum.GetValues<QrHeroPreset>().Select(h => new object[] { h });
+
+    [Theory, MemberData(nameof(DarkHeroes))]
+    public void HeroLogoDefaults_UseOnlyTheReviewedTintAndAccentTreatments(QrHeroPreset hero) {
+        var options = QrArt.Hero(hero, true);
+        var tinted = hero is QrHeroPreset.Ink or QrHeroPreset.DotMatrix or QrHeroPreset.MinimalLine or QrHeroPreset.MonoClassy;
+        Assert.Equal(tinted, options.LogoTint.HasValue);
+        var ringed = hero is QrHeroPreset.Sunset or QrHeroPreset.Ocean or QrHeroPreset.Neon or QrHeroPreset.Berry or QrHeroPreset.Brand;
+        Assert.Equal(ringed, options.LogoRingColor.HasValue);
+        Assert.Null(options.LogoBackground); // The plate inherits the actual edited panel colour.
+    }
+
+    [Fact]
+    public void ContinuousTimingHairline_RetainsAlternatingDarkDots() {
+        var qr = QR.Encode("TIMING");
+        const int m = 40;
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = m, ModuleShape = QrModuleShape.Dot, ModuleScale = .8125,
+            Foreground = new Rgba32(31, 31, 31), TimingThicknessModules = .2
+        }, out var w, out _, out _);
+        byte Red(double x, double y) => pixels[((int)((y + 4) * m) * w + (int)((x + 4) * m)) * 4];
+        Assert.True(qr.Modules[8, 6]); Assert.False(qr.Modules[9, 6]);
+        Assert.Equal(31, Red(8.5, 6.5));
+        Assert.InRange(Red(9.5, 6.5), 190, 220);
+        Assert.InRange(Red(10, 6.5), 190, 220);
+        Assert.Equal(255, Red(9.5, 6.1));
+    }
+
+    [Fact]
+    public void MonoClassyRuns_LeaveTheConcaveLightCornerOpen() {
+        var cells = new BitMatrix(5, 5);
+        cells[1, 1] = cells[2, 1] = cells[1, 2] = true;
+        var pixels = QrPngRenderer.RenderPixels(cells, new QrPngRenderOptions {
+            ModuleSize = 40, QuietZone = 1, ModuleShape = QrArt.Hero(QrHeroPreset.MonoClassy).ModuleShape!.Value
+        }, out var w, out _, out _);
+        Assert.Equal(255, pixels[(121 * w + 121) * 4]);
+        Assert.Equal(0, pixels[(100 * w + 100) * 4]);
+    }
+
+    [Theory, MemberData(nameof(DarkHeroes))]
+    public void DarkHeroes_ReserveDominantGroundAroundTintedScanSafePanels(QrHeroPreset hero) {
+        var options = QrArt.Hero(hero, true);
+        var image = QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, options,
+            new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
+        var pixels = ImageReader.DecodeRgba32(image, out var w, out var h);
+        var panel = options.Background;
+        Assert.False(panel.R == 255 && panel.G == 255 && panel.B == 255);
+        var left = w; var right = -1;
+        for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+            var p = (y * w + x) * 4;
+            if (pixels[p] != panel.R || pixels[p + 1] != panel.G || pixels[p + 2] != panel.B || pixels[p + 3] != 255) continue;
+            left = Math.Min(left, x); right = Math.Max(right, x);
+        }
+        Assert.True(right > left);
+        Assert.True(left >= (right - left + 1) * .18, $"{hero}: dark ground must reserve18% on each side.");
+        var ground = ((h / 2) * w + left / 2) * 4;
+        Assert.True(pixels[ground] + pixels[ground + 1] + pixels[ground + 2] < 380);
+        Assert.NotNull(options.Canvas!.BackgroundGradient);
+        Assert.NotEqual(options.Canvas.BackgroundGradient!.StartColor, options.Canvas.BackgroundGradient.EndColor);
+    }
+
+    [Fact]
+    public void DotAlignment_UsesSeparatePerimeterDotsAndACentreDot() {
+        var qr = QR.Encode("DOTS", new QrEncodingOptions { MinVersion = 2, MaxVersion = 2, ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        const int m = 20;
+        var hero = QrArt.Hero(QrHeroPreset.DotMatrix);
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = m, ModuleShape = hero.ModuleShape!.Value, Eyes = hero.Eyes, Foreground = hero.Foreground
+        }, out var w, out _, out _);
+        byte Red(int x, int y) => pixels[((y + 4 * m) * w + x + 4 * m) * 4];
+        Assert.True(Red(16 * m + m / 2, 16 * m + m / 2) < 64);
+        Assert.Equal(255, Red(17 * m, 16 * m + m / 2));
+        Assert.True(Red(18 * m + m / 2, 18 * m + m / 2) < 64);
+    }
+
+    [Fact]
+    public void RadialGradient_HoldsTheOceanCoreBeforeBlending() {
+        var modules = new BitMatrix(21, 21);
+        for (var y = 0; y < 21; y++) for (var x = 0; x < 21; x++) modules[x, y] = true;
+        var gradient = QrArt.Hero(QrHeroPreset.Ocean).ForegroundGradient!;
+        var pixels = QrPngRenderer.RenderPixels(modules, new QrPngRenderOptions { ModuleSize = 10, ForegroundGradient = gradient }, out var w, out _, out _);
+        var core = ((4 * 10 + 105) * w + 4 * 10 + 120) * 4;
+        Assert.Equal(new byte[] { 11, 46, 107 }, pixels.Skip(core).Take(3));
+        var rim = ((4 * 10 + 5) * w + 4 * 10 + 5) * 4;
+        Assert.True(pixels[rim + 1] > pixels[core + 1]);
+        Assert.Equal(.4, QrRenderer.CloneOptions(QrArt.Hero(QrHeroPreset.Ocean)).ForegroundGradient!.StartOffset);
+    }
     [Fact]
     public void FormatAndVersionInk_UsesTheBodyCoverageAndGradient() {
         var qr = QR.Encode(QrArtPremiumScanTests.ShortUrl, new QrEncodingOptions { MinVersion = 7, MaxVersion = 7, ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
@@ -49,13 +136,14 @@ public sealed class QrPremiumGeometryTests {
         var options = QrArt.Hero(hero, true);
         var png = QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
         var rgba = ImageReader.DecodeRgba32(png, out var w, out var h);
+        var control = QrRenderer.CloneOptions(options);
+        control.Canvas!.PanelGlowColor = control.Canvas.SecondaryPanelGlowColor = null;
+        var baseline = ImageReader.DecodeRgba32(QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, control,
+            new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray(), out var cw, out var ch);
+        Assert.Equal(w, cw); Assert.Equal(h, ch);
+        Assert.False(rgba.SequenceEqual(baseline));
         void Edge(int at) {
-            if (hero == QrHeroPreset.PaperCutout) Assert.Equal(0, rgba[at + 3]);
-            else if (rgba[at + 3] != 0) {
-                Assert.Equal(options.Canvas!.Background.R, rgba[at]);
-                Assert.Equal(options.Canvas.Background.G, rgba[at + 1]);
-                Assert.Equal(options.Canvas.Background.B, rgba[at + 2]);
-            }
+            for (var c = 0; c < 4; c++) Assert.Equal(baseline[at + c], rgba[at + c]);
         }
         for (var x = 0; x < w; x++) { Edge(x * 4); Edge(((h - 1) * w + x) * 4); }
         for (var y = 0; y < h; y++) { Edge((y * w) * 4); Edge((y * w + w - 1) * 4); }
@@ -82,9 +170,12 @@ public sealed class QrPremiumGeometryTests {
     public void MirroredLeafFinders_PointTowardsEachOutsideCorner() {
         var qr = QR.Encode(QrArtPremiumScanTests.ShortUrl);
         const int m = 20;
+        var eyes = QrArt.Hero(QrHeroPreset.Botanical).Eyes!;
+        Assert.Equal(QrModuleShape.Leaf, eyes.OuterShape);
+        Assert.Equal(QrModuleShape.Leaf, eyes.InnerShape);
         var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
             ModuleSize = m, ModuleShape = QrModuleShape.Circle,
-            Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Leaf, InnerShape = QrModuleShape.Leaf, MirrorOutward = true }
+            Eyes = eyes
         }, out var w, out _, out _);
         foreach (var point in new[] { (.1, .1), (qr.Size - .1, .1), (.1, qr.Size - .1) }) {
             var x = (int)((point.Item1 + 4) * m); var y = (int)((point.Item2 + 4) * m);

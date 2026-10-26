@@ -1,4 +1,4 @@
-"""Reproduce the bundled Manrope Medium subset from pinned, locally supplied inputs.
+"""Reproduce the bundled Manrope SemiBold subset from pinned, locally supplied inputs.
 
 Optional maintainer tool; Python and fontTools are not build or runtime requirements.
 Download the two inputs in INPUTS into --source-directory before running this script.
@@ -35,7 +35,7 @@ def main():
         if hashlib.sha256((args.source_directory / name).read_bytes()).hexdigest() != expected:
             raise ValueError(f"Unexpected source hash: {name}")
     face = TTFont(args.source_directory / "Manrope-source.ttf", recalcTimestamp=False)
-    instantiateVariableFont(face, {"wght": 500}, inplace=True, updateFontNames=True)
+    instantiateVariableFont(face, {"wght": 600}, inplace=True, updateFontNames=True)
     notice = (args.source_directory / "Manrope-OFL.txt").read_text(encoding="utf-8")
     # Keep the full copyright and OFL with embedded assembly-only copies as well.
     for record in face["name"].names:
@@ -51,19 +51,19 @@ def main():
     selection.subset(face)
     if any(ord(char) not in face.getBestCmap() for char in "Zażółć gęślą jaźń"):
         raise ValueError("The caption subset must retain Polish glyphs")
-    target = ROOT / "CodeGlyphX/Printing/Fonts/Manrope-Medium-Latin-Extended.ttf"
+    target = ROOT / "CodeGlyphX/Printing/Fonts/Manrope-SemiBold-Latin-Extended.ttf"
     face.save(target)
     digest = hashlib.sha256(target.read_bytes()).hexdigest()
-    if digest != "abece59c21850d7de427aaab9da2149c7acf3195042637cecad7981aa63ad4af":
+    if digest != "04c53e9409bad005e3b0e019075c28759c02dbb4501784fd665dddb10b5992e9":
         raise ValueError("Unexpected caption subset hash")
     shutil.copyfile(args.source_directory / "Manrope-OFL.txt", ROOT / "Licenses/Manrope-OFL.txt")
     manifest = {
         "tool": "fontTools 4.66.1; Prepare-CaptionFontAsset.py",
         "inputs": {name: {"url": url, "sha256": sha} for name, (url, sha) in INPUTS.items()},
         "outputs": {target.name: digest},
-        "face": "Manrope Medium; static weight 500",
+        "face": "Manrope SemiBold; static weight 600",
         "unicode_ranges": ",".join(f"U+{a:04X}-{b:04X}" for a, b in RANGES),
-        "modifications": "Instantiated at weight 500 with static Medium names; subset to Latin, Latin Extended, combining marks and common punctuation. Full upstream OFL retained in name ID 13."
+        "modifications": "Instantiated at weight 600 with static SemiBold names; subset to Latin, Latin Extended, combining marks and common punctuation. Full upstream OFL retained in name ID 13."
     }
     (target.parent / "caption-provenance.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(manifest["outputs"], indent=2))

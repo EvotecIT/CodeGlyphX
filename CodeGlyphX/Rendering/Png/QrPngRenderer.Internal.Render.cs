@@ -172,7 +172,9 @@ public static partial class QrPngRenderer {
         }
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
-                if (!modules[mx, my] || IsStyledAlignmentCell(mx, my, alignmentCenters)) continue;
+                var continuousTiming = opts.TimingThicknessModules > 0 &&
+                    (my == 6 && mx >= 8 && mx < size - 8 || mx == 6 && my >= 8 && my < size - 8);
+                if ((!modules[mx, my] && !continuousTiming) || IsStyledAlignmentCell(mx, my, alignmentCenters)) continue;
                 var eyeKind = EyeKind.None;
                 var eyeX = 0;
                 var eyeY = 0;
@@ -332,7 +334,7 @@ public static partial class QrPngRenderer {
                     protectFunctional ? QrModuleShape.Square : useShape,
                     protectFunctional ? 1 : useScale, opts.ModuleCornerRadiusPx,
                     GetNeighborMask(modules, mx, my), qrOriginX, qrOriginY, qrSizePx,
-                    moduleJitterX, moduleJitterY, opts.TimingThicknessModules);
+                    moduleJitterX, moduleJitterY, opts.TimingThicknessModules, modules[mx, my]);
 
             }
         }
@@ -548,17 +550,18 @@ public static partial class QrPngRenderer {
         }
 
         var canvas = opts.Canvas;
-        var pad = CaptionCanvasPadding(canvas);
+        var pad = CaptionCanvasPadding(canvas, qrFullPx);
         var canvasW = checked(qrFullPx + pad * 2);
         var captionHeight = CaptionCanvasHeight(canvas, qrFullPx);
         var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx);
 
-        var shadowX = canvas.ShadowOffsetX;
-        var shadowY = canvas.ShadowOffsetY;
-        var extraLeft = Math.Max(0, -shadowX) + canvas.ShadowBlurPx;
-        var extraRight = Math.Max(0, shadowX) + canvas.ShadowBlurPx;
-        var extraTop = Math.Max(0, -shadowY) + canvas.ShadowBlurPx;
-        var extraBottom = Math.Max(0, shadowY) + canvas.ShadowBlurPx;
+        var shadowX = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowOffsetX;
+        var shadowY = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowOffsetY;
+        var blur = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowBlurPx;
+        var extraLeft = Math.Max(0, -shadowX) + blur;
+        var extraRight = Math.Max(0, shadowX) + blur;
+        var extraTop = Math.Max(0, -shadowY) + blur;
+        var extraBottom = Math.Max(0, shadowY) + blur;
 
         widthPx = checked(canvasW + extraLeft + extraRight);
         heightPx = checked(canvasH + extraTop + extraBottom);
@@ -581,7 +584,7 @@ public static partial class QrPngRenderer {
         var canvas = opts.Canvas;
         if (canvas is null) return;
 
-        var pad = CaptionCanvasPadding(canvas);
+        var pad = CaptionCanvasPadding(canvas, qrFullPx);
         var canvasW = checked(qrFullPx + pad * 2);
         var captionHeight = CaptionCanvasHeight(canvas, qrFullPx);
         var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx);
@@ -591,7 +594,7 @@ public static partial class QrPngRenderer {
         if (canvas.Template == QrCanvasTemplate.PhoneOutline) canvasY -= (canvasH - qrFullPx - 2 * pad - captionHeight) / 2;
         var radius = Math.Max(0, canvas.CornerRadiusPx);
 
-        if (canvas.ShadowBlurPx == 0 && canvas.ShadowColor.A > 0 && (canvas.ShadowOffsetX != 0 || canvas.ShadowOffsetY != 0)) {
+        if (!canvas.ShadowOnPanelsOnly && canvas.ShadowBlurPx == 0 && canvas.ShadowColor.A > 0 && (canvas.ShadowOffsetX != 0 || canvas.ShadowOffsetY != 0)) {
             FillRoundedRect(
                 scanlines,
                 widthPx,
@@ -605,7 +608,7 @@ public static partial class QrPngRenderer {
                 radius);
         }
 
-        if (canvas.ShadowBlurPx > 0) DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride,
+        if (!canvas.ShadowOnPanelsOnly && canvas.ShadowBlurPx > 0) DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride,
             canvasX + canvas.ShadowOffsetX, canvasY + canvas.ShadowOffsetY, canvasW, canvasH, radius, canvas.ShadowBlurPx, canvas.ShadowColor);
 
         if (canvas.BorderPx > 0 && canvas.Template == QrCanvasTemplate.None) {
@@ -731,6 +734,9 @@ public static partial class QrPngRenderer {
                 qrFullPx,
                 canvas.Badge);
         }
+        if (canvas.SecondaryPanelGlowColor.HasValue && canvas.SecondaryPanelGlowRadiusPx > 0)
+            DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx,
+                canvas.QrCornerRadiusPx, canvas.SecondaryPanelGlowRadiusPx, canvas.SecondaryPanelGlowColor.Value);
         if (canvas.PanelGlowColor.HasValue && canvas.PanelGlowRadiusPx > 0)
             DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx,
                 canvas.QrCornerRadiusPx, canvas.PanelGlowRadiusPx, canvas.PanelGlowColor.Value);
@@ -742,7 +748,7 @@ public static partial class QrPngRenderer {
                 qrFullPx, qrFullPx, canvas.StackedPanelColor, canvas.QrCornerRadiusPx);
         }
         DrawCaptionCanvas(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY,
-            canvasW, canvasH, qrOffsetX, qrOffsetY, qrFullPx);
+            canvasW, canvasH, qrOffsetX, qrOffsetY, qrFullPx, opts.ModuleSize);
     }
 
     private static void DrawCanvasFill(

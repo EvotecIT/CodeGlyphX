@@ -43,9 +43,9 @@ The copied bidirectional mirroring table is generated from Unicode 17.0.0 `BidiM
 
 ## Bundled caption font
 
-Manrope Medium is derived from Manrope, copyright 2018 The Manrope Project
+Manrope SemiBold is derived from Manrope, copyright 2018 The Manrope Project
 Authors, under the SIL Open Font License 1.1. Source: <https://github.com/googlefonts/manrope>.
-The bundled face is instantiated at weight 500 and subset to Latin, Latin Extended,
+The bundled face is instantiated at weight 600 and subset to Latin, Latin Extended,
 combining marks and common punctuation. The subset includes Polish captions.
 The full copyright and OFL text are retained in `Licenses/Manrope-OFL.txt`
 and the font's license metadata, including embedded assembly-only copies.

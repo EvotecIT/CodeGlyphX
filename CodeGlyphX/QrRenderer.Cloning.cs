@@ -56,6 +56,7 @@ internal static partial class QrRenderer {
             EndColor = gradient.EndColor,
             CenterX = gradient.CenterX,
             CenterY = gradient.CenterY,
+            StartOffset = gradient.StartOffset,
         };
     }
 
@@ -225,11 +226,13 @@ internal static partial class QrRenderer {
         if (canvas is null) return null;
         return new QrCanvasOptions {
             Caption = canvas.Caption?.Copy(),
+            ShadowOnPanelsOnly = canvas.ShadowOnPanelsOnly,
             BandColor = canvas.BandColor, StrokeColor = canvas.StrokeColor, StrokeWidthPx = canvas.StrokeWidthPx,
             CaptionTail = canvas.CaptionTail, BandLogoPng = canvas.BandLogoPng is null ? null : (byte[])canvas.BandLogoPng.Clone(),
             QrCornerRadiusPx = canvas.QrCornerRadiusPx, ShadowBlurPx = canvas.ShadowBlurPx,
             StackedPanelOffsetPx = canvas.StackedPanelOffsetPx, StackedPanelColor = canvas.StackedPanelColor,
             PanelGlowColor = canvas.PanelGlowColor, PanelGlowRadiusPx = canvas.PanelGlowRadiusPx,
+            SecondaryPanelGlowColor = canvas.SecondaryPanelGlowColor, SecondaryPanelGlowRadiusPx = canvas.SecondaryPanelGlowRadiusPx,
             Template = canvas.Template,
             PaddingPx = canvas.PaddingPx,
             CornerRadiusPx = canvas.CornerRadiusPx,

@@ -32,9 +32,9 @@ public sealed class QrCanvasCaptionOptions {
 
     /// <summary>Exact headline text, limited to 256 UTF-16 characters without explicit line breaks.</summary>
     public string Text { get; set; } = "SCAN ME";
-    /// <summary>Immutable portable font. The bundled Manrope Medium default includes Latin Extended and Polish.
+    /// <summary>Immutable portable font. The bundled Manrope SemiBold default includes Latin Extended and Polish.
     /// Load a suitable face with BarcodeFont.FromBytes for other supported text.</summary>
-    public BarcodeFont Font { get; set; } = BarcodeFont.ManropeMedium;
+    public BarcodeFont Font { get; set; } = BarcodeFont.ManropeSemiBold;
     /// <summary>Requested em size in pixels, from 8 to 256; zero sizes cap height to 4.5% of the code width. Long text shrinks to a readable floor, then wraps to two lines.</summary>
     public int FontSizePx { get; set; } = 0;
     /// <summary>Outline weight.</summary>

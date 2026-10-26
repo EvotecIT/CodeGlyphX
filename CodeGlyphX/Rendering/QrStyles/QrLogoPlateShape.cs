@@ -11,5 +11,9 @@ public enum QrLogoPlateShape {
     /// <summary>Circular plate.</summary>
     Circle,
     /// <summary>Fourth-order superellipse.</summary>
-    Squircle
+    Squircle,
+    /// <summary>Outward-pointing asymmetric leaf.</summary>
+    Leaf,
+    /// <summary>One pointed corner and three rounded corners.</summary>
+    Classy
 }
