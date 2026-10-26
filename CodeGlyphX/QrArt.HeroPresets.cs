@@ -115,7 +115,6 @@ public static partial class QrArt {
             options.Background = preset == QrHeroPreset.Ink ? new Rgba32(245, 244, 242) : options.Background;
         }
         if (preset is QrHeroPreset.DotMatrix or QrHeroPreset.Brand) options.LogoTint = options.Foreground;
-        options.LogoBackground = options.Background;
         return options;
     }
 

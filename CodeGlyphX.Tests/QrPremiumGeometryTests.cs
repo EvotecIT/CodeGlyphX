@@ -119,8 +119,15 @@ public sealed class QrPremiumGeometryTests {
         options.LogoRingColor = new Rgba32(174, 49, 33); options.LogoRingWidthPx = 2;
         var copy = QrRenderer.CloneOptions(options);
         Assert.Equal(shape, copy.LogoPlateShape); Assert.Equal(options.LogoTint, copy.LogoTint);
+        options.Background = new Rgba32(246, 244, 230);
         var output = QR.Render(QrArtPremiumScanTests.LongUrl, OutputFormat.Png, options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
         Assert.True(QrArt.ValidateImage(output, QrArtPremiumScanTests.LongUrl).AllPassed);
-        Assert.Equal(options.Background, options.LogoBackground);
+        Assert.Null(options.LogoBackground);
+        var pixels = ImageReader.DecodeRgba32(output, out var width, out var height);
+        // The supplied E-shaped logo is transparent at its centre, exposing actual plate paint.
+        var center = ((height / 2) * width + width / 2) * 4;
+        Assert.Equal(options.Background.R, pixels[center]);
+        Assert.Equal(options.Background.G, pixels[center + 1]);
+        Assert.Equal(options.Background.B, pixels[center + 2]);
     }
 }
