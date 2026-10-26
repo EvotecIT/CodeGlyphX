@@ -6,20 +6,31 @@ namespace CodeGlyphX.Rendering.Art;
 public static partial class QrImageComposer {
     /// <summary>
     /// Square-free photo treatments used when no module silhouettes are requested. Every module colour is derived from
-    /// the image: its luminance is remapped into a dark or light band and its chroma is retained where the band allows.
-    /// Within a locally uniform image region, dark and light modules therefore keep a constant luminance gap of
-    /// 255 minus the band width, independently of the image tone.
+    /// the image. ColorModules remaps the image luminance into a dark or light band, so dark and light modules keep a
+    /// constant luminance gap within any locally uniform area. The dot treatments only move the image as far as needed:
+    /// a light module over an already light area keeps the image, and a dark module over a dark area does too.
+    /// All three share one function-zone treatment: the image continues under separators, timing and format zones,
+    /// and finders and alignment patterns are rounded, image-tinted rings.
     /// </summary>
     private sealed class PhotoPainter {
-        private const byte Data = 0, FinderZone = 1, Alignment = 2, OtherFunction = 3;
-        // Function patterns keep a narrower band (darker darks, lighter lights) than data modules.
+        private const byte Data = 0, Finder = 1, Separator = 2, Alignment = 3, OtherFunction = 4;
+        // Finder and alignment rings use a narrower dark band (deeper darks) than data modules.
         private const double FunctionBandLimit = 44;
         // Strongest halo, used where the image luminance opposes the module, and the distance where every halo ends.
         // Module corners lie beyond HaloEnd, so neighbouring modules always meet on the untreated image.
         private const double ConflictHalo = 0.8;
         private const double HaloEnd = 0.6;
+        // ColorModules keeps light modules below this luminance so they read as lit image colour, not pastel.
+        private const double MaxLightModule = 238;
+        // Finder and alignment light gaps keep more image colour than a pale function band (luminance 160 and up).
+        private const double RingLightBand = 95;
+        // Light dots ease back to the image between these image luminances.
+        // Width, in modules, of the light band around finders; the rest of the separator shows the image.
+        private const double SeparatorWidth = 0.6;
+        private const double LightAreaStart = 165, LightAreaFull = 225;
 
         private readonly QrImageCompositionStyle _style;
+        private readonly bool _solidFunctions;
         private readonly int _moduleSize;
         private readonly int _size;
         private readonly byte[] _kinds;
@@ -32,10 +43,11 @@ public static partial class QrImageComposer {
 
         internal PhotoPainter(QrCode qr, BitMatrix functions, QrImageCompositionOptions options) {
             _style = options.Style;
+            _solidFunctions = options.SolidFunctionPatterns;
             _moduleSize = options.ModuleSize;
             _size = qr.Size;
             var strength = options.Strength;
-            _band = _style == QrImageCompositionStyle.ColorModules ? 30 + 70 * strength : 20 + 60 * strength;
+            _band = _style == QrImageCompositionStyle.ColorModules ? 40 + 80 * strength : 20 + 60 * strength;
             _functionBand = Math.Min(_band, FunctionBandLimit);
             // A circle with radius 0.564w covers the same area as a square of width w.
             _radius = Math.Min(0.5, 0.564 * options.CenterSize);
@@ -50,38 +62,36 @@ public static partial class QrImageComposer {
             for (var y = 0; y < _size; y++) for (var x = 0; x < _size; x++) {
                 if (!functions[x, y]) continue;
                 var i = y * _size + x;
-                if ((x < 8 && y < 8) || (x >= _size - 8 && y < 8) || (x < 8 && y >= _size - 8)) {
-                    _kinds[i] = FinderZone;
+                if (InFinderZone(x, y)) {
+                    var lx = x < 8 ? x : x - (_size - 7);
+                    var ly = y < 8 ? y : y - (_size - 7);
+                    _kinds[i] = lx is >= 0 and < 7 && ly is >= 0 and < 7 ? Finder : Separator;
                     continue;
                 }
                 _kinds[i] = OtherFunction;
                 foreach (var ay in alignment) foreach (var ax in alignment) {
-                    if (Math.Abs(x - ax) > 2 || Math.Abs(y - ay) > 2) continue;
-                    if ((ax < 8 && ay < 8) || (ax >= _size - 8 && ay < 8) || (ax < 8 && ay >= _size - 8)) continue;
+                    if (Math.Abs(x - ax) > 2 || Math.Abs(y - ay) > 2 || InFinderZone(ax, ay)) continue;
                     _kinds[i] = Alignment;
                     _alignmentCenter[i] = ay * _size + ax;
                 }
             }
         }
 
+        private bool InFinderZone(int x, int y) => (x < 8 && y < 8) || (x >= _size - 8 && y < 8) || (x < 8 && y >= _size - 8);
+
         /// <summary>Paints one symbol pixel. px/py are relative to the first module; r/g/b is the image sample.</summary>
         internal void Paint(byte[] pixels, int index, int px, int py, bool dark, double r, double g, double b) {
             var mx = px / _moduleSize;
             var my = py / _moduleSize;
             var kind = _kinds[my * _size + mx];
-            if (_style == QrImageCompositionStyle.ColorModules) {
-                Tint(r, g, b, dark, kind == Data ? _band : _functionBand, out var tr, out var tg, out var tb);
-                Write(pixels, index, tr, tg, tb);
-                return;
-            }
-            if (_style == QrImageCompositionStyle.ImageOverlay && kind != Data) {
+            if (_solidFunctions && kind != Data) {
                 WriteGray(pixels, index, dark ? (byte)0 : (byte)255);
                 return;
             }
             // Module coordinates of the pixel centre.
             var u = (px + 0.5) / _moduleSize;
             var v = (py + 0.5) / _moduleSize;
-            if (kind == FinderZone) {
+            if (kind == Finder || (kind == Separator && _style != QrImageCompositionStyle.ColorModules)) {
                 var cx = mx < 8 ? 3.5 : _size - 3.5;
                 var cy = my < 8 ? 3.5 : _size - 3.5;
                 PaintRings(pixels, index, u - cx, v - cy, r, g, b, 3.5, 1.75, 0.75, 1.5, 0.85, true);
@@ -90,6 +100,12 @@ public static partial class QrImageComposer {
             if (kind == Alignment) {
                 var center = _alignmentCenter[my * _size + mx];
                 PaintRings(pixels, index, u - (center % _size + 0.5), v - (center / _size + 0.5), r, g, b, 2.5, 1.2, 0.45, 0.5, 0.5, false);
+                return;
+            }
+            // Data, separators, timing, format and version modules all share the data treatment.
+            if (_style == QrImageCompositionStyle.ColorModules) {
+                ModuleTint(r, g, b, dark, out var tr, out var tg, out var tb);
+                Write(pixels, index, tr, tg, tb);
                 return;
             }
             var dx = u - mx - 0.5;
@@ -102,12 +118,14 @@ public static partial class QrImageComposer {
             if (!dark) conflict = 1 - conflict;
             var halo = (_halo + (ConflictHalo - _halo) * conflict * conflict) * (1 - SmoothStep(_radius, HaloEnd, distance));
             var weight = dot + (1 - dot) * halo;
-            Tint(r, g, b, dark, kind == Data ? _band : _functionBand, out var dr, out var dg, out var db);
+            // Format, version and timing modules use the deeper function band: one misread format bit loses the symbol.
+            DotTint(r, g, b, dark, kind == OtherFunction ? _functionBand : _band, out var dr, out var dg, out var db);
             Write(pixels, index, r + (dr - r) * weight, g + (dg - g) * weight, b + (db - b) * weight);
         }
 
-        // Concentric rounded squares: dark ring, light gap and dark ball, all tinted from the image. Finders also get a
-        // light, image-tinted separator that fades into the image instead of a hard white block.
+        // Concentric rounded squares: dark ring, light gap and dark ball, all tinted from the local image. The rings stay
+        // inside the pattern's own bounds; outside the rounded corners the image (or, for ColorModules, a light module
+        // tint) shows through, so there is no feathered glow and no white block around them.
         private void PaintRings(byte[] pixels, int index, double x, double y, double r, double g, double b,
             double half, double outerRadius, double holeRadius, double ballHalf, double ballRadius, bool separator) {
             var outer = Coverage(RoundBox(x, y, half, outerRadius));
@@ -115,15 +133,53 @@ public static partial class QrImageComposer {
             var ball = Coverage(RoundBox(x, y, ballHalf, ballRadius));
             var darkWeight = outer * (1 - hole) + ball;
             var lightWeight = Math.Max(0, hole - ball);
-            if (separator) {
-                var outside = RoundBox(x, y, half, outerRadius);
-                lightWeight += (1 - outer) * (1 - SmoothStep(0.5, 1.0, outside));
+            // Dot treatments give finders a crisp, image-tinted light band (SeparatorWidth) that follows the ring. It ends
+            // at the separator's own edge, so it reads as part of the finder rather than a glow.
+            if (separator && _style != QrImageCompositionStyle.ColorModules)
+                lightWeight += (1 - outer) * Coverage(RoundBox(x, y, half + SeparatorWidth, outerRadius + SeparatorWidth));
+            DarkFunctionTint(r, g, b, out var dr, out var dg, out var db);
+            double lr, lg, lb;
+            if (_style == QrImageCompositionStyle.ColorModules) ModuleTint(r, g, b, false, out lr, out lg, out lb);
+            // The light gap keeps the local image colour: lifted only as far as the ring contrast needs, not to a pale wash.
+            else RingLightTint(r, g, b, out lr, out lg, out lb);
+            var rest = Math.Max(0, 1 - darkWeight - lightWeight);
+            double br = r, bg = g, bb = b;
+            if (_style == QrImageCompositionStyle.ColorModules) { br = lr; bg = lg; bb = lb; }
+            Write(pixels, index, br * rest + dr * darkWeight + lr * lightWeight,
+                bg * rest + dg * darkWeight + lg * lightWeight, bb * rest + db * darkWeight + lb * lightWeight);
+        }
+
+        private void DarkFunctionTint(double r, double g, double b, out double tr, out double tg, out double tb) {
+            var luminance = Luma(r, g, b);
+            ApplyChroma(r, g, b, luminance, luminance * _functionBand / 255, 1.3, true, out tr, out tg, out tb);
+        }
+
+        // ColorModules: the image's tonal range is remapped into each band, darks keep their hue and saturation, and
+        // lights are held below pastel.
+        private void ModuleTint(double r, double g, double b, bool dark, out double tr, out double tg, out double tb) {
+            var luminance = Luma(r, g, b);
+            var target = dark ? luminance * _band / 255 : Math.Min(MaxLightModule, 255 - _band + luminance * _band / 255);
+            ApplyChroma(r, g, b, luminance, target, dark ? 1.35 : 1.25, dark, out tr, out tg, out tb);
+        }
+
+        // Dot treatments: the image's tonal range is remapped into each band, except that light dots over an already light
+        // area ease back towards the image itself, so bright skies and highlights do not read as a bead mesh.
+        private static void DotTint(double r, double g, double b, bool dark, double band, out double tr, out double tg, out double tb) {
+            var luminance = Luma(r, g, b);
+            double target;
+            if (dark) target = luminance * band / 255;
+            else {
+                var remapped = 255 - band + luminance * band / 255;
+                var settled = Math.Max(luminance, 255 - band);
+                target = remapped + (settled - remapped) * SmoothStep(LightAreaStart, LightAreaFull, luminance);
             }
-            Tint(r, g, b, true, _functionBand, out var dr, out var dg, out var db);
-            Tint(r, g, b, false, _functionBand, out var lr, out var lg, out var lb);
-            var image = Math.Max(0, 1 - darkWeight - lightWeight);
-            Write(pixels, index, r * image + dr * darkWeight + lr * lightWeight,
-                g * image + dg * darkWeight + lg * lightWeight, b * image + db * darkWeight + lb * lightWeight);
+            ApplyChroma(r, g, b, luminance, target, ChromaBoost, dark, out tr, out tg, out tb);
+        }
+
+        // Light finder and alignment gaps and finder separators: the local image colour, lifted into a moderate light band.
+        private static void RingLightTint(double r, double g, double b, out double tr, out double tg, out double tb) {
+            var luminance = Luma(r, g, b);
+            ApplyChroma(r, g, b, luminance, 255 - RingLightBand + luminance * RingLightBand / 255, ChromaBoost, false, out tr, out tg, out tb);
         }
 
         // Signed distance, in modules, to a rounded square centred on the origin.
@@ -152,16 +208,34 @@ public static partial class QrImageComposer {
         private static byte ToByte(double value) => (byte)Math.Round(value < 0 ? 0 : value > 255 ? 255 : value);
     }
 
+    private const double ChromaBoost = 1.15;
+
+    private static double Luma(double r, double g, double b) => 0.299 * r + 0.587 * g + 0.114 * b;
+
     /// <summary>
-    /// Maps the image luminance into the dark band [0, band] or the light band [255 - band, 255] and keeps as much of
-    /// the image chroma as the band and the RGB gamut allow. Rec. 601 luminance is preserved exactly by the chroma offset.
+    /// Moves a colour to the target Rec. 601 luminance exactly, keeping its chroma offset (scaled by boost) as far as the
+    /// RGB gamut allows. Darkened yellows are turned slightly towards orange so they read as warm shadow, not olive.
     /// </summary>
-    internal static void Tint(double r, double g, double b, bool dark, double band, out double tr, out double tg, out double tb) {
-        var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-        var target = dark ? luminance * band / 255 : 255 - band + luminance * band / 255;
-        double cr = r - luminance, cg = g - luminance, cb = b - luminance;
-        // Chroma is lifted slightly so darkened and lightened modules do not look washed out; gamut limits still apply.
-        var k = ChromaBoost;
+    private static void ApplyChroma(double r, double g, double b, double luminance, double target, double boost, bool warmShadows,
+        out double tr, out double tg, out double tb) {
+        double cr = r - luminance, cb = b - luminance;
+        if (warmShadows && luminance > 1 && target < luminance) {
+            // Hue angle in the Cb/Cr plane: about 160 degrees for yellow, 140 for orange, 113 for red.
+            var angle = Math.Atan2(cr, cb) * 180 / Math.PI;
+            if (angle < 0) angle += 360;
+            if (angle > 135 && angle < 210) {
+                var darkening = 1 - target / luminance;
+                var rotate = -Math.Min(angle - 135, 28 * darkening) * Math.PI / 180;
+                var cos = Math.Cos(rotate);
+                var sin = Math.Sin(rotate);
+                var nb = cb * cos - cr * sin;
+                var nr = cb * sin + cr * cos;
+                cb = nb;
+                cr = nr;
+            }
+        }
+        var cg = -(0.299 * cr + 0.114 * cb) / 0.587;
+        var k = boost;
         k = LimitChroma(k, cr, target);
         k = LimitChroma(k, cg, target);
         k = LimitChroma(k, cb, target);
@@ -169,8 +243,6 @@ public static partial class QrImageComposer {
         tg = target + k * cg;
         tb = target + k * cb;
     }
-
-    private const double ChromaBoost = 1.15;
 
     private static double LimitChroma(double k, double chroma, double target) =>
         chroma > 0 ? Math.Min(k, (255 - target) / chroma) : chroma < 0 ? Math.Min(k, target / -chroma) : k;

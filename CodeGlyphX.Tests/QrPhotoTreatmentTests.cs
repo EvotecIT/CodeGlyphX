@@ -78,9 +78,9 @@ public sealed class QrPhotoTreatmentTests {
             if (qr.Modules[mx, my]) Assert.InRange(luma, 0, band + 1);
             else Assert.InRange(luma, 255 - band - 1, 255);
         }
-        // Finder ball and the light gap use the narrower function band.
+        // The finder ball uses the deep function band; the light gap is lifted image colour.
         Assert.InRange(Luma(pixels, Offset(3.5, 3.5)), 0, 45);
-        Assert.InRange(Luma(pixels, Offset(1.5, 3.5)), 210, 255);
+        Assert.InRange(Luma(pixels, Offset(1.5, 3.5)), 160, 255);
         Assert.True(QrArt.ValidateImage(result.ToPng(), Payload, 3000).AllPassed);
         Assert.Equal(Payload, QrLogoPlacementTests.IndependentDecode(result.ToPng()));
 
@@ -103,10 +103,10 @@ public sealed class QrPhotoTreatmentTests {
             Assert.InRange(pixels[p + 1] - green[1], -2, 2);
             Assert.InRange(pixels[p + 2] - green[2], -2, 2);
         }
-        // Light finder gaps, separators and the alignment gap are lightened image colour, not white.
+        // Light finder gaps, the separator band and the alignment gap are lifted image colour, not white.
         foreach (var (mx, my) in new[] { (1.5, 3.5), (7.3, 3.5), (qr.Size - 7.3, 3.5), (QrAlignment(qr) - 0.5, QrAlignment(qr) + 0.5) }) {
             var p = Offset(mx, my);
-            Assert.True(Luma(pixels, p) >= 205, $"Light function pixel at ({mx},{my}) is not light.");
+            Assert.True(Luma(pixels, p) >= 160, $"Light function pixel at ({mx},{my}) is not light.");
             Assert.True(pixels[p + 1] > pixels[p + 2] + 15, $"Light function pixel at ({mx},{my}) lost the image hue.");
         }
 

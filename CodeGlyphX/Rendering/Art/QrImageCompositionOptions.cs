@@ -6,12 +6,13 @@ namespace CodeGlyphX.Rendering.Art;
 public enum QrImageCompositionStyle {
     /// <summary>
     /// Tint every module from the image: dark modules become a darkened image colour and light modules a lightened one,
-    /// keeping the image's own hue and tonal variation. Functional modules use the same tint with stronger contrast.
+    /// keeping the image's own hue and tonal variation. Finders and alignment patterns are rounded, image-tinted rings.
     /// </summary>
     ColorModules,
     /// <summary>
     /// Reveal more of the image around soft, round module dots tinted from the image. The tint fades out before each
-    /// module edge, so no module grid is drawn across the image. Functional patterns stay solid.
+    /// module edge, so no module grid is drawn across the image. Finders and alignment patterns are rounded, image-tinted
+    /// rings; <see cref="QrImageCompositionOptions.SolidFunctionPatterns"/> restores solid black and white function patterns.
     /// </summary>
     ImageOverlay,
     /// <summary>
@@ -35,7 +36,7 @@ public enum QrImageFit {
 }
 
 /// <summary>
-/// Deterministic image composition settings. Functional modules retain solid, high-contrast geometry,
+/// Deterministic image composition settings. Function patterns keep their geometry and polarity,
 /// and the quiet zone remains uniformly light (white by default). These constraints do not guarantee camera readability.
 /// </summary>
 public sealed class QrImageCompositionOptions {
@@ -94,6 +95,15 @@ public sealed class QrImageCompositionOptions {
     /// </summary>
     public bool VerifyDecode { get; set; } = true;
 
+    /// <summary>
+    /// When true, ColorModules, ImageOverlay and ImageBackground draw every function pattern (finders, separators, timing,
+    /// alignment, format and version modules) as solid black and white squares, as earlier releases did. This is the
+    /// highest-contrast option but cuts the image out around the finders. Defaults to false: finders and alignment
+    /// patterns are rounded, image-tinted rings, the other function modules share the data treatment, and the image
+    /// continues underneath. Ignored for Halftone3x3 and when Art is set.
+    /// </summary>
+    public bool SolidFunctionPatterns { get; set; }
+
     /// <summary>Optional two-colour ink and paper for <see cref="QrImageCompositionStyle.Halftone3x3"/>; null keeps black and white.</summary>
     public QrImageDuotoneOptions? Duotone { get; set; }
 
@@ -101,7 +111,7 @@ public sealed class QrImageCompositionOptions {
         ModuleSize = moduleSize, QuietZone = QuietZone, Style = Style, Fit = Fit, Strength = Strength,
         CenterSize = CenterSize, ImagePositionX = ImagePositionX, ImagePositionY = ImagePositionY,
         ImageZoom = ImageZoom, Art = Art, Canvas = Canvas, MinimumVersion = MinimumVersion,
-        VerifyDecode = VerifyDecode, Duotone = Duotone
+        VerifyDecode = VerifyDecode, Duotone = Duotone, SolidFunctionPatterns = SolidFunctionPatterns
     };
 
     internal void Validate() {
