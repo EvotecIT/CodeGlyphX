@@ -10,9 +10,9 @@ public enum QrImageCompositionStyle {
     /// </summary>
     ColorModules,
     /// <summary>
-    /// Reveal more of the image around soft, round module dots tinted from the image. The tint fades out before each
-    /// module edge, so no module grid is drawn across the image. Finders and alignment patterns are rounded, image-tinted
-    /// rings; <see cref="QrImageCompositionOptions.SolidFunctionPatterns"/> restores solid black and white function patterns.
+    /// Photo first: the image stays full-bleed and unaltered across each module, and only a small square centre mark
+    /// (sized by CenterSize; 0.45 module by default) carries the dark or light value. Where the image opposes a mark, it is
+    /// nudged slightly towards it around the mark. Finders and alignment patterns are rounded, image-tinted rings; <see cref="QrImageCompositionOptions.SolidFunctionPatterns"/> restores solid black and white function patterns.
     /// </summary>
     ImageOverlay,
     /// <summary>
@@ -21,8 +21,8 @@ public enum QrImageCompositionStyle {
     /// </summary>
     Halftone3x3,
     /// <summary>
-    /// Keep the image across the whole symbol, including the finder, timing and alignment zones, with antialiased module
-    /// dots tinted from the image's luminance. Finder and alignment patterns are drawn as rounded, image-tinted rings on top.
+    /// Keep the image across the whole symbol, including the finder, timing and alignment zones, with crisp antialiased
+    /// module dots tinted from the image's luminance and no halo around them. Finder and alignment patterns are drawn as rounded, image-tinted rings on top.
     /// </summary>
     ImageBackground
 }
@@ -54,14 +54,15 @@ public sealed class QrImageCompositionOptions {
 
     /// <summary>
     /// Image strength (0..1). Zero produces black/white modules; higher values retain more image color.
-    /// In overlay and image-background modes this also relaxes the tint around module dots.
+    /// ImageOverlay keeps the image unaltered outside its centre marks at every strength.
     /// Halftone3x3 caps the image contribution at 0.7 so each module's average tone keeps following its bit.
     /// </summary>
     public double Strength { get; set; } = 0.75;
 
     /// <summary>
-    /// Size of the contrasting module dot relative to a module (0.5..1). Used by overlay and image-background modes
-    /// when Art is null; the round dot covers about the same area as a square of this width.
+    /// Size of the contrasting module mark relative to a module (0.5..1), used when Art is null. ImageBackground draws a
+    /// round dot covering about the same area as a square of this width; ImageOverlay draws a square centre mark of
+    /// 0.75 times this width, between 0.3 and 0.45 module. Smaller marks show more image but leave less scan margin.
     /// </summary>
     public double CenterSize { get; set; } = 0.6;
 

@@ -22,12 +22,18 @@ public static partial class QrImageComposer {
         private const double HaloEnd = 0.6;
         // ColorModules keeps light modules below this luminance so they read as lit image colour, not pastel.
         private const double MaxLightModule = 238;
-        // Finder and alignment light gaps keep more image colour than a pale function band (luminance 160 and up).
-        private const double RingLightBand = 95;
-        // Light dots ease back to the image between these image luminances.
+        // Light finder gaps and separator bands keep the local image colour, lifted only to this scan minimum.
+        private const double RingLightFloor = 175;
         // Width, in modules, of the light band around finders; the rest of the separator shows the image.
         private const double SeparatorWidth = 0.6;
+        // Light dots ease back to the image between these image luminances.
         private const double LightAreaStart = 165, LightAreaFull = 225;
+        // ImageOverlay centre marks: side relative to CenterSize, and the allowed range in modules.
+        // Centre marks are nearly black or white, still tinted by the image, because they are small.
+        private const double MarkBand = 24;
+        // Strongest nudge of an opposing image around a centre mark.
+        private const double MarkNudge = 0.3;
+        private const double MarkScale = 0.75, MinMark = 0.3, MaxMark = 0.45;
 
         private readonly QrImageCompositionStyle _style;
         private readonly bool _solidFunctions;
@@ -40,6 +46,7 @@ public static partial class QrImageComposer {
         private readonly double _radius;
         private readonly double _feather;
         private readonly double _halo;
+        private readonly double _mark;
 
         internal PhotoPainter(QrCode qr, BitMatrix functions, QrImageCompositionOptions options) {
             _style = options.Style;
@@ -55,7 +62,8 @@ public static partial class QrImageComposer {
             _feather = _style == QrImageCompositionStyle.ImageOverlay ? Math.Max(1.5 * pixel, 0.12) : pixel;
             // The halo tints the image around each dot and reaches zero before the module edge, so neighbouring
             // modules meet on the untreated image and no grid lines appear.
-            _halo = _style == QrImageCompositionStyle.ImageOverlay ? 0.6 - 0.3 * strength : 0.12 + 0.28 * (1 - strength);
+            _halo = 0;
+            _mark = Math.Max(MinMark, Math.Min(MaxMark, MarkScale * options.CenterSize));
             _kinds = new byte[_size * _size];
             _alignmentCenter = new int[_size * _size];
             var alignment = QrTables.GetAlignmentPatternPositions(qr.Version);
@@ -110,6 +118,19 @@ public static partial class QrImageComposer {
             }
             var dx = u - mx - 0.5;
             var dy = v - my - 0.5;
+            if (_style == QrImageCompositionStyle.ImageOverlay) {
+                // Photo first: the image stays unaltered across the module and only a small square centre mark carries
+                // the bit, in the deep function band so it survives downscaling.
+                var mark = Clamp01(0.5 + (_mark / 2 - Math.Abs(dx)) * _moduleSize) * Clamp01(0.5 + (_mark / 2 - Math.Abs(dy)) * _moduleSize);
+                DotTint(r, g, b, dark, MarkBand, out var mr, out var mg, out var mb);
+                // Only where the image opposes the bit is it nudged towards the mark, fading out before the module corners.
+                var opposed = Luma(r, g, b) / 255;
+                if (!dark) opposed = 1 - opposed;
+                var nudge = MarkNudge * opposed * opposed * (1 - SmoothStep(_mark / 2, HaloEnd, Math.Sqrt(dx * dx + dy * dy)));
+                var markWeight = mark + (1 - mark) * nudge;
+                Write(pixels, index, r + (mr - r) * markWeight, g + (mg - g) * markWeight, b + (mb - b) * markWeight);
+                return;
+            }
             var distance = Math.Sqrt(dx * dx + dy * dy);
             var dot = Clamp01(0.5 + (_radius - distance) / _feather);
             // Where the image fights the module (a light module over a dark area or the reverse), the halo grows so the
@@ -159,7 +180,11 @@ public static partial class QrImageComposer {
         private void ModuleTint(double r, double g, double b, bool dark, out double tr, out double tg, out double tb) {
             var luminance = Luma(r, g, b);
             var target = dark ? luminance * _band / 255 : Math.Min(MaxLightModule, 255 - _band + luminance * _band / 255);
-            ApplyChroma(r, g, b, luminance, target, dark ? 1.35 : 1.25, dark, out tr, out tg, out tb);
+            // Darkening a pale colour keeps its hue only if its chroma grows as its lightness falls (a pale sun becomes
+            // deep amber rather than olive-brown); the gamut still limits it. Light modules get a little extra chroma so
+            // grey-green and grey-blue areas do not wash out.
+            var boost = dark ? 1.35 * Math.Sqrt(Math.Max(1, luminance / Math.Max(1, target))) : 1.45;
+            ApplyChroma(r, g, b, luminance, target, boost, dark, out tr, out tg, out tb);
         }
 
         // Dot treatments: the image's tonal range is remapped into each band, except that light dots over an already light
@@ -176,10 +201,11 @@ public static partial class QrImageComposer {
             ApplyChroma(r, g, b, luminance, target, ChromaBoost, dark, out tr, out tg, out tb);
         }
 
-        // Light finder and alignment gaps and finder separators: the local image colour, lifted into a moderate light band.
+        // Light finder and alignment gaps and finder separator bands: the local image colour, lifted only as far as the
+        // scan minimum. Areas already lighter than that keep the image as it is.
         private static void RingLightTint(double r, double g, double b, out double tr, out double tg, out double tb) {
             var luminance = Luma(r, g, b);
-            ApplyChroma(r, g, b, luminance, 255 - RingLightBand + luminance * RingLightBand / 255, ChromaBoost, false, out tr, out tg, out tb);
+            ApplyChroma(r, g, b, luminance, Math.Max(luminance, RingLightFloor), ChromaBoost, false, out tr, out tg, out tb);
         }
 
         // Signed distance, in modules, to a rounded square centred on the origin.
@@ -225,7 +251,7 @@ public static partial class QrImageComposer {
             if (angle < 0) angle += 360;
             if (angle > 135 && angle < 210) {
                 var darkening = 1 - target / luminance;
-                var rotate = -Math.Min(angle - 135, 28 * darkening) * Math.PI / 180;
+                var rotate = -Math.Min(angle - 135, 22 * darkening) * Math.PI / 180;
                 var cos = Math.Cos(rotate);
                 var sin = Math.Sin(rotate);
                 var nb = cb * cos - cr * sin;
