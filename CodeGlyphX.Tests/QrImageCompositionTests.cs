@@ -129,15 +129,64 @@ public sealed class QrImageCompositionTests {
     [Theory]
     [InlineData(QrImageCompositionStyle.ColorModules)]
     [InlineData(QrImageCompositionStyle.ImageOverlay)]
-    public void FlatImageRegionsRetainStrongModuleCenters(QrImageCompositionStyle style) {
+    public void FlatImageRegionsKeepAWideModuleContrast(QrImageCompositionStyle style) {
         var qr = QR.Encode(Payload);
         var result = QrImageComposer.Render(qr, new byte[] { 128, 128, 128, 255 }, 1, 1,
             new QrImageCompositionOptions { ModuleSize = 8, Style = style, Strength = 1 });
         var pixels = result.GetPixels();
+        int brightestDark = 0, dimmestLight = 255;
         for (var y = 0; y < qr.Size; y++) for (var x = 0; x < qr.Size; x++) {
             var p = (((y + 4) * 8 + 4) * result.Size + (x + 4) * 8 + 4) * 4;
             var value = pixels[p];
-            Assert.True(qr.Modules[x, y] ? value < 32 : value > 223);
+            if (qr.Modules[x, y]) brightestDark = Math.Max(brightestDark, value);
+            else dimmestLight = Math.Min(dimmestLight, value);
+        }
+        // Image tints replace pure black and white, but every module centre stays well inside its band.
+        Assert.InRange(brightestDark, 1, 64);
+        Assert.InRange(dimmestLight, 191, 254);
+        Assert.True(dimmestLight - brightestDark >= 140, $"Module contrast {dimmestLight - brightestDark} is too low.");
+    }
+
+    [Fact]
+    public void ColorModulesTintEveryPixelOfAModule_WithoutCentreDots() {
+        var qr = QR.Encode(Payload);
+        var result = QrImageComposer.Render(qr, new byte[] { 40, 120, 200, 255 }, 1, 1,
+            new QrImageCompositionOptions { ModuleSize = 10, Style = QrImageCompositionStyle.ColorModules, Strength = 1 });
+        var pixels = result.GetPixels();
+        var functions = QrStructureAnalysis.BuildFunctionMask(qr.Version, qr.Size);
+        for (var my = 0; my < qr.Size; my++) for (var mx = 0; mx < qr.Size; mx++) {
+            var first = Pixel(mx, my, 0, 0);
+            // A flat image yields a flat module: no centre dot or mesh is drawn inside it.
+            for (var y = 0; y < 10; y++) for (var x = 0; x < 10; x++) Assert.Equal(first, Pixel(mx, my, x, y));
+            // Blue stays blue in both polarities, including functional modules: no grey veil and no white blocks.
+            Assert.True(first.B > first.R + 20, $"Module ({mx},{my}) lost the image hue: {first}.");
+            if (functions[mx, my]) Assert.True(qr.Modules[mx, my] ? Luma(first) <= 45 : Luma(first) >= 210);
+        }
+
+        (int R, int G, int B) Pixel(int mx, int my, int x, int y) {
+            var p = (((my + 4) * 10 + y) * result.Size + (mx + 4) * 10 + x) * 4;
+            return (pixels[p], pixels[p + 1], pixels[p + 2]);
+        }
+        static double Luma((int R, int G, int B) c) => 0.299 * c.R + 0.587 * c.G + 0.114 * c.B;
+    }
+
+    [Fact]
+    public void ImageOverlayFadesToTheImageAtEveryModuleCorner_SoNoGridIsDrawn() {
+        var qr = QR.Encode(Payload);
+        var image = new byte[] { 200, 150, 90, 255 };
+        var result = QrImageComposer.Render(qr, image, 1, 1,
+            new QrImageCompositionOptions { ModuleSize = 12, Style = QrImageCompositionStyle.ImageOverlay, Strength = 0.75 });
+        var pixels = result.GetPixels();
+        var functions = QrStructureAnalysis.BuildFunctionMask(qr.Version, qr.Size);
+        for (var my = 0; my < qr.Size; my++) for (var mx = 0; mx < qr.Size; mx++) {
+            if (functions[mx, my]) continue;
+            // Corner pixels of both polarities are the untreated image, so neighbouring modules join seamlessly.
+            foreach (var (x, y) in new[] { (0, 0), (11, 0), (0, 11), (11, 11) }) {
+                var p = (((my + 4) * 12 + y) * result.Size + (mx + 4) * 12 + x) * 4;
+                Assert.InRange(pixels[p] - image[0], -2, 2);
+                Assert.InRange(pixels[p + 1] - image[1], -2, 2);
+                Assert.InRange(pixels[p + 2] - image[2], -2, 2);
+            }
         }
     }
 

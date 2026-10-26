@@ -49,10 +49,10 @@ public static partial class QrImageComposer {
             ? new FinderGeometry(moduleSize, options.Art) : null;
         var halftone = options.Style == QrImageCompositionStyle.Halftone3x3 && options.Strength > 0
             ? DitherSubCells(image, qr.Modules, moduleSize, qrOffsetX + border - imageOriginX,
-                qrOffsetY + border - imageOriginY, options.Strength, cancellationToken) : null;
-        var centerSize = options.Style == QrImageCompositionStyle.ImageOverlay || options.Style == QrImageCompositionStyle.ImageBackground
-            ? options.CenterSize : 0.35;
-        var centerMargin = (int)Math.Floor(moduleSize * (1 - centerSize) / 2);
+                qrOffsetY + border - imageOriginY, Math.Min(options.Strength, MaxHalftoneImageWeight), cancellationToken) : null;
+        var photo = options.Art is null && options.Strength > 0 && options.Style != QrImageCompositionStyle.Halftone3x3
+            ? new PhotoPainter(qr, functions, options) : null;
+        var duotone = options.Style == QrImageCompositionStyle.Halftone3x3 ? options.Duotone : null;
         for (var y = 0; y < side; y++) {
             cancellationToken.ThrowIfCancellationRequested();
             for (var x = 0; x < side; x++) {
@@ -72,6 +72,7 @@ public static partial class QrImageComposer {
                     } else {
                         WriteGray(pixels, index, 255);
                         if (options.Art is not null && options.Strength > 0) WriteColor(pixels, index, options.Art.FunctionalBackground);
+                        else if (duotone is not null) WriteColor(pixels, index, duotone.Paper);
                     }
                     continue;
                 }
@@ -79,48 +80,30 @@ public static partial class QrImageComposer {
                 var mx = px / moduleSize;
                 var my = py / moduleSize;
                 var dark = qr.Modules[mx, my];
+                if (photo is not null) {
+                    image.Sample(x - imageOriginX, y - imageOriginY, out var pr, out var pg, out var pb);
+                    photo.Paint(pixels, index, px, py, dark, pr, pg, pb);
+                    continue;
+                }
                 if (functions[mx, my] || options.Strength == 0) {
                     WriteGray(pixels, index, dark ? (byte)0 : (byte)255);
                     if (options.Strength > 0 && options.Art is not null)
                         WriteColor(pixels, index, dark ? options.Art.FunctionalForeground : options.Art.FunctionalBackground);
+                    else if (duotone is not null) WriteColor(pixels, index, dark ? duotone.Ink : duotone.Paper);
                     continue;
                 }
-                image.Sample(x - imageOriginX, y - imageOriginY, out var r, out var g, out var b);
                 if (halftone is not null) {
                     var sx = px % moduleSize * 3 / moduleSize;
                     var sy = py % moduleSize * 3 / moduleSize;
                     var isCenter = sx == 1 && sy == 1;
-                    var imageDark = halftone[(my * 3 + sy) * qr.Size * 3 + mx * 3 + sx];
-                    WriteGray(pixels, index, (isCenter ? dark : imageDark) ? (byte)0 : (byte)255);
+                    var inked = isCenter ? dark : halftone[(my * 3 + sy) * qr.Size * 3 + mx * 3 + sx];
+                    if (duotone is not null) WriteColor(pixels, index, inked ? duotone.Ink : duotone.Paper);
+                    else WriteGray(pixels, index, inked ? (byte)0 : (byte)255);
                     continue;
                 }
-                if (art is not null) {
-                    art.Paint(pixels, index, mx, my, px % moduleSize, py % moduleSize, dark, r, g, b, options.Strength);
-                    continue;
-                }
-                var insideCenter = px % moduleSize >= centerMargin && px % moduleSize < moduleSize - centerMargin
-                    && py % moduleSize >= centerMargin && py % moduleSize < moduleSize - centerMargin;
-                if (options.Style == QrImageCompositionStyle.ImageBackground) {
-                    if (insideCenter) WriteGray(pixels, index, dark ? (byte)0 : (byte)255);
-                    else {
-                        pixels[index] = Adapt(r, dark, options.Strength);
-                        pixels[index + 1] = Adapt(g, dark, options.Strength);
-                        pixels[index + 2] = Adapt(b, dark, options.Strength);
-                    }
-                    continue;
-                }
-                var overlayEdge = options.Style == QrImageCompositionStyle.ImageOverlay && !insideCenter;
-                // Strong centers also give block-thresholding readers local contrast within flat colored regions.
-                // Overlay edges allow more of the image through than full-module color adaptation.
-                var darkLimit = insideCenter ? 20.0 : overlayEdge ? 128.0 : 60.0;
-                var lightLimit = insideCenter ? 235.0 : overlayEdge ? 127.0 : 195.0;
-                var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-                var amount = dark ? (luminance > darkLimit ? darkLimit / luminance : 1)
-                    : (luminance < lightLimit ? (255 - lightLimit) / (255 - luminance) : 1);
-                amount *= options.Strength;
-                pixels[index] = Adapt(r, dark, amount);
-                pixels[index + 1] = Adapt(g, dark, amount);
-                pixels[index + 2] = Adapt(b, dark, amount);
+                // Remaining pixels belong to module silhouettes: Art is set and Strength is positive.
+                image.Sample(x - imageOriginX, y - imageOriginY, out var r, out var g, out var b);
+                art!.Paint(pixels, index, mx, my, px % moduleSize, py % moduleSize, dark, r, g, b, options.Strength);
             }
         }
         return new QrImageComposition(pixels, side, qrOffsetX, qrOffsetY, qrFullSize);
