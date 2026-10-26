@@ -5,67 +5,55 @@ namespace CodeGlyphX.Rendering.Art;
 
 public static partial class QrImageComposer {
     /// <summary>
-    /// The tinted colour model shared by the canvas, the quiet zone and every module. The whole image is the washed
-    /// artwork with its own crisp regions. Behind and between modules, and across the quiet zone, the art's darker
-    /// areas are lifted to a luminance floor, so the code's footprint stays light without a veil or halo; the lift
-    /// fades out over a short distance beyond the quiet zone. Dark modules are deep tones of the art.
+    /// The tinted colour model shared by the canvas, the quiet zone and every module. The art exists in two keys from
+    /// the same geometry: the washed normal key, and a high key where every colour becomes a light tint of its own
+    /// hue (high lightness, reduced but non-zero chroma) with its relative values kept. The high key covers the code's
+    /// footprint (symbol and quiet zone) and blends into the normal key with a distance-graded step beyond it, so the
+    /// art keeps its structure inside the code. Dark modules are deep tones of the art.
     /// </summary>
     private sealed class TintModel {
-        internal const double BodyFloor = 202, DeepCeiling = 52;
+        // High-key luminance runs from HighKeyFloor (the art's darkest colour) to 255.
+        internal const double HighKeyFloor = 192, DeepCeiling = 52;
         private readonly Rgba32 _ink, _paper, _base;
-        private readonly double _tint, _darkArt, _saturation, _strength, _opacity, _module, _symbol, _border, _fade;
+        private readonly double _tint, _darkArt, _saturation, _strength, _opacity, _symbol, _border, _fade;
 
         internal TintModel(QrImageArtOptions options, double strength, double opacity, Rgba32 canvasBase,
             int moduleSize, int symbolModules, int border, double fade) {
             _ink = options.FunctionalForeground; _paper = options.FunctionalBackground; _base = canvasBase;
             _tint = options.FunctionalTint; _darkArt = options.DarkModuleArt; _saturation = options.LightModuleSaturation; _strength = strength; _opacity = opacity;
-            _module = moduleSize; _symbol = symbolModules * (double)moduleSize; _border = border; _fade = fade;
+            _symbol = symbolModules * (double)moduleSize; _border = border; _fade = fade;
         }
 
         /// <summary>
-        /// Weight of the light field at a pixel, in symbol coordinates (the symbol's top-left module corner is 0,0).
-        /// The field is built from the code's own footprint on the module grid: the symbol and its whole quiet zone are
-        /// lifted, and beyond the quiet zone a fringe of module-sized light tiles thins out over three rings, so the
-        /// field ends in the code's own pixel language instead of a straight edge or a veil.
+        /// High-key weight at a pixel, in symbol coordinates (the symbol's top-left module corner is 0,0): one across
+        /// the symbol and its quiet zone, then a smooth distance-graded step over FadeModules beyond the quiet zone.
         /// </summary>
         internal double Field(double px, double py) {
             px += 0.5; py += 0.5;
-            var outside = Math.Max(Math.Max(-px, px - _symbol), Math.Max(-py, py - _symbol));
-            if (outside < _border) return 1;
-            var ring = (int)((outside - _border) / _module);
-            if (ring >= 3) return 0;
-            var cellX = (int)Math.Floor(px / _module); var cellY = (int)Math.Floor(py / _module);
-            var keep = ring == 0 ? 0.72 : ring == 1 ? 0.38 : 0.12;
-            if (CellHash(cellX, cellY) >= keep) return 0;
-            // A crisp rounded tile, one module wide, like a light module that drifted out of the code.
-            var u = Mod(px, _module) / _module - 0.5; var v = Mod(py, _module) / _module - 0.5;
-            const double corner = 0.22, halfTile = 0.47;
-            var qx = Math.Max(Math.Abs(u) - (halfTile - corner), 0); var qy = Math.Max(Math.Abs(v) - (halfTile - corner), 0);
-            var edge = (Math.Sqrt(qx * qx + qy * qy) - corner) * _module;
-            return Math.Max(0, Math.Min(1, 0.5 - edge));
+            var ox = Math.Max(Math.Max(-_border - px, px - _symbol - _border), 0);
+            var oy = Math.Max(Math.Max(-_border - py, py - _symbol - _border), 0);
+            var outside = Math.Sqrt(ox * ox + oy * oy);
+            if (outside <= 0) return 1;
+            return _fade <= 0 ? 0 : 1 - Smooth(outside / _fade);
         }
 
-        private static double CellHash(int x, int y) {
-            unchecked {
-                var value = (uint)x * 0x9e3779b9u ^ (uint)y * 0x85ebca6bu ^ 0x5bd1e995u;
-                value ^= value >> 16; value *= 0x7feb352du; value ^= value >> 15; value *= 0x846ca68bu; value ^= value >> 16;
-                return (value & 0xffffff) / 16777216.0;
-            }
-        }
-        private static double Mod(double value, double size) => value - Math.Floor(value / size) * size;
         internal void Light(double r, double g, double b, double field, out double lr, out double lg, out double lb) {
             r = _base.R + (r - _base.R) * _opacity; g = _base.G + (g - _base.G) * _opacity; b = _base.B + (b - _base.B) * _opacity;
             var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-            // Inside the field the art may be desaturated, so modules win over busy colour.
-            var keep = 1 - (1 - _saturation) * field;
-            r = luminance + (r - luminance) * keep; g = luminance + (g - luminance) * keep; b = luminance + (b - luminance) * keep;
-            // A smooth maximum lifts only areas darker than the floor, keeping lighter art and every region edge crisp.
-            var floor = BodyFloor * field;
-            var target = Math.Pow(Math.Pow(luminance, 8) + Math.Pow(floor, 8), 1 / 8.0);
-            var amount = luminance >= 255 ? 0 : Math.Max(0, (255 - Math.Min(255, target)) / (255 - luminance));
-            lr = Blend(_paper.R, 255 - (255 - r) * amount);
-            lg = Blend(_paper.G, 255 - (255 - g) * amount);
-            lb = Blend(_paper.B, 255 - (255 - b) * amount);
+            if (field > 0) {
+                // The high key: optional desaturation, then lightness compressed into HighKeyFloor..255 toward white,
+                // which keeps every region's hue and its order of values.
+                // Lightness is remapped with an expanding curve so neighbouring light colours stay distinct, and hue
+                // is kept as a reduced but clearly visible chroma around the new lightness.
+                var target = HighKeyFloor + (255 - HighKeyFloor) * Math.Pow(luminance / 255, 1.8);
+                var chroma = Math.Min(1, (255 - target) / Math.Max(1, 255 - luminance) * 1.9) * _saturation;
+                var hr = target + (r - luminance) * chroma; var hg = target + (g - luminance) * chroma; var hb = target + (b - luminance) * chroma;
+                // Keep the tint inside the displayable range without shifting its lightness.
+                var over = Math.Max(Math.Max(hr, hg), hb) - 255;
+                if (over > 0) { var k = (255 - target) / (255 - target + over); hr = target + (hr - target) * k; hg = target + (hg - target) * k; hb = target + (hb - target) * k; }
+                r += (hr - r) * field; g += (hg - g) * field; b += (hb - b) * field;
+            }
+            lr = Blend(_paper.R, r); lg = Blend(_paper.G, g); lb = Blend(_paper.B, b);
         }
         internal void Deep(double r, double g, double b, out double dr, out double dg, out double db) {
             var luminance = 0.299 * r + 0.587 * g + 0.114 * b;

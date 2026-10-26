@@ -37,7 +37,7 @@ public sealed class QrImageArtOptions {
     /// <summary>
     /// Tinted composition (0..1). Zero keeps the classic treatment: solid functional colours and a solid quiet zone.
     /// Above zero, one colour model covers the whole symbol: behind light modules and across the quiet zone the artwork
-    /// keeps its crisp regions, with darker areas lifted to luminance 202, and dark modules, including finder, timing,
+    /// appears in a high key (light tints of its own hues, luminance 198..255), and dark modules, including finder, timing,
     /// alignment, format and version modules, are deep tones of the art (luminance at most 52) drawn with the data
     /// silhouettes. Values below one blend toward the solid functional colours.
     /// </summary>

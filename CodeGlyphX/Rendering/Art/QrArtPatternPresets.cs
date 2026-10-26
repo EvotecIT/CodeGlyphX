@@ -62,7 +62,7 @@ public static class QrArtPatternPresets {
             _ => QrImageFinderStyle.Rounded
         };
         // Each family has its own composition: the code sits off-centre in a margin sized for its motif, and the
-        // art's density gradient runs away from the code. Only the code's footprint is lifted, on its module grid.
+        // art's density gradient runs away from the code. The code's footprint shows the art in a high key.
         var (padding, x, y, opacity, saturation) = pattern switch {
             QrArtPattern.Marble => (10, 0.68, 0.34, 0.92, 0.75),
             QrArtPattern.Waves => (12, 0.74, 0.7, 0.75, 0.7),
@@ -89,7 +89,7 @@ public static class QrArtPatternPresets {
         };
         var options = new QrImageCompositionOptions {
             ModuleSize = moduleSize, Strength = 0.96,
-            Canvas = new QrImageCanvasOptions { PaddingModules = padding, PositionX = x, PositionY = y, ArtOpacity = opacity },
+            Canvas = new QrImageCanvasOptions { PaddingModules = padding, PositionX = x, PositionY = y, ArtOpacity = opacity, FadeModules = 2.5 },
             Art = new QrImageArtOptions {
                 Style = style, Shape = shape, Scale = 0.95, DetailProtection = 0.3, FunctionalTint = 1,
                 Finders = finders, FunctionalBackground = paper, FunctionalForeground = ink, LightModuleSaturation = saturation,
@@ -97,9 +97,9 @@ public static class QrArtPatternPresets {
             }
         };
         if (pattern == QrArtPattern.Sunburst) {
-            // Frame the burst so its centre falls on the off-centre code (for a typical 33-module symbol).
+            // Frame the burst so its vanishing point sits just above and left of the off-centre code.
             options.ImageZoom = 1.5;
-            options.ImagePositionX = 0.586; options.ImagePositionY = 0.426;
+            options.ImagePositionX = 0.72; options.ImagePositionY = 0.57;
         }
         return options;
     }

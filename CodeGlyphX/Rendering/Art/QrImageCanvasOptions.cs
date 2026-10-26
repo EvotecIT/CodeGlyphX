@@ -20,8 +20,8 @@ public sealed class QrImageCanvasOptions {
     public double ArtOpacity { get; set; } = 1;
 
     /// <summary>
-    /// Width, in modules (0..16), of the fade beyond the quiet zone's outer edge, where a tinted composition's light
-    /// field ends and the canvas art continues unlifted. Zero gives a hard edge. Ignored without tinting.
+    /// Width, in modules (0..16), of the distance-graded step beyond the quiet zone where a tinted composition's high-key
+    /// art blends back into the normal-key canvas art. Zero gives a hard edge. Ignored without tinting.
     /// </summary>
     public double FadeModules { get; set; }
 

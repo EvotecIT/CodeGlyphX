@@ -74,7 +74,11 @@ internal sealed class QrPatternRasterizer {
         // Thin crisp veins on top, so the stone still reads inside the code where values are lifted.
         var thin = Math.Abs(Math.Sin((qx * 0.55 + qy * 0.32 + 1.2 * Turbulence(qx * 1.1 + 3.3, qy * 1.1 - 6.1, 5)) * Math.PI * 1.6));
         var cover = Coverage(thin / 9.0 - 0.0011) * SmoothStep(-0.3, 0.2, Fbm(qx * 0.5 + 9, qy * 0.5 + 4, 2));
-        return Color.Mix(color, Color.Mix(Role(2), Black, 0.35), 0.9 * cover);
+        color = Color.Mix(color, Color.Mix(Role(2), Black, 0.35), 0.9 * cover);
+        // One heavy signature vein sweeps up-right through the lower left of the preset's code field.
+        var s = 0.6 * (x + 0.21) + 0.8 * (y - 0.21) + 0.045 * Fbm(x * 6 + 4.2, y * 6 - 1.3, 4);
+        color = Color.Mix(color, Role(2), 0.45 * Math.Exp(-Math.Abs(s) / 0.018));
+        return Color.Mix(color, Color.Mix(Role(2), Black, 0.45), Coverage(Math.Abs(s) - 0.0035));
     }
 
     private double Turbulence(double x, double y, int octaves) {
