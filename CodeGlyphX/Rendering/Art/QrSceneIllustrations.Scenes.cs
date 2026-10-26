@@ -360,22 +360,26 @@ internal static partial class QrSceneIllustrations {
         Fan(g, 0.93, 0.955, 0.13, Mix(c[2], c[0], 0.25));
         foreach (var (kx, height, phase) in new[] { (0.8, 0.15, 0.0), (0.83, 0.1, 1.3) })
             Kelp(g, kx, 0.97, height, phase, Mix(c[1], s.Ink, 0.35));
-        // Fish of three kinds (round reef fish, tall angelfish, long slender fish) scattered through the open water
-        // to the right at varied sizes, headings and depths. Farther, smaller fish are paler; an angelfish crosses the
-        // bubble's rim on the side, well clear of the code.
+        // Fish of three kinds in one illustration style. A small school of round fish swims right in the upper left;
+        // the rest are scattered through open water at varied sizes, headings and depths, one breaks the bubble's
+        // right side at about two o'clock, and an angelfish crosses the rim on the right. Farther fish are paler.
         var fish = new List<(double Size, double X, double Y, double Heading, int Kind)>();
+        var schoolX = 0.1; var schoolY = 0.12;
+        for (var k = 0; k < 4; k++)
+            fish.Add((0.02 + 0.004 * (k % 2), schoolX + 0.045 * k + r.Range(-0.008, 0.008), schoolY + 0.035 * ((k * 5) % 3) + r.Range(-0.006, 0.006), 0.2 + r.Range(-0.08, 0.08), 0));
+        var twoOClock = -0.55;
+        fish.Add((0.034, f.CenterX + (radius + 0.06) * Math.Cos(twoOClock), f.CenterY + (radius + 0.06) * Math.Sin(twoOClock), Math.PI + 0.35, 2));
         for (var attempt = 0; attempt < 900 && fish.Count < 12; attempt++) {
             var size = r.Range(0.018, 0.04);
-            // The first few go to the left and upper left, the rest anywhere in open water.
-            var left = fish.Count < 3;
-            var x = left ? r.Range(0.03, f.CenterX - radius * 0.45) : r.Range(0.03, 0.97);
-            var y = left ? r.Range(0.04, 0.5) : r.Range(0.04, 0.84);
-            if (x < 0.34 && y > 0.56 || x > 0.68 && y > 0.8) continue;
-            if (Math.Sqrt((x - f.CenterX) * (x - f.CenterX) + (y - f.CenterY) * (y - f.CenterY)) < radius + 0.03 + size * 1.4) continue;
+            var x = r.Range(0.03, 0.97); var y = r.Range(0.04, 0.84);
+            if (x < 0.34 && y > 0.56 || x > 0.68 && y > 0.8 || x < 0.32 && y < 0.24) continue;
+            var d = Math.Sqrt((x - f.CenterX) * (x - f.CenterX) + (y - f.CenterY) * (y - f.CenterY));
+            // Keep clear of the bubble and off a single ring around it.
+            if (d < radius + 0.03 + size * 1.4 || Math.Abs(d - radius - 0.06) < 0.025) continue;
             var clear = true;
-            foreach (var other in fish) if (Math.Abs(other.X - x) < (other.Size + size) * 1.9 && Math.Abs(other.Y - y) < (other.Size + size) * 1.4) clear = false;
+            foreach (var other in fish) if (Math.Abs(other.X - x) < (other.Size + size) * 2.1 && Math.Abs(other.Y - y) < (other.Size + size) * 1.6) clear = false;
             if (!clear) continue;
-            fish.Add((size, x, y, (r.Next() < 0.7 ? -Math.PI / 2 - 0.5 : Math.PI) + r.Range(-0.45, 0.45), (int)(r.Next() * 3)));
+            fish.Add((size, x, y, (r.Next() < 0.6 ? -Math.PI / 2 - 0.5 : Math.PI) + r.Range(-0.5, 0.5), (int)(r.Next() * 3)));
         }
         fish.Add((0.036, f.CenterX + (radius + 0.004) * Math.Cos(0.25), f.CenterY + (radius + 0.004) * Math.Sin(0.25), -Math.PI / 2 - 0.35, 1));
         fish.Sort((a, b) => a.Size.CompareTo(b.Size));
@@ -439,40 +443,37 @@ internal static partial class QrSceneIllustrations {
         }
     }
 
+    // One fish style for every kind: a smooth body, the same rounded fork tail, a pale belly and a dark eye with a
+    // highlight. Kind 0 is a round reef fish, 1 a tall angelfish with swept fins, 2 a long slender fish.
     private static void Fish(QrSceneGeometry g, double x, double y, double size, double heading, Rgba32 color, Rgba32 ink, bool stripes = false, int kind = 0) {
         var cos = Math.Cos(heading); var sin = Math.Sin(heading);
         double X(double u, double v) => x + u * cos - v * sin;
         double Y(double u, double v) => y + u * sin + v * cos;
+        var (length, height) = kind == 1 ? (0.7, 0.62) : kind == 2 ? (1.3, 0.27) : (1.0, 0.5);
+        var fin = QrSceneGeometry.Mix(color, ink, 0.18);
+        var belly = QrSceneGeometry.Mix(color, new Rgba32(255, 255, 255), 0.45);
+        // Tail: a rounded fork behind the body.
+        var tail = new ScenePath(X(-size * length * 0.8, 0), Y(-size * length * 0.8, 0))
+            .Quad(X(-size * (length + 0.25), -size * 0.1), Y(-size * (length + 0.25), -size * 0.1), X(-size * (length + 0.45), -size * height * 0.85), Y(-size * (length + 0.45), -size * height * 0.85))
+            .Quad(X(-size * (length + 0.3), 0), Y(-size * (length + 0.3), 0), X(-size * (length + 0.45), size * height * 0.85), Y(-size * (length + 0.45), size * height * 0.85))
+            .Quad(X(-size * (length + 0.25), size * 0.1), Y(-size * (length + 0.25), size * 0.1), X(-size * length * 0.8, 0), Y(-size * length * 0.8, 0)).ToArray();
+        g.Polygon(ScenePaint.Solid(fin), tail);
         if (kind == 1) {
-            // Angelfish: a tall rhombic body with long swept fins.
-            var fin = QrSceneGeometry.Mix(color, ink, 0.22);
-            g.Polygon(ScenePaint.Solid(fin), X(-size * 0.1, -size * 0.5), Y(-size * 0.1, -size * 0.5), X(-size * 0.9, -size * 1.5), Y(-size * 0.9, -size * 1.5), X(-size * 0.55, -size * 0.2), Y(-size * 0.55, -size * 0.2));
-            g.Polygon(ScenePaint.Solid(fin), X(-size * 0.1, size * 0.5), Y(-size * 0.1, size * 0.5), X(-size * 0.9, size * 1.5), Y(-size * 0.9, size * 1.5), X(-size * 0.55, size * 0.2), Y(-size * 0.55, size * 0.2));
-            g.Polygon(ScenePaint.Solid(fin), X(-size * 0.6, 0), Y(-size * 0.6, 0), X(-size * 1.0, size * 0.28), Y(-size * 1.0, size * 0.28), X(-size * 1.0, -size * 0.28), Y(-size * 1.0, -size * 0.28));
-            g.Polygon(ScenePaint.Solid(color), X(size * 0.7, 0), Y(size * 0.7, 0), X(0, -size * 0.75), Y(0, -size * 0.75), X(-size * 0.65, 0), Y(-size * 0.65, 0), X(0, size * 0.75), Y(0, size * 0.75));
-            g.Fill(ScenePaint.Solid(QrSceneGeometry.Mix(color, ink, 0.4)), QrSceneGeometry.StrokeContours(size * 0.12, new[] { X(size * 0.1, -size * 0.62), Y(size * 0.1, -size * 0.62), X(size * 0.1, size * 0.62), Y(size * 0.1, size * 0.62) }));
-            g.Circle(ScenePaint.Solid(ink), X(size * 0.42, -size * 0.1), Y(size * 0.42, -size * 0.1), size * 0.08);
-            return;
+            // Swept dorsal and anal fins, as curved leaves trailing back.
+            g.Fill(ScenePaint.Solid(fin), Leaf(X(size * 0.15, -size * 0.45), Y(size * 0.15, -size * 0.45), size * 1.25, size * 0.32, heading + Math.PI + 0.55, 0.12));
+            g.Fill(ScenePaint.Solid(fin), Leaf(X(size * 0.15, size * 0.45), Y(size * 0.15, size * 0.45), size * 1.25, size * 0.32, heading + Math.PI - 0.55, -0.12));
         }
-        if (kind == 2) {
-            // A long slender fish with a forked tail.
-            g.Polygon(ScenePaint.Solid(QrSceneGeometry.Mix(color, ink, 0.15)), X(-size * 1.15, 0), Y(-size * 1.15, 0), X(-size * 1.65, size * 0.36), Y(-size * 1.65, size * 0.36),
-                X(-size * 1.45, 0), Y(-size * 1.45, 0), X(-size * 1.65, -size * 0.36), Y(-size * 1.65, -size * 0.36));
-            g.Oval(ScenePaint.Solid(color), x, y, size * 1.35, size * 0.26, heading);
-            g.Fill(ScenePaint.Solid(QrSceneGeometry.Mix(color, new Rgba32(255, 255, 255), 0.55)), QrSceneGeometry.Ellipse(X(-size * 0.1, size * 0.06), Y(-size * 0.1, size * 0.06), size * 0.95, size * 0.06, heading, 32));
-            g.Circle(ScenePaint.Solid(ink), X(size * 0.95, -size * 0.06), Y(size * 0.95, -size * 0.06), size * 0.07);
-            return;
+        g.Oval(ScenePaint.Solid(color), x, y, size * length, size * height, heading);
+        g.Fill(ScenePaint.Solid(belly), QrSceneGeometry.Ellipse(X(-size * length * 0.05, size * height * 0.45), Y(-size * length * 0.05, size * height * 0.45), size * length * 0.62, size * height * 0.32, heading, 32));
+        if (stripes || kind == 1) {
+            foreach (var u in kind == 1 ? new[] { -0.1 } : new[] { -0.35, 0.15 })
+                g.Fill(ScenePaint.Solid(kind == 1 ? fin : QrSceneGeometry.Mix(color, new Rgba32(255, 255, 255), 0.8)),
+                    QrSceneGeometry.Ellipse(X(size * u, 0), Y(size * u, 0), size * 0.09, size * height * 0.9, heading, 24));
         }
-        g.Polygon(ScenePaint.Solid(QrSceneGeometry.Mix(color, ink, 0.15)), X(-size * 0.8, 0), Y(-size * 0.8, 0), X(-size * 1.35, size * 0.42), Y(-size * 1.35, size * 0.42),
-            X(-size * 1.25, 0), Y(-size * 1.25, 0), X(-size * 1.35, -size * 0.42), Y(-size * 1.35, -size * 0.42));
-        g.Oval(ScenePaint.Solid(color), x, y, size, size * 0.52, heading);
-        if (stripes) {
-            foreach (var u in new[] { -0.35, 0.15 })
-                g.Fill(ScenePaint.Solid(QrSceneGeometry.Mix(color, new Rgba32(255, 255, 255), 0.75)), QrSceneGeometry.Ellipse(X(size * u, 0), Y(size * u, 0), size * 0.09, size * 0.46, heading, 24));
-        }
-        g.Circle(ScenePaint.Solid(ink), X(size * 0.55, -size * 0.12), Y(size * 0.55, -size * 0.12), size * 0.09);
+        var ex = X(size * length * 0.58, -size * height * 0.18); var ey = Y(size * length * 0.58, -size * height * 0.18);
+        g.Circle(ScenePaint.Solid(ink), ex, ey, size * 0.085);
+        g.Circle(ScenePaint.Solid(new Rgba32(255, 255, 255)), ex + size * 0.025, ey - size * 0.025, size * 0.028);
     }
-
     // A pale moon carrying the code, ringed and orbited, in deep space with nebula light and a rocket.
     private static void Cosmos(SceneContext s) {
         var g = s.G; var c = s.C; var f = s.Frame; var paper = s.Paper; var r = s.Random;
