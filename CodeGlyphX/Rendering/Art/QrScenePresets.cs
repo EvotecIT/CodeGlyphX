@@ -19,12 +19,12 @@ public static class QrScenePresets {
             _ => Palette(0xED46AD, 0x33CDAA, 0xF4CD47, 0x6568D8)
         };
         // Each composition places the code in its own local backdrop; captions sit where the scene leaves room.
-        // A scale of 0.5 leaves room for the illustration and keeps three pixels per module from about 300 pixels
-        // (short URLs) or 420 pixels (130-character URLs); smaller renders throw instead of degrading the code.
+        // Scales of 0.46..0.54 leave room for the illustration and keep three pixels per module from about 320 pixels
+        // (short URLs) or 450 pixels (130-character URLs); smaller renders throw instead of degrading the code.
         var (qrX, qrY, qrScale, captionY, captionScale) = style switch {
-            QrSceneStyle.TropicalGarden => (0.5, 0.43, 0.5, 0.765, 0.56),
+            QrSceneStyle.TropicalGarden => (0.5, 0.43, 0.46, 0.737, 0.52),
             QrSceneStyle.ElectricCity => (0.5, 0.37, 0.5, 0.958, 0.72),
-            QrSceneStyle.MusicFestival => (0.5, 0.47, 0.5, 0.085, 0.8),
+            QrSceneStyle.MusicFestival => (0.5, 0.455, 0.5, 0.105, 0.8),
             QrSceneStyle.OceanReef => (0.5, 0.43, 0.5, 0.95, 0.66),
             QrSceneStyle.CosmicOrbit => (0.5, 0.44, 0.5, 0.95, 0.72),
             _ => (0.5, 0.4, 0.54, 0.79, 1.0)

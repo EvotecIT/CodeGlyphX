@@ -18,7 +18,7 @@ internal static partial class QrSceneIllustrations {
 
         // The arch: a sage frame band around a paper window. Its radius keeps every code corner inside.
         s.Plate();
-        var side = 0.04; var head = 0.09; var foot = Math.Max(f.Bottom + 0.16, 0.82);
+        var side = 0.034; var head = 0.08; var foot = Math.Max(f.Bottom + 0.15, 0.8);
         var radius = ArchRadius(side, head, f.Size);
         g.Fill(Solid(c[3]), QrSceneGeometry.RoundRectangle(f.X - side - 0.022, f.Y - head - 0.022, f.Size + 2 * side + 0.044, foot - f.Y + head + 0.044, radius + 0.022, 0.03));
         g.Fill(Solid(Mix(paper, c[1], 0.3)), QrSceneGeometry.RoundRectangle(f.X - side - 0.012, f.Y - head - 0.012, f.Size + 2 * side + 0.024, foot - f.Y + head + 0.024, radius + 0.012, 0.022));
@@ -27,7 +27,7 @@ internal static partial class QrSceneIllustrations {
         s.Motifs();
         var deep = c[3]; var leaf = c[1]; var light = Mix(c[1], paper, 0.35);
         // Lower left: a tall monstera and a second, smaller one turned the other way.
-        Monstera(g, -0.03, 1.02, 0.46, -1.42 + r.Range(-0.05, 0.05), leaf, light);
+        Monstera(g, 0.03, 1.04, 0.44, -1.36 + r.Range(-0.05, 0.05), leaf, light);
         Monstera(g, -0.04, 0.78, 0.3, -0.62 + r.Range(-0.06, 0.06), deep, Mix(deep, paper, 0.35));
         // Upper right: a palm frond sweeping down across the corner.
         Frond(g, 1.03, -0.02, 0.52, -0.12, 1.95, deep, Mix(deep, c[1], 0.45));
@@ -41,7 +41,7 @@ internal static partial class QrSceneIllustrations {
         Hibiscus(g, f.X - side - 0.035, f.Y + 0.02, 0.048, r.Range(-1, 0.2), Mix(c[0], c[2], 0.35), c[2], deep);
         Hibiscus(g, 0.16, 0.94, 0.036, r.Range(0, 1.2), c[0], c[2], deep);
         // A trailing vine from the top-left corner along the arch.
-        Vine(g, -0.01, 0.02, f.X - side + 0.04, f.Y - head - 0.01, Mix(c[1], deep, 0.3), c[1]);
+        Vine(g, 0.06, -0.012, f.X - side + 0.05, f.Y - head - 0.016, Mix(c[1], deep, 0.3), c[1]);
     }
 
     private static void Vine(QrSceneGeometry g, double x0, double y0, double x1, double y1, Rgba32 stem, Rgba32 leaf) {
@@ -150,7 +150,7 @@ internal static partial class QrSceneIllustrations {
 
         // The sign: a dark cabinet with a neon tube and a paper face, on two steel legs.
         s.Plate();
-        var m = 0.042; var frame = Mix(night, s.Ink, 0.5);
+        var m = 0.056; var frame = Mix(night, s.Ink, 0.5);
         var legTop = f.Bottom + m; var roof = Math.Min(0.95, Math.Max(legTop + 0.06, 0.8));
         foreach (var lx in new[] { f.X + f.Size * 0.24, f.Right - f.Size * 0.24 }) {
             g.Rect(Solid(frame), lx - 0.011, legTop - 0.01, 0.022, roof - legTop + 0.02);
@@ -190,6 +190,12 @@ internal static partial class QrSceneIllustrations {
             }
             x0 += w; index++;
         }
+        // A rooftop mast rises in front of the sign and crosses its lower edge, stopping below the code.
+        var mastX = f.X + f.Size * 0.1; var mastTop = f.Bottom + m * 0.45;
+        g.Rect(Solid(near), mastX - 0.004, mastTop, 0.008, roof - mastTop + 0.02);
+        g.Stroke(Solid(near), 0.004, mastX - 0.018, mastTop + 0.03, mastX + 0.018, mastTop + 0.03);
+        g.Circle(Solid(c[0], 0.35), mastX, mastTop, 0.012);
+        g.Circle(Solid(c[0]), mastX, mastTop, 0.0055);
         // Street and light trails.
         g.Rect(Solid(Mix(night, s.Ink, 0.7)), 0, 0.885, 1, 0.115);
         g.Stroke(Solid(c[0], 0.3), 0.012, -0.05, 0.9, 1.05, 0.906);
@@ -240,11 +246,10 @@ internal static partial class QrSceneIllustrations {
             g.Circle(Solid(Mix(s.Ink, c[3], 0.45)), left + 0.06, top + 0.05, 0.032);
             g.Circle(Solid(Mix(s.Ink, c[1], 0.35)), left + 0.06, top + 0.05, 0.012);
         }
-        for (var k = 0; k < 3; k++) {
-            var radius = 0.06 + k * 0.035; var cx = left + 0.06; var cy = floor - 0.36;
-            var arc = new List<double>();
-            for (var a = -2.7; a <= -1.35; a += 0.08) { arc.Add(cx + radius * Math.Cos(a)); arc.Add(cy + radius * Math.Sin(a)); }
-            g.Stroke(Solid(c[1], 0.9 - k * 0.22), 0.007, arc.ToArray());
+        // A level meter on top of the stack, in the stage colours.
+        for (var k = 0; k < 6; k++) {
+            var level = 0.025 + 0.05 * Math.Abs(Math.Sin(k * 1.7 + 0.4));
+            g.RoundRect(Solid(k % 3 == 2 ? c[0] : k % 2 == 0 ? c[1] : c[2]), left + 0.008 + k * 0.0185, floor - 0.32 - level, 0.013, level, 0.004);
         }
         // Light tower (right): a truss with three lamps.
         var tower = Math.Min(0.94, f.Right + m + 0.085);
@@ -264,7 +269,7 @@ internal static partial class QrSceneIllustrations {
         Crowd(g, r, floor + 0.035, 0.034, back, null, 0.25);
         Crowd(g, r, floor + 0.085, 0.044, front, c[2], 0.35);
         // One spotlight from the stage floor sweeps across the screen's lower-right corner, clear of the code.
-        g.Polygon(ScenePaint.Linear(f.Right, floor, f.Right + 0.25, 0, (0, Fade(Mix(c[2], paper, 0.4), 0.55)), (1, Fade(c[2], 0))),
+        g.Polygon(ScenePaint.Linear(f.Right, floor, f.Right + 0.25, 0, (0, Fade(Mix(c[2], paper, 0.55), 0.85)), (0.55, Fade(Mix(c[2], paper, 0.3), 0.45)), (1, Fade(c[2], 0))),
             f.Right - 0.002, floor, f.Right + 0.012, floor, f.Right + 0.33, -0.02, f.Right + 0.2, -0.02);
     }
 
@@ -332,21 +337,26 @@ internal static partial class QrSceneIllustrations {
         Fan(g, 0.93, 0.955, 0.13, Mix(c[2], c[0], 0.25));
         foreach (var (kx, height, phase) in new[] { (0.8, 0.15, 0.0), (0.83, 0.1, 1.3) })
             Kelp(g, kx, 0.97, height, phase, Mix(c[1], s.Ink, 0.35));
-        // A loose school around the bubble's right side: varied sizes, headings and depth. Smaller, farther fish
-        // are paler; one crosses the bubble's rim, well clear of the code.
-        var school = new List<(double Size, double X, double Y, double Heading)>();
-        for (var i = 0; i < 11; i++) {
-            var a = -1.0 + 2.0 * i / 10 + r.Range(-0.08, 0.08);
-            var d = radius + 0.035 + r.Range(0, 0.09);
-            school.Add((r.Range(0.014, 0.036), f.CenterX + d * Math.Cos(a), f.CenterY + d * Math.Sin(a), a - Math.PI / 2 + r.Range(-0.35, 0.35)));
+        // Fish of three kinds (round reef fish, tall angelfish, long slender fish) scattered through the open water
+        // to the right at varied sizes, headings and depths. Farther, smaller fish are paler; an angelfish crosses the
+        // bubble's rim on the side, well clear of the code.
+        var fish = new List<(double Size, double X, double Y, double Heading, int Kind)>();
+        for (var attempt = 0; attempt < 400 && fish.Count < 10; attempt++) {
+            var size = r.Range(0.018, 0.04);
+            var x = r.Range(f.CenterX + radius * 0.35, 0.96); var y = r.Range(0.05, 0.84);
+            if (Math.Sqrt((x - f.CenterX) * (x - f.CenterX) + (y - f.CenterY) * (y - f.CenterY)) < radius + 0.03 + size * 1.4) continue;
+            var clear = true;
+            foreach (var other in fish) if (Math.Abs(other.X - x) < (other.Size + size) * 1.9 && Math.Abs(other.Y - y) < (other.Size + size) * 1.4) clear = false;
+            if (!clear) continue;
+            fish.Add((size, x, y, (r.Next() < 0.7 ? -Math.PI / 2 - 0.5 : Math.PI) + r.Range(-0.45, 0.45), (int)(r.Next() * 3)));
         }
-        school.Add((0.032, f.CenterX + (radius + 0.004) * Math.Cos(0.3), f.CenterY + (radius + 0.004) * Math.Sin(0.3), 0.3 - Math.PI / 2 - 0.2));
-        school.Sort((a, b) => a.Size.CompareTo(b.Size));
+        fish.Add((0.034, f.CenterX + (radius + 0.004) * Math.Cos(0.25), f.CenterY + (radius + 0.004) * Math.Sin(0.25), -Math.PI / 2 - 0.35, 1));
+        fish.Sort((a, b) => a.Size.CompareTo(b.Size));
         var tint = 0;
-        foreach (var (size, x, y, heading) in school) {
-            var depth = 1 - (size - 0.014) / 0.022;
-            var body = (tint++ % 3 == 0 ? c[0] : c[2]);
-            Fish(g, x, y, size, heading, Mix(body, Mix(c[1], c[3], 0.4), 0.45 * depth), s.Ink);
+        foreach (var (size, x, y, heading, kind) in fish) {
+            var depth = Math.Max(0, 1 - (size - 0.018) / 0.02);
+            var body = tint++ % 3 == 0 ? c[0] : c[2];
+            Fish(g, x, y, size, heading, Mix(body, Mix(c[1], c[3], 0.4), 0.45 * depth), s.Ink, false, kind);
         }
         Fish(g, 0.11, 0.7, 0.05, -0.15, c[2], s.Ink, true);
         for (var i = 0; i < 7; i++) {
@@ -404,10 +414,30 @@ internal static partial class QrSceneIllustrations {
         }
     }
 
-    private static void Fish(QrSceneGeometry g, double x, double y, double size, double heading, Rgba32 color, Rgba32 ink, bool stripes = false) {
+    private static void Fish(QrSceneGeometry g, double x, double y, double size, double heading, Rgba32 color, Rgba32 ink, bool stripes = false, int kind = 0) {
         var cos = Math.Cos(heading); var sin = Math.Sin(heading);
         double X(double u, double v) => x + u * cos - v * sin;
         double Y(double u, double v) => y + u * sin + v * cos;
+        if (kind == 1) {
+            // Angelfish: a tall rhombic body with long swept fins.
+            var fin = QrSceneGeometry.Mix(color, ink, 0.22);
+            g.Polygon(ScenePaint.Solid(fin), X(-size * 0.1, -size * 0.5), Y(-size * 0.1, -size * 0.5), X(-size * 0.9, -size * 1.5), Y(-size * 0.9, -size * 1.5), X(-size * 0.55, -size * 0.2), Y(-size * 0.55, -size * 0.2));
+            g.Polygon(ScenePaint.Solid(fin), X(-size * 0.1, size * 0.5), Y(-size * 0.1, size * 0.5), X(-size * 0.9, size * 1.5), Y(-size * 0.9, size * 1.5), X(-size * 0.55, size * 0.2), Y(-size * 0.55, size * 0.2));
+            g.Polygon(ScenePaint.Solid(fin), X(-size * 0.6, 0), Y(-size * 0.6, 0), X(-size * 1.0, size * 0.28), Y(-size * 1.0, size * 0.28), X(-size * 1.0, -size * 0.28), Y(-size * 1.0, -size * 0.28));
+            g.Polygon(ScenePaint.Solid(color), X(size * 0.7, 0), Y(size * 0.7, 0), X(0, -size * 0.75), Y(0, -size * 0.75), X(-size * 0.65, 0), Y(-size * 0.65, 0), X(0, size * 0.75), Y(0, size * 0.75));
+            g.Fill(ScenePaint.Solid(QrSceneGeometry.Mix(color, ink, 0.4)), QrSceneGeometry.StrokeContours(size * 0.12, new[] { X(size * 0.1, -size * 0.62), Y(size * 0.1, -size * 0.62), X(size * 0.1, size * 0.62), Y(size * 0.1, size * 0.62) }));
+            g.Circle(ScenePaint.Solid(ink), X(size * 0.42, -size * 0.1), Y(size * 0.42, -size * 0.1), size * 0.08);
+            return;
+        }
+        if (kind == 2) {
+            // A long slender fish with a forked tail.
+            g.Polygon(ScenePaint.Solid(QrSceneGeometry.Mix(color, ink, 0.15)), X(-size * 1.15, 0), Y(-size * 1.15, 0), X(-size * 1.65, size * 0.36), Y(-size * 1.65, size * 0.36),
+                X(-size * 1.45, 0), Y(-size * 1.45, 0), X(-size * 1.65, -size * 0.36), Y(-size * 1.65, -size * 0.36));
+            g.Oval(ScenePaint.Solid(color), x, y, size * 1.35, size * 0.26, heading);
+            g.Fill(ScenePaint.Solid(QrSceneGeometry.Mix(color, new Rgba32(255, 255, 255), 0.55)), QrSceneGeometry.Ellipse(X(-size * 0.1, size * 0.06), Y(-size * 0.1, size * 0.06), size * 0.95, size * 0.06, heading, 32));
+            g.Circle(ScenePaint.Solid(ink), X(size * 0.95, -size * 0.06), Y(size * 0.95, -size * 0.06), size * 0.07);
+            return;
+        }
         g.Polygon(ScenePaint.Solid(QrSceneGeometry.Mix(color, ink, 0.15)), X(-size * 0.8, 0), Y(-size * 0.8, 0), X(-size * 1.35, size * 0.42), Y(-size * 1.35, size * 0.42),
             X(-size * 1.25, 0), Y(-size * 1.25, 0), X(-size * 1.35, -size * 0.42), Y(-size * 1.35, -size * 0.42));
         g.Oval(ScenePaint.Solid(color), x, y, size, size * 0.52, heading);
@@ -445,8 +475,13 @@ internal static partial class QrSceneIllustrations {
             var cx = f.CenterX + d * Math.Cos(a); var cy = f.CenterY + d * Math.Sin(a);
             // Keep each crater clear of the code square.
             if (Math.Abs(cx - f.CenterX) < half + size + 0.01 && Math.Abs(cy - f.CenterY) < half + size + 0.01) continue;
-            g.Circle(Solid(Mix(paper, c[3], 0.1)), cx, cy, size);
-            g.Circle(Solid(Mix(paper, c[3], 0.04)), cx + size * 0.22, cy + size * 0.22, size * 0.72);
+            // A crater: rim, a crescent of shadow on the upper left and a highlight on the lower right.
+            g.Circle(Solid(Mix(paper, c[3], 0.2)), cx, cy, size);
+            g.Circle(Solid(Mix(paper, c[3], 0.42)), cx - size * 0.08, cy - size * 0.08, size * 0.8);
+            g.Circle(Solid(Mix(paper, c[3], 0.14)), cx + size * 0.14, cy + size * 0.14, size * 0.68);
+            var glint = new List<double>();
+            for (var t = 0.1; t <= 1.45; t += 0.15) { glint.Add(cx + size * 0.86 * Math.Cos(t)); glint.Add(cy + size * 0.86 * Math.Sin(t)); }
+            g.Stroke(Solid(paper), size * 0.16, glint.ToArray());
         }
         var limb = new List<double>();
         for (var a = -0.35; a <= 2.0; a += 0.04) { limb.Add(f.CenterX + radius * Math.Cos(a)); limb.Add(f.CenterY + radius * Math.Sin(a)); }
