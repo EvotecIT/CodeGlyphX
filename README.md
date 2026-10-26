@@ -376,13 +376,13 @@ SVG exports are self-contained **hybrid images**: framing is vector geometry and
 
 ### Procedural art
 
-![Six locally drawn QR designs: marble, waves, sunburst, geometric tiles, botanical weave and circuits](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-procedural-art-gallery.png)
+![Six locally drawn QR designs: veined marble, layered waves, sunburst rays, Bauhaus tiles, leaves and circuit traces](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-procedural-art-gallery.png)
 
-`QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns.
+`QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns. Every motif is drawn from signed distances, so edges stay antialiased at any size.
 
 The browser art studio starts with six colorful presets. Edit the seed, density, rotation, four palette colors and paper color, then compare alternatives. Treatment, finder frames, color strength, module scale, detail protection and export resolution are adjustable. Switch to an uploaded image for focal-region and mask controls, or add an illustrated frame for PNG and hybrid SVG exports. Each result retains its original payload for later delivery checks.
 
-`QrArtPatternPresets` supplies editable palette and composition settings for each family. `QrArt.RenderPatternPng` renders the source artwork alone, so a preview and mask/layout search can use exactly the same pixels:
+`QrArtPatternPresets` supplies editable palette and composition settings for each family. The presets keep three or four related hues, carry the art through the finder, timing and format zones as deep and pale tints (`QrImageArtOptions.FunctionalTint`), wash the surrounding canvas (`QrImageCanvasOptions.ArtOpacity`) and round the quiet zone (`CornerRadiusModules`). The quiet zone itself always stays a solid light colour. `QrArt.RenderPatternPng` renders the source artwork alone, so a preview and mask/layout search can use exactly the same pixels:
 
 ```csharp
 var pattern = QrArtPatternPresets.CreatePatternOptions(QrArtPattern.Marble, seed: 2026);
@@ -430,7 +430,7 @@ The [procedural-art example](https://github.com/EvotecIT/CodeGlyphX/blob/master/
 
 ![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-scene-gallery.png)
 
-`QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Placement that clips the QR is rejected.
+`QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Each scene holds the code in a light backdrop that is part of the illustration (an arch, a billboard, a stage screen, a bubble, a moon or an arcade panel) and follows the QR placement. Placement that clips the QR is rejected.
 
 ```csharp
 using CodeGlyphX;
@@ -450,13 +450,13 @@ QrArt.ComposeScene(recipe.Payload, recipe.Design).SavePng("ocean-reopened.png");
 
 The browser art studio's **Illustrated scene** source offers six presets, palette and layer controls, logo upload, undo/reset, and recipe save/load. Downloaded results retain the payload and design used to render them. Editing controls does not change a completed export.
 
-Recipes are versioned local XML documents capped at 2 MiB of text. They copy settings and any embedded logo, preserve UTF-8 payloads including control characters, and reject DTDs, external resources and unknown fields. Logo input is limited to 1 MiB and one million decoded pixels. Captions use the portable outlined font: Latin letters, digits, spaces and `-./:()+?`; lowercase letters render as capitals. Paper and QR ink must meet the documented light/dark luminance limits.
+Recipes are versioned local XML documents capped at 2 MiB of text. They copy settings and any embedded logo, preserve UTF-8 payloads including control characters, and reject DTDs, external resources and unknown fields. Logo input is limited to 1 MiB and one million decoded pixels. Captions are real outline type in the canvas caption face (RetroArcade keeps seamless pixel type) and accept Latin letters, digits, spaces and `-./:()+?`; lowercase letters render as capitals. Paper and QR ink must meet the documented light/dark luminance limits.
 
 Run the [scene-gallery example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrSceneGalleryExample.cs) with `CODEGLYPHX_SCENE_GALLERY=1` to export all six scenes, thumbnails and recipes. `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Check the actual PNG with `QrArt.ValidateImage` and qualify delivery sizes and target devices before distribution; these software checks do not certify physical printing or phone cameras.
 
 ### Scene exports and delivery sizes
 
-Finished scenes export illustration polygons and caption outlines to SVG. QR contours follow the canonical PNG renderer's pixel reference grid, including connected modules and protected functional patterns. They remain vector paths at any zoom; fine contour steps reflect the selected reference resolution. Uploaded logos are normalized to bounded embedded PNGs. SVGs contain no external image or font references.
+Finished scenes export illustration shapes, gradients and caption outlines to SVG. QR contours follow the canonical PNG renderer's pixel reference grid, including connected modules and protected functional patterns. They remain vector paths at any zoom; fine contour steps reflect the selected reference resolution. Uploaded logos are normalized to bounded embedded PNGs. SVGs contain no external image or font references.
 
 ```csharp
 var print = scene.Export(new QrSceneExportOptions {
