@@ -237,21 +237,24 @@ var report = QrArt.ValidateImage(png, payload);
 if (report.AllPassed) File.WriteAllBytes("artistic-qr.png", png);
 ```
 
-`ColorModules` (the default) adapts the luminance of every image pixel to its QR module, with small contrasting centers for local-threshold readers. `ImageOverlay` reveals more image detail around contrasting square module centers; `CenterSize` controls their width when `Art` is not set. `Strength` ranges from 0 (plain black/white) to 1 (most image color). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
+`ColorModules` (the default) tints every module from the image itself: dark modules become a darkened image colour and light modules a lightened one, so the photo keeps its hue and tonal variation without a grey veil or centre dots. Functional patterns use the same tint with stronger contrast. `ImageOverlay` reveals more of the image around soft, round module dots; the tint fades out before each module edge, so no grid is drawn across the photo. `CenterSize` sets the dot size when `Art` is not set. `Strength` ranges from 0 (plain black/white) to 1 (most image colour). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
 
-`Halftone3x3` divides each data module into nine equal sub-cells. Error diffusion follows the supplied image, while the centre sub-cell is forced to the encoded dark or light value. All functional patterns and the quiet zone stay solid. Use a module size divisible by three; `Strength` controls the image's contribution before dithering. This is separate from the decorative stipple treatment named `Art.Style = Halftone`.
+Short payloads make coarse photo codes, so `QrArt.Compose` encodes at least version 6 (`MinimumVersion`, 1..40). Longer payloads still get the larger version they need. `QrImageComposer.Render` and `QrArt.SearchImage` use the versions they are given or explore. `Compose` also decodes its own result with the native decoder and throws `InvalidOperationException` with suggestions when the payload is not recovered; set `VerifyDecode = false` only for decorative output that you verify separately.
+
+`Halftone3x3` divides each data module into nine equal sub-cells. Error diffusion follows the supplied image after a mild contrast stretch, while the centre sub-cell is forced to the encoded dark or light value. Where the photo strongly opposes a module, at least five of its nine sub-cells take the module's colour, so small prints and blurred copies still read. `Strength` above 0.7 is capped for the same reason. All functional patterns and the quiet zone stay solid. Use a module size divisible by three. Set `Duotone` for a two-colour print: the default is a deep navy ink on warm cream paper, and both colours can be changed within enforced luminance bounds. This is separate from the decorative stipple treatment named `Art.Style = Halftone`.
 
 ```csharp
 var halftone = QrArt.Compose(payload, File.ReadAllBytes("portrait.png"),
     new QrImageCompositionOptions {
         Style = QrImageCompositionStyle.Halftone3x3,
         ModuleSize = 18,
-        Strength = 0.75
+        Strength = 0.75,
+        Duotone = new QrImageDuotoneOptions() // Optional; omit for black and white.
     });
 halftone.SavePng("portrait-qr.png");
 ```
 
-`ImageBackground` retains the source colours around opaque module centres. Use `CenterSize` to balance image visibility and scanning contrast; for example, start at `0.7` with an 18-pixel module. Neither new treatment combines with `Art` silhouettes. Validate the exported PNG at the delivery size with `QrArt.ValidateImage`, then check an independent reader and the intended phones or printed media. The limited native decoder on legacy runtimes can reject compositions accepted by modern .NET; rendering support does not establish legacy scan validation.
+`ImageBackground` keeps the photo across the whole symbol, including the finder, timing and alignment zones. Modules are antialiased dots tinted from the photo's luminance, and the finder and alignment patterns are rounded, photo-tinted rings with a soft light separator instead of hard white blocks. Use `CenterSize` to balance image visibility and scanning contrast; for example, start at `0.7` with an 18-pixel module. Neither `Halftone3x3` nor `ImageBackground` combines with `Art` silhouettes. Validate the exported PNG at the delivery size with `QrArt.ValidateImage`, then check an independent reader and the intended phones or printed media. The limited native decoder on legacy runtimes can reject compositions accepted by modern .NET; rendering support does not establish legacy scan validation.
 
 The legacy `QrImageDecoder` also locates axis-aligned QR finder patterns in the actual image. Captions, frame borders and detailed logos no longer have to share the QR's dark bounding rectangle. It still samples the supplied pixels and performs the normal module/error-correction checks; this does not replace checking camera images or printed output.
 
