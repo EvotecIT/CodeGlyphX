@@ -35,7 +35,7 @@ public sealed class QrCanvasCaptionTests {
         var options = Options(template, position);
         options.BackgroundSupersample = supersample;
         options.Canvas!.Frame = new QrCanvasFrameOptions { Color = new Rgba32(0, 0, 255) };
-        options.Canvas.Caption!.Text = "SCAN ME";
+        options.Canvas.Caption!.Text = "Zażółć gęślą jaźń";
         options.Canvas.Caption.FontSizePx = 28;
         options.Canvas.Caption.PaddingPx = captionPadding;
         options.Canvas.Caption.Color = new Rgba32(255, 0, 255);
@@ -71,6 +71,21 @@ public sealed class QrCanvasCaptionTests {
         Canvas = new QrCanvasOptions { PaddingPx = 32, Template = template,
             Caption = new QrCanvasCaptionOptions { Text = "Scan to explore", Position = position } }
     };
+
+    [Fact]
+    public void DefaultCaptionFont_PreservesPolishAndRejectsUnavailableGlyphs() {
+        var caption = new QrCanvasCaptionOptions();
+        Assert.Same(BarcodeFont.ManropeMedium, caption.Font);
+        Assert.Equal(QrCanvasCaptionWeight.Regular, caption.Weight);
+        Assert.Contains("Manrope", caption.Font.Name);
+        const string polish = "Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ";
+        var shaped = caption.Font.Shape(polish, 32);
+        Assert.Equal(polish, shaped.Text);
+        Assert.Empty(shaped.MissingGlyphs);
+        Assert.False(shaped.HasIncompleteShaping);
+        Assert.NotEmpty(shaped.Contours);
+        Assert.Throws<ArgumentException>(() => caption.Font.Shape("\u4e16", 32));
+    }
 
     [Theory]
     [MemberData(nameof(Templates))]
@@ -113,6 +128,7 @@ public sealed class QrCanvasCaptionTests {
         var font = BarcodeFont.FromBytes(memory.ToArray());
         var input = new QrRenderOptions { ArtGuardrailsEnabled = false, Canvas = Options(QrCanvasTemplate.CornerViewfinder, QrCanvasCaptionPosition.Top).Canvas };
         input.Canvas!.Caption!.Font = font; input.Canvas.Caption.Text = "Zażółć gęślą jaźń";
+        input.Canvas.Caption.Weight = QrCanvasCaptionWeight.Bold;
         var copy = QrRenderer.CloneOptions(input);
         Assert.NotSame(input.Canvas, copy.Canvas); Assert.NotSame(input.Canvas.Caption, copy.Canvas!.Caption);
         Assert.Same(font, copy.Canvas.Caption!.Font);

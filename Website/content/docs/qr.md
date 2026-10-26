@@ -56,7 +56,7 @@ File.WriteAllBytes("brand.png", result.GetPng());
 
 ### Captions and call-to-action frames
 
-A caption stays outside the complete quiet zone. Its default cap height scales with the code width; long text shrinks to a readable floor and then wraps to two lines. `FontSizePx` sets an explicit em size when needed. The bundled default remains Scan B. Supply a licensed TTF or OTF for another face; captions use the managed outline engine and do not depend on installed fonts.
+A caption stays outside the complete quiet zone. Its default cap height scales with the code width; long text shrinks to a readable floor and then wraps to two lines. `FontSizePx` sets an explicit em size when needed. The bundled default is Manrope Medium with Latin Extended, including Polish text such as `Zażółć gęślą jaźń`. Its Medium outlines render unchanged by default; `Weight = QrCanvasCaptionWeight.Bold` adds synthetic bold. Supply a licensed TTF or OTF for another face; captions use the managed outline engine and do not depend on installed fonts. Strict text handling rejects unavailable glyphs instead of silently substituting another face.
 
 ```csharp
 using CodeGlyphX.Printing;

@@ -41,6 +41,19 @@ Supplied font programs have their own licenses. The font fixtures used by the te
 
 The copied bidirectional mirroring table is generated from Unicode 17.0.0 `BidiMirroring.txt`, copyright (c) 1991-2026 Unicode, Inc. The [Unicode License V3](Licenses/Unicode-LICENSE.txt) is retained in the package.
 
+## Bundled caption font
+
+Manrope Medium is derived from Manrope, copyright 2018 The Manrope Project
+Authors, under the SIL Open Font License 1.1. Source: <https://github.com/googlefonts/manrope>.
+The bundled face is instantiated at weight 500 and subset to Latin, Latin Extended,
+combining marks and common punctuation. The subset includes Polish captions.
+The full copyright and OFL text are retained in `Licenses/Manrope-OFL.txt`
+and the font's license metadata, including embedded assembly-only copies.
+The package includes the font under `Fonts/`, its licence under `Licenses/`,
+and source URLs and SHA-256 hashes in `Fonts/caption-provenance.json`.
+`Build/Prepare-CaptionFontAsset.py` reproduces the asset from pinned local inputs;
+Python and fontTools are not required to build or use CodeGlyphX.
+
 ## Bundled OCR text fonts
 
 GG Ocra is included unchanged from FontLab's GetGo Fonts, commit
