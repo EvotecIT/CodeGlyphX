@@ -36,8 +36,8 @@ public static partial class QrArt {
         pattern ??= new QrArtPatternOptions();
         composition ??= new QrImageCompositionOptions {
             ModuleSize = 16, Strength = 0.95,
-            Canvas = new QrImageCanvasOptions { PaddingModules = 10 },
-            Art = new QrImageArtOptions { Scale = 0.95, DetailProtection = 0.35, Finders = QrImageFinderStyle.Rounded }
+            Canvas = new QrImageCanvasOptions { PaddingModules = 10, ArtOpacity = 0.45 },
+            Art = new QrImageArtOptions { Scale = 0.95, DetailProtection = 0.35, Finders = QrImageFinderStyle.Rounded, FunctionalTint = 1 }
         };
         composition.Validate();
         var rasterizer = new QrPatternRasterizer(pattern);
@@ -45,7 +45,8 @@ public static partial class QrArt {
         var side = (qr.Size + 2 * composition.QuietZone + 2 * (composition.Canvas?.PaddingModules ?? 0)) * composition.ModuleSize;
         RenderGuards.EnsureOutputPixels(side, side, "Procedural QR composition exceeds output limits.");
         RenderGuards.EnsureOutputBytes((long)side * side * 4, "Procedural QR composition exceeds output limits.");
-        var sourceSize = Math.Min(512, side);
+        // Draw the procedural source at the exact area it covers, so edges stay sharp instead of being upscaled.
+        var sourceSize = composition.Canvas is null || composition.Canvas.PaddingModules == 0 ? qr.Size * composition.ModuleSize : side;
         var source = rasterizer.Draw(sourceSize, cancellationToken);
         return QrImageComposer.Render(qr, source, sourceSize, sourceSize, composition, cancellationToken);
     }
