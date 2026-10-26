@@ -6,7 +6,7 @@ namespace CodeGlyphX.Rendering;
 internal static class QrShapeGeometry {
     internal static bool Connected(QrModuleShape shape) => shape is QrModuleShape.Liquid
         or QrModuleShape.ConnectedRounded or QrModuleShape.ConnectedSquircle
-        or QrModuleShape.BarsVertical or QrModuleShape.BarsHorizontal;
+        or QrModuleShape.BarsVertical or QrModuleShape.BarsHorizontal or QrModuleShape.Classy;
 
     // Neighbour bits are N, E, S, W. Coordinates are relative to the cell, not pixel centres.
     internal static bool Contains(QrModuleShape shape, double x, double y, double scale = 1,
@@ -36,7 +36,8 @@ internal static class QrShapeGeometry {
             case QrModuleShape.Leaf:
                 return Rounded(u, v, 0.5, true, false, true, false);
             case QrModuleShape.CutCorner: return dx + dy <= 1.65;
-            case QrModuleShape.Classy: return Rounded(u, v, 0.5, true, false, false, false);
+            case QrModuleShape.Classy: return Rounded(u, v, 0.5, (neighbours & 9) == 0,
+                (neighbours & 3) == 0, (neighbours & 6) == 0, (neighbours & 12) == 0);
             case QrModuleShape.ExtraRounded: return Rounded(u, v, 0.5, true, true, true, true);
             case QrModuleShape.BarsVertical:
                 return Rounded(u, v, 0.5, (neighbours & 1) == 0, (neighbours & 1) == 0,
@@ -69,6 +70,18 @@ internal static class QrShapeGeometry {
                     !connected || (neighbours & 3) == 0, !connected || (neighbours & 6) == 0,
                     !connected || (neighbours & 12) == 0);
         }
+    }
+
+    internal static bool ContainsEye(QrModuleShape shape, double x, double y, double radius = 0, int outwardCorner = -1) {
+        // Mirrored leaf eyes have one outward tip. Preserve the legacy lens for callers
+        // that did not request the outward-oriented eye treatment.
+        if (shape == QrModuleShape.Leaf && outwardCorner < 0) return Contains(shape, x, y, radius: radius);
+        if (outwardCorner == 1) x = 1 - x;
+        if (outwardCorner == 2) y = 1 - y;
+        if (shape is QrModuleShape.Leaf or QrModuleShape.Classy)
+            return x >= 0 && x <= 1 && y >= 0 && y <= 1 && Rounded(x, y,
+                shape == QrModuleShape.Leaf ? .35 : .25, false, true, true, true);
+        return Contains(shape, x, y, radius: radius);
     }
 
     private static bool Rounded(double x, double y, double r, bool tl, bool tr, bool br, bool bl) {

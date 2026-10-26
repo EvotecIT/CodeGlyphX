@@ -38,7 +38,7 @@ public static partial class QrPngRenderer {
     private static void DrawCoverageModule(byte[] buffer, int stride, int moduleSize, int mx, int my, int quiet,
         int offsetX, int offsetY, Rgba32 color, GradientInfo? gradient, QrForegroundPatternOptions? pattern,
         QrModuleShape shape, double scale, int radius, int neighbours, int originX, int originY, int qrSize,
-        int jitterX, int jitterY) {
+        int jitterX, int jitterY, double timingThickness = 0) {
         var x0 = offsetX + (mx + quiet) * moduleSize;
         var y0 = offsetY + (my + quiet) * moduleSize;
         for (var y = 0; y < moduleSize; y++) {
@@ -46,13 +46,20 @@ public static partial class QrPngRenderer {
                 var hits = 0;
                 for (var sy = 0; sy < 4; sy++)
                     for (var sx = 0; sx < 4; sx++)
-                        if (QrShapeGeometry.Contains(shape, (x - jitterX + (sx + 0.5) / 4) / moduleSize,
-                            (y - jitterY + (sy + 0.5) / 4) / moduleSize, scale, radius / (double)moduleSize, neighbours)) hits++;
+                        if (Contains((x - jitterX + (sx + .5) / 4) / moduleSize,
+                            (y - jitterY + (sy + .5) / 4) / moduleSize)) hits++;
                 if (hits == 0) continue;
                 var ink = gradient.HasValue ? GetGradientColor(gradient.Value, x0 + x, y0 + y, originX, originY) : color;
                 if (!ApplyStyledPattern(pattern, moduleSize, x0 + x, y0 + y, originX, originY, qrSize, ref ink)) continue;
                 BlendPixelAt(buffer, (y0 + y) * (stride + 1) + 1 + (x0 + x) * 4, CoverageColor(ink, hits));
             }
+        }
+        bool Contains(double u, double v) {
+            if (timingThickness > 0 && my == 6 && mx >= 8 && mx < qrSize / moduleSize - 8)
+                return Math.Abs(v - .5) <= timingThickness / 2 && Math.Abs(u - .5) <= .275;
+            if (timingThickness > 0 && mx == 6 && my >= 8 && my < qrSize / moduleSize - 8)
+                return Math.Abs(u - .5) <= timingThickness / 2 && Math.Abs(v - .5) <= .275;
+            return QrShapeGeometry.Contains(shape, u, v, scale, radius / (double)moduleSize, neighbours);
         }
     }
 
@@ -65,7 +72,7 @@ public static partial class QrPngRenderer {
         _ => shape,
     };
 
-    private static void DrawStyledFinder(byte[] buffer, int stride, QrPngRenderOptions opts,
+    private static void DrawStyledFinder(byte[] buffer, int stride, QrPngRenderOptions opts, BitMatrix modules,
         int originX, int originY, int qrSize, int mx, int my, int cells, int index) {
         var m = opts.ModuleSize;
         var eye = opts.Eyes;
@@ -103,32 +110,59 @@ public static partial class QrPngRenderer {
             for (var x = 0; x < pixels; x++) {
                 var ringHits = 0;
                 var ballHits = 0;
+                var bodyHits = 0;
                 for (var sy = 0; sy < 4; sy++)
                     for (var sx = 0; sx < 4; sx++) {
                         var xx = (x + (sx + 0.5) / 4) / m;
                         var yy = (y + (sy + 0.5) / 4) / m;
-                        if (QrShapeGeometry.Contains(outerShape, xx / cells, yy / cells, radius: outerRadius)
-                            && !QrShapeGeometry.Contains(outerShape, (xx - 1) / (cells - 2), (yy - 1) / (cells - 2), radius: holeRadius)
+                        var thickness = eye?.RingThicknessModules ?? 1;
+                        // Keep a thin stroke centred on the standard ring's centreline.
+                        // Expanding only its aperture shifts the ring and breaks finder run ratios.
+                        var outerInset = (1 - thickness) / 2;
+                        var holeInset = 1 - outerInset;
+                        var outerSpan = cells - 2 * outerInset;
+                        var holeSpan = cells - 2 * holeInset;
+                        if (index < 0 && !QrShapeGeometry.ContainsEye(outerShape, (xx - outerInset) / outerSpan, (yy - outerInset) / outerSpan, radius: outerRadius, outwardCorner: eye?.MirrorOutward == true ? (index < 0 ? 3 : index) : -1)) {
+                            var cellX = Math.Min(cells - 1, (int)xx); var cellY = Math.Min(cells - 1, (int)yy);
+                            var qx = mx + cellX; var qy = my + cellY;
+                            if (modules[qx, qy] && QrShapeGeometry.Contains(opts.ModuleShape, xx - cellX, yy - cellY,
+                                opts.ModuleScale, opts.ModuleCornerRadiusPx / (double)m, GetNeighborMask(modules, qx, qy))) bodyHits++;
+                        }
+                        if (QrShapeGeometry.ContainsEye(outerShape, (xx - outerInset) / outerSpan, (yy - outerInset) / outerSpan, radius: outerRadius, outwardCorner: eye?.MirrorOutward == true ? (index < 0 ? 3 : index) : -1)
+                            && !QrShapeGeometry.ContainsEye(outerShape, (xx - holeInset) / holeSpan, (yy - holeInset) / holeSpan, radius: holeRadius, outwardCorner: eye?.MirrorOutward == true ? (index < 0 ? 3 : index) : -1)
                             && StyledFrameRingVisible(frame, xx, yy, cells)) ringHits++;
-                        if (QrShapeGeometry.Contains(ballShape, (xx - 2) / (cells - 4), (yy - 2) / (cells - 4), radius: ballRadius)) ballHits++;
+                        if (QrShapeGeometry.ContainsEye(ballShape, (xx - 2) / (cells - 4), (yy - 2) / (cells - 4), radius: ballRadius, outwardCorner: eye?.MirrorOutward == true ? (index < 0 ? 3 : index) : -1)) ballHits++;
                     }
                 var p = (top + y) * (stride + 1) + 1 + (left + x) * 4;
                 var modulePalette = ResolveStyledPalette(palette, zones, mx + x / m, my + y / m, true);
                 var paletteInk = modulePalette.HasValue ? GetPaletteColor(modulePalette.Value, mx + x / m, my + y / m) : (Rgba32?)null;
+                var bodyInk = paletteInk ?? (global.HasValue ? GetGradientColor(global.Value, left + x, top + y, originX, originY) : opts.Foreground);
+                if (!ApplyStyledPattern(opts.ForegroundPattern?.ApplyToModules == true ? opts.ForegroundPattern : null,
+                    m, left + x, top + y, originX, originY, qrSize, ref bodyInk)) bodyHits = 0;
+                var red = bodyInk.R * bodyInk.A * bodyHits;
+                var green = bodyInk.G * bodyInk.A * bodyHits;
+                var blue = bodyInk.B * bodyInk.A * bodyHits;
+                var alpha = bodyInk.A * bodyHits;
                 if (ringHits > 0) {
                     var ink = og.HasValue ? GetGradientColorInBox(og.Value, left + x, top + y, left, top)
                         : paletteInk ?? (global.HasValue && eye?.OuterColor is null && eye?.OuterColors is null
                             ? GetGradientColor(global.Value, left + x, top + y, originX, originY) : outer);
-                    if (ApplyStyledPattern(pattern, m, left + x, top + y, originX, originY, qrSize, ref ink))
-                        BlendPixelAt(buffer, p, CoverageColor(ink, ringHits));
+                    if (ApplyStyledPattern(pattern, m, left + x, top + y, originX, originY, qrSize, ref ink)) {
+                        red += ink.R * ink.A * ringHits; green += ink.G * ink.A * ringHits;
+                        blue += ink.B * ink.A * ringHits; alpha += ink.A * ringHits;
+                    }
                 }
                 if (ballHits > 0) {
                     var ink = ig.HasValue ? GetGradientColorInBox(ig.Value, left + x, top + y, left + 2 * m, top + 2 * m)
                         : paletteInk ?? (global.HasValue && eye?.InnerColor is null && eye?.InnerColors is null
                             ? GetGradientColor(global.Value, left + x, top + y, originX, originY) : inner);
-                    if (ApplyStyledPattern(pattern, m, left + x, top + y, originX, originY, qrSize, ref ink))
-                        BlendPixelAt(buffer, p, CoverageColor(ink, ballHits));
+                    if (ApplyStyledPattern(pattern, m, left + x, top + y, originX, originY, qrSize, ref ink)) {
+                        red += ink.R * ink.A * ballHits; green += ink.G * ink.A * ballHits;
+                        blue += ink.B * ink.A * ballHits; alpha += ink.A * ballHits;
+                    }
                 }
+                if (alpha > 0) BlendPixelAt(buffer, p, new Rgba32((byte)(red / alpha), (byte)(green / alpha),
+                    (byte)(blue / alpha), (byte)((alpha + 8) / 16)));
             }
     }
 
@@ -151,7 +185,7 @@ public static partial class QrPngRenderer {
                     for (var cx = -1; cx <= 1; cx += 2) {
                         if (!modules[mx + cx, my] || !modules[mx, my + cy] || !modules[mx + cx, my + cy]) continue;
                         if (!LiquidAt(mx + cx, my) || !LiquidAt(mx, my + cy) || !LiquidAt(mx + cx, my + cy)) continue;
-                        var r = m * 0.28;
+                        var r = m * 0.4;
                         for (var y = 0; y < Math.Ceiling(r); y++)
                             for (var x = 0; x < Math.Ceiling(r); x++) {
                                 var hits = 0;

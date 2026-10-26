@@ -1898,7 +1898,7 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
-    public void Render_With_Functional_Protection_Preserves_Dark_Module_Color_And_Coverage() {
+    public void Render_With_Functional_Protection_StylesTheFixedDarkModuleLikeTheBody() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
         var size = qr.Size;
 
@@ -1931,9 +1931,12 @@ public sealed class QrPngRendererTests {
         var py = (opts.QuietZone + darkModuleY) * opts.ModuleSize;
         var p = py * stride + px * 4;
 
-        Assert.Equal(0, rgba[p + 0]);
-        Assert.Equal(0, rgba[p + 1]);
-        Assert.Equal(0, rgba[p + 2]);
+        Assert.Equal(255, rgba[p + 0]);
+        Assert.Equal(255, rgba[p + 1]);
+        Assert.Equal(255, rgba[p + 2]);
+        var center = (py + opts.ModuleSize / 2) * stride + (px + opts.ModuleSize / 2) * 4;
+        Assert.Equal(0, rgba[center + 1]);
+        Assert.True(rgba[center] == 255 || rgba[center + 2] == 255, "The fixed dark module uses the selected palette ink.");
     }
 
     [Fact]

@@ -6,6 +6,11 @@ namespace CodeGlyphX.Rendering;
 /// Styling overrides for QR finder (eye) patterns.
 /// </summary>
 public sealed class QrEyeOptions {
+    /// <summary>Mirror asymmetric finder shapes towards each outer corner.</summary>
+    public bool MirrorOutward { get; set; }
+    /// <summary>Outer ring width in modules, from 0.5 to 1. The separator and ball retain their centres.</summary>
+    public double RingThicknessModules { get; set; } = 1;
+
     /// <summary>
     /// Legacy framing switch, retained for source compatibility. Finder rings and balls are always
     /// whole shapes; <see cref="FrameStyle"/> selects the decorative treatment.
@@ -19,6 +24,7 @@ public sealed class QrEyeOptions {
 
     /// <summary>
     /// Gets or sets the whole outer (7x7) finder shape, surrounding a 5x5 light aperture.
+    /// Leaf eyes have one tip; MirrorOutward orients it towards each outer corner.
     /// </summary>
     public QrModuleShape OuterShape { get; set; } = QrModuleShape.Square;
 
@@ -282,6 +288,7 @@ public sealed class QrEyeOptions {
     public bool AccentStripeAllowOnQrBackground { get; set; }
 
     internal void Validate() {
+        if (RingThicknessModules < .5 || RingThicknessModules > 1 || double.IsNaN(RingThicknessModules)) throw new ArgumentOutOfRangeException(nameof(RingThicknessModules));
         if (OuterScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(OuterScale));
         if (InnerScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(InnerScale));
         if (GlowRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(GlowRadiusPx));

@@ -299,31 +299,35 @@ public sealed class QrArtWave1ScanTests {
         }
     }
 
-    internal sealed record ScanObservation(int Size, string Transform, string? StrictText, string? LibraryText) {
-        internal bool StrictPassed => StrictText == Payload;
-        internal bool LibraryPassed => LibraryText == Payload;
+    internal sealed record ScanObservation(int Size, string Transform, string? StrictText, string? LibraryText, string Expected = Payload) {
+        internal bool StrictPassed => StrictText == Expected;
+        internal bool LibraryPassed => LibraryText == Expected;
         public override string ToString() => $"{Size}/{Transform}: ZXing={StrictPassed}; library={LibraryPassed}";
     }
 
     // Shared only with the task-owned diagnostic runner. No decoder result is inferred from a
     // heuristic score, and no failing style is silently counted as a successful scan.
     internal static IEnumerable<ScanObservation> ScanMatrix(QrRenderOptions options) {
-        var png = RenderPng(options);
+        return ScanImage(RenderPng(options), Payload);
+    }
+
+    internal static IEnumerable<ScanObservation> ScanImage(byte[] png, string payload) {
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
         foreach (var size in new[] { 1024, 512, 256 }) {
-            var resized = ResizeArea(rgba, width, height, size);
+            var targetHeight = (int)Math.Round(size * height / (double)width);
+            var resized = ResizeArea(rgba, width, height, size, targetHeight);
             foreach (var transform in new[] { "plain", "rotate2deg", "blur121" }) {
-                var pixels = transform == "rotate2deg" ? Rotate2Degrees(resized, size)
-                    : transform == "blur121" ? Blur(resized, size) : resized;
+                var pixels = transform == "rotate2deg" ? Rotate2Degrees(resized, size, targetHeight)
+                    : transform == "blur121" ? Blur(resized, size, targetHeight) : resized;
                 var reader = new BarcodeReaderGeneric {
                     AutoRotate = false,
                     Options = new DecodingOptions { TryHarder = false, PureBarcode = false, TryInverted = false,
                         PossibleFormats = new[] { BarcodeFormat.QR_CODE } }
                 };
-                var strict = reader.Decode(new RGBLuminanceSource(pixels, size, size, RGBLuminanceSource.BitmapFormat.RGBA32));
-                var decoded = QrDecoder.TryDecode(pixels, size, size, size * 4, PixelFormat.Rgba32,
+                var strict = reader.Decode(new RGBLuminanceSource(pixels, size, targetHeight, RGBLuminanceSource.BitmapFormat.RGBA32));
+                var decoded = QrDecoder.TryDecode(pixels, size, targetHeight, size * 4, PixelFormat.Rgba32,
                     out var library);
-                yield return new ScanObservation(size, transform, strict?.Text, decoded ? library.Text : null);
+                yield return new ScanObservation(size, transform, strict?.Text, decoded ? library.Text : null, payload);
             }
         }
     }
@@ -380,11 +384,11 @@ public sealed class QrArtWave1ScanTests {
     }
 
     // Independent pixel transforms intentionally do not call the production scaler or filters.
-    private static byte[] ResizeArea(byte[] source, int width, int height, int size) {
-        var target = new byte[size * size * 4];
+    private static byte[] ResizeArea(byte[] source, int width, int height, int size, int targetHeight) {
+        var target = new byte[size * targetHeight * 4];
         var scaleX = width / (double)size;
-        var scaleY = height / (double)size;
-        for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
+        var scaleY = height / (double)targetHeight;
+        for (var y = 0; y < targetHeight; y++) for (var x = 0; x < size; x++) {
             var x0 = x * scaleX; var x1 = (x + 1) * scaleX;
             var y0 = y * scaleY; var y1 = (y + 1) * scaleY;
             for (var channel = 0; channel < 3; channel++) {
@@ -403,13 +407,13 @@ public sealed class QrArtWave1ScanTests {
         return target;
     }
 
-    private static byte[] Rotate2Degrees(byte[] source, int size) {
+    private static byte[] Rotate2Degrees(byte[] source, int size, int targetHeight) {
         var target = new byte[source.Length];
         var radians = Math.PI / 90;
-        var cos = Math.Cos(radians); var sin = Math.Sin(radians); var center = (size - 1) / 2.0;
-        for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
-            var sx = cos * (x - center) + sin * (y - center) + center;
-            var sy = -sin * (x - center) + cos * (y - center) + center;
+        var cos = Math.Cos(radians); var sin = Math.Sin(radians); var center = (size - 1) / 2.0; var centerY = (targetHeight - 1) / 2.0;
+        for (var y = 0; y < targetHeight; y++) for (var x = 0; x < size; x++) {
+            var sx = cos * (x - center) + sin * (y - centerY) + center;
+            var sy = -sin * (x - center) + cos * (y - centerY) + centerY;
             var ix = (int)Math.Floor(sx); var iy = (int)Math.Floor(sy);
             var fx = sx - ix; var fy = sy - iy;
             for (var c = 0; c < 3; c++) {
@@ -420,17 +424,17 @@ public sealed class QrArtWave1ScanTests {
             target[(y * size + x) * 4 + 3] = 255;
         }
         return target;
-        byte Sample(int x, int y, int channel) => x < 0 || y < 0 || x >= size || y >= size ? (byte)255 : source[(y * size + x) * 4 + channel];
+        byte Sample(int x, int y, int channel) => x < 0 || y < 0 || x >= size || y >= targetHeight ? (byte)255 : source[(y * size + x) * 4 + channel];
     }
 
-    private static byte[] Blur(byte[] source, int size) {
+    private static byte[] Blur(byte[] source, int size, int targetHeight) {
         var target = new byte[source.Length];
         var weights = new[] { 1, 2, 1 };
-        for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
+        for (var y = 0; y < targetHeight; y++) for (var x = 0; x < size; x++) {
             for (var c = 0; c < 3; c++) {
                 var sum = 0;
                 for (var yy = -1; yy <= 1; yy++) for (var xx = -1; xx <= 1; xx++)
-                    sum += source[(Math.Clamp(y + yy, 0, size - 1) * size + Math.Clamp(x + xx, 0, size - 1)) * 4 + c] * weights[yy + 1] * weights[xx + 1];
+                    sum += source[(Math.Clamp(y + yy, 0, targetHeight - 1) * size + Math.Clamp(x + xx, 0, size - 1)) * 4 + c] * weights[yy + 1] * weights[xx + 1];
                 target[(y * size + x) * 4 + c] = (byte)((sum + 8) / 16);
             }
             target[(y * size + x) * 4 + 3] = 255;

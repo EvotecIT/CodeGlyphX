@@ -80,8 +80,15 @@ internal static partial class QrRenderer {
         var logo = BuildPngLogo(opts);
         if (logo is not null) render.Logo = logo;
 
-        ApplyArtGuardrails(qr, render, opts);
-        if (opts.ArtGuardrailsEnabled && HasArtHints(render, opts)) NormalizeFinderContrast(render);
+        if (opts.HeroPreset is null) {
+            ApplyArtGuardrails(qr, render, opts);
+            if (opts.ArtGuardrailsEnabled && HasArtHints(render, opts)) NormalizeFinderContrast(render);
+        } else {
+            // Validate curated appearances as drawn with the native pixel gate, preserving
+            // the declared stops instead of replacing them with generic heuristic ink.
+            render.QuietZone = Math.Max(4, render.QuietZone);
+            render.ProtectQuietZone = true;
+        }
         if (opts.TargetSizePx > 0) {
             var targetModules = moduleCount + (opts.TargetSizeIncludesQuietZone ? render.QuietZone * 2 : 0);
             if (opts.TargetSizePx < targetModules)
@@ -92,6 +99,7 @@ internal static partial class QrRenderer {
                     : checked(opts.TargetSizePx + render.QuietZone * render.ModuleSize * 2);
         }
 
+        if (opts.HeroPreset.HasValue) ApplyHeroLayout(render, qr, opts.HeroPreset.Value);
         return render;
     }
 
@@ -174,6 +182,10 @@ internal static partial class QrRenderer {
         logo.DrawBackground = opts.LogoDrawBackground;
         logo.Background = opts.LogoBackground ?? opts.Background;
         logo.CornerRadiusPx = opts.LogoCornerRadiusPx;
+        logo.PlateShape = ResolvePlateShape(opts);
+        logo.RingColor = opts.LogoRingColor;
+        logo.RingWidthPx = opts.LogoRingWidthPx;
+        logo.Tint = opts.LogoTint;
         return logo;
     }
 

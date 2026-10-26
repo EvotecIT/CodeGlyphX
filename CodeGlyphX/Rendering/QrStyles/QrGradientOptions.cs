@@ -6,6 +6,9 @@ namespace CodeGlyphX.Rendering;
 /// Options for a foreground gradient fill.
 /// </summary>
 public sealed class QrGradientOptions {
+    /// <summary>Colour space used between stops. OKLCH preserves vivid hue; sRGB is available for legacy artwork.</summary>
+    public QrGradientInterpolation Interpolation { get; set; } = QrGradientInterpolation.Oklch;
+
     /// <summary>
     /// Gets or sets the gradient type.
     /// </summary>
@@ -32,6 +35,7 @@ public sealed class QrGradientOptions {
     public double CenterY { get; set; } = 0.5;
 
     internal void Validate() {
+        if (!Enum.IsDefined(typeof(QrGradientInterpolation), Interpolation)) throw new ArgumentOutOfRangeException(nameof(Interpolation));
         if (CenterX is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(CenterX));
         if (CenterY is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(CenterY));
     }

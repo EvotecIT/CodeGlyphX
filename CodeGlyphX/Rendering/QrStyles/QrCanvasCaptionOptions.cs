@@ -19,15 +19,24 @@ public enum QrCanvasCaptionWeight {
     Bold
 }
 
-/// <summary>A single-line canvas caption shared by PNG and canonical SVG output.</summary>
+/// <summary>A measured canvas caption shared by PNG and canonical SVG output.</summary>
 public sealed class QrCanvasCaptionOptions {
-    /// <summary>Exact caption text, limited to 256 UTF-16 characters without line breaks.</summary>
+    /// <summary>Optional second line, rendered smaller than the headline.</summary>
+    public string Subline { get; set; } = string.Empty;
+    /// <summary>Optional camera or phone silhouette before the caption.</summary>
+    public QrCanvasCaptionIcon Icon { get; set; }
+    /// <summary>Optional fallback URL, placed below the code independently of caption position.</summary>
+    public string Url { get; set; } = string.Empty;
+    /// <summary>Loads a caller-supplied TTF, OTF or supported font collection without installed fonts.</summary>
+    public static QrCanvasCaptionOptions FromFontBytes(byte[] fontData) => new() { Font = BarcodeFont.FromBytes(fontData) };
+
+    /// <summary>Exact headline text, limited to 256 UTF-16 characters without explicit line breaks.</summary>
     public string Text { get; set; } = "SCAN ME";
     /// <summary>Immutable portable font. The bundled Scan B face provides an ASCII default.
     /// Load a suitable face with BarcodeFont.FromBytes for supported Unicode text.</summary>
     public BarcodeFont Font { get; set; } = BarcodeFont.OcrB;
-    /// <summary>Requested em size in pixels, from 8 to 256. Long lines shrink to fit, down to 8 pixels.</summary>
-    public int FontSizePx { get; set; } = 24;
+    /// <summary>Requested em size in pixels, from 8 to 256; zero sizes cap height to 4.5% of the code width. Long text shrinks to a readable floor, then wraps to two lines.</summary>
+    public int FontSizePx { get; set; } = 0;
     /// <summary>Outline weight.</summary>
     public QrCanvasCaptionWeight Weight { get; set; } = QrCanvasCaptionWeight.Bold;
     /// <summary>Text colour, or null for contrasting dark/light text selected for the template.</summary>
@@ -44,15 +53,18 @@ public sealed class QrCanvasCaptionOptions {
 
     internal void Validate() {
         if (Text is null || Text.Length > 256) throw new ArgumentException("Caption text must contain at most 256 characters.", nameof(Text));
+        if (Subline is null || Subline.Length > 256 || Url is null || Url.Length > 256) throw new ArgumentException("Caption lines must contain at most 256 characters.");
+        if (!Enum.IsDefined(typeof(QrCanvasCaptionIcon), Icon)) throw new ArgumentOutOfRangeException(nameof(Icon));
+        if (Text.IndexOfAny(new[] { '\r', '\n' }) >= 0 || Subline.IndexOfAny(new[] { '\r', '\n' }) >= 0 || Url.IndexOfAny(new[] { '\r', '\n' }) >= 0) throw new ArgumentException("Use Subline for a second caption line.");
         if (Font is null) throw new ArgumentNullException(nameof(Font));
-        if (FontSizePx < 8 || FontSizePx > 256) throw new ArgumentOutOfRangeException(nameof(FontSizePx));
+        if (FontSizePx != 0 && (FontSizePx < 8 || FontSizePx > 256)) throw new ArgumentOutOfRangeException(nameof(FontSizePx));
         if (PaddingPx < 4 || PaddingPx > 256) throw new ArgumentOutOfRangeException(nameof(PaddingPx));
         if (!Enum.IsDefined(typeof(QrCanvasCaptionPosition), Position)) throw new ArgumentOutOfRangeException(nameof(Position));
         if (!Enum.IsDefined(typeof(QrCanvasCaptionWeight), Weight)) throw new ArgumentOutOfRangeException(nameof(Weight));
     }
 
     internal QrCanvasCaptionOptions Copy(int scale = 1) => new() {
-        Text = Text, Font = Font, FontSizePx = checked(FontSizePx * scale), Weight = Weight,
+        Text = Text, Subline = Subline, Icon = Icon, Url = Url, Font = Font, FontSizePx = checked(FontSizePx * scale), Weight = Weight,
         Color = Color, Position = Position, PaddingPx = checked(PaddingPx * scale), StrictText = StrictText,
         RasterScale = checked(RasterScale * scale)
     };
@@ -74,4 +86,14 @@ public enum QrCanvasTemplate {
     RoundedCardHeader,
     /// <summary>Four framing corners and a plain caption.</summary>
     CornerViewfinder
+}
+
+/// <summary>Portable vector silhouettes available before a caption.</summary>
+public enum QrCanvasCaptionIcon {
+    /// <summary>No icon.</summary>
+    None,
+    /// <summary>Camera outline and lens.</summary>
+    Camera,
+    /// <summary>Phone outline and home indicator.</summary>
+    Phone
 }

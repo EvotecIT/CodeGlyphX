@@ -9,6 +9,15 @@ namespace CodeGlyphX.Rendering;
 /// Options and pixel data for a centered logo overlay in a QR raster output.
 /// </summary>
 public sealed class QrRasterLogoOptions {
+    /// <summary>Plate silhouette. MatchEyes is resolved by the high-level renderer.</summary>
+    public QrLogoPlateShape PlateShape { get; set; } = QrLogoPlateShape.RoundedSquare;
+    /// <summary>Optional inset plate ring colour.</summary>
+    public Rgba32? RingColor { get; set; }
+    /// <summary>Inset ring width in pixels.</summary>
+    public int RingWidthPx { get; set; }
+    /// <summary>Optional monochrome ink for the supplied logo.</summary>
+    public Rgba32? Tint { get; set; }
+
     /// <summary>
     /// Logo pixels in RGBA order, row-major, tightly packed.
     /// </summary>

@@ -14,7 +14,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/ink-dark.png",
           "width": 672,
           "height": 672,
@@ -38,7 +38,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/dotmatrix-dark.png",
           "width": 672,
           "height": 672,
@@ -62,7 +62,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/sunset-dark.png",
           "width": 672,
           "height": 672,
@@ -86,7 +86,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/ocean-dark.png",
           "width": 672,
           "height": 672,
@@ -110,7 +110,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/monoclassy-dark.png",
           "width": 672,
           "height": 672,
@@ -153,7 +153,7 @@
           }
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/brand-dark.png",
           "width": 672,
           "height": 672,
@@ -188,7 +188,7 @@
       "description": "Evening events and screen displays.",
       "variants": [
         {
-          "name": "Light",
+          "name": "Dark design",
           "src": "/assets/hero-presets/neon-light.png",
           "width": 688,
           "height": 688,
@@ -196,7 +196,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark design",
           "src": "/assets/hero-presets/neon-dark.png",
           "width": 688,
           "height": 688,
@@ -214,16 +214,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/papercutout-light.png",
-          "width": 674,
-          "height": 676,
+          "width": 732,
+          "height": 739,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/papercutout-dark.png",
-          "width": 674,
-          "height": 676,
+          "width": 732,
+          "height": 739,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -238,16 +238,16 @@
         {
           "name": "Light",
           "src": "/assets/hero-presets/retropixel-light.png",
-          "width": 666,
-          "height": 666,
+          "width": 668,
+          "height": 668,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/retropixel-dark.png",
-          "width": 666,
-          "height": 666,
+          "width": 668,
+          "height": 668,
           "decoded": "https://codeglyphx.com",
           "budget": null
         }
@@ -268,7 +268,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/minimalline-dark.png",
           "width": 672,
           "height": 672,
@@ -292,7 +292,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/botanical-dark.png",
           "width": 672,
           "height": 672,
@@ -316,7 +316,7 @@
           "budget": null
         },
         {
-          "name": "Dark panel",
+          "name": "Dark",
           "src": "/assets/hero-presets/berry-dark.png",
           "width": 672,
           "height": 672,

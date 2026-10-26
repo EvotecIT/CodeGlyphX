@@ -33,7 +33,7 @@ internal static class HeroSpecimens {
                 ImageReader.DecodeRgba32(png, out var width, out var height);
                 var file = preset.ToString().ToLowerInvariant() + (dark ? "-dark.png" : "-light.png");
                 File.WriteAllBytes(Path.Combine(directory, file), png);
-                variants.Add(new { name = dark ? "Dark panel" : "Light", src = "/assets/hero-presets/" + file, width, height, decoded = payload, budget });
+                variants.Add(new { name = preset == QrHeroPreset.Neon ? "Dark design" : dark ? "Dark" : "Light", src = "/assets/hero-presets/" + file, width, height, decoded = payload, budget });
             }
             var code = preset == QrHeroPreset.Brand
                 ? "var appearance = QrArt.Hero(QrHeroPreset.Brand);\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\",\n    File.ReadAllBytes(\"logo.png\"),\n    new CodeGlyphX.Rendering.Art.QrLogoRenderOptions { Appearance = appearance });\nFile.WriteAllBytes(\"brand.png\", result.GetPng());"
