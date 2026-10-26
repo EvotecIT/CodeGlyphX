@@ -1,4 +1,4 @@
-name: Validate Website and Apply Cloudflare Policy
+name: Deploy Website to GitHub Pages
 
 on:
   push:
@@ -36,16 +36,31 @@ jobs:
       engine_mode: source
       runner_labels_json: '["ubuntu-latest"]'
       timeout_minutes: 60
+      upload_pages_artifact: true
+      pages_artifact_path: Website/_site
       powerforge_repository: EvotecIT/PSPublishModule
       powerforge_ref: 396e00acba04dcaae4c3c95433338f4df65fbc01
       report_artifact_name: codeglyphx-website-deploy-reports
-      site_artifact_name: powerforge-site-codeglyphx.com
-      site_artifact_retention_days: 7
     secrets:
       indexnow_key: ${{ secrets.INDEXNOW_KEY }}
 
-  site-policy:
+  deploy:
     needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+  site-policy:
+    needs: [build, deploy]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: production
@@ -57,10 +72,11 @@ jobs:
         with:
           ref: ${{ needs.build.outputs.source_sha }}
 
-      - name: Apply managed Cloudflare site policy
+      - name: Apply managed Cloudflare site policy and purge the deployed hostname
         uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-site-policy@396e00acba04dcaae4c3c95433338f4df65fbc01
         with:
           site-config: Website/site.json
           checkout-caller: "false"
           zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
           api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          purge-after-policy: "true"

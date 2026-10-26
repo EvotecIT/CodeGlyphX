@@ -60,15 +60,13 @@ The home page (`content/pages/index.md`, layout `landing`) reads committed data.
 
 ## Deploy + Recovery
 
-- Production pull timer: `../deploy/linux/systemd/codeglyphx-site-pull.timer`
-- Host pull configuration: `../deploy/linux/codeglyphx.site-pull.env.example`
-- Build and Cloudflare policy workflow: `../.github/workflows/website-deploy.yml`
-- Encrypted recovery workflow: `../.github/workflows/server-backup.yml`
-- Host recovery manifest: `../deploy/linux/codeglyphx.serverrecovery.json`
-- The OVH host fetches `master` over HTTPS, checks public GitHub release changes, builds with the pinned PowerForge revision, and promotes the site through the shared `powerforge-site-deploy` runtime. The root-owned host configuration holds the Cloudflare purge token; encrypted recovery capture includes it.
-- The protected `production` environment retains Cloudflare policy credentials and backup credentials. The backup job runs from the fixed-egress self-hosted runner and keeps its repository write key off OVH.
-- Shared PowerForge actions and runtimes own cache policy, promotion, purge, provenance checks, rollback, and backup publication. Do not add repo-local deployment or Cloudflare scripts.
-- Canonical deployment and cache guidance lives in `<Evotec repo root>/PSPublishModule/Docs` and `Deployment/Linux`.
+- Production hosting: GitHub Pages at `https://codeglyphx.com`, behind Cloudflare.
+- Deployment workflow: `../.github/workflows/website-deploy.yml`, using the pinned shared PowerForge website build and Cloudflare policy actions plus GitHub's Pages deployment action.
+- Pushes affecting the site on `master`, published releases, and manual dispatch build and deploy `Website/_site`. GitHub Pages uses the Actions publishing source and the protected `github-pages` environment.
+- The protected `production` environment's `CLOUDFLARE_ZONE_ID` variable and existing organization secret `CLOUDFLARE_API_TOKEN` supply the post-deployment Cloudflare policy action. The build receives no Cloudflare credential. Keep cache rules and response headers in `site.json`; GitHub Pages does not interpret `_headers`.
+- The site and playground are static. Blazor WebAssembly runs in the visitor's browser; there is no CodeGlyphX server API, database, or scheduled host build.
+- Recovery is a deployment from a known good source revision through the same workflow. Do not add repo-local deployment, Cloudflare, or server backup scripts.
+- See `HOSTING.md` for the hosting contract and migration rollback boundary.
 
 ## Theme Best Practices (Nav Stability)
 

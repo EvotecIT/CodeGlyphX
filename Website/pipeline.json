@@ -403,7 +403,7 @@
         "dev"
       ],
       "siteRoot": "./_site",
-      "include": "__agent-content-security-only__.html",
+      "include": "index.html",
       "checkLinks": false,
       "checkAssets": false,
       "checkNav": false,
@@ -431,6 +431,27 @@
       "failOnCategories": "agent-content",
       "summary": true,
       "summaryPath": "./_reports/agent-content-audit.json"
+    },
+    {
+      "task": "seo-doctor",
+      "id": "verify-deployment-seo",
+      "dependsOn": "audit-agent-content",
+      "modes": ["ci"],
+      "siteRoot": "./_site",
+      "failOnWarnings": true,
+      "checkTitleLength": false,
+      "checkDescriptionLength": false,
+      "checkH1": false,
+      "checkImageAlt": false,
+      "checkDuplicateTitles": false,
+      "checkOrphanPages": false,
+      "checkContentLeaks": true,
+      "requireCanonical": true,
+      "requireHreflang": false,
+      "requireHreflangXDefault": false,
+      "exclude": "404.html,404/**,**/*.scripts.html,**/*.head.html",
+      "reportPath": "./_reports/deployment-seo.json",
+      "summaryPath": "./_reports/deployment-seo.md"
     },
     {
       "task": "doctor",
