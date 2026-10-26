@@ -12,12 +12,16 @@ public enum QrImageCompositionStyle {
     /// <summary>
     /// Photo first: the image stays full-bleed and unaltered across each module, and only a small square centre mark
     /// (sized by CenterSize; 0.45 module by default) carries the dark or light value. Where the image opposes a mark, it is
-    /// nudged slightly towards it around the mark. Finders and alignment patterns are rounded, image-tinted rings; <see cref="QrImageCompositionOptions.SolidFunctionPatterns"/> restores solid black and white function patterns.
+    /// nudged slightly towards it around the mark. Dark photos leave the least scan margin of all photo treatments;
+    /// QrArt.Compose refuses output that does not decode. Finders and alignment patterns are rounded, image-tinted rings; <see cref="QrImageCompositionOptions.SolidFunctionPatterns"/> restores solid black and white function patterns.
     /// </summary>
     ImageOverlay,
     /// <summary>
     /// Dither the supplied image into 3 by 3 sub-cells per module, forcing the centre sub-cell to the encoded bit.
     /// Black and white by default; <see cref="QrImageCompositionOptions.Duotone"/> selects a two-colour ink and paper.
+    /// Works best with high-contrast subjects such as portraits, silhouettes, logos and bold shapes. Low-contrast or
+    /// flat-colour scenes, such as soft landscapes, may not stay recognisable within the scan limits; use ColorModules
+    /// or ImageBackground for those.
     /// </summary>
     Halftone3x3,
     /// <summary>
