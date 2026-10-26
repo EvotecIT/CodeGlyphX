@@ -133,6 +133,7 @@ public static partial class QrPngRenderer {
             : null;
         var useFrame = QrStructureAnalysis.TryGetVersionFromSize(size, out _) && HasStandardFinders(modules);
         var alignmentCenters = useFrame ? GetStyledAlignmentCenters(size) : new List<(int X, int Y)>();
+        modules = KnockOutLogoModules(modules, opts.Logo, opts.ModuleSize, out var logoKnockout);
         var background = opts.Background;
         var gradientInfo = opts.ForegroundGradient is null
             ? (GradientInfo?)null
@@ -341,7 +342,7 @@ public static partial class QrPngRenderer {
 
         if (opts.ModuleShape == QrModuleShape.Liquid || opts.ModuleShapeMap?.PrimaryShape == QrModuleShape.Liquid
             || opts.ModuleShapeMap?.SecondaryShape == QrModuleShape.Liquid) {
-            DrawLiquidInnerCorners(buffer, stride, modules, opts, qrOriginX, qrOriginY, qrSizePx, alignmentCenters);
+            DrawLiquidInnerCorners(buffer, stride, modules, opts, qrOriginX, qrOriginY, qrSizePx, alignmentCenters, logoKnockout);
         }
         if (useFrame) {
             DrawStyledFinder(buffer, stride, opts, modules, qrOriginX, qrOriginY, qrSizePx, 0, 0, 7, 0);

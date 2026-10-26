@@ -178,7 +178,7 @@ public static partial class QrPngRenderer {
     }
 
     private static void DrawLiquidInnerCorners(byte[] buffer, int stride, BitMatrix modules, QrPngRenderOptions opts,
-        int originX, int originY, int qrSize, List<(int X, int Y)> alignments) {
+        int originX, int originY, int qrSize, List<(int X, int Y)> alignments, BitMatrix? logoKnockout) {
         var m = opts.ModuleSize;
         var gradient = opts.ForegroundGradient is null ? (GradientInfo?)null : new GradientInfo(opts.ForegroundGradient, qrSize - 1, qrSize - 1);
         var structural = QrStructureAnalysis.TryGetVersionFromSize(modules.Width, out var version)
@@ -189,7 +189,7 @@ public static partial class QrPngRenderer {
         var shapeMap = opts.ModuleShapeMap is null ? (ModuleShapeMapInfo?)null : new ModuleShapeMapInfo(opts.ModuleShapeMap, modules.Width);
         for (var my = 1; my < modules.Height - 1; my++)
             for (var mx = 1; mx < modules.Width - 1; mx++) {
-                if (modules[mx, my] || TryGetEye(mx, my, modules.Width, out _, out _, out _) || IsStyledAlignmentCell(mx, my, alignments)) continue;
+                if (modules[mx, my] || logoKnockout?[mx, my] == true || TryGetEye(mx, my, modules.Width, out _, out _, out _) || IsStyledAlignmentCell(mx, my, alignments)) continue;
                 // Leave timing and encoded format/version bits untouched, including their light cells.
                 if (structural is not null && structural[mx, my]) continue;
                 for (var cy = -1; cy <= 1; cy += 2)

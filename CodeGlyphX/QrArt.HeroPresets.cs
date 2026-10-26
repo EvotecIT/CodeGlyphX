@@ -108,14 +108,14 @@ public static partial class QrArt {
         if (darkPanel || preset == QrHeroPreset.Neon) {
             var ground = preset switch {
                 QrHeroPreset.Ocean => new Rgba32(5, 20, 40),
-                QrHeroPreset.Sunset => new Rgba32(38, 12, 32),
+                QrHeroPreset.Sunset => new Rgba32(42, 18, 6),
                 QrHeroPreset.Botanical => new Rgba32(12, 30, 20),
                 QrHeroPreset.Berry => new Rgba32(34, 12, 35),
                 QrHeroPreset.DotMatrix => new Rgba32(10, 20, 39),
                 QrHeroPreset.MonoClassy => new Rgba32(35, 31, 27),
                 QrHeroPreset.Ink => new Rgba32(15, 17, 20),
                 QrHeroPreset.MinimalLine => new Rgba32(24, 26, 25),
-                QrHeroPreset.Brand => new Rgba32(35, 15, 22),
+                QrHeroPreset.Brand => new Rgba32(49, 8, 21),
                 QrHeroPreset.PaperCutout => new Rgba32(42, 31, 21),
                 QrHeroPreset.RetroPixel => new Rgba32(37, 24, 32),
                 _ => new Rgba32(20, 6, 44)
@@ -143,6 +143,11 @@ public static partial class QrArt {
             var wash = preset == QrHeroPreset.Neon ? new Rgba32(123, 43, 255) : accent;
             options.Canvas.BackgroundGradient!.EndColor = new Rgba32((byte)((ground.R * 3 + wash.R * 2) / 5),
                 (byte)((ground.G * 3 + wash.G * 2) / 5), (byte)((ground.B * 3 + wash.B * 2) / 5));
+            if (preset == QrHeroPreset.Sunset) {
+                options.Canvas.BackgroundGradient.EndColor = new Rgba32(122, 42, 14);
+                options.Canvas.PanelGlowColor = new Rgba32(255, 111, 24, 150);
+                options.Canvas.SecondaryPanelGlowColor = new Rgba32(224, 36, 122, 120);
+            }
             if (preset != QrHeroPreset.PaperCutout)
                 options.Canvas.PanelGlowColor ??= new Rgba32(accent.R, accent.G, accent.B, 150);
         }

@@ -95,6 +95,6 @@ public enum QrCanvasCaptionIcon {
     None,
     /// <summary>Camera outline and lens.</summary>
     Camera,
-    /// <summary>Phone outline and home indicator.</summary>
+    /// <summary>Handset silhouette.</summary>
     Phone
 }

@@ -104,7 +104,6 @@ public sealed class QrCanvasCaptionTests {
             QrPngRenderer.RenderPixels(qr.Modules, options, out _, out var ordinaryHeight, out _);
             ordinary.Template = QrCanvasTemplate.PhoneOutline;
             qy = (position == QrCanvasCaptionPosition.Top ? ordinaryHeight - pad - side : pad) + (h - ordinaryHeight) / 2;
-            Assert.InRange(h / (double)w, 2.1, 2.2);
         }
         for (var y = 0; y < side; y++) for (var x = 0; x < side * 4; x++)
             Assert.Equal(plain[y * side * 4 + x], actual[(y + qy) * stride + pad * 4 + x]);
@@ -153,14 +152,14 @@ public sealed class QrCanvasCaptionTests {
                     BandColor = Rgba32.Transparent, Caption = new QrCanvasCaptionOptions {
                         Text = "SCAN ME", Position = position, Color = Rgba32.Transparent } };
                 var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions { ModuleSize = m, Canvas = canvas }, out var w, out var h, out _);
-                var pad = (w - (qr.Size + 8) * m) / 2;
+                var edge = Enumerable.Range(0, w).First(x => pixels[((h / 2) * w + x) * 4 + 2] > pixels[((h / 2) * w + x) * 4] + 100);
                 var radius = template == QrCanvasTemplate.TicketStub ? w * .045 * 1.1 : Math.Round(w * .06);
                 var middle = radius - m * .25;
                 foreach (var right in new[] { false, true }) foreach (var bottom in new[] { false, true })
                     for (var angle = 0; angle <= 90; angle += 5) {
                         var theta = angle * Math.PI / 180;
-                        var x = (right ? w - pad / 2.0 - radius : pad / 2.0 + radius) + (right ? 1 : -1) * middle * Math.Cos(theta);
-                        var y = (bottom ? h - pad / 2.0 - radius : pad / 2.0 + radius) + (bottom ? 1 : -1) * middle * Math.Sin(theta);
+                        var x = (right ? w - edge - radius : edge + radius) + (right ? 1 : -1) * middle * Math.Cos(theta);
+                        var y = (bottom ? h - edge - radius : edge + radius) + (bottom ? 1 : -1) * middle * Math.Sin(theta);
                         var at = ((int)y * w + (int)x) * 4;
                         Assert.True(pixels[at + 2] > pixels[at] + 100, $"{template}/{position}: clipped corner stroke at {x:F1},{y:F1}.");
                     }

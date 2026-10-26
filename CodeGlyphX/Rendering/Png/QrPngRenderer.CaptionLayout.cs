@@ -19,17 +19,24 @@ public static partial class QrPngRenderer {
 
     private static int CaptionCanvasPadding(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
         var t = CaptionStrokeWidth(canvas, moduleSize);
-        var minimum = CaptionCanvasPadding(canvas);
+        var safe = FrameOuterSafeMargin(canvas, qr, moduleSize, quiet);
+        var minimum = Math.Max(CaptionCanvasPadding(canvas), safe);
+        // A 6% corner radius must clear the square panel at 45 degrees,
+        // including half the stroke and its antialiasing support.
+        var cornerPadding = (int)Math.Ceiling((safe + qr * .018 + t * .5 + 2) / .964);
         return canvas.Template switch {
-        QrCanvasTemplate.PhoneOutline => Math.Max(Math.Max(minimum, 4 * t), (int)Math.Ceiling(((qr - quiet * 2 * moduleSize) / .8 - qr + 4 * t) / 2)),
+        QrCanvasTemplate.PhoneOutline => Math.Max(Math.Max(minimum, safe + 3 * t), safe + (int)Math.Ceiling(((qr - quiet * 2 * moduleSize) / .8 - qr + 4 * t) / 2)),
         // The inner edge of the corner stroke must clear the entire square quiet zone.
-        QrCanvasTemplate.TicketStub => Math.Max(minimum, (int)Math.Ceiling(qr * .066)),
-        QrCanvasTemplate.RoundedCardHeader => Math.Max(minimum, (int)Math.Ceiling(qr * .07)),
+        QrCanvasTemplate.TicketStub => Math.Max(Math.Max(minimum, cornerPadding), (int)Math.Ceiling(qr * .076)),
+        QrCanvasTemplate.RoundedCardHeader => Math.Max(minimum, cornerPadding),
         // A complete bracket sits outside the quiet zone, including its round stroke caps.
-        QrCanvasTemplate.CornerViewfinder => Math.Max(minimum, (int)Math.Ceiling(Math.Max(3, t * 1.5) + t + Math.Max(2, t))),
+        QrCanvasTemplate.CornerViewfinder => Math.Max(minimum, safe + (int)Math.Ceiling(Math.Max(3, t * 1.5) + t)),
         _ => minimum
         };
     }
+
+    private static int FrameOuterSafeMargin(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) =>
+        Math.Max(MeasureCaption(canvas, qr, moduleSize, quiet).CapHeight, (int)Math.Ceiling(qr * .035));
 
     private static int CaptionStrokeWidth(QrCanvasOptions canvas, int moduleSize) => canvas.StrokeWidthPx > 0
         ? canvas.StrokeWidthPx : Math.Max(2 * (canvas.Caption?.RasterScale ?? 1), (int)Math.Round(moduleSize * .5));
@@ -53,7 +60,13 @@ public static partial class QrPngRenderer {
         if (canvas.Template == QrCanvasTemplate.TicketStub) plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(qr * .07));
         if (canvas.Template == QrCanvasTemplate.CornerViewfinder)
             plan.Gap = Math.Max(plan.Gap, (int)Math.Ceiling(Math.Max(3, CaptionStrokeWidth(canvas, moduleSize) * 1.5) + CaptionStrokeWidth(canvas, moduleSize) + cap));
-        plan.IconWidth = caption.Icon != QrCanvasCaptionIcon.None || canvas.BandLogoPng is not null ? (int)Math.Ceiling(cap * 1.6) : 0;
+        int IconSize(double em) {
+            var x = caption.Font.Shape("x", em, strict: false);
+            return Math.Max(4, (int)Math.Round(x.MissingGlyphs.Count == 0 ? x.InkBounds.Height : em * capUnit * .75));
+        }
+        int IconWidth(double em) => caption.Icon != QrCanvasCaptionIcon.None || canvas.BandLogoPng is not null
+            ? (int)Math.Ceiling(IconSize(em) * (canvas.BandLogoPng is null && caption.Icon == QrCanvasCaptionIcon.Camera ? 1 / .84 : 1) + em * .35) : 0;
+        plan.IconWidth = IconWidth(size);
         var available = plan.CodeWidth - 2 * plan.HorizontalClearance - plan.IconWidth;
         if (available <= 0) throw new ArgumentException("Caption padding leaves no readable text area.");
         BarcodeTextShape Shape(string text, double em) {
@@ -81,8 +94,8 @@ public static partial class QrPngRenderer {
         }
         if (plan.Lines.Count == 0) plan.Lines.Add((Shape(caption.Text, size), size));
         plan.CapHeight = Math.Max(1, (int)Math.Ceiling(plan.Lines[0].Size * capUnit));
-        var xHeight = caption.Font.Shape("x", plan.Lines[0].Size, strict: false);
-        plan.IconSize = Math.Max(4, (int)Math.Round(xHeight.MissingGlyphs.Count == 0 ? xHeight.InkBounds.Height : plan.CapHeight * .75));
+        plan.IconSize = IconSize(plan.Lines[0].Size);
+        plan.IconWidth = IconWidth(plan.Lines[0].Size);
         if (caption.Subline.Length > 0) {
             var subSize = size * .65;
             var sub = Shape(caption.Subline, subSize);
@@ -118,9 +131,11 @@ public static partial class QrPngRenderer {
     }
 
     private static int CaptionCanvasBodyHeight(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
-        var ordinary = qr + 2 * CaptionCanvasPadding(canvas, qr, moduleSize, quiet) + CaptionCanvasHeight(canvas, qr, moduleSize, quiet);
+        var width = qr + 2 * CaptionCanvasPadding(canvas, qr, moduleSize, quiet);
+        var ordinary = width + CaptionCanvasHeight(canvas, qr, moduleSize, quiet);
+        var safe = FrameOuterSafeMargin(canvas, qr, moduleSize, quiet);
         return canvas.Template == QrCanvasTemplate.PhoneOutline
-            ? Math.Max(ordinary, (int)Math.Ceiling((qr + 2 * CaptionCanvasPadding(canvas, qr, moduleSize, quiet)) * 19.5 / 9)) : ordinary;
+            ? Math.Max(ordinary, (int)Math.Ceiling((width - 2 * safe) * 19.5 / 9) + 2 * safe) : ordinary;
     }
 
     private static void PaintCaptionShape(byte[] pixels, int width, int height, int stride, BarcodeTextShape shape, int tx, int ty, Rgba32 color) {

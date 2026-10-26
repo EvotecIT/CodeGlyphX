@@ -28,6 +28,9 @@ internal static partial class QrRenderer {
             render.ModuleShape = QrModuleShape.ConnectedRounded;
             render.ModuleCornerRadiusPx = Math.Max(1, (int)Math.Round(render.ModuleSize * .5));
         }
+        // Whole-module knockouts need more correction margin around a dense leaf plate.
+        if (hero == QrHeroPreset.Botanical && qr.Version >= 5 && render.Logo is { Scale: .20 } botanicalLogo)
+            botanicalLogo.Scale = .17;
         if (hero == QrHeroPreset.Brand && render.Eyes?.OuterCornerRadiusPx == 16) render.Eyes.OuterCornerRadiusPx = render.ModuleSize;
         if (hero is QrHeroPreset.Brand or QrHeroPreset.Berry && render.ModuleShape == QrModuleShape.Rounded)
             render.ModuleCornerRadiusPx = Math.Max(1, (int)Math.Round(render.ModuleSize * .2));
@@ -45,7 +48,7 @@ internal static partial class QrRenderer {
         var darkPadding = hero switch {
             QrHeroPreset.DotMatrix => .19,
             QrHeroPreset.Botanical => .191,
-            QrHeroPreset.MinimalLine => .191,
+            QrHeroPreset.MinimalLine => .199,
             QrHeroPreset.RetroPixel => .182,
             QrHeroPreset.Ocean or QrHeroPreset.Sunset => .18,
             _ => .181
@@ -62,8 +65,10 @@ internal static partial class QrRenderer {
         }
         if (hero == QrHeroPreset.Neon) {
             canvas.PanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * .03125));
-            canvas.SecondaryPanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * .095));
+            canvas.SecondaryPanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * .1425));
         }
+        if (hero == QrHeroPreset.Sunset && darkGround)
+            canvas.SecondaryPanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * .07));
         if (hero == QrHeroPreset.PaperCutout) {
             canvas.ShadowOnPanelsOnly = darkGround;
             canvas.StackedPanelOffsetPx = Math.Max(1, (int)Math.Round(full * .012));

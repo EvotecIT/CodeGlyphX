@@ -13,13 +13,10 @@ public static partial class QrPngRenderer {
         var ink = canvas.StrokeColor ?? canvas.Frame?.Color ?? defaultInk;
         var band = canvas.BandColor ?? ink;
         var foreground = caption?.Color ?? ink;
-        var pad = CaptionCanvasPadding(canvas, qr, moduleSize, quiet);
         var t = CaptionStrokeWidth(canvas, moduleSize);
-        var left = x + pad / 2; var right = x + w - pad / 2;
-        var upper = y + pad / 2; var lower = y + h - pad / 2;
-        if (canvas.Template == QrCanvasTemplate.PhoneOutline) {
-            left = x + t; right = x + w - t; upper = y + t; lower = y + h - t;
-        }
+        var safe = FrameOuterSafeMargin(canvas, qr, moduleSize, quiet);
+        var left = x + safe; var right = x + w - safe;
+        var upper = y + safe; var lower = y + h - safe;
         var radius = canvas.Template == QrCanvasTemplate.PhoneOutline ? w / 9 : (int)Math.Round(w * .06);
         var pillWidth = Math.Min(plan.CodeWidth, plan.Width + 2 * plan.HorizontalClearance);
         var pillLeft = qx + (qr - pillWidth) / 2;
@@ -39,6 +36,11 @@ public static partial class QrPngRenderer {
         var notchGap = Math.Sqrt(Math.Max(0, notchReach * notchReach - sideClearance * sideClearance));
         var dividerInset = Math.Max(0, Math.Min(plan.Gap / 2.0, plan.Gap - notchGap));
         var divider = top ? sy + plan.Height + dividerInset : sy - dividerInset;
+        // Leave a complete dash-gap between each notch arc and the perforation.
+        var dashStart = left + notch + 3 * t;
+        var dashEnd = right - notch - 3 * t;
+        var dashCount = Math.Max(0, (int)Math.Floor((dashEnd - dashStart + 2 * t) / (4 * t)));
+        var dashOrigin = (dashStart + dashEnd - Math.Max(0, dashCount * 4 - 2) * t) / 2;
         if (template != QrCanvasTemplate.None) for (var py = y; py < y + h; py++) for (var px = x; px < x + w; px++) {
             if (px >= qx && px < qx + qr && py >= qy && py < qy + qr) continue;
             var hits = 0; var bandHits = 0;
@@ -75,8 +77,9 @@ public static partial class QrPngRenderer {
                         paint = outer && !inner && Math.Abs(yy - divider) >= notch;
                         paint |= xx >= left + t / 2.0 && xx <= right - t / 2.0 && Math.Abs(d - notch) <= t / 2.0;
                         paint |= dx * dx + Math.Pow(Math.Abs(yy - divider) - notch, 2) <= t * t / 4.0;
-                        var dash = (xx - left - notch) % Math.Max(4, t * 4);
-                        paint |= xx > left + notch && xx < right - notch && Rounded(dash, yy, t / 2.0, divider - t / 2.0, t * 2, t, t / 2.0);
+                        var dash = (xx - dashOrigin) % (t * 4);
+                        paint |= dashCount > 0 && xx >= dashOrigin && xx < dashOrigin + (dashCount * 4 - 2) * t
+                            && Rounded(dash, yy, 0, divider - t / 2.0, t * 2, t, t / 2.0);
                         break;
                     case QrCanvasTemplate.PhoneOutline:
                         var bezel = Math.Max(t * 2, qr / 65);
@@ -126,7 +129,7 @@ public static partial class QrPngRenderer {
                 : first.Shape.InkBounds.Height / 2;
             var headlineWidth = (int)Math.Ceiling(first.Shape.InkBounds.Width) + plan.IconWidth;
             DrawCaptionIcon(pixels, width, height, stride, canvas, qx + (qr - headlineWidth) / 2,
-                sy + plan.Clearance + (int)Math.Round(centre - iconSize / 2.0), iconSize, foreground);
+                sy + plan.Clearance + (int)Math.Round(centre - iconSize / 2.0 - (caption.Icon == QrCanvasCaptionIcon.Camera ? first.Size * .05 : 0)), iconSize, foreground);
         }
         if (caption.Url.Length > 0) {
             var size = plan.Lines[0].Size * .5;

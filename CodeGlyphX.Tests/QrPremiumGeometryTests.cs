@@ -7,6 +7,17 @@ namespace CodeGlyphX.Tests;
 
 public sealed class QrPremiumGeometryTests {
     [Fact]
+    public void SunsetDarkGround_IsBurntEmberWithOrangeAndPinkBlooms() {
+        var canvas = QrArt.Hero(QrHeroPreset.Sunset, true).Canvas!;
+        Assert.Equal(new Rgba32(42, 18, 6), canvas.BackgroundGradient!.StartColor);
+        Assert.Equal(new Rgba32(122, 42, 14), canvas.BackgroundGradient.EndColor);
+        Assert.Equal(new Rgba32(255, 111, 24, 150), canvas.PanelGlowColor);
+        Assert.Equal(new Rgba32(224, 36, 122, 120), canvas.SecondaryPanelGlowColor);
+        var brand = QrArt.Hero(QrHeroPreset.Brand, true).Canvas!.Background;
+        var retro = QrArt.Hero(QrHeroPreset.RetroPixel, true).Canvas!.Background;
+        Assert.True(brand.R > retro.R && brand.G < retro.G && brand.B < retro.B);
+    }
+    [Fact]
     public void Neon_HasSeparateVioletBloomOutsideTheMagentaRim_AndOneDarkComposition() {
         var options = QrArt.Hero(QrHeroPreset.Neon);
         var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
