@@ -34,6 +34,54 @@ public sealed class QrThemeScanRegressionTests {
         Assert.True(result.LibraryPassed, result.ToString());
     }
 
+    public static IEnumerable<object[]> LongUrlStrictCases() {
+        foreach (var logo in new[] { false, true }) {
+            yield return new object[] { QrArtTheme.ConnectedSquircleGlow, QrArtVariant.Bold, 256, "blur121", logo };
+            foreach (var variant in Enum.GetValues<QrArtVariant>())
+                yield return new object[] { QrArtTheme.PaintSplash, variant, 1024, "rotate2deg", logo };
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(LongUrlStrictCases))]
+    public void Themes_RetainStrictLongUrlScans_AtDeliverySizeAndTransform(QrArtTheme theme, QrArtVariant variant, int size,
+        string transform, bool logo) {
+        var options = new QrRenderOptions {
+            TargetSizePx = 1024, Art = QrArt.Theme(theme, variant),
+            LogoPng = logo ? QrArtPremiumScanTests.Logo() : null
+        };
+        var payload = QrArtPremiumScanTests.LongUrl;
+        var png = QR.Render(payload, OutputFormat.Png, options,
+            new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
+        var result = Assert.Single(QrArtWave1ScanTests.ScanImage(png, payload),
+            cell => cell.Size == size && cell.Transform == transform);
+        Assert.True(result.StrictPassed, result.ToString());
+        Assert.True(result.LibraryPassed, result.ToString());
+    }
+
+    // A palette stop below 4.5:1 contrast makes the guardrails replace the whole palette with neutral ink,
+    // so the theme silently renders as plain black modules.
+    [Fact]
+    public void Themes_KeepTheirPaletteInk() {
+        var failures = new List<string>();
+        foreach (var theme in Enum.GetValues<QrArtTheme>()) foreach (var variant in Enum.GetValues<QrArtVariant>()) {
+            var png = QR.Render(QrArtPremiumScanTests.LongUrl, OutputFormat.Png,
+                new QrRenderOptions { TargetSizePx = 512, Art = QrArt.Theme(theme, variant) },
+                new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
+            var rgba = ImageReader.DecodeRgba32(png, out var width, out var height);
+            int dark = 0, neutral = 0;
+            for (var y = height / 4; y < height * 3 / 4; y++) for (var x = width / 4; x < width * 3 / 4; x++) {
+                var p = (y * width + x) * 4;
+                int r = rgba[p], g = rgba[p + 1], b = rgba[p + 2];
+                if (299 * r + 587 * g + 114 * b >= 100_000) continue;
+                dark++;
+                if (Math.Max(r, Math.Max(g, b)) - Math.Min(r, Math.Min(g, b)) < 24) neutral++;
+            }
+            if (dark == 0 || neutral >= dark / 2) failures.Add($"{theme}/{variant}: {neutral} of {dark} dark pixels are neutral");
+        }
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
     [Theory]
     [InlineData(0, false)]
     [InlineData(3, false)]
