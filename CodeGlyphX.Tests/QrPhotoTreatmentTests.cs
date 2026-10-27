@@ -154,11 +154,14 @@ public sealed class QrPhotoTreatmentTests {
             var options = new QrImageCompositionOptions { Style = style, ModuleSize = 12 };
             var raised = QrArt.Compose(shortPayload, image, options);
             Assert.Equal((6 * 4 + 17 + 8) * 12, raised.Size);
-            // Compose has already decoded its own output. The limited legacy decoder on .NET Framework is not expected to
-            // read the half-size and blurred copies of the small ImageOverlay centre marks.
-            var legacy = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal);
-            if (!(legacy && style == QrImageCompositionStyle.ImageOverlay))
-                Assert.True(QrArt.ValidateImage(raised.ToPng(), shortPayload, 3000).AllPassed, style.ToString());
+            // Compose has exercised its fixed native guard. Check its exported payload independently;
+            // transformed-art recovery belongs to the complete strict photo matrix, not version selection.
+            var reader = new ZXing.BarcodeReaderGeneric { AutoRotate = false, Options = new ZXing.Common.DecodingOptions {
+                TryHarder = false, TryInverted = false, PossibleFormats = new[] { ZXing.BarcodeFormat.QR_CODE }
+            } };
+            var decoded = reader.Decode(new ZXing.RGBLuminanceSource(raised.GetPixels(), raised.Size, raised.Size,
+                ZXing.RGBLuminanceSource.BitmapFormat.RGBA32));
+            Assert.Equal(shortPayload, decoded?.Text);
             options.MinimumVersion = 1;
             Assert.Equal((smallest * 4 + 17 + 8) * 12, QrArt.Compose(shortPayload, image, options).Size);
         }
