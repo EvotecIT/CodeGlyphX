@@ -7,6 +7,7 @@ namespace CodeGlyphX.Rendering.Png;
 public static partial class QrPngRenderer {
     private sealed class CaptionPlan {
         internal readonly List<(BarcodeTextShape Shape, double Size)> Lines = new();
+        internal BarcodeTextShape? UrlShape;
         internal int Width, Height, Clearance, HorizontalClearance, Gap, IconWidth, IconSize, UrlHeight, LineGap, CapHeight, CodeWidth;
     }
 
@@ -121,7 +122,8 @@ public static partial class QrPngRenderer {
             var url = Shape(caption.Url, urlSize);
             urlSize *= Math.Min(1, (plan.CodeWidth - 2 * plan.Clearance) / Math.Max(1, url.InkBounds.Width));
             if (urlSize < 8 * caption.RasterScale) throw new ArgumentException("Fallback URL cannot fit readably. Shorten it or enlarge the code.");
-            plan.UrlHeight = (int)Math.Ceiling(Shape(caption.Url, urlSize).InkBounds.Height) + 2 * plan.Clearance;
+            plan.UrlShape = Shape(caption.Url, urlSize);
+            plan.UrlHeight = (int)Math.Ceiling(plan.UrlShape.InkBounds.Height) + 2 * plan.Clearance;
         }
         if (plan.Height > 4096 * caption.RasterScale) throw new ArgumentException("Caption font metrics exceed the supported height.");
         return plan;

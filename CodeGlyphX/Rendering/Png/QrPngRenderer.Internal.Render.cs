@@ -13,6 +13,8 @@ public static partial class QrPngRenderer {
         if (modules.Width != modules.Height) throw new ArgumentException("Matrix must be square.", nameof(modules));
         if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
         if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
+        if (opts.ModuleShadowColor.A > 0 && Math.Abs((long)opts.ModuleShadowOffsetPx) > (long)opts.QuietZone * opts.ModuleSize)
+            throw new ArgumentOutOfRangeException(nameof(opts), "ModuleShadowOffsetPx must fit inside the quiet zone.");
         if (opts.ModuleScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleScale));
         opts.BackgroundGradient?.Validate();
         opts.BackgroundPattern?.Validate();
@@ -325,7 +327,7 @@ public static partial class QrPngRenderer {
                 }
 
                 var useGradient = !protectFunctional && !usePalette && (eyeKind == EyeKind.None || opts.Eyes is null) ? gradientInfo : null;
-                if (useShape == QrModuleShape.Square && useScale >= 1 && useGradient is null && useMaskSolid && usePattern is null && moduleJitterX == 0 && moduleJitterY == 0) {
+                if (modules[mx, my] && useShape == QrModuleShape.Square && useScale >= 1 && useGradient is null && useMaskSolid && usePattern is null && moduleJitterX == 0 && moduleJitterY == 0) {
                     var solid = useColor.A == 255 ? useColor : CompositeColor(useColor, background);
                     DrawModuleSolid(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone, qrOffsetX, qrOffsetY, solid);
                     continue;

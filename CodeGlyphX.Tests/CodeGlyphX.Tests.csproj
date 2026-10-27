@@ -86,6 +86,7 @@
     <Compile Include="QrFormatDistanceTests.cs" />
     <Compile Include="QrApiTests.cs" />
     <Compile Include="QrNativeArtGuardrailTests.cs" />
+    <Compile Include="QrReviewRegressionTests.cs" />
     <Compile Include="QrGuardrailTransparencyTests.cs" />
     <Compile Include="QrFrameAppearanceTests.cs" />
     <Compile Include="TestHelpers/SvgCoverageTestReader.cs" />

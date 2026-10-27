@@ -57,7 +57,7 @@ public static partial class QrImageComposer {
             var swap = current; current = next; next = swap;
             Array.Clear(next, 0, next.Length);
         }
-        EnsureModuleMajority(result, modules, side);
+        EnsureModuleBias(result, modules, side);
         return result;
     }
 
@@ -109,18 +109,18 @@ public static partial class QrImageComposer {
     private static double Clamp255(double value) => value < 0 ? 0 : value > 255 ? 255 : value;
 
     // Edge neighbours of the centre first, so a corrected module reads as a small plus rather than a solid block.
-    private static readonly int[] MajorityOrder = { 1, 3, 5, 7, 0, 2, 6, 8 };
+    private static readonly int[] BiasOrder = { 1, 3, 5, 7, 0, 2, 6, 8 };
 
     // At small print or display sizes a reader sees each module's average tone. Where the image strongly opposes
-    // the encoded bit, at least five of the nine sub-cells (the forced centre included) are given the bit's colour.
-    private static void EnsureModuleMajority(bool[] subCells, BitMatrix modules, int side) {
+    // the encoded bit, at least four of the nine sub-cells (the forced centre included) are given the bit's colour.
+    private static void EnsureModuleBias(bool[] subCells, BitMatrix modules, int side) {
         const int minimumMatching = 4;
         for (var my = 0; my < modules.Height; my++) for (var mx = 0; mx < modules.Width; mx++) {
             var dark = modules[mx, my];
             var matching = 1; // The centre sub-cell is always painted with the encoded bit.
             for (var i = 0; i < 9; i++)
                 if (i != 4 && subCells[(my * 3 + i / 3) * side + mx * 3 + i % 3] == dark) matching++;
-            foreach (var i in MajorityOrder) {
+            foreach (var i in BiasOrder) {
                 if (matching >= minimumMatching) break;
                 var index = (my * 3 + i / 3) * side + mx * 3 + i % 3;
                 if (subCells[index] == dark) continue;

@@ -131,11 +131,7 @@ public static partial class QrPngRenderer {
             DrawCaptionIcon(pixels, width, height, stride, canvas, qx + (qr - headlineWidth) / 2,
                 sy + plan.Clearance + (int)Math.Round(centre - iconSize / 2.0 - (caption.Icon == QrCanvasCaptionIcon.Camera ? first.Size * .05 : 0)), iconSize, foreground);
         }
-        if (caption.Url.Length > 0) {
-            var size = plan.Lines[0].Size * .5;
-            var url = caption.Font.Shape(caption.Url, size, caption.StrictText);
-            size *= Math.Min(1, (plan.CodeWidth - 2 * plan.Clearance) / Math.Max(1, url.InkBounds.Width));
-            url = caption.Font.Shape(caption.Url, size, caption.StrictText);
+        if (plan.UrlShape is { } url) {
             var uy = qy + qr + plan.Gap + (top ? 0 : plan.Height) + plan.Clearance;
             PaintCaptionShape(pixels, width, height, stride, url, qx + (qr - (int)Math.Ceiling(url.InkBounds.Width)) / 2, uy, ink);
         }

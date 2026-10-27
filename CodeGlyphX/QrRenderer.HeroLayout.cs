@@ -19,7 +19,7 @@ internal static partial class QrRenderer {
         var full = (qr.Size + render.QuietZone * 2) * render.ModuleSize;
         if (hero == QrHeroPreset.MinimalLine) {
             render.TimingThicknessModules = .22;
-            if (qr.Version >= 5 && render.ModuleShape == QrModuleShape.Dot && render.ModuleScale == .6875) {
+            if (qr.Version >= 5 && render.ModuleShape == QrModuleShape.Dot && Math.Abs(render.ModuleScale - .6875) < 1e-9) {
                 render.ModuleScale = .8125; // Dot's 0.8 factor gives a 65% diameter on dense codes.
             }
         }

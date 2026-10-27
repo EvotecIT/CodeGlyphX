@@ -72,7 +72,7 @@ internal static class QrSceneRasterizer {
 
     // Signed-area accumulation for one edge inside a strip of rows [0, height).
     private static void Accumulate(float[] acc, int width, int height, double x0, double y0, double x1, double y1) {
-        if (y0 == y1) return;
+        if (Math.Abs(y0 - y1) < 1e-9) return;
         double direction = 1;
         if (y0 > y1) { direction = -1; (x0, x1) = (x1, x0); (y0, y1) = (y1, y0); }
         if (y1 <= 0 || y0 >= height) return;

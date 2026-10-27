@@ -11,7 +11,8 @@ public sealed partial class QrPngRenderOptions {
     internal int ExactSizePx { get; set; }
     // Themes retain solid format/version ink and complete alignment rings.
     internal bool PreserveThemeFunctionPatterns { get; set; }
-    /// <summary>Offset of an ink layer behind the module body; zero disables it.</summary>
+    /// <summary>Offset of an ink layer behind the module body; zero disables it.
+    /// A visible shadow's absolute offset must fit within the quiet zone in pixels.</summary>
     public int ModuleShadowOffsetPx { get; set; }
     /// <summary>Timing-line thickness in modules; zero follows the body geometry.</summary>
     public double TimingThicknessModules { get; set; }
