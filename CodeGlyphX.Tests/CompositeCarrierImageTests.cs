@@ -10,6 +10,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class CompositeCarrierImageTests {
     [Fact]
     public void CheckedStandaloneComponentSurvivesCancelledAdditionalCarrierSearch() {

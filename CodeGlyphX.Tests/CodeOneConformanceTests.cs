@@ -8,6 +8,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class CodeOneConformanceTests {
     [Fact]
     public void IndependentSizesAndEncodations_DecodePayloadAndVersion() {

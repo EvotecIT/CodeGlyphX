@@ -5,6 +5,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests.Net472;
 
+[Collection("ImageScannerSerial")]
 public sealed class SymbolScannerNet472Tests {
     [Theory]
     [InlineData(SymbolFormat.Code16K, "HELLO")]

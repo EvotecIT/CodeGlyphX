@@ -384,7 +384,7 @@ public sealed class QrArtWave1ScanTests {
     }
 
     // Independent pixel transforms intentionally do not call the production scaler or filters.
-    private static byte[] ResizeArea(byte[] source, int width, int height, int size, int targetHeight) {
+    internal static byte[] ResizeArea(byte[] source, int width, int height, int size, int targetHeight) {
         var target = new byte[size * targetHeight * 4];
         var scaleX = width / (double)size;
         var scaleY = height / (double)targetHeight;
@@ -407,7 +407,7 @@ public sealed class QrArtWave1ScanTests {
         return target;
     }
 
-    private static byte[] Rotate2Degrees(byte[] source, int size, int targetHeight) {
+    internal static byte[] Rotate2Degrees(byte[] source, int size, int targetHeight) {
         var target = new byte[source.Length];
         var radians = Math.PI / 90;
         var cos = Math.Cos(radians); var sin = Math.Sin(radians); var center = (size - 1) / 2.0; var centerY = (targetHeight - 1) / 2.0;

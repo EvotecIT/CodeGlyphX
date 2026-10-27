@@ -42,6 +42,24 @@ public sealed class QrNativeArtGuardrailTests {
         Assert.Equal(payload, independent.Decode(new ZXing.RGBLuminanceSource(pixels, width, height,
             ZXing.RGBLuminanceSource.BitmapFormat.RGBA32))?.Text);
     }
+#if NET8_0_OR_GREATER
+    [Fact]
+    public void RobustReadback_RecoversRotatedDenseDotsWithinAnOrdinaryBudget() {
+        const string payload = QrArtPremiumScanTests.LongUrl;
+        var options = QrArt.Hero(QrHeroPreset.MinimalLine, true);
+        options.TargetSizePx = 1024;
+        var png = QR.Render(payload, OutputFormat.Png, options,
+            new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
+        var rgba = ImageReader.DecodeRgba32(png, out var width, out var height);
+        var resized = QrArtWave1ScanTests.ResizeArea(rgba, width, height, 256, 256);
+        var rotated = QrArtWave1ScanTests.Rotate2Degrees(resized, 256, 256);
+        Assert.True(QrImageDecoder.TryDecode(rotated, 256, 256, 256 * 4, PixelFormat.Rgba32,
+            new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust,
+                BudgetMilliseconds = TestBudget.Adjust(1000) }, out var decoded));
+        Assert.Equal(payload, decoded.Text);
+    }
+#endif
+
     [Theory]
     [InlineData(OutputFormat.Png)]
     [InlineData(OutputFormat.Svg)]
