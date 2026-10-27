@@ -86,6 +86,7 @@ public sealed class QrThemeScanRegressionTests {
     // not as square slabs that read as stray rectangles beside dotted or rounded data.
     [Theory]
     [InlineData(QrModuleShape.Dot)]
+    [InlineData(QrModuleShape.DotGrid)]
     [InlineData(QrModuleShape.ConnectedSquircle)]
     [InlineData(QrModuleShape.Rounded)]
     public void ThemeVersionBits_FollowTheModuleShape(QrModuleShape shape) {

@@ -77,9 +77,9 @@ public static partial class QrPngRenderer {
     };
 
     // Format and version bits follow the theme's shape family but keep near-solid ink:
-    // dotted themes get full squircles because a circle loses too much coverage when blurred.
+    // dots use full squircles because circles lose coverage when blurred and dot grids leave the centre light.
     private static QrModuleShape FunctionModuleShape(QrModuleShape shape) => shape switch {
-        QrModuleShape.Dot or QrModuleShape.Circle => QrModuleShape.Squircle,
+        QrModuleShape.Dot or QrModuleShape.Circle or QrModuleShape.DotGrid => QrModuleShape.Squircle,
         _ => FinderShape(shape),
     };
 

@@ -26,6 +26,15 @@ public sealed class QrReviewRegressionTests {
             } };
             var pixels = QrPngRenderer.RenderPixels(qr.Modules, options, out var width, out var height, out _);
             var url = new List<(int X, int Y)>();
+            var lastQrInkRow = -1;
+            for (var y = 0; y < height; y++) for (var x = 0; x < width; x++) {
+                var at = (y * width + x) * 4;
+                // Only opaque black ink belongs to the QR; decorations and the fallback URL use red.
+                if (pixels[at + 3] >= 200 && pixels[at] < 64 && pixels[at + 1] < 64 && pixels[at + 2] < 64) lastQrInkRow = y;
+            }
+            Assert.True(lastQrInkRow >= 0);
+            var quietZoneBottom = lastQrInkRow + 1 + options.QuietZone * options.ModuleSize;
+            var urlTop = -1;
             // The unframed case has no red decoration; every red pixel belongs to the URL.
             if (template == QrCanvasTemplate.None) {
                 for (var y = 0; y < height; y++) for (var x = 0; x < width; x++) {
@@ -33,6 +42,7 @@ public sealed class QrReviewRegressionTests {
                     if (pixels[at] > pixels[at + 1] && pixels[at] > pixels[at + 2]) url.Add((x, y));
                 }
                 Assert.NotEmpty(url);
+                urlTop = url.Min(p => p.Y);
                 var cap = url.Max(p => p.Y) - url.Min(p => p.Y) + 1;
                 Assert.True(url.Min(p => p.X) >= cap && url.Max(p => p.X) < width - cap);
                 Assert.True(url.Min(p => p.Y) >= cap && url.Max(p => p.Y) < height - cap);
@@ -52,10 +62,13 @@ public sealed class QrReviewRegressionTests {
                             if (pixels[((y + row) * width + x) * 4 + at] != glyph![row * glyphWidth * 4 + at]) { match = false; break; }
                         }
                         found = match;
+                        if (match) urlTop = y;
                     }
                 }
                 Assert.True(found, $"The URL glyphs are missing from {template}/{position}.");
             }
+            Assert.True(urlTop >= quietZoneBottom,
+                $"The fallback URL overlaps the QR quiet zone in {template}/{position}: glyph top {urlTop}, QR bottom {quietZoneBottom}.");
             Assert.Equal(pixels, ImageReader.DecodeRgba32(QrPngRenderer.Render(qr.Modules, options), out _, out _));
         }
     }
