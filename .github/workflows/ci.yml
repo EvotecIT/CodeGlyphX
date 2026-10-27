@@ -15,9 +15,9 @@ jobs:
     name: Build & Test (${{ matrix.os }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
-    # Linux runs both full corpora; Windows also runs the .NET Framework suite.
-    # Allow build and shutdown headroom for those longer validation jobs.
-    timeout-minutes: ${{ matrix.os == 'macos-latest' && 20 || 45 }}
+    # Every platform runs the .NET 8 and .NET 10 corpora; Windows also runs .NET Framework.
+    # Allow build and shutdown headroom after the macOS corpora finish near twenty minutes.
+    timeout-minutes: ${{ matrix.os == 'macos-latest' && 30 || 45 }}
     env:
       # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
       CODEGLYPHX_TEST_BUDGET_MULTIPLIER: ${{ matrix.testBudgetMultiplier }}
