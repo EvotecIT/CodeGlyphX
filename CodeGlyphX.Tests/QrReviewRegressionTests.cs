@@ -3,12 +3,86 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Art;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
 
 public sealed class QrReviewRegressionTests {
+    [Theory]
+    [InlineData(QrCanvasCaptionPosition.Top)]
+    [InlineData(QrCanvasCaptionPosition.Bottom)]
+    public void FallbackUrl_WithoutAHeadline_RemainsVisibleAndWithinTheCanvas(QrCanvasCaptionPosition position) {
+        var qr = QR.Encode("https://evotec.xyz");
+        byte[]? glyph = null;
+        var glyphWidth = 0;
+        var glyphHeight = 0;
+        foreach (QrCanvasTemplate template in Enum.GetValues(typeof(QrCanvasTemplate))) {
+            var options = new QrPngRenderOptions { ModuleSize = 16, Canvas = new QrCanvasOptions {
+                Template = template, StrokeColor = new Rgba32(255, 0, 0),
+                Caption = new QrCanvasCaptionOptions { Text = "", Url = "evotec.xyz", Position = position,
+                    FontSizePx = 40, Color = new Rgba32(0, 0, 255) }
+            } };
+            var pixels = QrPngRenderer.RenderPixels(qr.Modules, options, out var width, out var height, out _);
+            var url = new List<(int X, int Y)>();
+            // The unframed case has no red decoration; every red pixel belongs to the URL.
+            if (template == QrCanvasTemplate.None) {
+                for (var y = 0; y < height; y++) for (var x = 0; x < width; x++) {
+                    var at = (y * width + x) * 4;
+                    if (pixels[at] > pixels[at + 1] && pixels[at] > pixels[at + 2]) url.Add((x, y));
+                }
+                Assert.NotEmpty(url);
+                var cap = url.Max(p => p.Y) - url.Min(p => p.Y) + 1;
+                Assert.True(url.Min(p => p.X) >= cap && url.Max(p => p.X) < width - cap);
+                Assert.True(url.Min(p => p.Y) >= cap && url.Max(p => p.Y) < height - cap);
+                glyphWidth = url.Max(p => p.X) - url.Min(p => p.X) + 1;
+                glyphHeight = cap;
+                glyph = new byte[glyphWidth * glyphHeight * 4];
+                for (var row = 0; row < glyphHeight; row++) Buffer.BlockCopy(pixels,
+                    ((url.Min(p => p.Y) + row) * width + url.Min(p => p.X)) * 4,
+                    glyph, row * glyphWidth * 4, glyphWidth * 4);
+            } else {
+                Assert.NotNull(glyph);
+                var found = false;
+                for (var y = height / 2; y <= height - glyphHeight && !found; y++) {
+                    for (var x = (width - glyphWidth) / 2 - 2; x <= (width - glyphWidth) / 2 + 2 && !found; x++) {
+                        var match = true;
+                        for (var row = 0; row < glyphHeight && match; row++) for (var at = 0; at < glyphWidth * 4; at++) {
+                            if (pixels[((y + row) * width + x) * 4 + at] != glyph![row * glyphWidth * 4 + at]) { match = false; break; }
+                        }
+                        found = match;
+                    }
+                }
+                Assert.True(found, $"The URL glyphs are missing from {template}/{position}.");
+            }
+            Assert.Equal(pixels, ImageReader.DecodeRgba32(QrPngRenderer.Render(qr.Modules, options), out _, out _));
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void SceneEdges_OutsideTheAccumulationSpan_MatchAnUnclippedReferenceCrop(bool mirror) {
+        const int size = 64;
+        var contour = new[] { -1.5, -.25, .5, .125, .875, .875 };
+        if (mirror) for (var i = 0; i < contour.Length; i += 2) contour[i] = 1 - contour[i];
+        var original = new QrSceneGeometry();
+        original.Shapes.Add(new SceneShape(ScenePaint.Solid(Rgba32.Black), new[] { contour }));
+        var embedded = contour.Select(v => (v + 8) / 16).ToArray();
+        var reference = new QrSceneGeometry();
+        reference.Shapes.Add(new SceneShape(ScenePaint.Solid(Rgba32.Black), new[] { embedded }));
+        var options = new QrSceneOptions { Paper = Rgba32.White };
+        var actual = QrSceneRasterizer.Paint(size, options, original, default);
+        var large = QrSceneRasterizer.Paint(size * 16, options, reference, default);
+        for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
+            var at = (y * size + x) * 4;
+            var expected = ((y + size * 8) * size * 16 + x + size * 8) * 4;
+            for (var channel = 0; channel < 4; channel++)
+                Assert.InRange(Math.Abs(actual[at + channel] - large[expected + channel]), 0, 1);
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

@@ -571,7 +571,7 @@ public static partial class QrPngRenderer {
         heightPx = checked(canvasH + extraTop + extraBottom);
         qrOffsetX = extraLeft + pad;
         var mainCaption = MeasureCaption(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
-        var topCaption = canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? mainCaption.Height + mainCaption.Gap : 0;
+        var topCaption = canvas.Caption?.Position == QrCanvasCaptionPosition.Top && mainCaption.Height > 0 ? mainCaption.Height + mainCaption.Gap : 0;
         qrOffsetY = extraTop + pad + topCaption;
         if (canvas.Template == QrCanvasTemplate.PhoneOutline) qrOffsetY += (canvasH - qrFullPx - 2 * pad - captionHeight) / 2;
     }
@@ -594,7 +594,7 @@ public static partial class QrPngRenderer {
         var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasX = qrOffsetX - pad;
         var mainCaption = MeasureCaption(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
-        var canvasY = qrOffsetY - pad - (canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? mainCaption.Height + mainCaption.Gap : 0);
+        var canvasY = qrOffsetY - pad - (canvas.Caption?.Position == QrCanvasCaptionPosition.Top && mainCaption.Height > 0 ? mainCaption.Height + mainCaption.Gap : 0);
         if (canvas.Template == QrCanvasTemplate.PhoneOutline) canvasY -= (canvasH - qrFullPx - 2 * pad - captionHeight) / 2;
         var radius = Math.Max(0, canvas.CornerRadiusPx);
 

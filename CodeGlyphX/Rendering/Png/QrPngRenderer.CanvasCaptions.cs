@@ -108,7 +108,7 @@ public static partial class QrPngRenderer {
             if (hits > 0) BlendPixel(pixels, stride, px, py, new Rgba32(ink.R, ink.G, ink.B, (byte)(ink.A * hits / 4)));
             if (bandHits > 0) BlendPixel(pixels, stride, px, py, new Rgba32(band.R, band.G, band.B, (byte)(band.A * bandHits / 4)));
         }
-        if (caption is null || plan.Height == 0) return;
+        if (caption is null || plan.Height == 0 && plan.UrlShape is null) return;
         if (template is QrCanvasTemplate.ScanMePill or QrCanvasTemplate.SpeechBubble or QrCanvasTemplate.RoundedCardHeader)
             foreground = caption.Color ?? (IsDark(band) ? Rgba32.White : Rgba32.Black);
         var textY = sy + plan.Clearance;

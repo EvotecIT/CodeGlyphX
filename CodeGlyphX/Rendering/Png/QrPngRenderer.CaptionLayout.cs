@@ -19,7 +19,8 @@ public static partial class QrPngRenderer {
     }
 
     private static int CaptionCanvasPadding(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
-        if (canvas.Template == QrCanvasTemplate.None && (canvas.Caption is null || canvas.Caption.Text.Length == 0))
+        if (canvas.Template == QrCanvasTemplate.None && (canvas.Caption is null ||
+            canvas.Caption.Text.Length == 0 && canvas.Caption.Url.Length == 0))
             return CaptionCanvasPadding(canvas);
         var t = CaptionStrokeWidth(canvas, moduleSize);
         var safe = FrameOuterSafeMargin(canvas, qr, moduleSize, quiet);
@@ -47,10 +48,11 @@ public static partial class QrPngRenderer {
     private static CaptionPlan MeasureCaption(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
         var plan = new CaptionPlan { CodeWidth = qr - 2 * quiet * moduleSize };
         var caption = canvas.Caption;
-        if (caption is null || caption.Text.Length == 0) return plan;
+        if (caption is null || caption.Text.Length == 0 && caption.Url.Length == 0) return plan;
+        var hasHeadline = caption.Text.Length > 0;
         var capShape = caption.Font.Shape("H", 1, strict: false);
         var capUnit = Math.Max(.1, capShape.MissingGlyphs.Count == 0 ? capShape.InkBounds.Height
-            : caption.Font.Shape(caption.Text, 1, caption.StrictText).InkBounds.Height);
+            : caption.Font.Shape(hasHeadline ? caption.Text : caption.Url, 1, caption.StrictText).InkBounds.Height);
         var size = caption.FontSizePx > 0 ? caption.FontSizePx : plan.CodeWidth * .055 / capUnit;
         var cap = size * capUnit;
         plan.Clearance = Math.Max(caption.PaddingPx, (int)Math.Ceiling(cap));
@@ -69,7 +71,7 @@ public static partial class QrPngRenderer {
         }
         int IconWidth(double em) => caption.Icon != QrCanvasCaptionIcon.None || canvas.BandLogoPng is not null
             ? (int)Math.Ceiling(IconSize(em) * (canvas.BandLogoPng is null && caption.Icon == QrCanvasCaptionIcon.Camera ? 1 / .84 : 1) + em * .35) : 0;
-        plan.IconWidth = IconWidth(size);
+        plan.IconWidth = hasHeadline ? IconWidth(size) : 0;
         var available = plan.CodeWidth - 2 * plan.HorizontalClearance - plan.IconWidth;
         if (available <= 0) throw new ArgumentException("Caption padding leaves no readable text area.");
         BarcodeTextShape Shape(string text, double em) {
@@ -95,10 +97,10 @@ public static partial class QrPngRenderer {
                 plan.Lines.Add((Shape(caption.Text.Substring(split + 1).Trim(), floor), floor));
             } else throw new ArgumentException("Caption headline cannot fit above its subline. Shorten it or enlarge the code.");
         }
-        if (plan.Lines.Count == 0) plan.Lines.Add((Shape(caption.Text, size), size));
-        plan.CapHeight = Math.Max(1, (int)Math.Ceiling(plan.Lines[0].Size * capUnit));
-        plan.IconSize = IconSize(plan.Lines[0].Size);
-        plan.IconWidth = IconWidth(plan.Lines[0].Size);
+        if (plan.Lines.Count == 0 && hasHeadline) plan.Lines.Add((Shape(caption.Text, size), size));
+        plan.CapHeight = Math.Max(1, (int)Math.Ceiling((hasHeadline ? plan.Lines[0].Size : size * .5) * capUnit));
+        plan.IconSize = hasHeadline ? IconSize(plan.Lines[0].Size) : 0;
+        plan.IconWidth = hasHeadline ? IconWidth(plan.Lines[0].Size) : 0;
         if (caption.Subline.Length > 0) {
             var subSize = size * .65;
             var sub = Shape(caption.Subline, subSize);
@@ -116,7 +118,7 @@ public static partial class QrPngRenderer {
             textHeight += Math.Ceiling(line.Shape.InkBounds.Height) + Math.Ceiling(cap * .35);
         }
         plan.LineGap = (int)Math.Ceiling(cap * .35);
-        plan.Height = checked((int)Math.Ceiling(textHeight - Math.Ceiling(cap * .35)) + 2 * plan.Clearance);
+        plan.Height = plan.Lines.Count == 0 ? 0 : checked((int)Math.Ceiling(textHeight - Math.Ceiling(cap * .35)) + 2 * plan.Clearance);
         if (caption.Url.Length > 0) {
             var urlSize = size * .5;
             var url = Shape(caption.Url, urlSize);
@@ -131,7 +133,7 @@ public static partial class QrPngRenderer {
 
     private static int CaptionCanvasHeight(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
         var plan = MeasureCaption(canvas, qr, moduleSize, quiet);
-        return plan.Height == 0 ? 0 : checked(plan.Height + plan.Gap + plan.UrlHeight);
+        return plan.Height == 0 && plan.UrlHeight == 0 ? 0 : checked(plan.Height + plan.Gap + plan.UrlHeight);
     }
 
     private static int CaptionCanvasBodyHeight(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {

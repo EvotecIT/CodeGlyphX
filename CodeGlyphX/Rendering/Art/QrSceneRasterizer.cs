@@ -32,7 +32,7 @@ internal static class QrSceneRasterizer {
             minX = Math.Min(minX, contour[i]); maxX = Math.Max(maxX, contour[i]);
             minY = Math.Min(minY, contour[i + 1]); maxY = Math.Max(maxY, contour[i + 1]);
         }
-        // The horizontal span stays unclipped (bounded to three canvas widths) so off-canvas edges keep exact coverage.
+        // Bound storage to three canvas widths while retaining each edge's original geometry.
         var left = (int)Math.Floor(Math.Max(-size, minX * size)); var right = (int)Math.Ceiling(Math.Min(2.0 * size, maxX * size));
         var top = (int)Math.Max(0, Math.Floor(minY * size)); var bottom = (int)Math.Min(size, Math.Ceiling(maxY * size));
         if (right <= left || bottom <= top || right <= 0 || left >= size) return;
@@ -47,8 +47,8 @@ internal static class QrSceneRasterizer {
             foreach (var contour in shape.Contours) {
                 for (var i = 0; i < contour.Length; i += 2) {
                     var j = (i + 2) % contour.Length;
-                    Accumulate(strip, width, rows, Clamp(contour[i] * size, left, right) - left, contour[i + 1] * size - band,
-                        Clamp(contour[j] * size, left, right) - left, contour[j + 1] * size - band);
+                    Accumulate(strip, width, rows, contour[i] * size - left, contour[i + 1] * size - band,
+                        contour[j] * size - left, contour[j + 1] * size - band);
                 }
             }
             for (var row = 0; row < rows; row++) {
@@ -67,8 +67,6 @@ internal static class QrSceneRasterizer {
             }
         }
     }
-
-    private static double Clamp(double value, double min, double max) => value < min ? min : value > max ? max : value;
 
     // Signed-area accumulation for one edge inside a strip of rows [0, height).
     private static void Accumulate(float[] acc, int width, int height, double x0, double y0, double x1, double y1) {
@@ -89,33 +87,42 @@ internal static class QrSceneRasterizer {
             var d = (float)(dy * direction);
             double a, b;
             if (x < next) { a = x; b = next; } else { a = next; b = x; }
-            // Interpolation can drift a hair outside the clamped span; keep every deposit inside the strip.
-            a = Clamp(a, 0, width - 2.5); b = Clamp(b, 0, width - 2.5);
+            // Fold deposits left of storage into its initial winding, and ignore deposits
+            // to its right. Clipping the coordinates themselves would change the edge slope.
             var a0 = Math.Floor(a); var ai = (int)a0;
             var bi = (int)Math.Ceiling(b);
             if (bi <= ai + 1) {
                 var middle = 0.5 * (x + next) - a0;
-                acc[line + ai] += (float)(d - d * middle);
-                acc[line + ai + 1] += (float)(d * middle);
+                Deposit(acc, line, width, ai, (float)(d - d * middle));
+                Deposit(acc, line, width, ai + 1, (float)(d * middle));
             } else {
                 var s = 1 / (b - a);
                 var af = a - a0;
                 var first = 0.5 * s * (1 - af) * (1 - af);
                 var bf = b - bi + 1;
                 var last = 0.5 * s * bf * bf;
-                acc[line + ai] += (float)(d * first);
-                if (bi == ai + 2) acc[line + ai + 1] += (float)(d * (1 - first - last));
+                Deposit(acc, line, width, ai, (float)(d * first));
+                if (bi == ai + 2) Deposit(acc, line, width, ai + 1, (float)(d * (1 - first - last)));
                 else {
                     var second = s * (1.5 - af);
-                    acc[line + ai + 1] += (float)(d * (second - first));
-                    for (var xi = ai + 2; xi < bi - 1; xi++) acc[line + xi] += (float)(d * s);
+                    Deposit(acc, line, width, ai + 1, (float)(d * (second - first)));
+                    var startColumn = ai + 2;
+                    var endColumn = bi - 1;
+                    var before = Math.Min(0, endColumn) - startColumn;
+                    if (before > 0) acc[line] += (float)(d * s * before);
+                    for (var xi = Math.Max(0, startColumn); xi < Math.Min(width, endColumn); xi++) acc[line + xi] += (float)(d * s);
                     var rest = second + (bi - ai - 3) * s;
-                    acc[line + bi - 1] += (float)(d * (1 - rest - last));
+                    Deposit(acc, line, width, bi - 1, (float)(d * (1 - rest - last)));
                 }
-                acc[line + bi] += (float)(d * last);
+                Deposit(acc, line, width, bi, (float)(d * last));
             }
             x = next;
         }
+    }
+
+    private static void Deposit(float[] acc, int line, int width, int column, float area) {
+        if (column < 0) acc[line] += area;
+        else if (column < width) acc[line + column] += area;
     }
 
     private static byte Blend(byte source, double ink, double amount) => (byte)Math.Round(source + (ink - source) * amount);
