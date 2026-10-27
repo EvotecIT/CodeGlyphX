@@ -18,6 +18,8 @@ public static partial class QrPngRenderer {
     }
 
     private static int CaptionCanvasPadding(QrCanvasOptions canvas, int qr, int moduleSize, int quiet) {
+        if (canvas.Template == QrCanvasTemplate.None && (canvas.Caption is null || canvas.Caption.Text.Length == 0))
+            return CaptionCanvasPadding(canvas);
         var t = CaptionStrokeWidth(canvas, moduleSize);
         var safe = FrameOuterSafeMargin(canvas, qr, moduleSize, quiet);
         var minimum = Math.Max(CaptionCanvasPadding(canvas), safe);

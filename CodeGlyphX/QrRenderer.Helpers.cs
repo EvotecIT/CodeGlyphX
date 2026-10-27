@@ -42,6 +42,7 @@ internal static partial class QrRenderer {
             BackgroundPattern = opts.BackgroundPattern,
             BackgroundSupersample = opts.BackgroundSupersample,
             ProtectFunctionalPatterns = opts.ProtectFunctionalPatterns,
+            PreserveThemeFunctionPatterns = opts.Art is not null,
             ProtectQuietZone = opts.ProtectQuietZone,
             Canvas = opts.Canvas,
             Debug = CloneDebug(opts.Debug),

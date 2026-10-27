@@ -9,6 +9,8 @@ public sealed partial class QrPngRenderOptions {
     // Optional outer bounds from the high-level target-size contract. Integer modules are centred,
     // with the unused pixels extending the quiet zone rather than resampling the QR grid.
     internal int ExactSizePx { get; set; }
+    // Themes retain solid format/version ink and complete alignment rings.
+    internal bool PreserveThemeFunctionPatterns { get; set; }
     /// <summary>Offset of an ink layer behind the module body; zero disables it.</summary>
     public int ModuleShadowOffsetPx { get; set; }
     /// <summary>Timing-line thickness in modules; zero follows the body geometry.</summary>

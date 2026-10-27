@@ -119,7 +119,8 @@ public static partial class QrPngRenderer {
                     for (var sx = 0; sx < 4; sx++) {
                         var xx = (x + (sx + 0.5) / 4) / m;
                         var yy = (y + (sy + 0.5) / 4) / m;
-                        if (index < 0 && opts.ModuleShape == QrModuleShape.Dot && eye?.OuterShape == QrModuleShape.Rounded) {
+                        if (index < 0 && !opts.PreserveThemeFunctionPatterns
+                            && opts.ModuleShape == QrModuleShape.Dot && eye?.OuterShape == QrModuleShape.Rounded) {
                             var cx = (int)xx; var cy = (int)yy;
                             var dot = QrShapeGeometry.Contains(QrModuleShape.Circle, xx - cx, yy - cy, scale: .9);
                             if (dot && (cx == 0 || cy == 0 || cx == cells - 1 || cy == cells - 1)) ringHits++;

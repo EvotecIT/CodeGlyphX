@@ -192,8 +192,9 @@ public static partial class QrPngRenderer {
                 if (useFrame && eyeKind != EyeKind.None) continue;
 
                 var isFunctional = functionMask is not null && functionMask[mx, my];
-                // Function bits carry encoded data and use the same paint and coverage as the body.
-                var protectFunctional = !useFrame && isFunctional && !isEye && mx != 6 && my != 6;
+                // Themes retain their protected ink; curated looks style encoded bits like the body.
+                var protectFunctional = (!useFrame || opts.PreserveThemeFunctionPatterns)
+                    && isFunctional && !isEye && mx != 6 && my != 6;
                 var eyeIndex = eyeKind == EyeKind.None ? -1 : GetEyeIndex(eyeX, eyeY, size);
 
                 var useMask = protectFunctional
