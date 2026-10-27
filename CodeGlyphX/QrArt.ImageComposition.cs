@@ -32,7 +32,7 @@ public static partial class QrArt {
         var decodeOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
             DisableTransforms = true,
-            BudgetMilliseconds = 2000,
+            BudgetMilliseconds = 1000,
         };
         if (QrDecoder.TryDecode(qr.Modules, out var expected)
             && QrImageDecoder.TryDecode(composition.GetPixels(), composition.Size, composition.Size, composition.Size * 4,
