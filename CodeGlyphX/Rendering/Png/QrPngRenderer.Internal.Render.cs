@@ -333,7 +333,7 @@ public static partial class QrPngRenderer {
 
                 DrawCoverageModule(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone,
                     qrOffsetX, qrOffsetY, useColor, useGradient, usePattern,
-                    protectFunctional ? QrModuleShape.Square : useShape,
+                    protectFunctional ? (useFrame ? FunctionModuleShape(baseModuleShape) : QrModuleShape.Square) : useShape,
                     protectFunctional ? 1 : useScale, opts.ModuleCornerRadiusPx,
                     GetNeighborMask(modules, mx, my), qrOriginX, qrOriginY, qrSizePx,
                     moduleJitterX, moduleJitterY, opts.TimingThicknessModules, modules[mx, my]);

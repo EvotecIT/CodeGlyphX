@@ -82,6 +82,34 @@ public sealed class QrThemeScanRegressionTests {
         Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
     }
 
+    // Theme looks draw format and version bits as whole modules in their own shape family,
+    // not as square slabs that read as stray rectangles beside dotted or rounded data.
+    [Theory]
+    [InlineData(QrModuleShape.Dot)]
+    [InlineData(QrModuleShape.ConnectedSquircle)]
+    [InlineData(QrModuleShape.Rounded)]
+    public void ThemeVersionBits_FollowTheModuleShape(QrModuleShape shape) {
+        var qr = QR.Encode(QrArtPremiumScanTests.LongUrl, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        const int module = 12, quiet = 4;
+        var options = new QrPngRenderOptions {
+            ModuleSize = module, QuietZone = quiet, ModuleShape = shape, ModuleCornerRadiusPx = 4,
+            ProtectFunctionalPatterns = true, PreserveThemeFunctionPatterns = true
+        };
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, options, out _, out _, out var stride);
+        var size = qr.Modules.Width;
+        var bits = 0;
+        // Version block beside the top-right finder: three columns by six rows.
+        for (var y = 0; y < 6; y++) for (var x = size - 11; x < size - 8; x++) {
+            if (!qr.Modules[x, y]) continue;
+            var left = (quiet + x) * module;
+            var top = (quiet + y) * module;
+            Assert.True(pixels[(top + module / 2) * stride + (left + module / 2) * 4] < 64, $"version bit {x},{y} lost its ink");
+            Assert.True(pixels[top * stride + left * 4] > 160, $"version bit {x},{y} is still a square slab");
+            bits++;
+        }
+        Assert.True(bits > 0);
+    }
+
     [Theory]
     [InlineData(0, false)]
     [InlineData(3, false)]
