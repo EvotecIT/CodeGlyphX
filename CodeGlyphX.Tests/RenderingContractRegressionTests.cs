@@ -101,65 +101,47 @@ public sealed class RenderingContractRegressionTests {
     [InlineData(OutputFormat.Svg)]
     [InlineData(OutputFormat.Svgz)]
     [InlineData(OutputFormat.Html)]
-    public void StyledExportsPreserveProtectedMetadataAndSupportedPatternGeometry(OutputFormat format) {
+    public void StyledExportsApplyBodyPaintAndGeometryToEncodedMetadata(OutputFormat format) {
         var qr = CreateVersionSeven();
         var options = new QrRenderOptions {
             ModuleSize = 8, QuietZone = 4, ModuleShape = QrModuleShape.Circle, ModuleScale = 0.5,
             ArtGuardrailsEnabled = false,
             ForegroundGradient = new QrGradientOptions { StartColor = new Rgba32(255, 0, 0), EndColor = new Rgba32(0, 0, 255) }
         };
-        var protectedSvg = ReadSvg(qr.Render(format, options));
-        if (format != OutputFormat.Html || HasCanonicalContours(protectedSvg)) {
-            var coverage = ReadVectorCoverage(protectedSvg, qr.Size);
-            // Encoded format/version/fixed-dark cells stay solid; timing and alignment are
-            // deliberately styled in Wave1, so their distinct geometry is checked separately.
-            foreach (var cell in FunctionalCells(qr).Skip(3))
-                foreach (var fraction in new[] { 0.1, 0.5, 0.9 })
-                    Assert.Equal(Rgba32.Black, coverage(cell.x + 4 + fraction, cell.y + 4 + fraction));
-            Assert.NotEqual(Rgba32.White, coverage(12.5, 10.5));
-            Assert.Equal(Rgba32.White, coverage(12.05, 10.05));
-            Assert.NotEqual(Rgba32.White, coverage(26.5, 26.5));
-            Assert.Equal(Rgba32.White, coverage(25.5, 26.5));
-            options.ProtectFunctionalPatterns = false;
-            var unprotected = ReadVectorCoverage(ReadSvg(qr.Render(format, options)), qr.Size);
-            var formatCell = FunctionalCells(qr)[4];
-            Assert.Equal(Rgba32.White, unprotected(formatCell.x + 4.05, formatCell.y + 4.05));
-            return;
+        var coverage = ReadVectorCoverage(ReadSvg(qr.Render(format, options)), qr.Size);
+        // Format/version/fixed-dark cells use the same circle coverage and gradient as the body.
+        foreach (var cell in FunctionalCells(qr).Skip(3)) {
+            foreach (var fraction in new[] { 0.1, 0.9 })
+                Assert.Equal(Rgba32.White, coverage(cell.x + 4 + fraction, cell.y + 4 + fraction));
+            var center = coverage(cell.x + 4.5, cell.y + 4.5);
+            Assert.NotEqual(Rgba32.White, center);
+            Assert.NotEqual(Rgba32.Black, center);
         }
-        foreach (var cell in FunctionalCells(qr)) {
-            Assert.True(HasSolidSvgModule(protectedSvg, cell.x + 4, cell.y + 4), $"Unprotected functional cell ({cell.x}, {cell.y}).");
-        }
-        Assert.Contains(protectedSvg.Descendants(), e => e.Name.LocalName == "circle");
-
-        options.ProtectFunctionalPatterns = false;
-        var decorativeSvg = ReadSvg(qr.Render(format, options));
-        Assert.False(HasSolidSvgModule(decorativeSvg, 12, 10));
+        Assert.NotEqual(Rgba32.White, coverage(12.5, 10.5));
+        Assert.Equal(Rgba32.White, coverage(12.05, 10.05));
+        Assert.NotEqual(Rgba32.White, coverage(26.5, 26.5));
+        Assert.Equal(Rgba32.White, coverage(25.5, 26.5));
     }
 
     [Theory]
     [InlineData(OutputFormat.Svg)]
     [InlineData(OutputFormat.Html)]
-    public void PlainGeometryGradientKeepsProtectedCellsInSolidForeground(OutputFormat format) {
+    public void PlainGeometryGradientColorsEncodedMetadataAndTiming(OutputFormat format) {
         var qr = CreateVersionSeven();
         var svg = ReadSvg(qr.Render(format, new QrRenderOptions {
             QuietZone = 4, ArtGuardrailsEnabled = false, ForegroundGradient = new QrGradientOptions {
                 StartColor = new Rgba32(255, 0, 0), EndColor = new Rgba32(0, 0, 255)
             }
         }));
-        if (format != OutputFormat.Html || HasCanonicalContours(svg)) {
-            var coverage = ReadVectorCoverage(svg, qr.Size);
-            foreach (var cell in FunctionalCells(qr).Skip(3))
-                Assert.Equal(Rgba32.Black, coverage(cell.x + 4.5, cell.y + 4.5));
-            // The timing center retains its intended gradient instead of becoming plain black.
-            var coloredTiming = coverage(12.5, 10.5);
-            Assert.True(coloredTiming.R > 0 || coloredTiming.B > 0);
-            Assert.Equal(Rgba32.White, coverage(12.5, 11.5));
-            return;
+        var coverage = ReadVectorCoverage(svg, qr.Size);
+        foreach (var cell in FunctionalCells(qr).Skip(3)) {
+            var color = coverage(cell.x + 4.5, cell.y + 4.5);
+            Assert.NotEqual(Rgba32.White, color);
+            Assert.NotEqual(Rgba32.Black, color);
         }
-        foreach (var cell in FunctionalCells(qr)) {
-            Assert.True(HasSolidSvgModule(svg, cell.x + 4, cell.y + 4));
-        }
-        Assert.Contains(svg.Descendants(), e => e.Name.LocalName == "path" && ((string?)e.Attribute("fill"))?.StartsWith("url(#", StringComparison.Ordinal) == true);
+        var coloredTiming = coverage(12.5, 10.5);
+        Assert.True(coloredTiming.R > 0 || coloredTiming.B > 0);
+        Assert.Equal(Rgba32.White, coverage(12.5, 11.5));
     }
 
     [Fact]
@@ -306,20 +288,4 @@ public sealed class RenderingContractRegressionTests {
         return (x, y) => pixels[(int)(y * scale) * width + (int)(x * scale)];
     }
 
-    private static bool HasSolidSvgModule(XElement svg, int x, int y) {
-        foreach (var shape in svg.Descendants().Where(e => (string?)e.Attribute("fill") == "#000000")) {
-            if (shape.Name.LocalName == "rect" && (string?)shape.Attribute("x") == x.ToString(CultureInfo.InvariantCulture)
-                && (string?)shape.Attribute("y") == y.ToString(CultureInfo.InvariantCulture)
-                && (string?)shape.Attribute("width") == "1" && (string?)shape.Attribute("height") == "1"
-                && shape.Attribute("rx") is null) return true;
-            if (shape.Name.LocalName != "path") continue;
-            foreach (Match run in Regex.Matches((string?)shape.Attribute("d") ?? "", @"M(\d+) (\d+)h(\d+)v1h-\d+z")) {
-                var start = int.Parse(run.Groups[1].Value, CultureInfo.InvariantCulture);
-                var row = int.Parse(run.Groups[2].Value, CultureInfo.InvariantCulture);
-                var length = int.Parse(run.Groups[3].Value, CultureInfo.InvariantCulture);
-                if (row == y && start <= x && x < start + length) return true;
-            }
-        }
-        return false;
-    }
 }
