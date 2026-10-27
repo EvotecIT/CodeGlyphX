@@ -6,17 +6,17 @@ namespace CodeGlyphX.Rendering.Art;
 
 /// <summary>Repeatable artwork made from local geometry, without an image service or model.</summary>
 public enum QrArtPattern {
-    /// <summary>Flowing, multicolor marble bands.</summary>
+    /// <summary>Veined stone: soft clouding and turbulent veins in a restrained palette.</summary>
     Marble,
-    /// <summary>Layered waves of color.</summary>
+    /// <summary>Layered swells with pale crests.</summary>
     Waves,
-    /// <summary>Twisting radial rays.</summary>
+    /// <summary>Straight rays radiating from the canvas centre.</summary>
     Sunburst,
-    /// <summary>Colorful triangles and circular tile cutouts.</summary>
+    /// <summary>Bauhaus tiles: quarter and half discs, triangles, rings and dots.</summary>
     Geometric,
-    /// <summary>Leaves and stems on a paper-colored ground.</summary>
+    /// <summary>Overlapping lance leaves with midribs, stems and berries.</summary>
     Botanical,
-    /// <summary>Angular traces and circular junctions.</summary>
+    /// <summary>Circuit traces with 45-degree corners, pads and vias.</summary>
     Circuit
 }
 

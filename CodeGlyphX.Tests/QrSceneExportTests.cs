@@ -27,9 +27,9 @@ public sealed class QrSceneExportTests {
         var scene = QrArt.ComposeScene(Payload, options);
         var root = XElement.Parse(scene.ToSvg()); var ns = root.Name.Namespace;
         Assert.Equal("0 0 600 600", (string?)root.Attribute("viewBox"));
-        Assert.True(root.Descendants(ns + "polygon").Count() > 20);
+        Assert.True(root.Descendants().Count(e => e.Name == ns + "polygon" || e.Name == ns + "path") > 20);
         Assert.Empty(root.Descendants(ns + "image"));
-        var ink = root.Descendants(ns + "path").Single();
+        var ink = root.Descendants(ns + "path").Single(p => (string?)p.Attribute("shape-rendering") == "crispEdges");
         var mask = new bool[600 * 600];
         foreach (Match rect in Regex.Matches((string)ink.Attribute("d")!, @"M(\d+) (\d+)h(\d+)v(\d+)h-\d+z")) {
             var x = int.Parse(rect.Groups[1].Value); var y = int.Parse(rect.Groups[2].Value);

@@ -43,7 +43,12 @@ public static partial class QrImageComposer {
         var image = new QrImageSampler(rgba, width, height, hasCanvas ? side : imageSide, options);
         var imageOriginX = hasCanvas ? 0 : qrOffsetX + border;
         var imageOriginY = hasCanvas ? 0 : qrOffsetY + border;
-        var art = options.Art is null ? null : new ArtGeometry(qr.Modules, functions, moduleSize, options.Art,
+        var canvasOpacity = options.Canvas?.ArtOpacity ?? 1;
+        var fadeWidth = (options.Canvas?.FadeModules ?? 0) * moduleSize;
+        var canvasBase = options.Art is not null && options.Strength > 0 ? options.Art.FunctionalBackground : Rgba32.White;
+        var tintModel = options.Art is not null && options.Strength > 0 && options.Art.FunctionalTint > 0
+            ? new TintModel(options.Art, options.Strength, canvasOpacity, canvasBase, moduleSize, qr.Size, border, fadeWidth) : null;
+        var art = options.Art is null ? null : new ArtGeometry(qr.Modules, functions, moduleSize, options.Art, tintModel,
             image, qrOffsetX + border - imageOriginX, qrOffsetY + border - imageOriginY, cancellationToken);
         var finders = options.Art is not null && options.Art.Finders != QrImageFinderStyle.Square && options.Strength > 0
             ? new FinderGeometry(moduleSize, options.Art) : null;
@@ -64,8 +69,20 @@ public static partial class QrImageComposer {
                 if (px < 0 || py < 0 || px >= imageSide || py >= imageSide) {
                     var inQuietZone = x >= qrOffsetX && y >= qrOffsetY
                         && x < qrOffsetX + qrFullSize && y < qrOffsetY + qrFullSize;
+                    if (tintModel is not null) {
+                        image.Sample(x - imageOriginX, y - imageOriginY, out var qr2, out var qg, out var qb);
+                        tintModel.Write(pixels, index, px, py, qr2, qg, qb, 0);
+                        continue;
+                    }
                     if (hasCanvas && !inQuietZone) {
                         image.Sample(x, y, out var cr, out var cg, out var cb);
+                        // Washed art blends toward the quiet-zone colour.
+                        var opacity = canvasOpacity;
+                        if (opacity < 1) {
+                            cr = canvasBase.R + (cr - canvasBase.R) * opacity;
+                            cg = canvasBase.G + (cg - canvasBase.G) * opacity;
+                            cb = canvasBase.B + (cb - canvasBase.B) * opacity;
+                        }
                         pixels[index] = (byte)Math.Round(cr);
                         pixels[index + 1] = (byte)Math.Round(cg);
                         pixels[index + 2] = (byte)Math.Round(cb);
@@ -74,6 +91,17 @@ public static partial class QrImageComposer {
                         if (options.Art is not null && options.Strength > 0) WriteColor(pixels, index, options.Art.FunctionalBackground);
                         else if (duotone is not null) WriteColor(pixels, index, duotone.Paper);
                     }
+                    continue;
+                }
+                if (tintModel is not null) {
+                    image.Sample(x - imageOriginX, y - imageOriginY, out var tr, out var tg, out var tb);
+                    if (finders is not null && finders.Contains(px, py, qr.Size)) {
+                        tintModel.Write(pixels, index, px, py, tr, tg, tb, finders.DarkCoverage(px, py, qr.Size));
+                        continue;
+                    }
+                    // Timing, alignment, format and version modules take the same silhouettes as data modules.
+                    var tx = px / moduleSize; var ty = py / moduleSize;
+                    art!.Paint(pixels, index, tx, ty, px % moduleSize, py % moduleSize, qr.Modules[tx, ty], tr, tg, tb, options.Strength);
                     continue;
                 }
                 if (finders is not null && finders.TryPaint(pixels, index, px, py, qr.Size)) continue;

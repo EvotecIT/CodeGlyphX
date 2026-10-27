@@ -19,13 +19,19 @@ public static partial class QrImageComposer {
         private readonly double _nominalScale;
         private readonly Rgba32 _ink;
         private readonly Rgba32 _paper;
+        private readonly int _samples;
+        private readonly bool _tinted;
+        private readonly TintModel? _tint;
 
-        internal ArtGeometry(BitMatrix modules, BitMatrix functions, int moduleSize, QrImageArtOptions options,
+        internal ArtGeometry(BitMatrix modules, BitMatrix functions, int moduleSize, QrImageArtOptions options, TintModel? tint,
             QrImageSampler image, int imageX, int imageY, CancellationToken cancellationToken) {
             _style = options.Style;
             _nominalScale = options.Scale;
             _ink = options.FunctionalForeground;
             _paper = options.FunctionalBackground;
+            _samples = options.FunctionalTint > 0 ? 4 : 2;
+            _tint = tint;
+            _tinted = tint is not null;
             _modules = modules;
             _functions = functions;
             _moduleSize = moduleSize;
@@ -36,7 +42,8 @@ public static partial class QrImageComposer {
             for (var y = 0; y < modules.Height; y++) {
                 cancellationToken.ThrowIfCancellationRequested();
                 for (var x = 0; x < modules.Width; x++) {
-                    if (functions[x, y]) continue;
+                    // Tinted compositions draw reserved modules with the data silhouettes too.
+                    if (functions[x, y] && tint is null) continue;
                     var left = imageX + (x + 0.2) * moduleSize;
                     var right = imageX + (x + 0.8) * moduleSize;
                     var top = imageY + (y + 0.2) * moduleSize;
@@ -62,11 +69,16 @@ public static partial class QrImageComposer {
             double r, double g, double b, double strength) {
             var cell = _cells[my * _modules.Width + mx];
             ApplyTreatment(ref r, ref g, ref b, cell, mx, my, x, y);
+            if (_tinted) {
+                PaintTinted(pixels, index, cell, mx, my, x, y, dark, r, g, b);
+                return;
+            }
             var coverage = 0.0;
-            for (var sy = 0; sy < 2; sy++) for (var sx = 0; sx < 2; sx++) {
-                var u = (x + 0.25 + sx * 0.5) / _moduleSize;
-                var v = (y + 0.25 + sy * 0.5) / _moduleSize;
-                if (Inside(cell, mx, my, u, v, dark)) coverage += 0.25;
+            var weight = 1.0 / (_samples * _samples);
+            for (var sy = 0; sy < _samples; sy++) for (var sx = 0; sx < _samples; sx++) {
+                var u = (x + (sx + 0.5) / _samples) / _moduleSize;
+                var v = (y + (sy + 0.5) / _samples) / _moduleSize;
+                if (Inside(cell, mx, my, u, v, dark)) coverage += weight;
             }
             coverage *= 1 - 0.85 * cell.Protection;
             var cx = (x + 0.5) / _moduleSize - 0.5;
@@ -83,6 +95,27 @@ public static partial class QrImageComposer {
             pixels[index + 1] = Adapt(g, dark, amount);
             pixels[index + 2] = Adapt(b, dark, amount);
         }
+
+        // Tinted compositions read like a styled code printed on the artwork: light cells keep the art's crisp regions
+        // in a pale band, and dark silhouettes are deep tones of it. The scan anchor stays fixed at each dark cell centre.
+        private void PaintTinted(byte[] pixels, int index, CellGeometry cell, int mx, int my, int x, int y, bool dark,
+            double r, double g, double b) {
+            var coverage = 0.0;
+            if (dark) {
+                var weight = 1.0 / (_samples * _samples);
+                for (var sy = 0; sy < _samples; sy++) for (var sx = 0; sx < _samples; sx++) {
+                    var u = (x + (sx + 0.5) / _samples) / _moduleSize;
+                    var v = (y + (sy + 0.5) / _samples) / _moduleSize;
+                    if (Inside(cell, mx, my, u, v, true)) coverage += weight;
+                }
+                var cx = (x + 0.5) / _moduleSize - 0.5;
+                var cy = (y + 0.5) / _moduleSize - 0.5;
+                var anchor = Math.Max(0, Math.Min(1, (0.24 - Math.Sqrt(cx * cx + cy * cy)) / 0.06));
+                coverage = Math.Max(coverage * (1 - 0.85 * cell.Protection), anchor);
+            }
+            _tint!.Write(pixels, index, mx * _moduleSize + x, my * _moduleSize + y, r, g, b, coverage);
+        }
+        private static byte Mix(byte from, byte to, double amount) => (byte)Math.Round(from + (to - from) * amount);
 
         private void ApplyTreatment(ref double r, ref double g, ref double b, CellGeometry cell, int mx, int my, int px, int py) {
             if (_style == QrImageArtStyle.ModuleShape || _style == QrImageArtStyle.Botanical
@@ -168,8 +201,10 @@ public static partial class QrImageComposer {
 
         private bool InsideCircuit(int mx, int my, double u, double v, bool dark) {
             var x = u - 0.5; var y = v - 0.5;
-            var width = 0.12 * _nominalScale;
-            var node = x * x + y * y < 0.045 * _nominalScale * _nominalScale;
+            // Tinted circuits use bolder traces and pads, so dark cells keep their weight on a pale board.
+            var weight = _tinted ? 1.7 : 1;
+            var width = 0.12 * _nominalScale * weight;
+            var node = x * x + y * y < 0.045 * _nominalScale * _nominalScale * weight * weight;
             // Scale thickness, keeping every connection aligned with its neighbor's edge midpoint.
             var horizontal = Math.Abs(y) < width && SameData(mx + (x < 0 ? -1 : 1), my, dark);
             var vertical = Math.Abs(x) < width && SameData(mx, my + (y < 0 ? -1 : 1), dark);

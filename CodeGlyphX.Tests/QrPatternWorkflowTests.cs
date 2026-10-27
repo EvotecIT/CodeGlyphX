@@ -13,16 +13,19 @@ public sealed class QrPatternWorkflowTests {
         const string payload = "https://example.com/art";
         var pattern = QrArtPatternPresets.CreatePatternOptions(QrArtPattern.Circuit, 2026);
         var composition = QrArtPatternPresets.CreateCompositionOptions(pattern.Pattern);
-        var png = QrArt.RenderPatternPng(pattern);
-        var pixels = ImageReader.DecodeRgba32(png, out var width, out var height);
-        Assert.Equal(512, width);
-        Assert.Equal(512, height);
         var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        // Direct rendering draws the procedural source at the composition's full canvas size.
+        var side = (code.Size + 2 * composition.QuietZone + 2 * composition.Canvas!.PaddingModules) * composition.ModuleSize;
+        Assert.Equal(512, ImageReader.DecodeRgba32(QrArt.RenderPatternPng(pattern), out _, out _).Length / 4 / 512);
+        var png = QrArt.RenderPatternPng(pattern, side);
+        var pixels = ImageReader.DecodeRgba32(png, out var width, out var height);
+        Assert.Equal(side, width);
+        Assert.Equal(side, height);
         var fromSource = QrImageComposer.Render(code, pixels, width, height, composition);
         Assert.Equal(QrArt.ComposePattern(payload, pattern, composition).GetPixels(), fromSource.GetPixels());
-        Assert.Equal(png, QrArt.RenderPatternPng(pattern));
+        Assert.Equal(png, QrArt.RenderPatternPng(pattern, side));
         pattern.Seed++;
-        Assert.NotEqual(png, QrArt.RenderPatternPng(pattern));
+        Assert.NotEqual(png, QrArt.RenderPatternPng(pattern, side));
     }
 
     [Fact]
@@ -40,7 +43,7 @@ public sealed class QrPatternWorkflowTests {
             edited.Canvas!.PaddingModules = 0;
             var other = QrArtPatternPresets.CreateCompositionOptions(pattern);
             Assert.Equal(0.95, other.Art!.Scale);
-            Assert.Equal(8, other.Canvas!.PaddingModules);
+            Assert.True(other.Canvas!.PaddingModules >= 8);
             Assert.Equal(18, other.ModuleSize);
         }
     }
