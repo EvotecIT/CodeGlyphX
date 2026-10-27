@@ -4,13 +4,30 @@ namespace CodeGlyphX.Rendering.Art;
 
 /// <summary>How an image contributes color to QR data modules.</summary>
 public enum QrImageCompositionStyle {
-    /// <summary>Adjust every image pixel to its module polarity, with a small high-contrast center.</summary>
+    /// <summary>
+    /// Tint every module from the image: dark modules become a darkened image colour and light modules a lightened one,
+    /// keeping the image's own hue and tonal variation. Finders and alignment patterns are rounded, image-tinted rings.
+    /// </summary>
     ColorModules,
-    /// <summary>Reveal more of the image around contrasting square module centers.</summary>
+    /// <summary>
+    /// Photo first: the image stays full-bleed and unaltered across each module, and only a small square centre mark
+    /// (sized by CenterSize; 0.45 module by default) carries the dark or light value. Where the image opposes a mark, it is
+    /// nudged slightly towards it around the mark. Dark photos leave the least scan margin of all photo treatments;
+    /// QrArt.Compose refuses output that does not decode. Finders and alignment patterns are rounded, image-tinted rings; <see cref="QrImageCompositionOptions.SolidFunctionPatterns"/> restores solid black and white function patterns.
+    /// </summary>
     ImageOverlay,
-    /// <summary>Dither the supplied image into 3 by 3 sub-cells per module, forcing the centre sub-cell to the encoded bit.</summary>
+    /// <summary>
+    /// Dither the supplied image into 3 by 3 sub-cells per module, forcing the centre sub-cell to the encoded bit.
+    /// Black and white by default; <see cref="QrImageCompositionOptions.Duotone"/> selects a two-colour ink and paper.
+    /// Works best with high-contrast subjects such as portraits, silhouettes, logos and bold shapes. Low-contrast or
+    /// flat-colour scenes, such as soft landscapes, may not stay recognisable within the scan limits; use ColorModules
+    /// or ImageBackground for those.
+    /// </summary>
     Halftone3x3,
-    /// <summary>Keep the source image behind opaque, contrasting data-module centres.</summary>
+    /// <summary>
+    /// Keep the image across the whole symbol, including the finder, timing and alignment zones, with crisp antialiased
+    /// module dots tinted from the image's luminance and no halo around them. Finder and alignment patterns are drawn as rounded, image-tinted rings on top.
+    /// </summary>
     ImageBackground
 }
 
@@ -23,7 +40,7 @@ public enum QrImageFit {
 }
 
 /// <summary>
-/// Deterministic image composition settings. Functional modules retain solid, high-contrast geometry,
+/// Deterministic image composition settings. Function patterns keep their geometry and polarity,
 /// and the quiet zone remains uniformly light (white by default). These constraints do not guarantee camera readability.
 /// </summary>
 public sealed class QrImageCompositionOptions {
@@ -41,13 +58,15 @@ public sealed class QrImageCompositionOptions {
 
     /// <summary>
     /// Image strength (0..1). Zero produces black/white modules; higher values retain more image color.
-    /// In overlay mode this also relaxes contrast outside protected module centers.
+    /// ImageOverlay keeps the image unaltered outside its centre marks at every strength.
+    /// Halftone3x3 caps the image contribution at 0.7 so each module's average tone keeps following its bit.
     /// </summary>
     public double Strength { get; set; } = 0.75;
 
     /// <summary>
-    /// Width of the protected square center relative to a data module (0.5..1).
-    /// Used by overlay and image-background modes when Art is null; rounded up to a centered whole-pixel footprint.
+    /// Size of the contrasting module mark relative to a module (0.5..1), used when Art is null. ImageBackground draws a
+    /// round dot covering about the same area as a square of this width; ImageOverlay draws a square centre mark of
+    /// 0.75 times this width, between 0.3 and 0.45 module. Smaller marks show more image but leave less scan margin.
     /// </summary>
     public double CenterSize { get; set; } = 0.6;
 
@@ -66,15 +85,45 @@ public sealed class QrImageCompositionOptions {
     /// <summary>Optional canvas. The image is fitted across the entire canvas for continuity around the QR.</summary>
     public QrImageCanvasOptions? Canvas { get; set; }
 
+    /// <summary>
+    /// Smallest QR version that <see cref="QrArt.Compose(string, byte[], QrImageCompositionOptions?, ImageDecodeOptions?)"/>
+    /// encodes (1..40); defaults to 6. Short payloads otherwise produce so few modules that every photo treatment reads as
+    /// coarse blocks. Longer payloads still use the larger version they need. <see cref="QrImageComposer"/> and
+    /// <see cref="QrArt.SearchImage"/> keep the versions they are given or explore.
+    /// </summary>
+    public int MinimumVersion { get; set; } = 6;
+
+    /// <summary>
+    /// When true (default), <see cref="QrArt.Compose(string, byte[], QrImageCompositionOptions?, ImageDecodeOptions?)"/>
+    /// decodes the composed pixels with the native decoder and throws <see cref="InvalidOperationException"/> when the
+    /// payload is not recovered. This does not certify resized, compressed or printed output.
+    /// </summary>
+    public bool VerifyDecode { get; set; } = true;
+
+    /// <summary>
+    /// When true, ColorModules, ImageOverlay and ImageBackground draw every function pattern (finders, separators, timing,
+    /// alignment, format and version modules) as solid black and white squares, as earlier releases did. This is the
+    /// highest-contrast option but cuts the image out around the finders. Defaults to false: finders and alignment
+    /// patterns are rounded, image-tinted rings, the other function modules share the data treatment, and the image
+    /// continues underneath. Ignored for Halftone3x3 and when Art is set.
+    /// </summary>
+    public bool SolidFunctionPatterns { get; set; }
+
+    /// <summary>Optional two-colour ink and paper for <see cref="QrImageCompositionStyle.Halftone3x3"/>; null keeps black and white.</summary>
+    public QrImageDuotoneOptions? Duotone { get; set; }
+
     internal QrImageCompositionOptions WithModuleSize(int moduleSize) => new QrImageCompositionOptions {
         ModuleSize = moduleSize, QuietZone = QuietZone, Style = Style, Fit = Fit, Strength = Strength,
         CenterSize = CenterSize, ImagePositionX = ImagePositionX, ImagePositionY = ImagePositionY,
-        ImageZoom = ImageZoom, Art = Art, Canvas = Canvas
+        ImageZoom = ImageZoom, Art = Art, Canvas = Canvas, MinimumVersion = MinimumVersion,
+        VerifyDecode = VerifyDecode, Duotone = Duotone, SolidFunctionPatterns = SolidFunctionPatterns
     };
 
     internal void Validate() {
         Art?.Validate();
         Canvas?.Validate();
+        Duotone?.Validate();
+        if (MinimumVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(MinimumVersion));
         QrImageCanvasOptions.ValidatePosition(ImagePositionX, nameof(ImagePositionX));
         QrImageCanvasOptions.ValidatePosition(ImagePositionY, nameof(ImagePositionY));
         if (double.IsNaN(ImageZoom) || ImageZoom < 1 || ImageZoom > 4) throw new ArgumentOutOfRangeException(nameof(ImageZoom));
@@ -86,6 +135,8 @@ public sealed class QrImageCompositionOptions {
             throw new ArgumentOutOfRangeException(nameof(Style));
         if ((Style == QrImageCompositionStyle.Halftone3x3 || Style == QrImageCompositionStyle.ImageBackground) && Art is not null)
             throw new ArgumentException("Image sub-cell and background treatments cannot be combined with module silhouettes.", nameof(Art));
+        if (Duotone is not null && Style != QrImageCompositionStyle.Halftone3x3)
+            throw new ArgumentException("Duotone ink and paper apply to the Halftone3x3 style only.", nameof(Duotone));
         if (Fit != QrImageFit.Cover && Fit != QrImageFit.Contain) throw new ArgumentOutOfRangeException(nameof(Fit));
         if (double.IsNaN(Strength) || Strength < 0 || Strength > 1) throw new ArgumentOutOfRangeException(nameof(Strength));
         if (double.IsNaN(CenterSize) || CenterSize < 0.5 || CenterSize > 1) throw new ArgumentOutOfRangeException(nameof(CenterSize));
