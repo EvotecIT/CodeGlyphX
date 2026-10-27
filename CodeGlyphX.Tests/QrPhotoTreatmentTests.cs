@@ -1,5 +1,6 @@
 using System;
 using CodeGlyphX.Qr;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Art;
 using Xunit;
 
@@ -31,8 +32,7 @@ public sealed class QrPhotoTreatmentTests {
             else if (x % 18 >= 6 && x % 18 < 12 && y % 18 >= 6 && y % 18 < 12)
                 Assert.Equal(qr.Modules[mx, my] ? 0 : 255, value);
         }
-        Assert.True(QrArt.ValidateImage(result.ToPng(), Payload, 3000).AllPassed);
-        Assert.Equal(Payload, QrLogoPlacementTests.IndependentDecode(result.ToPng()));
+        AssertPayload(result);
     }
 
     [Fact]
@@ -81,8 +81,7 @@ public sealed class QrPhotoTreatmentTests {
         // The finder ball uses the deep function band; the light gap is lifted image colour.
         Assert.InRange(Luma(pixels, Offset(3.5, 3.5)), 0, 45);
         Assert.InRange(Luma(pixels, Offset(1.5, 3.5)), 160, 255);
-        Assert.True(QrArt.ValidateImage(result.ToPng(), Payload, 3000).AllPassed);
-        Assert.Equal(Payload, QrLogoPlacementTests.IndependentDecode(result.ToPng()));
+        AssertPayload(result);
 
         int Offset(double mx, double my) => ((int)((4 + my) * module) * result.Size + (int)((4 + mx) * module)) * 4;
     }
@@ -130,7 +129,7 @@ public sealed class QrPhotoTreatmentTests {
         }
         Assert.True(ink > 0 && paper > 0);
         Assert.Equal(duotone.Paper.R, pixels[0]);
-        Assert.True(QrArt.ValidateImage(result.ToPng(), Payload, 3000).AllPassed);
+        AssertPayload(result);
 
         Assert.Throws<ArgumentException>(() => QrImageComposer.Render(qr, Artwork(8), 8, 8, new QrImageCompositionOptions {
             Style = QrImageCompositionStyle.Halftone3x3, Duotone = new QrImageDuotoneOptions { Ink = new CodeGlyphX.Rendering.Rgba32(120, 120, 120) }
@@ -180,6 +179,17 @@ public sealed class QrPhotoTreatmentTests {
         var other = QR.Encode("https://example.com/other", new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var error = Assert.Throws<InvalidOperationException>(() => QrArt.VerifyComposition(other, composition));
         Assert.Contains("VerifyDecode", error.Message);
+    }
+
+    private static void AssertPayload(QrImageComposition result) {
+        // Colour and functional-pixel contracts need exact readback, independent of profiler overhead.
+        // Timed guard acceptance/rejection and transformed delivery scans have separate tests.
+        var png = result.ToPng();
+        var pixels = ImageReader.DecodeRgba32(png, out var width, out var height);
+        Assert.True(QrImageDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32,
+            new QrPixelDecodeOptions { Profile = QrDecodeProfile.Balanced, DisableTransforms = true }, out var decoded));
+        Assert.Equal(Payload, decoded.Text);
+        Assert.Equal(Payload, QrLogoPlacementTests.IndependentDecode(png));
     }
 
     private static double Luma(byte[] pixels, int p) => 0.299 * pixels[p] + 0.587 * pixels[p + 1] + 0.114 * pixels[p + 2];

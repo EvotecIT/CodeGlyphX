@@ -11,13 +11,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: Build & Test (${{ matrix.os }})
+  test-framework:
+    name: Test (${{ matrix.os }}, ${{ matrix.framework }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
-    # Linux runs both full corpora; Windows also runs the .NET Framework suite.
-    # Allow build and shutdown headroom for those longer validation jobs.
-    timeout-minutes: ${{ matrix.os == 'macos-latest' && 20 || 45 }}
+    # Every platform runs the .NET 8 and .NET 10 corpora; Windows also runs .NET Framework.
+    # Allow build and shutdown headroom after the macOS corpora finish near twenty minutes.
+    timeout-minutes: ${{ matrix.os == 'macos-latest' && 30 || 45 }}
     env:
       # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
       CODEGLYPHX_TEST_BUDGET_MULTIPLIER: ${{ matrix.testBudgetMultiplier }}
@@ -26,12 +26,31 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
+            framework: net8.0
+            selfHostedRunner: '["self-hosted","linux"]'
+            testBudgetMultiplier: '4'
+          - os: ubuntu-latest
+            framework: net10.0
             selfHostedRunner: '["self-hosted","linux"]'
             testBudgetMultiplier: '4'
           - os: macos-latest
+            framework: net8.0
+            selfHostedRunner: '["self-hosted","macOS"]'
+            testBudgetMultiplier: '1'
+          - os: macos-latest
+            framework: net10.0
             selfHostedRunner: '["self-hosted","macOS"]'
             testBudgetMultiplier: '1'
           - os: windows-latest
+            framework: net8.0
+            selfHostedRunner: '["self-hosted","windows"]'
+            testBudgetMultiplier: '1'
+          - os: windows-latest
+            framework: net10.0
+            selfHostedRunner: '["self-hosted","windows"]'
+            testBudgetMultiplier: '1'
+          - os: windows-latest
+            framework: net472
             selfHostedRunner: '["self-hosted","windows"]'
             testBudgetMultiplier: '1'
     steps:
@@ -49,17 +68,17 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Build complete solution
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && matrix.framework == 'net8.0'
         run: dotnet build CodeGlyphX.sln -c Release --nologo
 
+      - name: Build test framework
+        if: runner.os != 'Windows' || matrix.framework != 'net8.0'
+        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f ${{ matrix.framework }} --nologo
+
       - name: Build portable projects
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && matrix.framework == 'net8.0'
         run: |
           dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f netstandard2.0 --nologo
-          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net8.0 --nologo
-          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --nologo
-          dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --nologo
-          dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net10.0 --nologo
           dotnet build CodeGlyphX.Examples/CodeGlyphX.Examples.csproj -c Release --nologo
           dotnet build CodeGlyphX.Fuzz/CodeGlyphX.Fuzz.csproj -c Release --nologo
 
@@ -69,23 +88,23 @@ jobs:
           ./Build/Download-ImageSamples.ps1 -NoUpdateManifest
           ./Build/Download-ExternalSamples.ps1 -NoUpdateManifest
 
-      - name: Test (net8.0)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
+      - name: Test (${{ matrix.framework }})
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f ${{ matrix.framework }} --no-restore --no-build
 
-      - name: Test (net10.0)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net10.0 --no-restore --no-build
-
-      - name: Upload coverage to Codecov
-        if: runner.os == 'Linux' && github.event_name != 'pull_request'
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
-        with:
-          files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
-          fail_ci_if_error: false
-          verbose: true
-
-      - name: Test (net472 smoke)
-        if: runner.os == 'Windows'
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore --no-build
+  build-test:
+    name: Build & Test (${{ matrix.os }})
+    needs: test-framework
+    if: always()
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Require every framework suite
+        env:
+          TEST_RESULT: ${{ needs.test-framework.result }}
+        run: test "$TEST_RESULT" = success
 
   release-contracts:
     name: Package & NativeAOT contracts
@@ -151,12 +170,22 @@ jobs:
       powerforge_ref: 396e00acba04dcaae4c3c95433338f4df65fbc01
       report_artifact_name: powerforge-website-reports
 
-  coverage:
-    name: Coverage (linux)
+  coverage-shards:
+    name: Coverage shard (${{ matrix.shard }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     # Keep upload/shutdown headroom after the profiled full suite.
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: qr-rendering
+            filter: 'Category!=CorpusTiming&FullyQualifiedName~CodeGlyphX.Tests.Qr&(FullyQualifiedName~Art|FullyQualifiedName~Canvas|FullyQualifiedName~Caption|FullyQualifiedName~Photo|FullyQualifiedName~Hero|FullyQualifiedName~Scene|FullyQualifiedName~Logo|FullyQualifiedName~Geometry)'
+          - shard: qr-readback
+            filter: 'Category!=CorpusTiming&FullyQualifiedName~CodeGlyphX.Tests.Qr&FullyQualifiedName!~Art&FullyQualifiedName!~Canvas&FullyQualifiedName!~Caption&FullyQualifiedName!~Photo&FullyQualifiedName!~Hero&FullyQualifiedName!~Scene&FullyQualifiedName!~Logo&FullyQualifiedName!~Geometry'
+          - shard: other
+            filter: 'Category!=CorpusTiming&FullyQualifiedName!~CodeGlyphX.Tests.Qr'
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -179,7 +208,7 @@ jobs:
           ./Build/Download-ExternalSamples.ps1 -NoUpdateManifest
 
       - name: Test (net8.0 + coverage, excluding timing-sensitive corpus)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --filter "Category!=CorpusTiming" --collect:"XPlat Code Coverage" --settings Build/coverage.runsettings
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --filter "${{ matrix.filter }}" --collect:"XPlat Code Coverage" --settings Build/coverage.runsettings
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
@@ -187,3 +216,15 @@ jobs:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
           fail_ci_if_error: false
           verbose: true
+
+  coverage:
+    name: Coverage (linux)
+    needs: coverage-shards
+    if: always()
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 5
+    steps:
+      - name: Require every coverage shard
+        env:
+          COVERAGE_RESULT: ${{ needs.coverage-shards.result }}
+        run: test "$COVERAGE_RESULT" = success
