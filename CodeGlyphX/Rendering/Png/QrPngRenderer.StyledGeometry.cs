@@ -76,6 +76,13 @@ public static partial class QrPngRenderer {
         _ => shape,
     };
 
+    // Format and version bits follow the theme's shape family but keep near-solid ink:
+    // dotted themes get full squircles because a circle loses too much coverage when blurred.
+    private static QrModuleShape FunctionModuleShape(QrModuleShape shape) => shape switch {
+        QrModuleShape.Dot or QrModuleShape.Circle => QrModuleShape.Squircle,
+        _ => FinderShape(shape),
+    };
+
     private static void DrawStyledFinder(byte[] buffer, int stride, QrPngRenderOptions opts, BitMatrix modules,
         int originX, int originY, int qrSize, int mx, int my, int cells, int index) {
         var m = opts.ModuleSize;
