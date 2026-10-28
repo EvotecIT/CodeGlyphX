@@ -47,9 +47,10 @@
     <None Include="../Licenses/Unicode-LICENSE.txt" Pack="true" PackagePath="Licenses/" />
     <None Include="../Licenses/GG-Ocra-CC0.txt" Pack="true" PackagePath="Licenses/" />
     <None Include="../Licenses/Raisty-OCR-B-OFL.txt" Pack="true" PackagePath="Licenses/" />
+    <None Include="../Licenses/Manrope-OFL.txt" Pack="true" PackagePath="Licenses/" />
     <EmbeddedResource Include="Printing/Fonts/*.ttf" LogicalName="CodeGlyphX.Printing.Fonts.%(Filename)%(Extension)" />
-    <None Remove="Printing/Fonts/*.ttf;Printing/Fonts/provenance.json" />
-    <None Include="Printing/Fonts/*.ttf;Printing/Fonts/provenance.json" Pack="true" PackagePath="Fonts/" />
+    <None Remove="Printing/Fonts/*.ttf;Printing/Fonts/provenance.json;Printing/Fonts/caption-provenance.json" />
+    <None Include="Printing/Fonts/*.ttf;Printing/Fonts/provenance.json;Printing/Fonts/caption-provenance.json" Pack="true" PackagePath="Fonts/" />
     <None Include="..\\Assets\\Logo\\codeglyphx-qr-icon.png" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0' ">

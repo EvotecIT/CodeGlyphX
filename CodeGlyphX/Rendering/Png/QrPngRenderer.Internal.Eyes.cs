@@ -1283,6 +1283,13 @@ public static partial class QrPngRenderer {
         if (canvas is null) return null;
         return new QrCanvasOptions {
             Caption = canvas.Caption?.Copy(scale),
+            ShadowOnPanelsOnly = canvas.ShadowOnPanelsOnly,
+            BandColor = canvas.BandColor, StrokeColor = canvas.StrokeColor, StrokeWidthPx = canvas.StrokeWidthPx * scale,
+            CaptionTail = canvas.CaptionTail, BandLogoPng = canvas.BandLogoPng,
+            QrCornerRadiusPx = canvas.QrCornerRadiusPx * scale, ShadowBlurPx = canvas.ShadowBlurPx * scale,
+            StackedPanelOffsetPx = canvas.StackedPanelOffsetPx * scale, StackedPanelColor = canvas.StackedPanelColor,
+            PanelGlowColor = canvas.PanelGlowColor, PanelGlowRadiusPx = canvas.PanelGlowRadiusPx * scale,
+            SecondaryPanelGlowColor = canvas.SecondaryPanelGlowColor, SecondaryPanelGlowRadiusPx = canvas.SecondaryPanelGlowRadiusPx * scale,
             Template = canvas.Template,
             PaddingPx = CaptionCanvasPadding(canvas) * scale,
             CornerRadiusPx = canvas.CornerRadiusPx * scale,

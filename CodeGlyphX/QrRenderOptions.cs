@@ -12,6 +12,17 @@ namespace CodeGlyphX;
 /// HTML supports a smaller appearance subset and rejects unsupported effects explicitly.
 /// </remarks>
 public sealed class QrRenderOptions {
+    // Preset layout is resolved at the actual code size; native decode validation still applies.
+    internal QrHeroPreset? HeroPreset { get; set; }
+    /// <summary>Shape of the logo plate; MatchEyes follows the whole finder silhouette.</summary>
+    public QrLogoPlateShape LogoPlateShape { get; set; } = QrLogoPlateShape.MatchEyes;
+    /// <summary>Optional inset ring on the logo plate.</summary>
+    public Rgba32? LogoRingColor { get; set; }
+    /// <summary>Inset ring width in pixels, kept within the budgeted plate.</summary>
+    public int LogoRingWidthPx { get; set; }
+    /// <summary>Optional monochrome logo ink. White backgrounds in opaque source images become transparent.</summary>
+    public Rgba32? LogoTint { get; set; }
+
     /// <summary>
     /// Module size in pixels.
     /// </summary>
@@ -108,8 +119,8 @@ public sealed class QrRenderOptions {
 
 
     /// <summary>
-    /// When true, preserves format/version bits and the fixed dark module at full size.
-    /// Timing follows the body style and alignment patterns use whole finder geometry.
+    /// Preserves functional-pattern placement and quiet-zone protection. Format, version and timing
+    /// modules follow the body shape and paint; finders and alignment patterns use whole geometry.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 

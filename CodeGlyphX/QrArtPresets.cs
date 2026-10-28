@@ -431,7 +431,7 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(18, 36, 92);
         opts.Background = new Rgba32(250, 252, 255);
-        opts.ModuleShape = QrModuleShape.ConnectedSquircle;
+        opts.ModuleShape = QrModuleShape.Squircle;
         opts.ModuleScale = 0.96;
         opts.ModuleScaleMap = new QrModuleScaleMapOptions {
             Mode = QrModuleScaleMode.Radial,
@@ -501,7 +501,7 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(20, 40, 98);
         opts.Background = new Rgba32(250, 252, 255);
-        opts.ModuleShape = QrModuleShape.ConnectedSquircle;
+        opts.ModuleShape = QrModuleShape.Squircle;
         opts.ModuleScale = 0.96;
         opts.ModuleScaleMap = new QrModuleScaleMapOptions {
             Mode = QrModuleScaleMode.Radial,
@@ -627,7 +627,7 @@ internal static class QrArtPresets {
         }
         opts.ForegroundGradient = new QrGradientOptions {
             Type = QrGradientType.DiagonalDown,
-            StartColor = new Rgba32(28, 132, 196),
+            StartColor = new Rgba32(22, 118, 184),
             EndColor = new Rgba32(34, 62, 168),
         };
         if (opts.Eyes is not null) {
@@ -660,7 +660,7 @@ internal static class QrArtPresets {
             opts.ForegroundPalette.Colors = new[] {
                 new Rgba32(58, 70, 184),
                 new Rgba32(90, 60, 184),
-                new Rgba32(40, 128, 176),
+                new Rgba32(34, 118, 166),
             };
         }
         return opts;

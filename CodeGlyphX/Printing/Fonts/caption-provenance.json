@@ -1,0 +1,19 @@
+{
+  "tool": "fontTools 4.66.1; Prepare-CaptionFontAsset.py",
+  "inputs": {
+    "Manrope-source.ttf": {
+      "url": "https://raw.githubusercontent.com/google/fonts/e7db6ca603fd4862010383ff17ffd6cc4ffac1c0/ofl/manrope/Manrope%5Bwght%5D.ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    "Manrope-OFL.txt": {
+      "url": "https://raw.githubusercontent.com/google/fonts/e7db6ca603fd4862010383ff17ffd6cc4ffac1c0/ofl/manrope/OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    }
+  },
+  "outputs": {
+    "Manrope-SemiBold-Latin-Extended.ttf": "04c53e9409bad005e3b0e019075c28759c02dbb4501784fd665dddb10b5992e9"
+  },
+  "face": "Manrope SemiBold; static weight 600",
+  "unicode_ranges": "U+0020-024F,U+0300-036F,U+2000-206F,U+20AC-20AC,U+1E00-1EFF",
+  "modifications": "Instantiated at weight 600 with static SemiBold names; subset to Latin, Latin Extended, combining marks and common punctuation. Full upstream OFL retained in name ID 13."
+}

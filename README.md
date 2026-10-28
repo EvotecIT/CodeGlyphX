@@ -4,7 +4,6 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, industrial and retail ba
 
 [![NuGet](https://img.shields.io/nuget/v/CodeGlyphX)](https://www.nuget.org/packages/CodeGlyphX)
 [![CI](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml/badge.svg)](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml)
-[![Codecov](https://codecov.io/gh/EvotecIT/CodeGlyphX/branch/master/graph/badge.svg)](https://codecov.io/gh/EvotecIT/CodeGlyphX)
 [![License](https://img.shields.io/github/license/EvotecIT/CodeGlyphX.svg)](https://github.com/EvotecIT/CodeGlyphX/blob/master/LICENSE)
 
 ## What it covers
@@ -237,21 +236,24 @@ var report = QrArt.ValidateImage(png, payload);
 if (report.AllPassed) File.WriteAllBytes("artistic-qr.png", png);
 ```
 
-`ColorModules` (the default) adapts the luminance of every image pixel to its QR module, with small contrasting centers for local-threshold readers. `ImageOverlay` reveals more image detail around contrasting square module centers; `CenterSize` controls their width when `Art` is not set. `Strength` ranges from 0 (plain black/white) to 1 (most image color). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
+`ColorModules` (the default) tints every module from the image itself: dark modules become a darkened image colour and light modules a lightened one, so the photo keeps its hue and tonal variation without a grey veil or centre dots. Dark modules keep their hue and gain chroma as they darken, so a pale sun turns deep amber rather than olive-brown, and light modules stay below pastel. `ImageOverlay` is the "centre-pixel" look: the photo stays full-bleed and unaltered across every module, and only a small square centre mark (0.45 module at the default `CenterSize`) carries the dark or light value; where the photo opposes a mark it is nudged slightly towards it around the mark so the code still reads when downscaled. Dark photos leave this treatment the least scan margin; `QrArt.Compose` refuses output that does not decode, so pick a lighter crop, `ImageBackground` or `ColorModules` if it throws. All three colour treatments share one function-pattern style: finders and alignment patterns are rounded, photo-tinted rings, and separators, timing and format modules use the same treatment as data modules, so the photo is never cut out around the finders. Set `SolidFunctionPatterns = true` for the earlier solid black-and-white function patterns when maximum contrast matters more than the look. `CenterSize` sets the dot size when `Art` is not set. `Strength` ranges from 0 (plain black/white) to 1 (most image colour). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
 
-`Halftone3x3` divides each data module into nine equal sub-cells. Error diffusion follows the supplied image, while the centre sub-cell is forced to the encoded dark or light value. All functional patterns and the quiet zone stay solid. Use a module size divisible by three; `Strength` controls the image's contribution before dithering. This is separate from the decorative stipple treatment named `Art.Style = Halftone`.
+Short payloads make coarse photo codes, so `QrArt.Compose` encodes at least version 6 (`MinimumVersion`, 1..40). Longer payloads still get the larger version they need. `QrImageComposer.Render` and `QrArt.SearchImage` use the versions they are given or explore. `Compose` also decodes its own result with the native decoder and throws `InvalidOperationException` with suggestions when the payload is not recovered; set `VerifyDecode = false` only for decorative output that you verify separately.
+
+`Halftone3x3` divides each data module into nine equal sub-cells. Before dithering, the tones are separated: a percentile contrast stretch, local contrast on luminance, partial histogram equalisation and a lift curve that keeps mid-tones as an open grey pattern. Serpentine error diffusion then follows the image, while the centre sub-cell is forced to the encoded dark or light value. Where the photo strongly opposes a module, at least four of its nine sub-cells take the module's colour, so small prints and blurred copies still read. `Strength` above 0.7 is capped for the same reason. All functional patterns and the quiet zone stay solid. Use a module size divisible by three. Set `Duotone` for a two-colour print: the default is a navy ink (#1E3780) on warm cream paper, and both colours can be changed within enforced luminance bounds. This is separate from the decorative stipple treatment named `Art.Style = Halftone`. Halftone works best with high-contrast subjects: portraits, silhouettes, logos and bold shapes. Low-contrast or flat-colour scenes, such as soft landscapes, may not stay recognisable within the scan limits; use `ColorModules` or `ImageBackground` for those.
 
 ```csharp
 var halftone = QrArt.Compose(payload, File.ReadAllBytes("portrait.png"),
     new QrImageCompositionOptions {
         Style = QrImageCompositionStyle.Halftone3x3,
         ModuleSize = 18,
-        Strength = 0.75
+        Strength = 0.75,
+        Duotone = new QrImageDuotoneOptions() // Optional; omit for black and white.
     });
 halftone.SavePng("portrait-qr.png");
 ```
 
-`ImageBackground` retains the source colours around opaque module centres. Use `CenterSize` to balance image visibility and scanning contrast; for example, start at `0.7` with an 18-pixel module. Neither new treatment combines with `Art` silhouettes. Validate the exported PNG at the delivery size with `QrArt.ValidateImage`, then check an independent reader and the intended phones or printed media. The limited native decoder on legacy runtimes can reject compositions accepted by modern .NET; rendering support does not establish legacy scan validation.
+`ImageBackground` keeps the photo across the whole symbol, including the finder, timing and alignment zones. Modules are crisp antialiased dots tinted from the photo's luminance, with no halo, so the photo between them stays sharp. The finder and alignment patterns are rounded, photo-tinted rings; their light gap and the narrow separator band keep the local photo colour, lifted only to the scanning minimum. Use `CenterSize` to balance image visibility and scanning contrast; for example, start at `0.7` with an 18-pixel module. Neither `Halftone3x3` nor `ImageBackground` combines with `Art` silhouettes. Validate the exported PNG at the delivery size with `QrArt.ValidateImage`, then check an independent reader and the intended phones or printed media. The limited native decoder on legacy runtimes can reject compositions accepted by modern .NET; rendering support does not establish legacy scan validation.
 
 The legacy `QrImageDecoder` also locates axis-aligned QR finder patterns in the actual image. Captions, frame borders and detailed logos no longer have to share the QR's dark bounding rectangle. It still samples the supplied pixels and performs the normal module/error-correction checks; this does not replace checking camera images or printed output.
 
@@ -376,13 +378,13 @@ SVG exports are self-contained **hybrid images**: framing is vector geometry and
 
 ### Procedural art
 
-![Six locally drawn QR designs: marble, waves, sunburst, geometric tiles, botanical weave and circuits](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-procedural-art-gallery.png)
+![Six locally drawn QR designs: veined marble, layered waves, sunburst rays, Bauhaus tiles, leaves and circuit traces](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-procedural-art-gallery.png)
 
-`QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns.
+`QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns. Every motif is drawn from signed distances, so edges stay antialiased at any size.
 
 The browser art studio starts with six colorful presets. Edit the seed, density, rotation, four palette colors and paper color, then compare alternatives. Treatment, finder frames, color strength, module scale, detail protection and export resolution are adjustable. Switch to an uploaded image for focal-region and mask controls, or add an illustrated frame for PNG and hybrid SVG exports. Each result retains its original payload for later delivery checks.
 
-`QrArtPatternPresets` supplies editable palette and composition settings for each family. `QrArt.RenderPatternPng` renders the source artwork alone, so a preview and mask/layout search can use exactly the same pixels:
+`QrArtPatternPresets` supplies editable palette and composition settings for each family. The presets keep three or four related hues and use one tinted colour model (`QrImageArtOptions.FunctionalTint`): the art's crisp regions continue through the quiet zone and light modules, with darker areas lifted into a light field that follows the code and fades softly into the washed canvas (`QrImageCanvasOptions.ArtOpacity`, `FadeModules`). Every dark module, finder, timing, format and version modules included, is a deep tone of the art drawn with the body silhouette; `DarkModuleArt` = 0 uses the functional foreground instead. Each family places the code differently in its art. `QrArt.RenderPatternPng` renders the source artwork alone, so a preview and mask/layout search can use exactly the same pixels:
 
 ```csharp
 var pattern = QrArtPatternPresets.CreatePatternOptions(QrArtPattern.Marble, seed: 2026);
@@ -430,7 +432,7 @@ The [procedural-art example](https://github.com/EvotecIT/CodeGlyphX/blob/master/
 
 ![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-scene-gallery.png)
 
-`QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Placement that clips the QR is rejected.
+`QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Each scene holds the code in a light backdrop that is part of the illustration (an arch, a billboard, a stage screen, a bubble, a moon or an arcade panel) and follows the QR placement. Placement that clips the QR, or leaves fewer than three pixels per module, is rejected: at the preset scales a short URL needs about 320 pixels and a 130-character URL about 450.
 
 ```csharp
 using CodeGlyphX;
@@ -450,13 +452,13 @@ QrArt.ComposeScene(recipe.Payload, recipe.Design).SavePng("ocean-reopened.png");
 
 The browser art studio's **Illustrated scene** source offers six presets, palette and layer controls, logo upload, undo/reset, and recipe save/load. Downloaded results retain the payload and design used to render them. Editing controls does not change a completed export.
 
-Recipes are versioned local XML documents capped at 2 MiB of text. They copy settings and any embedded logo, preserve UTF-8 payloads including control characters, and reject DTDs, external resources and unknown fields. Logo input is limited to 1 MiB and one million decoded pixels. Captions use the portable outlined font: Latin letters, digits, spaces and `-./:()+?`; lowercase letters render as capitals. Paper and QR ink must meet the documented light/dark luminance limits.
+Recipes are versioned local XML documents capped at 2 MiB of text. They copy settings and any embedded logo, preserve UTF-8 payloads including control characters, and reject DTDs, external resources and unknown fields. Logo input is limited to 1 MiB and one million decoded pixels. Captions are real outline type in the canvas caption face (RetroArcade keeps seamless pixel type) and accept Latin letters, digits, spaces and `-./:()+?`; lowercase letters render as capitals. Paper and QR ink must meet the documented light/dark luminance limits.
 
 Run the [scene-gallery example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrSceneGalleryExample.cs) with `CODEGLYPHX_SCENE_GALLERY=1` to export all six scenes, thumbnails and recipes. `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Check the actual PNG with `QrArt.ValidateImage` and qualify delivery sizes and target devices before distribution; these software checks do not certify physical printing or phone cameras.
 
 ### Scene exports and delivery sizes
 
-Finished scenes export illustration polygons and caption outlines to SVG. QR contours follow the canonical PNG renderer's pixel reference grid, including connected modules and protected functional patterns. They remain vector paths at any zoom; fine contour steps reflect the selected reference resolution. Uploaded logos are normalized to bounded embedded PNGs. SVGs contain no external image or font references.
+Finished scenes export illustration shapes, gradients and caption outlines to SVG. QR contours follow the canonical PNG renderer's pixel reference grid, including connected modules and protected functional patterns. They remain vector paths at any zoom; fine contour steps reflect the selected reference resolution. Uploaded logos are normalized to bounded embedded PNGs. SVGs contain no external image or font references.
 
 ```csharp
 var print = scene.Export(new QrSceneExportOptions {

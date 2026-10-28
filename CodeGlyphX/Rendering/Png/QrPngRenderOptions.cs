@@ -9,6 +9,15 @@ public sealed partial class QrPngRenderOptions {
     // Optional outer bounds from the high-level target-size contract. Integer modules are centred,
     // with the unused pixels extending the quiet zone rather than resampling the QR grid.
     internal int ExactSizePx { get; set; }
+    // Themes retain solid format/version ink and complete alignment rings.
+    internal bool PreserveThemeFunctionPatterns { get; set; }
+    /// <summary>Offset of an ink layer behind the module body; zero disables it.
+    /// A visible shadow's absolute offset must fit within the quiet zone in pixels.</summary>
+    public int ModuleShadowOffsetPx { get; set; }
+    /// <summary>Timing-line thickness in modules; zero follows the body geometry.</summary>
+    public double TimingThicknessModules { get; set; }
+    /// <summary>Colour of the offset module layer.</summary>
+    public Rgba32 ModuleShadowColor { get; set; } = Rgba32.Transparent;
     /// <summary>
     /// Minimum allowed background supersample factor.
     /// </summary>
@@ -106,8 +115,8 @@ public sealed partial class QrPngRenderOptions {
 
 
     /// <summary>
-    /// When true, keeps format/version bits and the fixed dark module at full scale and stable colour.
-    /// Timing follows the body style; alignment uses whole 5x5 finder geometry.
+    /// Preserves functional-pattern placement. Format, version and timing modules follow the body
+    /// shape and paint; finders and alignment patterns use whole geometry.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 

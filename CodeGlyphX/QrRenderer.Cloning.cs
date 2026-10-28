@@ -6,6 +6,9 @@ namespace CodeGlyphX;
 internal static partial class QrRenderer {
     internal static QrRenderOptions CloneOptions(QrRenderOptions opts) {
         return new QrRenderOptions {
+            HeroPreset = opts.HeroPreset,
+            LogoPlateShape = opts.LogoPlateShape, LogoRingColor = opts.LogoRingColor,
+            LogoRingWidthPx = opts.LogoRingWidthPx, LogoTint = opts.LogoTint,
             ModuleSize = opts.ModuleSize,
             QuietZone = opts.QuietZone,
             TargetSizePx = opts.TargetSizePx,
@@ -48,11 +51,12 @@ internal static partial class QrRenderer {
     internal static QrGradientOptions? CloneGradient(QrGradientOptions? gradient) {
         if (gradient is null) return null;
         return new QrGradientOptions {
-            Type = gradient.Type,
+            Type = gradient.Type, Interpolation = gradient.Interpolation,
             StartColor = gradient.StartColor,
             EndColor = gradient.EndColor,
             CenterX = gradient.CenterX,
             CenterY = gradient.CenterY,
+            StartOffset = gradient.StartOffset,
         };
     }
 
@@ -152,7 +156,7 @@ internal static partial class QrRenderer {
     internal static QrEyeOptions? CloneEyes(QrEyeOptions? eyes) {
         if (eyes is null) return null;
         return new QrEyeOptions {
-            UseFrame = eyes.UseFrame,
+            UseFrame = eyes.UseFrame, MirrorOutward = eyes.MirrorOutward, RingThicknessModules = eyes.RingThicknessModules,
             FrameStyle = eyes.FrameStyle,
             OuterShape = eyes.OuterShape,
             InnerShape = eyes.InnerShape,
@@ -222,6 +226,13 @@ internal static partial class QrRenderer {
         if (canvas is null) return null;
         return new QrCanvasOptions {
             Caption = canvas.Caption?.Copy(),
+            ShadowOnPanelsOnly = canvas.ShadowOnPanelsOnly,
+            BandColor = canvas.BandColor, StrokeColor = canvas.StrokeColor, StrokeWidthPx = canvas.StrokeWidthPx,
+            CaptionTail = canvas.CaptionTail, BandLogoPng = canvas.BandLogoPng is null ? null : (byte[])canvas.BandLogoPng.Clone(),
+            QrCornerRadiusPx = canvas.QrCornerRadiusPx, ShadowBlurPx = canvas.ShadowBlurPx,
+            StackedPanelOffsetPx = canvas.StackedPanelOffsetPx, StackedPanelColor = canvas.StackedPanelColor,
+            PanelGlowColor = canvas.PanelGlowColor, PanelGlowRadiusPx = canvas.PanelGlowRadiusPx,
+            SecondaryPanelGlowColor = canvas.SecondaryPanelGlowColor, SecondaryPanelGlowRadiusPx = canvas.SecondaryPanelGlowRadiusPx,
             Template = canvas.Template,
             PaddingPx = canvas.PaddingPx,
             CornerRadiusPx = canvas.CornerRadiusPx,

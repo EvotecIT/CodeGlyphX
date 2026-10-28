@@ -10,6 +10,8 @@ public static partial class QrPngRenderer {
 
     private static bool CanRenderSimpleRgba(QrPngRenderOptions opts) {
         if (opts is null) throw new ArgumentNullException(nameof(opts));
+        if (opts.TimingThicknessModules > 0) return false;
+        if (opts.ModuleShadowOffsetPx != 0 && opts.ModuleShadowColor.A > 0) return false;
         return opts.BackgroundGradient is null
             && opts.ExactSizePx == 0
             && opts.BackgroundPattern is null

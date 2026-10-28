@@ -195,6 +195,9 @@ public static partial class QrPngRenderer {
     }
 
     private static bool CanRenderAsBinary(QrPngRenderOptions opts) {
+        if (opts is null) throw new ArgumentNullException(nameof(opts));
+        if (opts.TimingThicknessModules > 0) return false;
+        if (opts.ModuleShadowOffsetPx != 0 && opts.ModuleShadowColor.A > 0) return false;
         if (opts.ExactSizePx > 0) return false;
         if (opts.BackgroundGradient is not null) return false;
         if (opts.BackgroundPattern is not null) return false;

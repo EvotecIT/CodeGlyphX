@@ -11,9 +11,9 @@ internal static class QrProceduralArtExample {
         var directory = Path.Combine(outputDir, "qr-procedural-art");
         Directory.CreateDirectory(directory);
         var designs = new[] {
-            ("prismatic-marble", QrArtPattern.Marble), ("tidal-ribbons", QrArtPattern.Waves),
-            ("sunburst-stitch", QrArtPattern.Sunburst), ("confetti-tiles", QrArtPattern.Geometric),
-            ("botanical-weave", QrArtPattern.Botanical), ("electric-circuit", QrArtPattern.Circuit)
+            ("veined-marble", QrArtPattern.Marble), ("layered-waves", QrArtPattern.Waves),
+            ("sunburst-rays", QrArtPattern.Sunburst), ("bauhaus-tiles", QrArtPattern.Geometric),
+            ("botanical-leaves", QrArtPattern.Botanical), ("circuit-traces", QrArtPattern.Circuit)
         };
         var images = new List<QrImageComposition>();
         for (var i = 0; i < designs.Length; i++) {

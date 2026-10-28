@@ -13,6 +13,8 @@ public static partial class QrPngRenderer {
         if (modules.Width != modules.Height) throw new ArgumentException("Matrix must be square.", nameof(modules));
         if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
         if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
+        if (opts.ModuleShadowColor.A > 0 && Math.Abs((long)opts.ModuleShadowOffsetPx) > (long)opts.QuietZone * opts.ModuleSize)
+            throw new ArgumentOutOfRangeException(nameof(opts), "ModuleShadowOffsetPx must fit inside the quiet zone.");
         if (opts.ModuleScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleScale));
         opts.BackgroundGradient?.Validate();
         opts.BackgroundPattern?.Validate();
@@ -133,6 +135,7 @@ public static partial class QrPngRenderer {
             : null;
         var useFrame = QrStructureAnalysis.TryGetVersionFromSize(size, out _) && HasStandardFinders(modules);
         var alignmentCenters = useFrame ? GetStyledAlignmentCenters(size) : new List<(int X, int Y)>();
+        modules = KnockOutLogoModules(modules, opts.Logo, opts.ModuleSize, out var logoKnockout);
         var background = opts.Background;
         var gradientInfo = opts.ForegroundGradient is null
             ? (GradientInfo?)null
@@ -161,9 +164,20 @@ public static partial class QrPngRenderer {
         var eyeOuterGradientInfos = BuildEyeGradientInfos(opts.Eyes?.OuterGradients, opts.ModuleSize, eyeModules: 7);
         var eyeInnerGradientInfos = BuildEyeGradientInfos(opts.Eyes?.InnerGradients, opts.ModuleSize, eyeModules: 3);
 
+        if (opts.ModuleShadowOffsetPx != 0 && opts.ModuleShadowColor.A > 0) {
+            for (var yy = 0; yy < size; yy++) for (var xx = 0; xx < size; xx++) {
+                if (!modules[xx, yy] || TryGetEye(xx, yy, size, out _, out _, out _)) continue;
+                DrawCoverageModule(buffer, stride, opts.ModuleSize, xx, yy, opts.QuietZone,
+                    qrOffsetX + opts.ModuleShadowOffsetPx, qrOffsetY + opts.ModuleShadowOffsetPx,
+                    opts.ModuleShadowColor, null, null, opts.ModuleShape, opts.ModuleScale,
+                    opts.ModuleCornerRadiusPx, GetNeighborMask(modules, xx, yy), qrOriginX, qrOriginY, qrSizePx, 0, 0);
+            }
+        }
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
-                if (!modules[mx, my] || IsStyledAlignmentCell(mx, my, alignmentCenters)) continue;
+                var continuousTiming = opts.TimingThicknessModules > 0 &&
+                    (my == 6 && mx >= 8 && mx < size - 8 || mx == 6 && my >= 8 && my < size - 8);
+                if ((!modules[mx, my] && !continuousTiming) || IsStyledAlignmentCell(mx, my, alignmentCenters)) continue;
                 var eyeKind = EyeKind.None;
                 var eyeX = 0;
                 var eyeY = 0;
@@ -180,7 +194,9 @@ public static partial class QrPngRenderer {
                 if (useFrame && eyeKind != EyeKind.None) continue;
 
                 var isFunctional = functionMask is not null && functionMask[mx, my];
-                var protectFunctional = isFunctional && !isEye && mx != 6 && my != 6;
+                // Themes retain their protected ink; curated looks style encoded bits like the body.
+                var protectFunctional = (!useFrame || opts.PreserveThemeFunctionPatterns)
+                    && isFunctional && !isEye && mx != 6 && my != 6;
                 var eyeIndex = eyeKind == EyeKind.None ? -1 : GetEyeIndex(eyeX, eyeY, size);
 
                 var useMask = protectFunctional
@@ -311,7 +327,7 @@ public static partial class QrPngRenderer {
                 }
 
                 var useGradient = !protectFunctional && !usePalette && (eyeKind == EyeKind.None || opts.Eyes is null) ? gradientInfo : null;
-                if (useShape == QrModuleShape.Square && useScale >= 1 && useGradient is null && useMaskSolid && usePattern is null && moduleJitterX == 0 && moduleJitterY == 0) {
+                if (modules[mx, my] && useShape == QrModuleShape.Square && useScale >= 1 && useGradient is null && useMaskSolid && usePattern is null && moduleJitterX == 0 && moduleJitterY == 0) {
                     var solid = useColor.A == 255 ? useColor : CompositeColor(useColor, background);
                     DrawModuleSolid(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone, qrOffsetX, qrOffsetY, solid);
                     continue;
@@ -319,24 +335,24 @@ public static partial class QrPngRenderer {
 
                 DrawCoverageModule(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone,
                     qrOffsetX, qrOffsetY, useColor, useGradient, usePattern,
-                    protectFunctional ? QrModuleShape.Square : useShape,
+                    protectFunctional ? (useFrame ? FunctionModuleShape(baseModuleShape) : QrModuleShape.Square) : useShape,
                     protectFunctional ? 1 : useScale, opts.ModuleCornerRadiusPx,
                     GetNeighborMask(modules, mx, my), qrOriginX, qrOriginY, qrSizePx,
-                    moduleJitterX, moduleJitterY);
+                    moduleJitterX, moduleJitterY, opts.TimingThicknessModules, modules[mx, my]);
 
             }
         }
 
         if (opts.ModuleShape == QrModuleShape.Liquid || opts.ModuleShapeMap?.PrimaryShape == QrModuleShape.Liquid
             || opts.ModuleShapeMap?.SecondaryShape == QrModuleShape.Liquid) {
-            DrawLiquidInnerCorners(buffer, stride, modules, opts, qrOriginX, qrOriginY, qrSizePx, alignmentCenters);
+            DrawLiquidInnerCorners(buffer, stride, modules, opts, qrOriginX, qrOriginY, qrSizePx, alignmentCenters, logoKnockout);
         }
         if (useFrame) {
-            DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, 0, 0, 7, 0);
-            DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, size - 7, 0, 7, 1);
-            DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, 0, size - 7, 7, 2);
+            DrawStyledFinder(buffer, stride, opts, modules, qrOriginX, qrOriginY, qrSizePx, 0, 0, 7, 0);
+            DrawStyledFinder(buffer, stride, opts, modules, qrOriginX, qrOriginY, qrSizePx, size - 7, 0, 7, 1);
+            DrawStyledFinder(buffer, stride, opts, modules, qrOriginX, qrOriginY, qrSizePx, 0, size - 7, 7, 2);
             foreach (var center in alignmentCenters)
-                DrawStyledFinder(buffer, stride, opts, qrOriginX, qrOriginY, qrSizePx, center.X - 2, center.Y - 2, 5, -1);
+                DrawStyledFinder(buffer, stride, opts, modules, qrOriginX, qrOriginY, qrSizePx, center.X - 2, center.Y - 2, 5, -1);
         }
 
         if (opts.Logo is not null) {
@@ -538,22 +554,26 @@ public static partial class QrPngRenderer {
         }
 
         var canvas = opts.Canvas;
-        var pad = CaptionCanvasPadding(canvas);
+        var pad = CaptionCanvasPadding(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasW = checked(qrFullPx + pad * 2);
-        var captionHeight = CaptionCanvasHeight(canvas);
-        var canvasH = checked(canvasW + captionHeight);
+        var captionHeight = CaptionCanvasHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
+        var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
 
-        var shadowX = canvas.ShadowOffsetX;
-        var shadowY = canvas.ShadowOffsetY;
-        var extraLeft = Math.Max(0, -shadowX);
-        var extraRight = Math.Max(0, shadowX);
-        var extraTop = Math.Max(0, -shadowY);
-        var extraBottom = Math.Max(0, shadowY);
+        var shadowX = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowOffsetX;
+        var shadowY = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowOffsetY;
+        var blur = canvas.ShadowOnPanelsOnly ? 0 : canvas.ShadowBlurPx;
+        var extraLeft = Math.Max(0, -shadowX) + blur;
+        var extraRight = Math.Max(0, shadowX) + blur;
+        var extraTop = Math.Max(0, -shadowY) + blur;
+        var extraBottom = Math.Max(0, shadowY) + blur;
 
         widthPx = checked(canvasW + extraLeft + extraRight);
         heightPx = checked(canvasH + extraTop + extraBottom);
         qrOffsetX = extraLeft + pad;
-        qrOffsetY = extraTop + pad + (canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? captionHeight : 0);
+        var mainCaption = MeasureCaption(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
+        var topCaption = canvas.Caption?.Position == QrCanvasCaptionPosition.Top && mainCaption.Height > 0 ? mainCaption.Height + mainCaption.Gap : 0;
+        qrOffsetY = extraTop + pad + topCaption;
+        if (canvas.Template == QrCanvasTemplate.PhoneOutline) qrOffsetY += (canvasH - qrFullPx - 2 * pad - captionHeight) / 2;
     }
 
     private static void DrawCanvas(
@@ -568,15 +588,17 @@ public static partial class QrPngRenderer {
         var canvas = opts.Canvas;
         if (canvas is null) return;
 
-        var pad = CaptionCanvasPadding(canvas);
+        var pad = CaptionCanvasPadding(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasW = checked(qrFullPx + pad * 2);
-        var captionHeight = CaptionCanvasHeight(canvas);
-        var canvasH = checked(canvasW + captionHeight);
+        var captionHeight = CaptionCanvasHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
+        var canvasH = CaptionCanvasBodyHeight(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
         var canvasX = qrOffsetX - pad;
-        var canvasY = qrOffsetY - pad - (canvas.Caption?.Position == QrCanvasCaptionPosition.Top ? captionHeight : 0);
+        var mainCaption = MeasureCaption(canvas, qrFullPx, opts.ModuleSize, opts.QuietZone);
+        var canvasY = qrOffsetY - pad - (canvas.Caption?.Position == QrCanvasCaptionPosition.Top && mainCaption.Height > 0 ? mainCaption.Height + mainCaption.Gap : 0);
+        if (canvas.Template == QrCanvasTemplate.PhoneOutline) canvasY -= (canvasH - qrFullPx - 2 * pad - captionHeight) / 2;
         var radius = Math.Max(0, canvas.CornerRadiusPx);
 
-        if (canvas.ShadowColor.A > 0 && (canvas.ShadowOffsetX != 0 || canvas.ShadowOffsetY != 0)) {
+        if (!canvas.ShadowOnPanelsOnly && canvas.ShadowBlurPx == 0 && canvas.ShadowColor.A > 0 && (canvas.ShadowOffsetX != 0 || canvas.ShadowOffsetY != 0)) {
             FillRoundedRect(
                 scanlines,
                 widthPx,
@@ -589,6 +611,9 @@ public static partial class QrPngRenderer {
                 canvas.ShadowColor,
                 radius);
         }
+
+        if (!canvas.ShadowOnPanelsOnly && canvas.ShadowBlurPx > 0) DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride,
+            canvasX + canvas.ShadowOffsetX, canvasY + canvas.ShadowOffsetY, canvasW, canvasH, radius, canvas.ShadowBlurPx, canvas.ShadowColor);
 
         if (canvas.BorderPx > 0 && canvas.Template == QrCanvasTemplate.None) {
             var borderColor = canvas.BorderColor ?? canvas.Background;
@@ -713,8 +738,21 @@ public static partial class QrPngRenderer {
                 qrFullPx,
                 canvas.Badge);
         }
+        if (canvas.SecondaryPanelGlowColor.HasValue && canvas.SecondaryPanelGlowRadiusPx > 0)
+            DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx,
+                canvas.QrCornerRadiusPx, canvas.SecondaryPanelGlowRadiusPx, canvas.SecondaryPanelGlowColor.Value);
+        if (canvas.PanelGlowColor.HasValue && canvas.PanelGlowRadiusPx > 0)
+            DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx,
+                canvas.QrCornerRadiusPx, canvas.PanelGlowRadiusPx, canvas.PanelGlowColor.Value);
+        if (canvas.StackedPanelOffsetPx > 0) {
+            var d = canvas.StackedPanelOffsetPx;
+            DrawSoftPanelEffect(scanlines, widthPx, heightPx, stride, qrOffsetX + d, qrOffsetY + d, qrFullPx, qrFullPx,
+                canvas.QrCornerRadiusPx, Math.Max(1, canvas.ShadowBlurPx), canvas.ShadowColor);
+            FillRoundedRect(scanlines, widthPx, heightPx, stride, qrOffsetX + d, qrOffsetY + d,
+                qrFullPx, qrFullPx, canvas.StackedPanelColor, canvas.QrCornerRadiusPx);
+        }
         DrawCaptionCanvas(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY,
-            canvasW, canvasH, qrOffsetX, qrOffsetY, qrFullPx);
+            canvasW, canvasH, qrOffsetX, qrOffsetY, qrFullPx, opts.ModuleSize, opts.QuietZone);
     }
 
     private static void DrawCanvasFill(
@@ -750,9 +788,9 @@ public static partial class QrPngRenderer {
         int qrOffsetY,
         int qrFullPx) {
         if (opts.BackgroundGradient is null) {
-            FillRoundedRect(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx, opts.Background, 0);
+            FillRoundedRect(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx, opts.Background, Math.Min(opts.Canvas?.QrCornerRadiusPx ?? 0, opts.QuietZone * opts.ModuleSize));
         } else {
-            FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx, opts.BackgroundGradient, 0);
+            FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx, opts.BackgroundGradient, Math.Min(opts.Canvas?.QrCornerRadiusPx ?? 0, opts.QuietZone * opts.ModuleSize));
         }
 
         if (opts.BackgroundPattern is not null) {
@@ -3608,99 +3646,6 @@ public static partial class QrPngRenderer {
         var dx2 = dx * dx;
         var dy2 = dy * dy;
         return dx2 * dx2 + dy2 * dy2 <= 1.0;
-    }
-
-    private static Rgba32 GetGradientColor(GradientInfo gradient, int px, int py, int originX, int originY) {
-        var u = (px - originX) * gradient.InvSizeX;
-        var v = (py - originY) * gradient.InvSizeY;
-        if (u < 0) u = 0;
-        if (u > 1) u = 1;
-        if (v < 0) v = 0;
-        if (v > 1) v = 1;
-
-        double t = gradient.Type switch {
-            QrGradientType.Horizontal => u,
-            QrGradientType.Vertical => v,
-            QrGradientType.DiagonalDown => (u + v) * 0.5,
-            QrGradientType.DiagonalUp => (u + (1 - v)) * 0.5,
-            QrGradientType.Radial => GetRadialT(u, v, gradient.CenterX, gradient.CenterY, gradient.MaxDist),
-            _ => u,
-        };
-
-        return Lerp(gradient, t);
-    }
-
-    private static Rgba32 GetGradientColorInBox(GradientInfo gradient, int px, int py, int x, int y) {
-        var u = (px - x) * gradient.InvSizeX;
-        var v = (py - y) * gradient.InvSizeY;
-        if (u < 0) u = 0;
-        if (u > 1) u = 1;
-        if (v < 0) v = 0;
-        if (v > 1) v = 1;
-
-        double t = gradient.Type switch {
-            QrGradientType.Horizontal => u,
-            QrGradientType.Vertical => v,
-            QrGradientType.DiagonalDown => (u + v) * 0.5,
-            QrGradientType.DiagonalUp => (u + (1 - v)) * 0.5,
-            QrGradientType.Radial => GetRadialT(u, v, gradient.CenterX, gradient.CenterY, gradient.MaxDist),
-            _ => u,
-        };
-
-        return Lerp(gradient, t);
-    }
-
-    private static double GetRadialT(double u, double v, double cx, double cy, double maxDist) {
-        var dx = u - cx;
-        var dy = v - cy;
-        var dist = Math.Sqrt(dx * dx + dy * dy);
-        if (maxDist <= 0) return 0;
-        var t = dist / maxDist;
-        if (t < 0) return 0;
-        if (t > 1) return 1;
-        return t;
-    }
-
-    private static Rgba32 Lerp(GradientInfo gradient, double t) {
-        if (t <= 0) return gradient.StartColor;
-        if (t >= 1) return gradient.EndColor;
-        var r = (byte)Math.Round(gradient.StartColor.R + gradient.Dr * t);
-        var g = (byte)Math.Round(gradient.StartColor.G + gradient.Dg * t);
-        var b = (byte)Math.Round(gradient.StartColor.B + gradient.Db * t);
-        var a = (byte)Math.Round(gradient.StartColor.A + gradient.Da * t);
-        return new Rgba32(r, g, b, a);
-    }
-
-    private readonly struct GradientInfo {
-        public QrGradientType Type { get; }
-        public Rgba32 StartColor { get; }
-        public Rgba32 EndColor { get; }
-        public double CenterX { get; }
-        public double CenterY { get; }
-        public double InvSizeX { get; }
-        public double InvSizeY { get; }
-        public double MaxDist { get; }
-        public int Dr { get; }
-        public int Dg { get; }
-        public int Db { get; }
-        public int Da { get; }
-
-        public GradientInfo(QrGradientOptions gradient, int sizeX, int sizeY) {
-            Type = gradient.Type;
-            StartColor = gradient.StartColor;
-            EndColor = gradient.EndColor;
-            CenterX = gradient.CenterX;
-            CenterY = gradient.CenterY;
-            var sx = Math.Max(1, sizeX);
-            var sy = Math.Max(1, sizeY);
-            InvSizeX = 1.0 / sx;
-            InvSizeY = 1.0 / sy;
-            Dr = EndColor.R - StartColor.R;
-            Dg = EndColor.G - StartColor.G;
-            Db = EndColor.B - StartColor.B;
-            Da = EndColor.A - StartColor.A;
-            MaxDist = Type == QrGradientType.Radial ? ComputeMaxDist(CenterX, CenterY) : 0.0;
-        }
     }
 
     private readonly struct ModuleScaleMapInfo {

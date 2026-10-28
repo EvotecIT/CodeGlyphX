@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: Build & Test (${{ matrix.os }})
+  test-framework:
+    name: Test (${{ matrix.os }}, ${{ matrix.framework }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
     # Every platform runs the .NET 8 and .NET 10 corpora; Windows also runs .NET Framework.
@@ -26,12 +26,31 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
+            framework: net8.0
+            selfHostedRunner: '["self-hosted","linux"]'
+            testBudgetMultiplier: '4'
+          - os: ubuntu-latest
+            framework: net10.0
             selfHostedRunner: '["self-hosted","linux"]'
             testBudgetMultiplier: '4'
           - os: macos-latest
+            framework: net8.0
+            selfHostedRunner: '["self-hosted","macOS"]'
+            testBudgetMultiplier: '1'
+          - os: macos-latest
+            framework: net10.0
             selfHostedRunner: '["self-hosted","macOS"]'
             testBudgetMultiplier: '1'
           - os: windows-latest
+            framework: net8.0
+            selfHostedRunner: '["self-hosted","windows"]'
+            testBudgetMultiplier: '1'
+          - os: windows-latest
+            framework: net10.0
+            selfHostedRunner: '["self-hosted","windows"]'
+            testBudgetMultiplier: '1'
+          - os: windows-latest
+            framework: net472
             selfHostedRunner: '["self-hosted","windows"]'
             testBudgetMultiplier: '1'
     steps:
@@ -49,17 +68,17 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Build complete solution
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && matrix.framework == 'net8.0'
         run: dotnet build CodeGlyphX.sln -c Release --nologo
 
+      - name: Build test framework
+        if: runner.os != 'Windows' || matrix.framework != 'net8.0'
+        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f ${{ matrix.framework }} --nologo
+
       - name: Build portable projects
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && matrix.framework == 'net8.0'
         run: |
           dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f netstandard2.0 --nologo
-          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net8.0 --nologo
-          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --nologo
-          dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --nologo
-          dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net10.0 --nologo
           dotnet build CodeGlyphX.Examples/CodeGlyphX.Examples.csproj -c Release --nologo
           dotnet build CodeGlyphX.Fuzz/CodeGlyphX.Fuzz.csproj -c Release --nologo
 
@@ -69,23 +88,23 @@ jobs:
           ./Build/Download-ImageSamples.ps1 -NoUpdateManifest
           ./Build/Download-ExternalSamples.ps1 -NoUpdateManifest
 
-      - name: Test (net8.0)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
+      - name: Test (${{ matrix.framework }})
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f ${{ matrix.framework }} --no-restore --no-build
 
-      - name: Test (net10.0)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net10.0 --no-restore --no-build
-
-      - name: Upload coverage to Codecov
-        if: runner.os == 'Linux' && github.event_name != 'pull_request'
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
-        with:
-          files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
-          fail_ci_if_error: false
-          verbose: true
-
-      - name: Test (net472 smoke)
-        if: runner.os == 'Windows'
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore --no-build
+  build-test:
+    name: Build & Test (${{ matrix.os }})
+    needs: test-framework
+    if: always()
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Require every framework suite
+        env:
+          TEST_RESULT: ${{ needs.test-framework.result }}
+        run: test "$TEST_RESULT" = success
 
   release-contracts:
     name: Package & NativeAOT contracts
@@ -150,40 +169,3 @@ jobs:
       powerforge_repository: EvotecIT/PSPublishModule
       powerforge_ref: 396e00acba04dcaae4c3c95433338f4df65fbc01
       report_artifact_name: powerforge-website-reports
-
-  coverage:
-    name: Coverage (linux)
-    # Prefer private/self-hosted runners for private repos to reduce hosted spend.
-    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
-    # Keep upload/shutdown headroom after the profiled full suite.
-    timeout-minutes: 25
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: "8.0.x"
-
-      - name: Restore Tests
-        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net8.0
-
-      - name: Build Tests (net8.0)
-        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
-
-      - name: Download hash-pinned test corpora
-        shell: pwsh
-        run: |
-          ./Build/Download-ImageSamples.ps1 -NoUpdateManifest
-          ./Build/Download-ExternalSamples.ps1 -NoUpdateManifest
-
-      - name: Test (net8.0 + coverage, excluding timing-sensitive corpus)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --filter "Category!=CorpusTiming" --collect:"XPlat Code Coverage" --settings Build/coverage.runsettings
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
-        with:
-          files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
-          fail_ci_if_error: false
-          verbose: true

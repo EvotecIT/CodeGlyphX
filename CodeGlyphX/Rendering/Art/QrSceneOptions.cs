@@ -6,17 +6,17 @@ namespace CodeGlyphX.Rendering.Art;
 
 /// <summary>Locally drawn illustration families; equal inputs reproduce equal artwork.</summary>
 public enum QrSceneStyle {
-    /// <summary>Layered foliage, flowers and a warm sun.</summary>
+    /// <summary>A greenhouse arch framed by monstera, palm fronds and hibiscus.</summary>
     TropicalGarden,
-    /// <summary>Night skyline, glowing windows and circuit traces.</summary>
+    /// <summary>A neon billboard above a night skyline with lit windows.</summary>
     ElectricCity,
-    /// <summary>Records, musical notes and rhythmic ribbons.</summary>
+    /// <summary>A stage screen at sunset with spotlights, speakers and a crowd.</summary>
     MusicFestival,
-    /// <summary>Waves, bubbles, fish and coral.</summary>
+    /// <summary>An air bubble with a fish school, coral and sunlit water.</summary>
     OceanReef,
-    /// <summary>Planets, stars, orbital paths and a rocket.</summary>
+    /// <summary>A ringed moon in deep space with planets and a rocket.</summary>
     CosmicOrbit,
-    /// <summary>Pixel creatures, arcade tiles and geometric sparks.</summary>
+    /// <summary>An arcade panel on a pixel tile grid with sprites and pixel type.</summary>
     RetroArcade
 }
 
@@ -58,7 +58,7 @@ public sealed class QrSceneOptions {
     public Rgba32 Ink { get; set; } = new(20, 32, 53);
     /// <summary>QR data module shape; functional patterns retain protected geometry.</summary>
     public QrModuleShape ModuleShape { get; set; } = QrModuleShape.ConnectedRounded;
-    /// <summary>Portable outlined caption, up to 48 characters. Supports Latin letters, digits, space and -./:()+?.</summary>
+    /// <summary>Caption, up to 48 characters, drawn as outline type (pixel type for RetroArcade). Supports Latin letters, digits, space and -./:()+?.</summary>
     public string Caption { get; set; } = "SCAN ME";
     /// <summary>Optional encoded logo image, at most 1 MiB and one million decoded pixels. It stays outside the protected QR.</summary>
     public byte[]? LogoImage { get; set; }

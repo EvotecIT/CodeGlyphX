@@ -32,7 +32,7 @@ SVG and SVGZ preserve body shapes, eyes, palettes and canvas artwork through vec
 
 ## Coordinated looks
 
-The [showcase](/showcase/#hero-presets) includes twelve coordinated looks, each with a light and a dark-panel variant. The code stays dark on a light background in both variants. `QrArt.Hero` returns editable rendering options:
+The [showcase](/showcase/#hero-presets) includes twelve editable looks with light and dark compositions. Neon uses the same dark design for both choices. Dark compositions use a palette-tinted light panel, a larger dark field and an accent bloom or wash. The code stays dark on a light background in both variants. `QrArt.Hero` starts at a 1024-pixel code size and returns editable rendering options:
 
 ```csharp
 var appearance = QrArt.Hero(QrHeroPreset.Sunset, darkPanel: true);
@@ -53,6 +53,41 @@ File.WriteAllBytes("brand.png", result.GetPng());
 ```
 
 `LogoPlacement.CenterOverAlignment` is an explicit alternative that requires native and independent decoder verification, with a warning when the alignment pattern is covered. No external decoder ships with the library. Software checks do not replace checking the final design on the phones and printed media you intend to use.
+
+### Captions and call-to-action frames
+
+A caption stays outside the complete quiet zone. The complete caption block, including its band and icon, stays within the visible code width, excluding the quiet zone. It keeps at least one cap height of clearance from the canvas, frame edges and decorations. Its default cap height is 5.5% of the visible code width; long text shrinks to a readable floor and then wraps to two lines. Camera and handset icons use independent vector outlines, so they require no symbol glyphs in the caption font. Sublines are centred beneath the complete headline group. `FontSizePx` sets an explicit em size when needed. The bundled default is Manrope SemiBold with Latin Extended, including Polish text such as `Zażółć gęślą jaźń`. Its SemiBold outlines render unchanged by default; `Weight = QrCanvasCaptionWeight.Bold` adds synthetic bold. Supply a licensed TTF or OTF for another face; captions use the managed outline engine and do not depend on installed fonts. Strict text handling rejects unavailable glyphs instead of silently substituting another face.
+
+```csharp
+using CodeGlyphX.Printing;
+using CodeGlyphX.Rendering;
+
+var caption = QrCanvasCaptionOptions.FromFontBytes(File.ReadAllBytes("BrandSans.ttf"));
+caption.Text = "Explore the collection";
+caption.Subline = "Our autumn selection";
+caption.Icon = QrCanvasCaptionIcon.Camera;
+caption.Url = "evotec.xyz";
+caption.Position = QrCanvasCaptionPosition.Bottom;
+
+var appearance = QrArt.Hero(QrHeroPreset.Ink);
+appearance.Canvas = new QrCanvasOptions {
+    Template = QrCanvasTemplate.ScanMePill,
+    CaptionTail = true,
+    BandColor = new Rgba32(30, 35, 50),
+    StrokeColor = new Rgba32(30, 35, 50),
+    Caption = caption
+};
+QR.Save("https://evotec.xyz", "collection.png", appearance,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+```
+
+`SpeechBubble` is the pill with its tail enabled. Other templates provide a ticket with semicircle notches, a phone silhouette, a rounded card band and viewfinder corners. Every decoration keeps the same outer safe margin of at least one headline cap height. Ticket perforations leave a complete dash-gap inside each notch; caption icons sit 0.35 em before the headline. `BandLogoPng` places a caller-supplied logo beside the caption, independently of a budgeted logo inside the code. Caption, band and stroke colours can be selected separately. For dark compositions, use a dark canvas background; the automatic caption and stroke colours follow it.
+
+### Logo plates and gradients
+
+The default logo plate follows the finder shape and takes the code background colour. Modules touched by the plate are removed whole before rendering, so dots and connected bars end cleanly around it. `LogoPlateShape` also accepts `Circle`, `Squircle`, `RoundedSquare` or `Square`. `LogoRingColor` and `LogoRingWidthPx` add an inset accent ring within the existing knockout budget; `LogoTint` uses monochrome ink while retaining source transparency. Ink, Dot Matrix, Minimal Line and Mono Classy tint the supplied mark to their palette.
+
+Gradients interpolate in OKLCH with gamut-aware chroma reduction. Choose `QrGradientInterpolation.Oklab` for Cartesian perceptual interpolation or `Srgb` for legacy channel interpolation. Canvas shadows and panel bloom reserve their extent; PNG renders these effects directly. Canonical SVG preserves the rendered coverage as vector contours at the chosen resolution, including text outlines and soft effects. Those contours are resolution-bound rather than editable SVG filter effects.
 
 ## Error Correction Levels
 

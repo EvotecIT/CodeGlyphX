@@ -35,7 +35,7 @@ public sealed class QrCanvasCaptionTests {
         var options = Options(template, position);
         options.BackgroundSupersample = supersample;
         options.Canvas!.Frame = new QrCanvasFrameOptions { Color = new Rgba32(0, 0, 255) };
-        options.Canvas.Caption!.Text = "SCAN ME";
+        options.Canvas.Caption!.Text = "Zażółć gęślą jaźń";
         options.Canvas.Caption.FontSizePx = 28;
         options.Canvas.Caption.PaddingPx = captionPadding;
         options.Canvas.Caption.Color = new Rgba32(255, 0, 255);
@@ -68,9 +68,25 @@ public sealed class QrCanvasCaptionTests {
     }
     private static QrPngRenderOptions Options(QrCanvasTemplate template, QrCanvasCaptionPosition position) => new() {
         ModuleSize = 10, QuietZone = 4,
-        Canvas = new QrCanvasOptions { PaddingPx = 32, Template = template,
+        Canvas = new QrCanvasOptions { PaddingPx = template == QrCanvasTemplate.PhoneOutline ? 64 : 32, Template = template,
             Caption = new QrCanvasCaptionOptions { Text = "Scan to explore", Position = position } }
     };
+
+    [Fact]
+    public void DefaultCaptionFont_PreservesPolishAndRejectsUnavailableGlyphs() {
+        var caption = new QrCanvasCaptionOptions();
+        Assert.Same(BarcodeFont.ManropeSemiBold, caption.Font);
+        Assert.Equal(QrCanvasCaptionWeight.Regular, caption.Weight);
+        Assert.Contains("Manrope", caption.Font.Name);
+        Assert.Contains("SemiBold", caption.Font.Name);
+        const string polish = "Zeskanuj kod — Łódź. Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ";
+        var shaped = caption.Font.Shape(polish, 32);
+        Assert.Equal(polish, shaped.Text);
+        Assert.Empty(shaped.MissingGlyphs);
+        Assert.False(shaped.HasIncompleteShaping);
+        Assert.NotEmpty(shaped.Contours);
+        Assert.Throws<ArgumentException>(() => caption.Font.Shape("\u4e16", 32));
+    }
 
     [Theory]
     [MemberData(nameof(Templates))]
@@ -80,9 +96,17 @@ public sealed class QrCanvasCaptionTests {
         var plain = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions { ModuleSize = 10 }, out var side, out _, out _);
         var actual = QrPngRenderer.RenderPixels(qr.Modules, options, out var w, out var h, out var stride);
         Assert.True(h > w);
-        var qy = position == QrCanvasCaptionPosition.Top ? h - 32 - side : 32;
+        var pad = options.Canvas!.PaddingPx;
+        var qy = position == QrCanvasCaptionPosition.Top ? h - pad - side : pad;
+        if (template == QrCanvasTemplate.PhoneOutline) {
+            var ordinary = options.Canvas!;
+            ordinary.Template = QrCanvasTemplate.None;
+            QrPngRenderer.RenderPixels(qr.Modules, options, out _, out var ordinaryHeight, out _);
+            ordinary.Template = QrCanvasTemplate.PhoneOutline;
+            qy = (position == QrCanvasCaptionPosition.Top ? ordinaryHeight - pad - side : pad) + (h - ordinaryHeight) / 2;
+        }
         for (var y = 0; y < side; y++) for (var x = 0; x < side * 4; x++)
-            Assert.Equal(plain[y * side * 4 + x], actual[(y + qy) * stride + 32 * 4 + x]);
+            Assert.Equal(plain[y * side * 4 + x], actual[(y + qy) * stride + pad * 4 + x]);
         var root = XElement.Parse(SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
         Assert.Equal(w, (int)root.Attribute("width")!);
         Assert.Equal(h, (int)root.Attribute("height")!);
@@ -105,6 +129,7 @@ public sealed class QrCanvasCaptionTests {
         var font = BarcodeFont.FromBytes(memory.ToArray());
         var input = new QrRenderOptions { ArtGuardrailsEnabled = false, Canvas = Options(QrCanvasTemplate.CornerViewfinder, QrCanvasCaptionPosition.Top).Canvas };
         input.Canvas!.Caption!.Font = font; input.Canvas.Caption.Text = "Zażółć gęślą jaźń";
+        input.Canvas.Caption.Weight = QrCanvasCaptionWeight.Bold;
         var copy = QrRenderer.CloneOptions(input);
         Assert.NotSame(input.Canvas, copy.Canvas); Assert.NotSame(input.Canvas.Caption, copy.Canvas!.Caption);
         Assert.Same(font, copy.Canvas.Caption!.Font);
@@ -115,6 +140,30 @@ public sealed class QrCanvasCaptionTests {
         Assert.Equal(QrCanvasCaptionWeight.Bold, input.Canvas.Caption.Weight);
         copy.Canvas.Caption.Font = BarcodeFont.OcrB;
         Assert.False(regular.SequenceEqual(QR.Encode(Payload).Render(OutputFormat.Png, copy).Data.ToArray()));
+    }
+
+    [Fact]
+    public void LargeRoundedFrameCorners_KeepTheirCompleteStrokeOutsideTheCodePanel() {
+        var qr = QR.Encode(Payload);
+        foreach (var template in new[] { QrCanvasTemplate.TicketStub, QrCanvasTemplate.RoundedCardHeader })
+            foreach (var position in new[] { QrCanvasCaptionPosition.Top, QrCanvasCaptionPosition.Bottom }) {
+                const int m = 30;
+                var canvas = new QrCanvasOptions { Template = template, StrokeColor = new Rgba32(0, 0, 255),
+                    BandColor = Rgba32.Transparent, Caption = new QrCanvasCaptionOptions {
+                        Text = "SCAN ME", Position = position, Color = Rgba32.Transparent } };
+                var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions { ModuleSize = m, Canvas = canvas }, out var w, out var h, out _);
+                var edge = Enumerable.Range(0, w).First(x => pixels[((h / 2) * w + x) * 4 + 2] > pixels[((h / 2) * w + x) * 4] + 100);
+                var radius = template == QrCanvasTemplate.TicketStub ? w * .045 * 1.1 : Math.Round(w * .06);
+                var middle = radius - m * .25;
+                foreach (var right in new[] { false, true }) foreach (var bottom in new[] { false, true })
+                    for (var angle = 0; angle <= 90; angle += 5) {
+                        var theta = angle * Math.PI / 180;
+                        var x = (right ? w - edge - radius : edge + radius) + (right ? 1 : -1) * middle * Math.Cos(theta);
+                        var y = (bottom ? h - edge - radius : edge + radius) + (bottom ? 1 : -1) * middle * Math.Sin(theta);
+                        var at = ((int)y * w + (int)x) * 4;
+                        Assert.True(pixels[at + 2] > pixels[at] + 100, $"{template}/{position}: clipped corner stroke at {x:F1},{y:F1}.");
+                    }
+            }
     }
 
     [Fact]
@@ -133,7 +182,7 @@ public sealed class QrCanvasCaptionTests {
         var baseline = QrPngRenderer.RenderPixels(qr.Modules, options, out var w, out var h, out _);
         options.BackgroundSupersample = 2;
         QrPngRenderer.RenderPixels(qr.Modules, options, out var sw, out var sh, out _);
-        Assert.Equal(w, sw); Assert.Equal(h, sh); Assert.Equal(24, options.Canvas!.Caption!.FontSizePx);
+        Assert.Equal(w, sw); Assert.Equal(h, sh); Assert.Equal(0, options.Canvas!.Caption!.FontSizePx);
         options.Canvas.Caption.Text = new string('W', 256);
         Assert.Throws<ArgumentException>(() => QrPngRenderer.Render(qr.Modules, options));
         options.Canvas.Caption.Text += "W";
@@ -210,11 +259,91 @@ public sealed class QrCanvasCaptionTests {
         Assert.Contains("fit readably", error.Message);
         Assert.Throws<ArgumentException>(() => SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
         // This run also shrinks to fit, but remains above eight final pixels.
-        caption.Text = new string('B', 30);
+        caption.Text = new string('B', 10);
         Assert.NotEmpty(QrPngRenderer.Render(qr.Modules, options));
         Assert.Contains("<svg", SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions { Appearance = options }));
         Assert.Equal(24, caption.FontSizePx);
         Assert.Equal(16, caption.PaddingPx);
+    }
+
+    [Theory]
+    [MemberData(nameof(Templates))]
+    public void LongCaptionBounds_KeepOneCapHeightClearOfFrameDecorations(QrCanvasTemplate template, QrCanvasCaptionPosition position) {
+        var qr = QR.Encode(Payload);
+        var options = Options(template, position);
+        options.Canvas!.Caption!.Text = "Scan to explore the collection";
+        options.Canvas.Caption.Color = new Rgba32(255, 0, 255);
+        options.Canvas.StrokeColor = options.Canvas.BandColor = new Rgba32(0, 0, 255);
+        var actual = QrPngRenderer.RenderPixels(qr.Modules, options, out var w, out var h, out _);
+        options.Canvas.Caption.Color = Rgba32.Transparent;
+        var frame = QrPngRenderer.RenderPixels(qr.Modules, options, out _, out _, out _);
+        var points = new List<(int X, int Y)>();
+        for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+            var at = (y * w + x) * 4;
+            if (actual[at] > actual[at + 1]) points.Add((x, y));
+        }
+        Assert.NotEmpty(points);
+        // Automatic text may shrink to 75% before wrapping. This independently checks its
+        // protected rectangle against actual decoration pixels, including bracket arms.
+        var cap = (int)Math.Floor((qr.Size + 8) * 10 * .045 * .75);
+        var left = points.Min(p => p.X); var right = points.Max(p => p.X);
+        var top = points.Min(p => p.Y); var bottom = points.Max(p => p.Y);
+        var filled = template is QrCanvasTemplate.ScanMePill or QrCanvasTemplate.SpeechBubble or QrCanvasTemplate.RoundedCardHeader;
+        bool IsBlue(int x, int y) { var at = (y * w + x) * 4; return frame[at + 2] > frame[at] && frame[at + 2] > frame[at + 1]; }
+        if (filled) {
+            foreach (var point in points) Assert.True(IsBlue(point.X, point.Y));
+            for (var d = 1; d <= cap; d++) {
+                Assert.True(IsBlue((left + right) / 2, top - d));
+                Assert.True(IsBlue((left + right) / 2, bottom + d));
+            }
+        } else {
+            for (var y = Math.Max(0, top - cap); y <= Math.Min(h - 1, bottom + cap); y++)
+                for (var x = Math.Max(0, left - cap); x <= Math.Min(w - 1, right + cap); x++)
+                    Assert.False(IsBlue(x, y), $"{template}/{position}: decoration enters the cap-height clearance at {x},{y}.");
+        }
+    }
+
+    [Theory]
+    [InlineData("OfficeIMOBaselineSans-Regular.ttf", "Za\u017c\u00f3\u0142\u0107 g\u0119\u015bl\u0105 ja\u017a\u0144")]
+    [InlineData("TestOutlines.otf", "AB")]
+    public void CallerTtfAndOtfFonts_RenderThroughTheCaptionFactory(string fixture, string text) {
+        using var stream = typeof(QrCanvasCaptionTests).Assembly.GetManifestResourceStream("CodeGlyphX.Tests.Fixtures.Fonts." + fixture)!;
+        using var memory = new System.IO.MemoryStream(); stream.CopyTo(memory);
+        var caption = QrCanvasCaptionOptions.FromFontBytes(memory.ToArray());
+        caption.Text = text;
+        var options = Options(QrCanvasTemplate.ScanMePill, QrCanvasCaptionPosition.Bottom);
+        options.Canvas!.Caption = caption;
+        var pixels = QrPngRenderer.RenderPixels(QR.Encode(Payload).Modules, options, out var width, out var height, out _);
+        Assert.True(height > width);
+        Assert.Contains(pixels, c => c > 0 && c < 255);
+        var svg = SvgQrRenderer.Render(QR.Encode(Payload).Modules, new QrSvgRenderOptions { Appearance = options });
+        Assert.Equal(pixels, ReadSvg(XElement.Parse(svg), width, height));
+    }
+
+    [Theory]
+    [MemberData(nameof(Templates))]
+    public void CaptionDetails_RenderIconSublineFallbackUrlAndBandLogo_WithoutChangingQrPixels(QrCanvasTemplate template, QrCanvasCaptionPosition position) {
+        var options = Options(template, position);
+        options.Canvas!.Caption!.Text = "SCAN ME";
+        options.Canvas.Caption.Subline = "Collection";
+        options.Canvas.Caption.Url = "evotec.xyz";
+        options.Canvas.Caption.Icon = QrCanvasCaptionIcon.Camera;
+        options.Canvas.BandColor = new Rgba32(20, 50, 100);
+        options.Canvas.StrokeColor = new Rgba32(20, 50, 100);
+        options.Canvas.StrokeWidthPx = 4;
+        var qr = QR.Encode(Payload);
+        var first = QrPngRenderer.RenderPixels(qr.Modules, options, out var w, out var h, out _);
+        options.Canvas.BandLogoPng = PngImageEncoder.EncodeRgba32(new byte[] { 180, 40, 60, 255 }, 1, 1);
+        var second = QrPngRenderer.RenderPixels(qr.Modules, options, out var sw, out var sh, out _);
+        Assert.Equal(w, sw); Assert.Equal(h, sh);
+        Assert.False(first.SequenceEqual(second));
+        Assert.True(QrImageDecoder.TryDecode(second, w, h, w * 4, PixelFormat.Rgba32, out var read));
+        Assert.Equal(Payload, read.Text);
+        var cloned = QrRenderer.CloneCanvas(options.Canvas)!;
+        Assert.NotSame(options.Canvas.BandLogoPng, cloned.BandLogoPng);
+        Assert.Equal(options.Canvas.Caption.Subline, cloned.Caption!.Subline);
+        Assert.Equal(options.Canvas.Caption.Url, cloned.Caption.Url);
+        Assert.Equal(options.Canvas.Caption.Icon, cloned.Caption.Icon);
     }
 
     private static byte[] ReadSvg(XElement root, int width, int height) {

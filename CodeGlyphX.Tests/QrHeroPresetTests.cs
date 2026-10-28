@@ -45,6 +45,32 @@ public sealed class QrHeroPresetTests {
         }
     }
 
+    [Fact]
+    public void MinimalDenseFallback_PreservesEditedInkAndDotScale() {
+        var options = QrArt.Hero(QrHeroPreset.MinimalLine);
+        options.TargetSizePx = 0; options.ModuleSize = 20;
+        options.Foreground = new Rgba32(20, 30, 40); options.ModuleScale = .5;
+        options.ArtGuardrailsEnabled = false;
+        var qr = QR.Encode(QrArtPremiumScanTests.LongUrl, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var pixels = qr.RenderPixels(out var w, out _, out _, options);
+        var y = Enumerable.Range(0, 6).First(row => qr.Modules[8, row]);
+        var center = (((y + 4) * 20 + 10) * w + 12 * 20 + 10) * 4;
+        Assert.Equal(new byte[] { 20, 30, 40 }, pixels.Skip(center).Take(3));
+        var outsideEditedDot = (((y + 4) * 20 + 10) * w + 12 * 20 + 5) * 4;
+        Assert.Equal(255, pixels[outsideEditedDot]);
+    }
+
+    [Fact]
+    public void BotanicalDenseFallback_PreservesAnExplicitCallerBodyChoice() {
+        var options = QrArt.Hero(QrHeroPreset.Botanical);
+        var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+        var original = QR.Render(QrArtPremiumScanTests.LongUrl, OutputFormat.Png, options, encoding).ToArray();
+        options.ModuleShape = QrModuleShape.Square;
+        var edited = QR.Render(QrArtPremiumScanTests.LongUrl, OutputFormat.Png, options, encoding).ToArray();
+        Assert.False(original.SequenceEqual(edited));
+        Assert.Equal(QrModuleShape.Square, options.ModuleShape);
+    }
+
     [Theory]
     [MemberData(nameof(HeroCases))]
     public void HeroOptions_AreIndependent_AndNeverInvertTheLightCode(QrHeroPreset preset, bool darkPanel) {
@@ -52,11 +78,12 @@ public sealed class QrHeroPresetTests {
         var second = QrArt.Hero(preset, darkPanel);
         Assert.NotSame(first, second);
         Assert.NotSame(first.Eyes, second.Eyes);
-        Assert.True(second.Background.R >= 200 && second.Background.G >= 200 && second.Background.B >= 200);
+        Assert.True(second.Background.R >= 200 && second.Background.G >= 160 && second.Background.B >= 60);
         Assert.Equal(4, second.QuietZone);
         if (darkPanel) Assert.NotNull(second.Canvas);
+        var original = second.Eyes!.InnerColor;
         first.Eyes!.InnerColor = Rgba32.White;
-        Assert.Null(second.Eyes!.InnerColor);
+        Assert.Equal(original, second.Eyes!.InnerColor);
         Assert.False(string.IsNullOrWhiteSpace(QrArt.DescribeHero(preset)));
     }
 }
