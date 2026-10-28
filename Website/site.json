@@ -252,7 +252,7 @@
             "Items": [
               { "Id": "docs", "Title": "Docs and format support", "Url": "/docs/", "Description": "All 65 formats, encoding, decoding, fonts and physical printing." },
               { "Id": "api", "Title": "API", "Url": "/api/", "Description": "Every public type and member in the package." },
-              { "Id": "benchmarks", "Title": "Benchmarks", "Url": "/benchmarks/", "Description": "Generation timing and image recognition beside ZXing and QRCoder." },
+              { "Id": "benchmarks", "Title": "Benchmarks", "Url": "/benchmarks/", "Description": "Image recognition, speed and honest limits beside ZXing and QRCoder." },
               { "Id": "downloads", "Title": "Downloads", "Url": "/downloads/", "Description": "ZIP builds of every release, and the NuGet package." },
               { "Id": "changelog", "Title": "Changelog", "Url": "/changelog/", "Description": "What each release added, with the codes it drew." }
             ]
@@ -279,6 +279,7 @@
           { "Title": "FAQ", "Url": "/faq/" },
           { "Title": "Downloads", "Url": "/downloads/" },
           { "Title": "Changelog", "Url": "/changelog/" },
+          { "Title": "Benchmark evidence", "Url": "/benchmarks/evidence/" },
           { "Title": "NuGet Package", "Url": "https://www.nuget.org/packages/CodeGlyphX", "External": true },
           { "Title": "GitHub Repository", "Url": "https://github.com/EvotecIT/CodeGlyphX", "External": true },
           { "Title": "Report Issue", "Url": "https://github.com/EvotecIT/CodeGlyphX/issues", "External": true },
