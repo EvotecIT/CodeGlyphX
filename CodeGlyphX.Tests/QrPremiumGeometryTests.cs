@@ -18,11 +18,18 @@ public sealed class QrPremiumGeometryTests {
         Assert.True(brand.R > retro.R && brand.G < retro.G && brand.B < retro.B);
     }
     [Fact]
-    public void Neon_HasSeparateVioletBloomOutsideTheMagentaRim_AndOneDarkComposition() {
-        var options = QrArt.Hero(QrHeroPreset.Neon);
+    public void Neon_HasSeparateVioletBloomOutsideTheMagentaRim_AndALightComposition() {
+        var options = QrArt.Hero(QrHeroPreset.Neon, true);
         var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
         var png = QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, options, encoding).ToArray();
-        Assert.Equal(png, QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, QrArt.Hero(QrHeroPreset.Neon, true), encoding).ToArray());
+        var light = QrArt.Hero(QrHeroPreset.Neon);
+        var lightPng = QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, light, encoding).ToArray();
+        Assert.NotEqual(png, lightPng);
+        var lightPixels = ImageReader.DecodeRgba32(lightPng, out var lw, out var lh);
+        var corner = ((lh / 2) * lw + 8) * 4;
+        Assert.True(lightPixels[corner] + lightPixels[corner + 1] + lightPixels[corner + 2] > 690, "Light Neon needs a pale ground.");
+        Assert.NotNull(light.Canvas!.PanelGlowColor);
+        Assert.NotNull(light.Canvas.SecondaryPanelGlowColor);
         var pixels = ImageReader.DecodeRgba32(png, out var w, out var h);
         var left = Enumerable.Range(0, w / 2).First(x => {
             var p = ((h / 2) * w + x) * 4;
@@ -43,7 +50,8 @@ public sealed class QrPremiumGeometryTests {
         var options = QrArt.Hero(hero, true);
         var tinted = hero is QrHeroPreset.Ink or QrHeroPreset.DotMatrix or QrHeroPreset.MinimalLine or QrHeroPreset.MonoClassy;
         Assert.Equal(tinted, options.LogoTint.HasValue);
-        var ringed = hero is QrHeroPreset.Sunset or QrHeroPreset.Ocean or QrHeroPreset.Neon or QrHeroPreset.Berry or QrHeroPreset.Brand;
+        // Brand's plate matches its panel and needs no outline around the host's logo.
+        var ringed = hero is QrHeroPreset.Sunset or QrHeroPreset.Ocean or QrHeroPreset.Neon or QrHeroPreset.Berry;
         Assert.Equal(ringed, options.LogoRingColor.HasValue);
         Assert.Null(options.LogoBackground); // The plate inherits the actual edited panel colour.
     }
@@ -114,6 +122,28 @@ public sealed class QrPremiumGeometryTests {
     }
 
     [Fact]
+    public void ThinAlignmentRing_HasNoProtrudingDots_AndKeepsEveryPerimeterModuleDark() {
+        var qr = QR.Encode("RING", new QrEncodingOptions { MinVersion = 2, MaxVersion = 2, ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        const int m = 20;
+        var hero = QrArt.Hero(QrHeroPreset.MinimalLine);
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = m, ModuleShape = hero.ModuleShape!.Value, ModuleScale = hero.ModuleScale!.Value, Eyes = hero.Eyes, Foreground = hero.Foreground
+        }, out var w, out _, out _);
+        byte Red(double x, double y) => pixels[((int)((y + 4) * m) * w + (int)((x + 4) * m)) * 4];
+        // Every perimeter module centre stays dark: sides on the ring, corners as separate whole dots.
+        foreach (var (x, y) in new[] { (16.5, 16.5), (20.5, 16.5), (16.5, 20.5), (20.5, 20.5), (16.5, 18.5), (18.5, 16.5), (16.5, 17.5) }) {
+            Assert.True(qr.Modules[(int)x, (int)y]);
+            Assert.True(Red(x, y) < 64);
+        }
+        // A side dot no longer bulges past the ring, and each corner dot stays clear of it.
+        Assert.Equal(255, Red(16.28, 17.39));
+        Assert.Equal(255, Red(16.77, 16.77));
+        Assert.Equal(255, Red(16.05, 16.05));
+        Assert.Equal(255, Red(17.5, 18.5));
+        Assert.True(Red(18.5, 18.5) < 64);
+    }
+
+    [Fact]
     public void RadialGradient_HoldsTheOceanCoreBeforeBlending() {
         var modules = new BitMatrix(21, 21);
         for (var y = 0; y < 21; y++) for (var x = 0; x < 21; x++) modules[x, y] = true;
@@ -160,12 +190,13 @@ public sealed class QrPremiumGeometryTests {
     }
 
     public static IEnumerable<object[]> Effects() {
-        yield return new object[] { QrHeroPreset.Neon };
-        yield return new object[] { QrHeroPreset.PaperCutout };
+        yield return new object[] { QrHeroPreset.Neon, true };
+        yield return new object[] { QrHeroPreset.Neon, false };
+        yield return new object[] { QrHeroPreset.PaperCutout, true };
     }
     [Theory, MemberData(nameof(Effects))]
-    public void HeroEffects_HaveReservedFiniteExtent_AndNoClippedPixels(QrHeroPreset hero) {
-        var options = QrArt.Hero(hero, true);
+    public void HeroEffects_HaveReservedFiniteExtent_AndNoClippedPixels(QrHeroPreset hero, bool dark) {
+        var options = QrArt.Hero(hero, dark);
         var png = QR.Render(QrArtPremiumScanTests.ShortUrl, OutputFormat.Png, options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
         var rgba = ImageReader.DecodeRgba32(png, out var w, out var h);
         var control = QrRenderer.CloneOptions(options);

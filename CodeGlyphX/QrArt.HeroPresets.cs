@@ -5,7 +5,7 @@ namespace CodeGlyphX;
 
 public static partial class QrArt {
     /// <summary>Creates an independent, editable hero appearance. Dark compositions retain
-    /// a light QR panel and full quiet zone; Neon uses its dark composition for both choices.
+    /// a light QR panel and full quiet zone; light Neon keeps its rim and bloom on a pale ground.
     /// Brand provides the two-color appearance;
     /// pass it to RenderLogo to place and validate the actual logo without silently omitting it.</summary>
     public static QrRenderOptions Hero(QrHeroPreset preset, bool darkPanel = false) {
@@ -41,9 +41,8 @@ public static partial class QrArt {
                 options.ForegroundGradient.StartOffset = .4;
                 break;
             case QrHeroPreset.MonoClassy:
-                options.ModuleShape = QrModuleShape.ConnectedRounded;
-                options.Foreground = new Rgba32(43, 43, 43);
-                options.Background = new Rgba32(244, 239, 230);
+                options.ModuleShape = QrModuleShape.Square;
+                options.Foreground = new Rgba32(17, 17, 19);
                 options.Eyes.OuterShape = QrModuleShape.Classy;
                 options.Eyes.MirrorOutward = true;
                 options.Eyes.InnerShape = QrModuleShape.Square;
@@ -61,17 +60,30 @@ public static partial class QrArt {
                 options.Foreground = new Rgba32(48, 10, 71);
                 options.Background = new Rgba32(251, 239, 255);
                 options.Eyes.OuterColor = options.Eyes.InnerColor = new Rgba32(94, 13, 80);
-                options.Canvas = Panel(new Rgba32(10, 6, 20), 48);
+                options.Canvas = Panel(darkPanel ? new Rgba32(10, 6, 20) : new Rgba32(250, 246, 255), 48);
                 options.Canvas.PanelGlowColor = new Rgba32(255, 43, 214);
                 options.Canvas.SecondaryPanelGlowColor = new Rgba32(123, 43, 255);
+                if (!darkPanel) {
+                    // The light composition carries its neon through the rim, bloom and eyes.
+                    options.Background = Rgba32.White;
+                    options.Canvas.BackgroundGradient = Gradient(QrGradientType.DiagonalDown,
+                        new Rgba32(246, 240, 255), new Rgba32(255, 238, 249));
+                    options.Canvas.PanelGlowColor = new Rgba32(255, 43, 214, 210);
+                    options.Canvas.SecondaryPanelGlowColor = new Rgba32(123, 43, 255, 120);
+                    options.Eyes.OuterColor = new Rgba32(196, 0, 150);
+                    options.Eyes.InnerColor = new Rgba32(84, 16, 160);
+                }
                 break;
             case QrHeroPreset.PaperCutout:
                 options.ModuleShape = QrModuleShape.Liquid;
-                options.Foreground = new Rgba32(69, 51, 38);
-                options.Background = new Rgba32(255, 252, 245);
-                options.Canvas = Panel(darkPanel ? new Rgba32(32, 27, 24) : new Rgba32(237, 225, 205), 52);
-                options.Canvas.ShadowColor = new Rgba32(35, 23, 12, 46);
-                options.Canvas.StackedPanelColor = darkPanel ? new Rgba32(187, 167, 139) : new Rgba32(225, 207, 176);
+                // Craft paper: a kraft ground, a terracotta sheet under the cream card, cocoa ink.
+                options.Foreground = new Rgba32(66, 40, 26);
+                options.Background = new Rgba32(255, 250, 240);
+                options.Eyes.OuterColor = new Rgba32(160, 66, 36);
+                options.Eyes.InnerColor = new Rgba32(66, 40, 26);
+                options.Canvas = Panel(darkPanel ? new Rgba32(32, 27, 24) : new Rgba32(222, 196, 158), 52);
+                options.Canvas.ShadowColor = new Rgba32(58, 30, 10, 72);
+                options.Canvas.StackedPanelColor = darkPanel ? new Rgba32(190, 98, 62) : new Rgba32(206, 116, 78);
                 break;
             case QrHeroPreset.RetroPixel:
                 options.ModuleShape = QrModuleShape.Square;
@@ -105,14 +117,14 @@ public static partial class QrArt {
                 options.Eyes.OuterShape = QrModuleShape.Squircle;
                 break;
         }
-        if (darkPanel || preset == QrHeroPreset.Neon) {
+        if (darkPanel) {
             var ground = preset switch {
                 QrHeroPreset.Ocean => new Rgba32(5, 20, 40),
                 QrHeroPreset.Sunset => new Rgba32(42, 18, 6),
                 QrHeroPreset.Botanical => new Rgba32(12, 30, 20),
                 QrHeroPreset.Berry => new Rgba32(34, 12, 35),
                 QrHeroPreset.DotMatrix => new Rgba32(10, 20, 39),
-                QrHeroPreset.MonoClassy => new Rgba32(35, 31, 27),
+                QrHeroPreset.MonoClassy => new Rgba32(22, 22, 24),
                 QrHeroPreset.Ink => new Rgba32(15, 17, 20),
                 QrHeroPreset.MinimalLine => new Rgba32(24, 26, 25),
                 QrHeroPreset.Brand => new Rgba32(49, 8, 21),
@@ -130,7 +142,7 @@ public static partial class QrArt {
                 QrHeroPreset.DotMatrix => new Rgba32(231, 239, 252),
                 QrHeroPreset.Sunset => new Rgba32(255, 233, 238),
                 QrHeroPreset.Ocean => new Rgba32(223, 247, 246),
-                QrHeroPreset.MonoClassy => new Rgba32(235, 231, 222),
+                QrHeroPreset.MonoClassy => new Rgba32(244, 244, 242),
                 QrHeroPreset.Brand => new Rgba32(245, 231, 238),
                 QrHeroPreset.Neon => new Rgba32(251, 239, 255),
                 QrHeroPreset.PaperCutout => new Rgba32(237, 223, 198),
@@ -153,7 +165,7 @@ public static partial class QrArt {
         }
         if (preset is QrHeroPreset.Ink or QrHeroPreset.DotMatrix or QrHeroPreset.MinimalLine or QrHeroPreset.MonoClassy)
             options.LogoTint = options.Foreground;
-        if (preset is QrHeroPreset.Sunset or QrHeroPreset.Ocean or QrHeroPreset.Neon or QrHeroPreset.Berry or QrHeroPreset.Brand) {
+        if (preset is QrHeroPreset.Sunset or QrHeroPreset.Ocean or QrHeroPreset.Neon or QrHeroPreset.Berry) {
             options.LogoRingColor = HeroAccent(preset);
             options.LogoRingWidthPx = 2;
         }
@@ -190,7 +202,7 @@ public static partial class QrArt {
         QrHeroPreset.Berry => new Rgba32(208, 59, 137),
         QrHeroPreset.RetroPixel => new Rgba32(180, 85, 111),
         QrHeroPreset.PaperCutout => new Rgba32(152, 112, 65),
-        QrHeroPreset.MonoClassy => new Rgba32(130, 116, 96),
+        QrHeroPreset.MonoClassy => new Rgba32(112, 112, 118),
         QrHeroPreset.MinimalLine => new Rgba32(108, 122, 113),
         _ => new Rgba32(104, 116, 132)
     };

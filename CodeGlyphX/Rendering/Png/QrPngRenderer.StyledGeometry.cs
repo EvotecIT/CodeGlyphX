@@ -109,6 +109,10 @@ public static partial class QrPngRenderer {
         var outerRadius = (eye?.OuterCornerRadiusPx ?? 0) / (double)(cells * m);
         var holeRadius = eye?.OuterCornerRadiusPx > 0 ? Math.Max(1e-9, (eye.OuterCornerRadiusPx - m) / (double)((cells - 2) * m)) : 0;
         var ballRadius = (eye?.InnerCornerRadiusPx ?? 0) / (double)((cells - 4) * m);
+        // A thin alignment ring already carries its side modules. Their body ink is not repeated, so no
+        // partial dot protrudes past the ring's edge. The four corner modules lie outside a circle and
+        // keep separate whole body dots, clear of the ring, so every perimeter module centre stays dark.
+        var thinAlignment = index < 0 && (eye?.RingThicknessModules ?? 1) < 1;
         if (index >= 0 && frame == QrEyeFrameStyle.Glow && eye is not null) {
             var glowRadius = eye.GlowRadiusPx > 0 ? eye.GlowRadiusPx : m * 2;
             var glow = eye.GlowColor ?? outer;
@@ -134,6 +138,7 @@ public static partial class QrPngRenderer {
                             if (cx == 2 && cy == 2 && QrShapeGeometry.Contains(QrModuleShape.Circle, xx - cx, yy - cy)) ballHits++;
                             continue;
                         }
+
                         var thickness = eye?.RingThicknessModules ?? 1;
                         // Keep a thin stroke centred on the standard ring's centreline.
                         // Expanding only its aperture shifts the ring and breaks finder run ratios.
@@ -144,7 +149,8 @@ public static partial class QrPngRenderer {
                         if (index < 0 && !QrShapeGeometry.ContainsEye(outerShape, (xx - outerInset) / outerSpan, (yy - outerInset) / outerSpan, radius: outerRadius, outwardCorner: eye?.MirrorOutward == true ? (index < 0 ? 3 : index) : -1)) {
                             var cellX = Math.Min(cells - 1, (int)xx); var cellY = Math.Min(cells - 1, (int)yy);
                             var qx = mx + cellX; var qy = my + cellY;
-                            if (modules[qx, qy] && QrShapeGeometry.Contains(opts.ModuleShape, xx - cellX, yy - cellY,
+                            var corner = (cellX == 0 || cellX == cells - 1) && (cellY == 0 || cellY == cells - 1);
+                            if ((!thinAlignment || corner) && modules[qx, qy] && QrShapeGeometry.Contains(opts.ModuleShape, xx - cellX, yy - cellY,
                                 opts.ModuleScale, opts.ModuleCornerRadiusPx / (double)m, GetNeighborMask(modules, qx, qy))) bodyHits++;
                         }
                         if (QrShapeGeometry.ContainsEye(outerShape, (xx - outerInset) / outerSpan, (yy - outerInset) / outerSpan, radius: outerRadius, outwardCorner: eye?.MirrorOutward == true ? (index < 0 ? 3 : index) : -1)
