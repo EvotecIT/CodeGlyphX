@@ -112,7 +112,8 @@ public static partial class QrPngRenderer {
         // A thin alignment ring already carries its side modules. Their body ink is not repeated, so no
         // partial dot protrudes past the ring's edge. The four corner modules lie outside a circle and
         // keep separate whole body dots, clear of the ring, so every perimeter module centre stays dark.
-        var thinAlignment = index < 0 && (eye?.RingThicknessModules ?? 1) < 1;
+        var thinAlignment = index < 0 && outerShape == QrModuleShape.Circle && frame == QrEyeFrameStyle.Single
+            && (eye?.RingThicknessModules ?? 1) < 1;
         if (index >= 0 && frame == QrEyeFrameStyle.Glow && eye is not null) {
             var glowRadius = eye.GlowRadiusPx > 0 ? eye.GlowRadiusPx : m * 2;
             var glow = eye.GlowColor ?? outer;

@@ -144,6 +144,21 @@ public sealed class QrPremiumGeometryTests {
     }
 
     [Fact]
+    public void ThinDiamondAlignmentRing_KeepsSideModuleCentersDark() {
+        var qr = QR.Encode("RING", new QrEncodingOptions { MinVersion = 2, MaxVersion = 2, ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        const int m = 20;
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = m, ModuleShape = QrModuleShape.Square,
+            Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Diamond, InnerShape = QrModuleShape.Circle, RingThicknessModules = .75 }
+        }, out var width, out _, out _);
+        foreach (var (x, y) in new[] { (16, 17), (17, 16), (19, 16), (20, 17), (20, 19), (19, 20), (17, 20), (16, 19) }) {
+            Assert.True(qr.Modules[x, y]);
+            var red = pixels[(((y + 4) * m + m / 2) * width + (x + 4) * m + m / 2) * 4];
+            Assert.True(red < 64, $"Alignment module ({x}, {y}) must be dark, got {red}.");
+        }
+    }
+
+    [Fact]
     public void RadialGradient_HoldsTheOceanCoreBeforeBlending() {
         var modules = new BitMatrix(21, 21);
         for (var y = 0; y < 21; y++) for (var x = 0; x < 21; x++) modules[x, y] = true;
