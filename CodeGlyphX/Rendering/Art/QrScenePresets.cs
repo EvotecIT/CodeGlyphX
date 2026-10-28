@@ -39,13 +39,23 @@ public static class QrScenePresets {
             QrSceneStyle.CosmicOrbit => "EXPLORE YOUR UNIVERSE",
             _ => "PRESS START"
         };
-        options.ModuleShape = style == QrSceneStyle.RetroArcade ? QrModuleShape.Square : QrModuleShape.ConnectedRounded;
+        // The code takes a deep tone and a module silhouette from its own scene, on a backdrop tinted to match,
+        // so it reads as part of the illustration rather than a pasted-on label.
+        (options.Ink, options.Paper, options.ModuleShape) = style switch {
+            QrSceneStyle.TropicalGarden => (Color(0x10483A), Color(0xFFFAEE), QrModuleShape.Leaf),
+            QrSceneStyle.ElectricCity => (Color(0x261E62), Color(0xF6F4FF), QrModuleShape.ConnectedSquircle),
+            QrSceneStyle.MusicFestival => (Color(0x3A1A5C), Color(0xFFF7F0), QrModuleShape.Rounded),
+            QrSceneStyle.OceanReef => (Color(0x0E345E), Color(0xF7FCFA), QrModuleShape.Circle),
+            QrSceneStyle.CosmicOrbit => (Color(0x281E56), Color(0xFFFAEC), QrModuleShape.Circle),
+            _ => (Color(0x1E1A46), Color(0xFFF9ED), QrModuleShape.Square)
+        };
         options.Validate();
         return options;
     }
     private static Rgba32[] Palette(params int[] values) {
         var colors = new Rgba32[values.Length];
-        for (var i = 0; i < colors.Length; i++) colors[i] = new((byte)(values[i] >> 16), (byte)(values[i] >> 8), (byte)values[i]);
+        for (var i = 0; i < colors.Length; i++) colors[i] = Color(values[i]);
         return colors;
     }
+    private static Rgba32 Color(int value) => new((byte)(value >> 16), (byte)(value >> 8), (byte)value);
 }
