@@ -783,7 +783,7 @@ pre.code-block > .copy-btn.copied { color: var(--good); }
 /* Style board: every preset, rendered by CodeGlyphX. */
 .style-board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
 .style-board-card { margin: 0; padding: 10px 10px 12px; border: 1px solid var(--line); border-radius: var(--cgx-radius); background: var(--surface); }
-.style-board-card img { display: block; width: 100%; height: auto; border-radius: 9px; }
+.style-board-card img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 9px; }
 .style-board-label { margin-top: 10px; color: var(--ink); font-size: .875rem; font-weight: 600; }
 .style-board-fallback { padding: 16px; color: var(--ink-muted); }
 .cgx-hero-presets { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 24px; }

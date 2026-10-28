@@ -176,8 +176,6 @@ main.cgx-landing { padding: var(--header-height) 0 0; overflow-x: clip; }
   .cgx-hero__thumbs li { width: 84px; }
 }
 
-/* Ten style-board designs on the home page; the showcase has the rest. */
-.cgx-art .style-board-grid > :nth-child(n+11) { display: none; }
 .cgx-art__more { margin-top: 20px; }
 .cgx-art .cgx-link { color: #c4b5fd; }
 
