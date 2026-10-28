@@ -25,7 +25,7 @@
             <dl class="cgx-bh-stats">
                 <div><dt>Ahead of the next reader</dt><dd>+{{ cgx.correct - runner_up }} <span>images</span></dd></div>
                 <div><dt>Formats led or tied</dt><dd>{{ format_lead }} <span>of {{ format_total }}</span></dd></div>
-                <div><dt>Negative images rejected</dt><dd>{{ comparison.recognition[0].rejected }} <span>of 25</span></dd></div>
+                <div><dt>Up from the original decoder</dt><dd>{{ cgx.before }} <span>&rarr; {{ cgx.correct }}</span></dd></div>
             </dl>
         </div>
         <figure class="cgx-bh-chart">
@@ -101,6 +101,7 @@
                     <li><strong>Not the fastest everywhere.</strong> CodeGlyphX has the lowest PNG median in {{ comparison.png_wins }} of {{ comparison.png_cases }} payload and domain cases. ZXing-C++ builds the module matrix fastest in {{ comparison.module_cpp_wins }} of {{ comparison.png_cases }}, and QRCoder allocates the least managed memory for PNG in {{ comparison.png_qrc_allocation_wins }} of {{ comparison.png_cases }}. Both ZXing bindings write PNG through the CodeGlyphX codec here.</li>
                     {{~ if format_losses.size > 0 ~}}<li><strong>Formats where another reader does better.</strong> {{ format_losses | array.join "; " }}.</li>{{~ end ~}}
                     {{~ if format_misses.size > 0 ~}}<li><strong>Misses remain.</strong> {{ format_misses | array.join ", " }}.</li>{{~ end ~}}
+                    <li><strong>Negative images.</strong> On the 12 main-corpus negatives CodeGlyphX rejects {{ comparison.recognition[0].main_rejected }}{{ for n in comparison.recognition offset:1 }}, {{ n.engine }} {{ n.main_rejected }}{{ end }}. On the 25 supplementary negatives{{ for n in comparison.recognition }} {{ n.engine }} rejects {{ n.rejected }}{{ if !for.last }},{{ end }}{{ end }}.</li>
                     {{~ for note in head.limits ~}}<li>{{ note }}</li>{{~ end ~}}
                 </ul>
             </div>
