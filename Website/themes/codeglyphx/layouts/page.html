@@ -20,7 +20,7 @@
   <div class="page">
 {{ include "header" -}}
 <main id="main" class="cgx-main">
-{{~ ph_title = page.meta.heading ?? page.title; ph_lede = page.meta.lede ?? page.description; ph_glyph = page.meta.glyph ~}}
+{{~ ph_title = page.meta.heading ?? page.title; ph_lede = page.meta.lede ?? page.description; ph_glyph = page.meta.glyph; ph_crumb = page.meta.crumb; ph_crumb_url = page.meta.crumb_url ~}}
 {{ include "page-head" }}
 <div class="cgx-page cgx-page--{{ page.slug }}">
 {{ content }}

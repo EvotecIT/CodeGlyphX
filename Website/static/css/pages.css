@@ -209,6 +209,26 @@
 @media (max-width: 860px) {
     .cgx-bench-overview { grid-template-columns: minmax(0, 1fr); }
 }
+.cgx-bench-overview--single { grid-template-columns: minmax(0, 1fr); }
+
+/* Evidence follow-up studies are disclosures: the heading is the summary, historical studies start collapsed. */
+details.cgx-bench-study > .cgx-bench-study__summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; list-style: none; cursor: pointer; }
+details.cgx-bench-study > .cgx-bench-study__summary::-webkit-details-marker { display: none; }
+details.cgx-bench-study > .cgx-bench-study__summary::after { content: "+"; display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink-muted); font-family: var(--cgx-mono); font-size: 1rem; line-height: 1; transition: transform .2s ease, border-color .2s ease, color .2s ease; }
+details.cgx-bench-study[open] > .cgx-bench-study__summary::after { content: "\2212"; }
+details.cgx-bench-study > .cgx-bench-study__summary:hover::after { border-color: var(--accent-ink); color: var(--accent-ink); }
+details.cgx-bench-study > .cgx-bench-study__summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+details.cgx-bench-study > .cgx-bench-study__summary h3 { margin: 0; font-family: var(--cgx-display); font-size: clamp(1.0625rem, 1rem + .4vw, 1.3125rem); font-weight: 800; line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; }
+details.cgx-bench-study:not([open]) > .cgx-bench-study__summary h3 { color: var(--ink-muted); font-weight: 700; }
+details.cgx-bench-study { margin-top: 0; padding-block: 22px; }
+details.cgx-bench-study[open] { padding-bottom: 36px; }
+details.cgx-bench-study > p { max-width: var(--cgx-measure); margin-top: 14px; color: var(--ink-2); }
+details.cgx-bench-study > :is(h3, h4) { margin-top: 28px; }
+.cgx-section > details.cgx-bench-study:first-of-type { margin-top: 40px; }
+.cgx-bench-index li:not(.is-historical) a { color: var(--ink); font-weight: 600; }
+.cgx-bench-index li.is-historical a { color: var(--ink-dim); }
+.cgx-bench-index + details.cgx-bench-study, .cgx-bench-index ~ details.cgx-bench-study:first-of-type { margin-top: 32px; }
+
 /* ---------- Product pages: codes with what they decode to ---------- */
 .cgx-codecard { display: grid; align-content: start; gap: 10px; margin: 0; }
 .cgx-codecard__plate { position: relative; display: grid; place-items: center; width: var(--size, 180px); aspect-ratio: 1; padding: 12px; border-radius: 12px; background: #fff; }

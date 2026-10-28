@@ -1,5 +1,5 @@
-<section class="cgx-bench-study" aria-labelledby="png-output-buffers">
-    <h3 id="png-output-buffers">{{ if comparison.png_output.historical }}Retained PNG study: {{ end }}PNG output allocation and stream correctness</h3>
+<details class="cgx-bench-study"{{ if !comparison.png_output.historical }} open{{ end }}>
+    <summary class="cgx-bench-study__summary"><h3 id="png-output-buffers">{{ if comparison.png_output.historical }}Retained PNG study: {{ end }}PNG output allocation and stream correctness</h3></summary>
     {{ if comparison.png_output.historical }}<p>This PNG study retains its original binaries, measurements and test results.</p>{{ end }}
     <p>{{ comparison.png_output.changes }}</p>
     <p>{{ comparison.png_output.contracts }}</p>
@@ -37,4 +37,4 @@
     </details>
     <p>{{ comparison.png_output.generation_limits }}</p>
     <p><a href="/comparisons/evidence/png-output-proof.json">PNG proof and all raw packets</a> · <a href="/comparisons/evidence/png-output-stream-before.json">Previous stream reproduction</a> · <a href="/comparisons/evidence/png-output-stream-current.json">Current stream output</a></p>
-</section>
+</details>
