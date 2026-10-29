@@ -19,6 +19,11 @@ on:
       - "CodeGlyphX/**/*.csproj"
       - "WebsiteArtifacts/project-manifest.json"
 
+concurrency:
+  # PRs replace only their own older runs; every other event has a unique group.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   verify-manifest:
     runs-on: windows-latest
