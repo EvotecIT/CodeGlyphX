@@ -8,6 +8,11 @@
         "w": 160,
         "h": 100
       },
+      "gallery": {
+        "src": "/visuals/nav/gallery.svg",
+        "w": 160,
+        "h": 100
+      },
       "powershell": {
         "src": "/visuals/nav/powershell.svg",
         "w": 160,

@@ -43,6 +43,13 @@
       "changefreq": "monthly"
     },
     {
+      "path": "/gallery/",
+      "title": "QR style gallery",
+      "section": "Product",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
       "path": "/showcase/",
       "title": "Showcase",
       "section": "Resources",

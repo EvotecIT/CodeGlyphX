@@ -1,0 +1,162 @@
+{{~ # QR style gallery (/gallery/). Looks, images, recipes and mockups come from data/gallery.json, written by
+   # CODEGLYPHX_GALLERY=1 (CodeGlyphX.Examples/QrGalleryExample.cs). Scan badges come from data/gallery-scan.json,
+   # written and checked by CodeGlyphX.Tests/QrGalleryScanTests. Mockups are HTML and CSS drawn around the same PNGs. ~}}
+{{~ g = shortcode.data; scan = data["gallery-scan"] ~}}
+{{~ variant_total = 0; for l in g.looks; variant_total = variant_total + l.variants.size; end ~}}
+{{~ checks_total = 0; passed_total = 0; for s in scan.variants; checks_total = checks_total + s.checks; passed_total = passed_total + s.passed; end ~}}
+{{~ short = scan.payloads[0]; long = scan.payloads[1] ~}}
+{{~ families = ["Colour", "Minimal", "Framed", "Caption", "Logo"] ~}}
+<div class="cgx-gl">
+    <section class="cgx-gl-proof" aria-labelledby="gl-proof-title">
+        <div class="cgx-gl-proof__copy">
+            <p class="cgx-bh-eyebrow"><span class="cgx-bh-eyebrow__dot" aria-hidden="true"></span>Every look · every variant · every check</p>
+            <h2 id="gl-proof-title" class="cgx-gl-proof__title"><span class="cgx-gl-proof__figure">{{ passed_total }}<span>/{{ checks_total }}</span></span> scans read the exact URL</h2>
+            <p class="cgx-gl-proof__lede">{{ g.looks.size }} looks in {{ variant_total }} variants. Each one is rendered from the C# on its card, then read {{ scan.checksPerVariant }} times by strict ZXing and the CodeGlyphX decoder. A look that misses a single read is not on this page.</p>
+        </div>
+        <dl class="cgx-gl-matrix" aria-label="What every look is checked against">
+            <div><dt>Payloads</dt><dd>Short URL <span>version {{ short.version }}</span><br />Long URL <span>version {{ long.version }}, {{ long.text | string.size }} characters</span></dd></div>
+            <div><dt>Logo</dt><dd>Without, and with a centred logo placed by <code>QrArt.RenderLogo</code></dd></div>
+            <div><dt>Size</dt><dd>{{ for s in scan.sizes }}{{ s }} px{{ if !for.last }} and {{ end }}{{ end }} code width</dd></div>
+            <div><dt>Capture</dt><dd>As rendered, rotated 2°, and blurred</dd></div>
+            <div><dt>Decoders</dt><dd>ZXing.Net without TryHarder or rotation, and CodeGlyphX</dd></div>
+        </dl>
+    </section>
+
+    <section class="cgx-section cgx-gl-looks" aria-labelledby="gl-looks-title">
+        <div class="cgx-gl-looks__head">
+            <div class="cgx-section__head">
+                <h2 id="gl-looks-title">The looks</h2>
+                <p>Copy a recipe, change the payload and save. Light and dark panels of the same look share a card.</p>
+            </div>
+            <div class="cgx-tabs cgx-gl-filter" role="group" aria-label="Filter looks" data-gallery-filter hidden>
+                <button type="button" class="cgx-tab active" aria-pressed="true" data-family="all"><span class="cgx-tab__key" aria-hidden="true"></span>All <span class="cgx-tab__count">{{ g.looks.size }}</span></button>
+                {{~ for f in families; n = 0; for l in g.looks; if l.family == f; n = n + 1; end; end ~}}
+                <button type="button" class="cgx-tab" aria-pressed="false" data-family="{{ f }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ f }} <span class="cgx-tab__count">{{ n }}</span></button>
+                {{~ end ~}}
+            </div>
+        </div>
+        <div class="cgx-gl-grid">
+            {{~ for look in g.looks ~}}
+            <article class="cgx-gl-card" id="{{ look.id }}" data-family="{{ look.family }}" aria-labelledby="{{ look.id }}-name">
+                <div class="cgx-gl-card__stage">
+                    {{~ for v in look.variants ~}}
+                    <figure class="cgx-gl-card__sample" data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}>
+                        <img src="{{ v.src }}" width="{{ v.width }}" height="{{ v.height }}" loading="lazy" decoding="async" alt="{{ v.alt }}" />
+                    </figure>
+                    {{~ end ~}}
+                </div>
+                <div class="cgx-gl-card__body">
+                    <div class="cgx-gl-card__head">
+                        <h3 id="{{ look.id }}-name">{{ look.name }}</h3>
+                        {{~ if look.variants.size > 1 ~}}
+                        <div class="cgx-tabs cgx-gl-variants" role="group" aria-label="{{ look.name }} panel" data-variant-tabs hidden>
+                            {{~ for v in look.variants ~}}
+                            <button type="button" class="cgx-tab{{ if for.first }} active{{ end }}" aria-pressed="{{ if for.first }}true{{ else }}false{{ end }}" data-variant="{{ v.id }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ v.label }}</button>
+                            {{~ end ~}}
+                        </div>
+                        {{~ end ~}}
+                    </div>
+                    <div class="cgx-gl-card__scan">
+                        {{~ for v in look.variants; vs = null; for s in scan.variants; if s.id == v.id; vs = s; end; end ~}}
+                        <p data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}>{{ if vs }}<span class="cgx-gl-badge{{ if vs.passed != vs.checks }} is-failing{{ end }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>{{ vs.passed }}/{{ vs.checks }}</strong> reads</span><span class="cgx-gl-card__decoders">ZXing {{ vs.zxing }}/{{ vs.checks // 2 }} · CodeGlyphX {{ vs.codeglyphx }}/{{ vs.checks // 2 }}</span>{{ else }}<span class="cgx-gl-badge is-failing">Not measured</span>{{ end }}</p>
+                        {{~ end ~}}
+                    </div>
+                    <p class="cgx-gl-card__summary">{{ look.summary }}</p>
+                    <p class="cgx-gl-card__use"><span>{{ look.family }}</span>{{ look.bestFor }}</p>
+                    <details class="cgx-gl-recipe">
+                        <summary>C# recipe</summary>
+                        {{~ for v in look.variants ~}}
+                        <div data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}><pre class="code-block"><code class="language-csharp">{{ v.code | html.escape }}</code></pre></div>
+                        {{~ end ~}}
+                    </details>
+                </div>
+            </article>
+            {{~ end ~}}
+        </div>
+    </section>
+
+    <section class="cgx-section cgx-gl-context" aria-labelledby="gl-context-title">
+        <div class="cgx-section__head">
+            <h2 id="gl-context-title">In context</h2>
+            <p>The same gallery images, placed where people meet them. The scenes are drawn in HTML and CSS; every code in them is the PNG from its card.</p>
+        </div>
+        <div class="cgx-gl-mocks">
+            {{~ for m in g.mockups; c = m.copy ~}}
+            <figure class="cgx-mock cgx-mock--{{ m.kind }}" id="mockup-{{ m.id }}">
+                <div class="cgx-mock__scene">
+                    {{~ if m.kind == "poster" ~}}
+                    <div class="cgx-mock__poster">
+                        <span class="cgx-mock__tape cgx-mock__tape--l" aria-hidden="true"></span><span class="cgx-mock__tape cgx-mock__tape--r" aria-hidden="true"></span>
+                        <p class="cgx-mock__eyebrow">{{ c.eyebrow }}</p>
+                        <p class="cgx-mock__title">{{ c.title }}</p>
+                        <p class="cgx-mock__body">{{ c.body }}</p>
+                        <div class="cgx-mock__foot">
+                            <img src="{{ m.src }}" width="{{ m.width }}" height="{{ m.height }}" loading="lazy" decoding="async" alt="{{ m.look }} QR code on the poster" />
+                            <p><strong>{{ c.cta }}</strong>{{ c.footer }}</p>
+                        </div>
+                    </div>
+                    {{~ else if m.kind == "card" ~}}
+                    <div class="cgx-mock__card cgx-mock__card--front" aria-hidden="true">
+                        <p class="cgx-mock__company">{{ c.company }}</p>
+                        <div><p class="cgx-mock__name">{{ c.name }}</p><p class="cgx-mock__role">{{ c.role }}</p></div>
+                    </div>
+                    <div class="cgx-mock__card cgx-mock__card--back">
+                        <div class="cgx-mock__contact">
+                            <p class="cgx-mock__name">{{ c.name }}</p>
+                            <p>{{ c.email }}</p><p>{{ c.phone }}</p>
+                            <p class="cgx-mock__cta">{{ c.cta }} &rarr;</p>
+                        </div>
+                        <img src="{{ m.src }}" width="{{ m.width }}" height="{{ m.height }}" loading="lazy" decoding="async" alt="{{ m.look }} QR code on the back of the card" />
+                    </div>
+                    {{~ else if m.kind == "package" ~}}
+                    <div class="cgx-mock__box">
+                        <div class="cgx-mock__box-top" aria-hidden="true"></div>
+                        <div class="cgx-mock__box-side" aria-hidden="true"><span>{{ c.brand }}</span></div>
+                        <div class="cgx-mock__box-front">
+                            <p class="cgx-mock__brand">{{ c.brand }}</p>
+                            <div class="cgx-mock__label">
+                                <p class="cgx-mock__product">{{ c.product }}</p>
+                                <p class="cgx-mock__kind">{{ c.kind }}</p>
+                                <img src="{{ m.src }}" width="{{ m.width }}" height="{{ m.height }}" loading="lazy" decoding="async" alt="{{ m.look }} QR code on the tea box" />
+                                <p class="cgx-mock__cta">{{ c.cta }}</p>
+                            </div>
+                            <p class="cgx-mock__weight">{{ c.weight }}</p>
+                        </div>
+                    </div>
+                    {{~ else if m.kind == "tent" ~}}
+                    <div class="cgx-mock__tent">
+                        <div class="cgx-mock__tent-face">
+                            <p class="cgx-mock__brand">{{ c.brand }}</p>
+                            <p class="cgx-mock__title">{{ c.title }}</p>
+                            <img src="{{ m.src }}" width="{{ m.width }}" height="{{ m.height }}" loading="lazy" decoding="async" alt="{{ m.look }} QR code on the table tent" />
+                            <p class="cgx-mock__cta">{{ c.cta }}</p>
+                            <p class="cgx-mock__table">{{ c.table }}</p>
+                        </div>
+                    </div>
+                    {{~ end ~}}
+                </div>
+                <figcaption><strong>{{ m.title }}</strong> <span>{{ m.description }}</span> <a class="cgx-link" href="#{{ m.lookId }}">{{ m.look }} recipe</a></figcaption>
+            </figure>
+            {{~ end ~}}
+        </div>
+    </section>
+
+    <section class="cgx-section cgx-gl-method" aria-labelledby="gl-method-title">
+        <div class="cgx-gl-method__grid">
+            <div class="cgx-section__head">
+                <h2 id="gl-method-title">How the gallery stays honest</h2>
+                <p>The images, recipes and badges are generated from the library at the commit that built this page, so they can't drift from the code.</p>
+            </div>
+            <ul class="cgx-bh-limits">
+                <li><strong>One source.</strong> The C# on each card is copied from the recipe file the generator compiles, and the tests compare the page data with it.</li>
+                <li><strong>Measured, then published.</strong> The badges come from the scan tests. A look that fails one of its {{ scan.checksPerVariant }} reads is fixed or removed, never footnoted.</li>
+                <li><strong>A simulation, not a guarantee.</strong> These are software reads of rendered pixels. Print a proof of your final design and scan it on the phones and at the distances you expect.</li>
+            </ul>
+        </div>
+        <pre class="code-block"><code class="language-powershell"># Images and page data (Website/static/assets/gallery, Website/data/gallery.json)
+$env:CODEGLYPHX_GALLERY = '1'; dotnet run --project CodeGlyphX.Examples -c Release
+# Scan badges (Website/data/gallery-scan.json), then check them on both runtimes
+$env:CODEGLYPHX_GALLERY_SCAN_WRITE = '1'; dotnet test CodeGlyphX.Tests -f net8.0 --filter QrGalleryScanTests
+dotnet test CodeGlyphX.Tests -f net10.0 --filter QrGalleryScanTests</code></pre>
+    </section>
+</div>

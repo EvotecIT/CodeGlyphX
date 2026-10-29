@@ -417,6 +417,44 @@ globalThis.setTheme = setTheme;
         });
     }
 
+    // QR style gallery (/gallery/): family filter and the light/dark panel of each look. Without
+    // script every card shows its first variant and the controls stay hidden.
+    function initQrGallery() {
+        document.querySelectorAll('[data-gallery-filter]').forEach((bar) => {
+            if (bar.dataset.bound === 'true') return;
+            bar.dataset.bound = 'true';
+            bar.hidden = false;
+            const cards = Array.from(document.querySelectorAll('.cgx-gl-card[data-family]'));
+            const buttons = Array.from(bar.querySelectorAll('button[data-family]'));
+            buttons.forEach((button) => button.addEventListener('click', () => {
+                const family = button.dataset.family;
+                buttons.forEach((b) => {
+                    const on = b === button;
+                    b.classList.toggle('active', on);
+                    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                });
+                cards.forEach((card) => { card.hidden = family !== 'all' && card.dataset.family !== family; });
+            }));
+        });
+        document.querySelectorAll('.cgx-gl-card [data-variant-tabs]').forEach((tabs) => {
+            if (tabs.dataset.bound === 'true') return;
+            tabs.dataset.bound = 'true';
+            tabs.hidden = false;
+            const card = tabs.closest('.cgx-gl-card');
+            const buttons = Array.from(tabs.querySelectorAll('button[data-variant]'));
+            buttons.forEach((button) => button.addEventListener('click', () => {
+                buttons.forEach((b) => {
+                    const on = b === button;
+                    b.classList.toggle('active', on);
+                    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                });
+                card.querySelectorAll('[data-variant-panel]').forEach((panel) => {
+                    panel.hidden = panel.dataset.variantPanel !== button.dataset.variant;
+                });
+            }));
+        });
+    }
+
     function initShowcaseCarousel() {
         const galleries = Array.from(document.querySelectorAll('.showcase-gallery'))
             .filter((gallery) => gallery.dataset.bound !== 'true');
@@ -680,6 +718,7 @@ globalThis.setTheme = setTheme;
             initStyleBoards();
             initDocsNav();
             initShowcaseCarousel();
+            initQrGallery();
             linkifyReleaseBodyUrls();
         }, 100);
     }
