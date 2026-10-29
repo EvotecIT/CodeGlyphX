@@ -85,7 +85,7 @@ The nineteen-image timing subset is locked separately: the first selected image 
 
 ## Reproduce
 
-The website reads `Website/data/comparisons.json`, generated from the checked-in evidence. Its page and quick summary share the same data and shortcode. Refresh or verify that projection without rerunning measurements:
+The website reads `Website/data/comparisons.json`, generated from the checked-in evidence. The headline page (`/benchmarks/`), the complete evidence page (`/benchmarks/evidence/`) and the quick summary all read that same data. Refresh or verify that projection without rerunning measurements:
 
 ```text
 python Build/comparison_website_data.py --evidence-root docs/comparisons/evidence --website-root Website

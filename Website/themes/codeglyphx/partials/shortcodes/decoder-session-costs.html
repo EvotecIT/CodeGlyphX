@@ -1,5 +1,5 @@
-    <section class="cgx-bench-study" aria-labelledby="{{ session_costs.anchor }}">
-        <h3 id="{{ session_costs.anchor }}">{{ session_costs.title }}</h3>
+    <details class="cgx-bench-study"{{ if !session_costs.historical }} open{{ end }}>
+        <summary class="cgx-bench-study__summary"><h3 id="{{ session_costs.anchor }}">{{ session_costs.title }}</h3></summary>
         {{ if session_costs.historical }}<p>These measurements retain their original source <code class="cgx-bench-source">{{ session_costs.source }}</code>.</p>{{ end }}
         {{ if session_costs.summary }}
         <p>{{ session_costs.summary }}</p>
@@ -29,4 +29,4 @@
         {{ end }}
         <p>{{ session_costs.limits }}</p>
         <p><a href="/comparisons/evidence/{{ session_costs.evidence }}">{{ session_costs.evidence_label }}</a> · <a href="/comparisons/evidence/retained-contexts-history.json">Historical context inventory</a>. The proof links every packet and its complete priming and measured per-image outcomes.</p>
-    </section>
+    </details>

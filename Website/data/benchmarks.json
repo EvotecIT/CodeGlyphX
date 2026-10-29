@@ -1,7 +1,16 @@
 {
   "hero": {
-    "title": "Barcode benchmarks and image recognition",
-    "intro": "Matched QR generation workflows and a frozen image corpus compare CodeGlyphX, ZXing.Net, ZXing-C++ and QRCoder. Speed, managed allocation and recognition quality are reported separately. The full comparison and the later decoder follow-ups retain separate qualified sources."
+    "title": "Barcode benchmarks",
+    "intro": "CodeGlyphX reads more images from the same barcode corpus than ZXing.Net or ZXing-C++. Here is the result, where CodeGlyphX is slower, and how to reproduce every number."
+  },
+  "headline": {
+    "method": "Every reader receives the same preloaded pixels and format hint for each image in the frozen ZXing black-box corpus. A pass means the exact expected payload set, with no trimming or partial credit; image loading is excluded.",
+    "host": "Timing ran on one shared Windows workstation, 12 rotated samples after 3 warmups with every outlier kept, so small differences are noise.",
+    "limits": [
+      "The corpus is not held out. It is used during CodeGlyphX development and regression testing, and it comes from the ZXing ecosystem.",
+      "Readers receive the expected format as a hint, so this measures hinted recognition, not default all-format scanning."
+    ],
+    "reproduce": "Build the benchmark project with the comparison engines, fetch the hash-locked corpus and run the recognition pass. Timing suites use the same assembly through PSPublishModule's benchmark runner."
   },
   "sharedHost": "Other tasks were active during timing. Comparisons rotate engine order within each fixed cache domain and retain all outliers. This is a shared-host measurement, with no idle-machine or universal performance claim; the evidence records CPU samples before each suite.",
   "recognition": "The frozen ZXing Java black-box corpus contains 279 images: 267 positives and 12 negatives. Each reader receives the same preloaded RGBA32 pixels and format hints. Exact payload sets preserve Unicode, newlines and significant spaces; multi-symbol images require every expected payload. Image loading is excluded. QRCoder is generation-only. The Code 128 comparison hint includes GS1-128, matching the physical family in both ZXing readers. This follow-up holds input hashes, hints, oracles and payload scoring fixed.",

@@ -29,6 +29,13 @@
       "changefreq": "monthly"
     },
     {
+      "path": "/benchmarks/evidence/",
+      "title": "Benchmark evidence",
+      "section": "Resources",
+      "priority": "0.6",
+      "changefreq": "monthly"
+    },
+    {
       "path": "/faq/",
       "title": "FAQ",
       "section": "Resources",
