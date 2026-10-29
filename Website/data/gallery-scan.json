@@ -1,0 +1,267 @@
+{
+  "generatedBy": "CodeGlyphX.Tests/QrGalleryScanTests (CODEGLYPHX_GALLERY_SCAN_WRITE=1)",
+  "decoders": [
+    "ZXing.Net (strict: no TryHarder, no auto-rotate)",
+    "CodeGlyphX QrImageDecoder"
+  ],
+  "payloads": [
+    {
+      "name": "short",
+      "text": "https://codeglyphx.com",
+      "version": 3
+    },
+    {
+      "name": "long",
+      "text": "https://codeglyphx.com/docs/qr/?utm_source=print\u0026utm_medium=poster\u0026utm_campaign=autumn-launch-2026\u0026ref=gallery",
+      "version": 10
+    }
+  ],
+  "logo": [
+    false,
+    true
+  ],
+  "sizes": [
+    320,
+    1024
+  ],
+  "transforms": [
+    "plain",
+    "rotate2deg",
+    "blur121"
+  ],
+  "checksPerVariant": 48,
+  "variants": [
+    {
+      "id": "sunset",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "minimal-line",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "botanical",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "botanical-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "neon-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "neon",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "ink",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "ink-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "gold-sparkle",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "retro-pixel",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "retro-pixel-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "ticket",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "mono-classy-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "mono-classy",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "ocean",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "confetti",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "scan-me",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "berry",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "berry-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "glow-frame",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "paper-cutout",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "paper-cutout-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "brand-logo",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "brand-logo-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "wi-fi-card",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "viewfinder",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "dot-matrix",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "dot-matrix-dark",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "mint-logo",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    }
+  ]
+}

@@ -26,6 +26,9 @@
     <Compile Include="**\*.cs" Exclude="bin\**;obj\**;Net472\**" />
     <Compile Include="../CodeGlyphX.Examples/QrSampleBrandMark.cs" Link="StyleBoard/QrSampleBrandMark.cs" />
     <Compile Include="../CodeGlyphX.Examples/QrStyleBoardLooks.cs" Link="StyleBoard/QrStyleBoardLooks.cs" />
+    <Compile Include="../CodeGlyphX.Examples/QrGalleryLooks.cs" Link="Gallery/QrGalleryLooks.cs" />
+    <Compile Include="../CodeGlyphX.Examples/QrGalleryRecipes.cs" Link="Gallery/QrGalleryRecipes.cs" />
+    <EmbeddedResource Include="../CodeGlyphX.Examples/QrGalleryRecipes.cs" LogicalName="QrGalleryRecipes.cs" Link="Gallery/QrGalleryRecipes.cs" />
     <Compile Include="../CodeGlyphX.Examples/QrArtIllustrations.cs" Link="Showcase/QrArtIllustrations.cs" />
     <Compile Include="../CodeGlyphX.Examples/QrExpressiveArtExample.cs" Link="Showcase/QrExpressiveArtExample.cs" />
     <Compile Include="../CodeGlyphX.Examples/QrProceduralArtExample.cs" Link="Showcase/QrProceduralArtExample.cs" />
