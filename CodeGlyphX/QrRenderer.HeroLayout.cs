@@ -53,7 +53,7 @@ internal static partial class QrRenderer {
             QrHeroPreset.Ocean or QrHeroPreset.Sunset => .18,
             _ => .181
         };
-        canvas.PaddingPx = Math.Max(canvas.PaddingPx, (int)Math.Ceiling(full * (darkGround ? darkPadding : .065)));
+        canvas.PaddingPx = Math.Max(canvas.PaddingPx, (int)Math.Ceiling(full * (darkGround ? darkPadding : hero == QrHeroPreset.Neon ? .1 : .065)));
         canvas.QrCornerRadiusPx = render.Eyes?.OuterShape switch {
             QrModuleShape.Square => 0,
             QrModuleShape.Circle => Math.Max(2, (int)Math.Round(full * .09)),
@@ -65,13 +65,14 @@ internal static partial class QrRenderer {
         }
         if (hero == QrHeroPreset.Neon) {
             canvas.PanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * .03125));
-            canvas.SecondaryPanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * .1425));
+            // A pale ground keeps a tighter bloom so the code stays large in small previews.
+            canvas.SecondaryPanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * (darkGround ? .1425 : .085)));
         }
         if (hero == QrHeroPreset.Sunset && darkGround)
             canvas.SecondaryPanelGlowRadiusPx = Math.Max(1, (int)Math.Round(full * .07));
         if (hero == QrHeroPreset.PaperCutout) {
             canvas.ShadowOnPanelsOnly = darkGround;
-            canvas.StackedPanelOffsetPx = Math.Max(1, (int)Math.Round(full * .012));
+            canvas.StackedPanelOffsetPx = Math.Max(1, (int)Math.Round(full * .024));
             canvas.ShadowOffsetX = 0;
             canvas.ShadowOffsetY = Math.Max(1, (int)Math.Round(full * .012));
             canvas.ShadowBlurPx = Math.Max(1, (int)Math.Round(full * .03125));

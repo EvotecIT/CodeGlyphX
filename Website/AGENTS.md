@@ -52,6 +52,8 @@ The home page (`content/pages/index.md`, layout `landing`) reads committed data.
 - Specimen sheet, payload codes and hero decode results: `data/specimens.json` and `static/specimens/*.svg`, produced by CodeGlyphX itself:
   - `dotnet run --project ./tools/SiteSpecimens -c Release -- .`
   - The hero and gallery art in `static/images/art/` comes from `Assets/Examples`. The tool decodes each image, so the page only claims what CodeGlyphX reads back.
+- Style board (home page and showcase): `static/data/style-board.json` and `static/assets/style-board/*.png`, rendered from `CodeGlyphX.Examples/QrStyleBoardLooks.cs`:
+  - `CODEGLYPHX_STYLE_BOARD=1 dotnet run --project ../CodeGlyphX.Examples -c Release`, then copy `qr-style-board/*.png` and `style-board.json` from the examples output. Remove images that are no longer in the manifest. `QrStyleBoardScanTests` decodes every look with strict ZXing and the native decoder.
 - PowerShell (home section and `/powershell/`): run both scripts against the same ImagePlayground build, so the command list and examples describe one consistent snapshot:
   - `pwsh ./build/Sync-ImagePlayground.ps1 [-ModulePath <ImagePlayground.psd1>]` writes `data/imageplayground.json`.
   - `pwsh ./build/Render-PowerShellExamples.ps1 [-ModulePath <ImagePlayground.psd1>] [-Id wifi,barcodes]` runs every `powershell/<id>.ps1` listed in `powershell/examples.json` and writes the files each one produced to `static/powershell/examples/<id>/`, plus `data/powershell-examples.json` (script text, console output, output files). Pages show scripts exactly as they ran; do not link to example files on GitHub.

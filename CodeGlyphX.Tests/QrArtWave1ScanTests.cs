@@ -311,9 +311,12 @@ public sealed class QrArtWave1ScanTests {
         return ScanImage(RenderPng(options), Payload);
     }
 
-    internal static IEnumerable<ScanObservation> ScanImage(byte[] png, string payload) {
+    internal static IEnumerable<ScanObservation> ScanImage(byte[] png, string payload) =>
+        ScanImageAt(png, payload, 1024, 512, 256);
+
+    internal static IEnumerable<ScanObservation> ScanImageAt(byte[] png, string payload, params int[] sizes) {
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
-        foreach (var size in new[] { 1024, 512, 256 }) {
+        foreach (var size in sizes) {
             var targetHeight = (int)Math.Round(size * height / (double)width);
             var resized = ResizeArea(rgba, width, height, size, targetHeight);
             foreach (var transform in new[] { "plain", "rotate2deg", "blur121" }) {

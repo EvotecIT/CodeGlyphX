@@ -130,12 +130,16 @@ internal static class QrArtIllustrations {
     }
 
     private static (byte R, byte G, byte B) Geometric(double x, double y) {
+        // Colour quadrants frame one large disc, so the centred code sits on a single field instead of a four-way split.
         (byte, byte, byte) color = (240, 223, 194);
-        if (x > 0.52 && y < 0.52) color = (197, 85, 63);
-        if (x < 0.52 && y > 0.52) color = (41, 85, 98);
-        if (Math.Pow(x - 0.27, 2) + Math.Pow(y - 0.27, 2) < 0.042) color = (214, 158, 75);
-        if (Math.Pow(x - 0.75, 2) + Math.Pow(y - 0.76, 2) < 0.047) color = (107, 71, 101);
+        if (x > 0.5 && y < 0.5) color = (197, 85, 63);
+        if (x < 0.5 && y > 0.5) color = (41, 85, 98);
         if (Math.Abs(x - y) < 0.012) color = (244, 233, 210);
+        if (Math.Pow(x - 0.86, 2) + Math.Pow(y - 0.86, 2) < 0.045) color = (107, 71, 101);
+        if (Math.Pow(x - 0.13, 2) + Math.Pow(y - 0.13, 2) < 0.02) color = (107, 71, 101);
+        var distance = Math.Sqrt(Math.Pow(x - 0.5, 2) + Math.Pow(y - 0.5, 2));
+        if (distance < 0.488) color = (244, 233, 210);
+        if (distance < 0.47) color = (214, 158, 75);
         return color;
     }
 }

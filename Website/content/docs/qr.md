@@ -166,90 +166,77 @@ var png = QR.Create("https://example.com", encodingOptions: new QrEncodingOption
     .ToArray();
 ```
 
-### Style Board Presets (Homepage Gallery)
+### Style Board (Homepage Gallery)
 
-The homepage style board is generated from a curated set of presets. Each QR payload
-points back to this section and includes a `?style=slug` hint for tracking or
-future deep-linking. All presets use error correction `H`, a 384px target size,
-and a quiet zone of 4 modules to keep them crisp while remaining web-friendly.
-They are visual examples, not scanner-certification fixtures. Several deliberately artistic recipes exceed what some readers or cameras can handle.
+The homepage style board shows twenty looks built only from public render options: hero
+presets, an art theme, module shapes, eyes, palettes, canvas templates and logos. Every look
+encodes `https://codeglyphx.com` with error correction `H` at a 480px code size, plus any canvas.
+The test suite renders each look through the same code as the website and requires the exact
+payload from strict ZXing and the CodeGlyphX decoder at the delivered size, at 1024, 512 and
+256 px, after a 2 degree rotation and after a light blur. Check your own design on the phones
+and printed media you intend to use.
 
-Full source code for these presets lives in
-[QrStyleBoardExample.cs](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrStyleBoardExample.cs).
+The recipes live in
+[QrStyleBoardLooks.cs](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrStyleBoardLooks.cs).
+Set `CODEGLYPHX_STYLE_BOARD=1` and run `CodeGlyphX.Examples` to regenerate the images and
+`style-board.json`.
 
-| Style | Recipe | Extras |
-| --- | --- | --- |
-| **Neon Dot** | Shape: Dot; Eyes: Target; Palette: Random (cyan/magenta/yellow); Canvas: Dark gradient | — |
-| **Candy Checker** | Shape: Rounded; Eyes: Badge; Palette: Checker (pink/yellow); Canvas: Dots pattern | — |
-| **Pastel Rings** | Shape: Squircle; Eyes: DoubleRing; Palette: Rings (pastels); Canvas: Checker pattern | Scale map: Radial |
-| **Ocean Grid** | Shape: DotGrid; Eyes: Single; Palette: Cycle (ocean blues); Canvas: Grid pattern | — |
-| **Mono Badge** | Shape: Square; Eyes: Badge; Palette: None (mono); Canvas: White with black border | — |
-| **Bracket Tech** | Shape: Diamond; Eyes: Bracket; Palette: Random (teal/blue/white); Canvas: Dark gradient | Scale map: Rings |
-| **Sunset Sticker** | Shape: Rounded; Eyes: Target; Palette: Cycle (sunset warm); Canvas: Warm gradient | Logo: Warm circle |
-| **Aurora** | Shape: Circle; Eyes: DoubleRing; Palette: Random (aurora hues); Canvas: Dots pattern | Scale map: Random |
-| **Mint Board** | Shape: Squircle; Eyes: Single; Palette: Checker (mint); Canvas: Mint border | — |
-| **Deep Space** | Shape: Dot; Eyes: Target; Palette: Rings (purple/teal); Canvas: Night gradient | Logo: Cool circle |
-| **Leaf Bloom** | Shape: Leaf; Eyes: DoubleRing; Palette: Cycle (greens); Canvas: Forest gradient | — |
-| **Wave Pulse** | Shape: Wave; Eyes: Target; Palette: Random (electric blue); Canvas: Dots pattern | — |
-| **Ink Blob** | Shape: Blob; Eyes: Badge; Palette: Random (grayscale); Canvas: Light border | — |
-| **Soft Diamond** | Shape: SoftDiamond; Eyes: DoubleRing; Palette: Rings (peach/pink); Canvas: Warm gradient | — |
-| **Sticker Grid** | Shape: Square; Eyes: Badge; Palette: Cycle (mono); Canvas: Grid pattern | — |
-| **Center Pop** | Shape: Rounded; Eyes: Single; Palette: Cycle (navy) + Zones; Canvas: Clean border | Logo: Warm circle; Zones: Center + corners |
+| Style | Recipe |
+| --- | --- |
+| **Sunset** | `QrArt.Hero(QrHeroPreset.Sunset)` |
+| **Neon** | `QrArt.Hero(QrHeroPreset.Neon, darkPanel: true)` |
+| **Ink** | `QrArt.Hero(QrHeroPreset.Ink)` |
+| **Retro Pixel** | `QrArt.Hero(QrHeroPreset.RetroPixel)` |
+| **Gold Sparkle** | ConnectedRounded body; `QrEyePresets.NeonSparkle()` recoloured bronze; black-to-gold canvas gradient |
+| **Ticket** | ConnectedRounded body; `QrCanvasTemplate.TicketStub` on coral with an "ADMIT ONE" caption |
+| **Botanical** | `QrArt.Hero(QrHeroPreset.Botanical)` |
+| **Confetti** | Rounded body; Random palette (crimson, violet, blue) on cream |
+| **Mono Classy** | `QrArt.Hero(QrHeroPreset.MonoClassy, darkPanel: true)` |
+| **Ocean** | `QrArt.Hero(QrHeroPreset.Ocean)` on a pale aqua background |
+| **Scan Me** | Rounded body; `QrCanvasTemplate.ScanMePill` on yellow |
+| **Berry** | `QrArt.Hero(QrHeroPreset.Berry)` |
+| **Glow Frame** | `QrArt.Theme(QrArtTheme.ConnectedSquircleGlow, QrArtVariant.Pastel)` |
+| **Paper Cutout** | `QrArt.Hero(QrHeroPreset.PaperCutout)` |
+| **Brand Logo** | `QrArt.Hero(QrHeroPreset.Brand)` with a sample logo through `QrArt.RenderLogo` |
+| **Soft Diamond** | SoftDiamond body; Rings palette (rust, umber, wine); apricot canvas gradient |
+| **Wi-Fi Card** | ConnectedSquircle body; `QrCanvasTemplate.RoundedCardHeader` in blue with a caption |
+| **Viewfinder** | ExtraRounded crimson body; `QrCanvasTemplate.CornerViewfinder` with a caption |
+| **Dot Matrix** | `QrArt.Hero(QrHeroPreset.DotMatrix)` on a pale blue background |
+| **Mint Logo** | Squircle body and eyes; Checker palette (two greens); mint canvas with a green border; sample logo through `QrArt.RenderLogo` |
 
-#### Preset Starting Point (Neon Dot)
+#### Starting Point (Gold Sparkle)
 
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
-using CodeGlyphX.Rendering.Png;
+
+var eyes = QrEyePresets.NeonSparkle();
+eyes.OuterColor = new Rgba32(150, 98, 0);
+eyes.InnerColor = new Rgba32(60, 38, 0);
+eyes.SparkleColor = new Rgba32(255, 222, 140, 210);
 
 var options = new QrRenderOptions
 {
-    TargetSizePx = 384,
-    TargetSizeIncludesQuietZone = true,
-    ModuleSize = 10,
+    TargetSizePx = 480,
     QuietZone = 4,
-    Foreground = new Rgba32(0, 255, 213),
-    ModuleShape = QrModuleShape.Dot,
-    Eyes = new QrEyeOptions
-    {
-        UseFrame = true,
-        FrameStyle = QrEyeFrameStyle.Target,
-        OuterShape = QrModuleShape.Rounded,
-        InnerShape = QrModuleShape.Circle,
-        OuterColor = new Rgba32(0, 255, 213),
-        InnerColor = new Rgba32(255, 59, 255)
-    },
-    ForegroundPalette = new QrPaletteOptions
-    {
-        Mode = QrPaletteMode.Random,
-        Seed = 14001,
-        RingSize = 2,
-        Colors = new[]
-        {
-            new Rgba32(0, 255, 213),
-            new Rgba32(255, 59, 255),
-            new Rgba32(255, 214, 0)
-        }
-    },
+    ModuleShape = QrModuleShape.ConnectedRounded,
+    Foreground = new Rgba32(92, 60, 4),
+    Background = new Rgba32(255, 250, 232),
+    Eyes = eyes,
     Canvas = new QrCanvasOptions
     {
-        PaddingPx = 24,
-        CornerRadiusPx = 26,
+        PaddingPx = 44,
+        CornerRadiusPx = 28,
+        QrCornerRadiusPx = 16,
         BackgroundGradient = new QrGradientOptions
         {
             Type = QrGradientType.DiagonalDown,
-            StartColor = new Rgba32(18, 18, 28),
-            EndColor = new Rgba32(48, 23, 72)
-        },
-        BorderPx = 2,
-        BorderColor = new Rgba32(255, 255, 255, 40),
-        ShadowOffsetX = 6,
-        ShadowOffsetY = 8,
-        ShadowColor = new Rgba32(0, 0, 0, 60)
+            StartColor = new Rgba32(14, 12, 8),
+            EndColor = new Rgba32(70, 50, 12)
+        }
     }
 };
 
-QR.Save("https://codeglyphx.com/docs/qr?style=neon-dot#styling-options", "neon-dot.png", options,
+QR.Save("https://codeglyphx.com", "gold-sparkle.png", options,
     new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
 ```

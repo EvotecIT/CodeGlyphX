@@ -6,23 +6,33 @@ namespace CodeGlyphX.Examples;
 
 /// <summary>Six reproducible, locally drawn QR designs and a compact gallery.</summary>
 internal static class QrProceduralArtExample {
+    internal const string Payload = "https://codeglyphx.com";
+    internal const int GalleryTile = 420;
+    internal static readonly (string Name, QrArtPattern Pattern)[] Designs = {
+        ("veined-marble", QrArtPattern.Marble), ("layered-waves", QrArtPattern.Waves),
+        ("sunburst-rays", QrArtPattern.Sunburst), ("bauhaus-tiles", QrArtPattern.Geometric),
+        ("botanical-leaves", QrArtPattern.Botanical), ("circuit-traces", QrArtPattern.Circuit)
+    };
+
+    /// <summary>Composes one gallery design with the options the published gallery uses.</summary>
+    internal static QrImageComposition Compose(int index) {
+        var pattern = Designs[index].Pattern;
+        // A tighter margin and a crisp, frosted panel keep the code large and clearly separated in a gallery tile.
+        var composition = QrArtPatternPresets.CreateCompositionOptions(pattern);
+        composition.Canvas!.PaddingModules = 5;
+        composition.Canvas.FadeModules = 0;
+        return QrArt.ComposePattern(Payload, QrArtPatternPresets.CreatePatternOptions(pattern, seed: 2026 + index), composition);
+    }
+
     public static void Run(string outputDir) {
-        const string payload = "https://codeglyphx.com";
         var directory = Path.Combine(outputDir, "qr-procedural-art");
         Directory.CreateDirectory(directory);
-        var designs = new[] {
-            ("veined-marble", QrArtPattern.Marble), ("layered-waves", QrArtPattern.Waves),
-            ("sunburst-rays", QrArtPattern.Sunburst), ("bauhaus-tiles", QrArtPattern.Geometric),
-            ("botanical-leaves", QrArtPattern.Botanical), ("circuit-traces", QrArtPattern.Circuit)
-        };
         var images = new List<QrImageComposition>();
-        for (var i = 0; i < designs.Length; i++) {
-            var (name, pattern) = designs[i];
-            var result = QrArt.ComposePattern(payload,
-                QrArtPatternPresets.CreatePatternOptions(pattern, seed: 2026 + i),
-                QrArtPatternPresets.CreateCompositionOptions(pattern));
+        for (var i = 0; i < Designs.Length; i++) {
+            var name = Designs[i].Name;
+            var result = Compose(i);
             result.SavePng(Path.Combine(directory, name + ".png"));
-            var report = QrArt.ValidateImage(result.ToPng(), payload, 3000);
+            var report = QrArt.ValidateImage(result.ToPng(), Payload, 3000);
             Console.WriteLine(name + ": " + string.Join(", ", report.Checks.Select(c => $"{c.Name}={c.Passed}")));
             if (!report.AllPassed) throw new InvalidOperationException("QR artwork failed validation: " + name);
             images.Add(result);
@@ -31,7 +41,7 @@ internal static class QrProceduralArtExample {
     }
 
     private static void SaveGallery(IReadOnlyList<QrImageComposition> images, string path) {
-        const int tile = 420, gap = 24, columns = 3;
+        const int tile = GalleryTile, gap = 24, columns = 3;
         var width = columns * tile + (columns + 1) * gap;
         var height = 2 * tile + 3 * gap;
         var pixels = new byte[width * height * 4];

@@ -188,15 +188,15 @@
       "description": "Evening events and screen displays.",
       "variants": [
         {
-          "name": "Dark design",
+          "name": "Light",
           "src": "/assets/hero-presets/neon-light.png",
-          "width": 1361,
-          "height": 1361,
+          "width": 1199,
+          "height": 1199,
           "decoded": "https://codeglyphx.com",
           "budget": null
         },
         {
-          "name": "Dark design",
+          "name": "Dark",
           "src": "/assets/hero-presets/neon-dark.png",
           "width": 1361,
           "height": 1361,

@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using CodeGlyphX;
+using CodeGlyphX.Examples;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Art;
 
@@ -12,7 +13,7 @@ internal static class HeroSpecimens {
         const string payload = "https://codeglyphx.com";
         var directory = Path.Combine(website, "static", "assets", "hero-presets");
         Directory.CreateDirectory(directory);
-        var logo = LogoBuilder.CreateCirclePng(64, new Rgba32(35, 32, 38), new Rgba32(190, 42, 42), out _, out _);
+        var logo = QrSampleBrandMark.Render(160, new Rgba32(80, 32, 42), new Rgba32(255, 248, 246));
         var presets = new List<object>();
         foreach (var preset in Enum.GetValues<QrHeroPreset>()) {
             var variants = new List<object>();
@@ -33,7 +34,7 @@ internal static class HeroSpecimens {
                 ImageReader.DecodeRgba32(png, out var width, out var height);
                 var file = preset.ToString().ToLowerInvariant() + (dark ? "-dark.png" : "-light.png");
                 File.WriteAllBytes(Path.Combine(directory, file), png);
-                variants.Add(new { name = preset == QrHeroPreset.Neon ? "Dark design" : dark ? "Dark" : "Light", src = "/assets/hero-presets/" + file, width, height, decoded = payload, budget });
+                variants.Add(new { name = dark ? "Dark" : "Light", src = "/assets/hero-presets/" + file, width, height, decoded = payload, budget });
             }
             var code = preset == QrHeroPreset.Brand
                 ? "var appearance = QrArt.Hero(QrHeroPreset.Brand);\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\",\n    File.ReadAllBytes(\"logo.png\"),\n    new CodeGlyphX.Rendering.Art.QrLogoRenderOptions { Appearance = appearance });\nFile.WriteAllBytes(\"brand.png\", result.GetPng());"

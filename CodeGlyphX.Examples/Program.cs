@@ -23,6 +23,7 @@ internal static class Program {
         if (RunWhenEnabled(runner, "CODEGLYPHX_SPECIALIST_BARCODES", "Specialist barcodes and profiles", SpecialistBarcodeExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_SCENE_DELIVERY", "QR (scene delivery exports)", QrSceneDeliveryExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_SCENE_GALLERY", "QR (scene gallery)", QrSceneGalleryExample.Run)) return true;
+        if (RunWhenEnabled(runner, "CODEGLYPHX_STYLE_BOARD", "QR (style board)", QrStyleBoardExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_COLORFUL_GALLERY", "QR (colorful gallery)", QrColorfulGalleryExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_PROCEDURAL_ART", "QR (procedural art)", QrProceduralArtExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_ILLUSTRATED", "QR (illustrated compositions)", QrIllustratedExample.Run)) return true;
