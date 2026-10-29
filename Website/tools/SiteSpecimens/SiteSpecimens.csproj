@@ -6,6 +6,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../../CodeGlyphX.Examples/QrSampleBrandMark.cs" Link="QrSampleBrandMark.cs" />
     <ProjectReference Include="..\..\..\CodeGlyphX\CodeGlyphX.csproj" />
   </ItemGroup>
 </Project>
