@@ -66,7 +66,7 @@
                     <details class="cgx-gl-recipe">
                         <summary>C# recipe</summary>
                         {{~ for v in look.variants ~}}
-                        <div data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}><pre class="code-block"><code class="language-csharp">{{ v.code | html.escape }}</code></pre></div>
+                        <div data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}><pre class="code-block"><code class="language-csharp">{{ v.code | html.escape }}</code></pre>{{ if v.logo }}<a class="cgx-link" href="{{ v.sampleLogoSrc }}" download>Download the sample logo used in this image</a>{{ end }}</div>
                         {{~ end ~}}
                     </details>
                 </div>
@@ -135,7 +135,7 @@
                     </div>
                     {{~ end ~}}
                 </div>
-                <figcaption><strong>{{ m.title }}</strong> <span>{{ m.description }}</span> <a class="cgx-link" href="#{{ m.lookId }}">{{ m.look }} recipe</a></figcaption>
+                <figcaption><strong>{{ m.title }}</strong> <span>{{ m.description }}</span> <a class="cgx-link" href="#{{ m.lookId }}" data-gallery-recipe>{{ m.look }} recipe</a></figcaption>
             </figure>
             {{~ end ~}}
         </div>
@@ -145,10 +145,10 @@
         <div class="cgx-gl-method__grid">
             <div class="cgx-section__head">
                 <h2 id="gl-method-title">How the gallery stays honest</h2>
-                <p>The images, recipes and badges are generated from the library at the commit that built this page, so they can't drift from the code.</p>
+                <p>The images, appearance settings and badges are generated from the library at the commit that built this page. Each recipe adds the gallery's output size; logo cards include their sample mark.</p>
             </div>
             <ul class="cgx-bh-limits">
-                <li><strong>One source.</strong> The C# on each card is copied from the recipe file the generator compiles, and the tests compare the page data with it.</li>
+                <li><strong>One source.</strong> Appearance settings come from the recipe file the generator compiles. The page adds the output size and save call, and tests compare the published C# and sample marks with their sources.</li>
                 <li><strong>Measured, then published.</strong> The badges come from the scan tests. A look that fails one of its {{ scan.checksPerVariant }} reads is fixed or removed, never footnoted.</li>
                 <li><strong>A simulation, not a guarantee.</strong> These are software reads of rendered pixels. Print a proof of your final design and scan it on the phones and at the distances you expect.</li>
             </ul>

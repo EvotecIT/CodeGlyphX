@@ -13,8 +13,9 @@ namespace CodeGlyphX.Examples;
 /// <summary>
 /// Renders the website QR gallery from <see cref="QrGalleryLooks"/> straight into the repository's
 /// <c>Website</c> folder: one PNG per variant under <c>static/assets/gallery/</c> and the page data in
-/// <c>data/gallery.json</c> (looks, published C# recipes and the mockup scenes). Stale gallery PNGs are
-/// removed. The scan badges come from <c>data/gallery-scan.json</c>, which QrGalleryScanTests writes and checks.
+/// <c>data/gallery.json</c> (looks, published C# recipes and the mockup scenes). Logo looks also write
+/// their downloadable sample marks. Stale gallery PNGs are removed. The scan badges come from
+/// <c>data/gallery-scan.json</c>, which QrGalleryScanTests writes and checks.
 /// Run with <c>CODEGLYPHX_GALLERY=1</c>.
 /// </summary>
 internal static class QrGalleryExample {
@@ -84,6 +85,11 @@ internal static class QrGalleryExample {
                     json.WriteNumber("height", height);
                     json.WriteNumber("bytes", png.Length);
                     json.WriteBoolean("logo", variant.ShowsLogo);
+                    if (variant.ShowsLogo) {
+                        var logoFile = variant.SampleLogoFile ?? throw new InvalidOperationException($"No sample logo file for {variant.Id}.");
+                        if (written.Add(logoFile)) File.WriteAllBytes(Path.Combine(imageDir, logoFile), QrGalleryLooks.Logo(variant, variant.Create()));
+                        json.WriteString("sampleLogoSrc", "/assets/gallery/" + logoFile);
+                    }
                     var label = variant.Label.Length == 0 ? "" : " (" + variant.Label.ToLowerInvariant() + ")";
                     json.WriteString("alt", $"{look.Name}{label} QR code for {QrGalleryLooks.ShortPayload}: {look.Summary}");
                     json.WriteString("code", QrGalleryLooks.Snippet(variant));
@@ -125,7 +131,7 @@ internal static class QrGalleryExample {
         foreach (var stale in Directory.GetFiles(imageDir, "*.png").Where(f => !written.Contains(Path.GetFileName(f)))) {
             File.Delete(stale);
         }
-        Console.WriteLine($"Rendered and native-validated {written.Count} gallery images for {QrGalleryLooks.All.Count} looks into {imageDir}.");
+        Console.WriteLine($"Rendered and native-validated {variantSources.Count} gallery QR images for {QrGalleryLooks.All.Count} looks into {imageDir}.");
     }
 
     private static string FindWebsite() {

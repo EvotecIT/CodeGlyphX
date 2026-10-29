@@ -33,7 +33,7 @@ internal static class QrGalleryLooks {
     };
 
     internal sealed record Variant(string Id, string Label, Func<QrRenderOptions> Create, bool ShowsLogo = false,
-        Rgba32? LogoTile = null, Rgba32? LogoMark = null);
+        Rgba32? LogoTile = null, Rgba32? LogoMark = null, string? SampleLogoFile = null);
 
     internal sealed record Look(string Id, string Name, string Summary, string BestFor, string Family, IReadOnlyList<Variant> Variants) {
         internal Variant Default => Variants[0];
@@ -111,8 +111,8 @@ internal static class QrGalleryLooks {
         new("brand-logo", "Brand Logo", "Rounded body, maroon eyes and a centred logo.",
             "Your own mark on business cards and packaging.", "Logo",
             new[] {
-                new Variant("brand-logo", "Light", QrGalleryRecipes.BrandLogo, ShowsLogo: true, LogoTile: R(80, 32, 42), LogoMark: R(255, 248, 246)),
-                new Variant("brand-logo-dark", "Dark", QrGalleryRecipes.BrandLogoDark, ShowsLogo: true, LogoTile: R(80, 32, 42), LogoMark: R(255, 248, 246)),
+                new Variant("brand-logo", "Light", QrGalleryRecipes.BrandLogo, ShowsLogo: true, LogoTile: R(80, 32, 42), LogoMark: R(255, 248, 246), SampleLogoFile: "brand-logo-sample-logo.png"),
+                new Variant("brand-logo-dark", "Dark", QrGalleryRecipes.BrandLogoDark, ShowsLogo: true, LogoTile: R(80, 32, 42), LogoMark: R(255, 248, 246), SampleLogoFile: "brand-logo-sample-logo.png"),
             }),
 
 
@@ -130,7 +130,7 @@ internal static class QrGalleryLooks {
 
         new("mint-logo", "Mint Logo", "Squircle modules in two greens with a logo and a green border.",
             "Health, finance and fresh-food brands.", "Logo",
-            new[] { new Variant("mint-logo", "", QrGalleryRecipes.MintLogo, ShowsLogo: true, LogoTile: R(0, 112, 86), LogoMark: R(234, 251, 243)) }),
+            new[] { new Variant("mint-logo", "", QrGalleryRecipes.MintLogo, ShowsLogo: true, LogoTile: R(0, 112, 86), LogoMark: R(234, 251, 243), SampleLogoFile: "mint-logo-sample-logo.png") }),
     };
 
     internal static IEnumerable<Variant> AllVariants => All.SelectMany(look => look.Variants);
@@ -168,9 +168,10 @@ internal static class QrGalleryLooks {
         var sb = new StringBuilder();
         sb.Append("using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n");
         if (variant.ShowsLogo) sb.Append("using CodeGlyphX.Rendering.Art;\n");
-        sb.Append('\n').Append(body).Append("\n\n");
+        sb.Append('\n').Append(body).Append("\noptions.TargetSizePx = ").Append(GallerySizePx).Append(";\n\n");
         if (variant.ShowsLogo) {
-            sb.Append("var result = QrArt.RenderLogo(\"").Append(ShortPayload).Append("\", File.ReadAllBytes(\"logo.png\"),\n");
+            sb.Append("var result = QrArt.RenderLogo(\"").Append(ShortPayload).Append("\", File.ReadAllBytes(\"")
+                .Append(variant.SampleLogoFile).Append("\"),\n");
             sb.Append("    new QrLogoRenderOptions { Appearance = options },\n");
             sb.Append("    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });\n");
             sb.Append("File.WriteAllBytes(\"").Append(variant.Id).Append(".png\", result.GetPng());");
@@ -195,7 +196,7 @@ internal static class QrGalleryLooks {
         using var reader = new StreamReader(stream);
         var source = reader.ReadToEnd().Replace("\r\n", "\n");
         var blocks = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (Match match in Regex.Matches(source, @"^[ \t]*#region recipe ([a-z0-9-]+)\n(.*?)\n[ \t]*#endregion", RegexOptions.Multiline | RegexOptions.Singleline)) {
+        foreach (Match match in Regex.Matches(source, @"^[ \t]*#region recipe ([a-z0-9-]+)\n(.*?)\n[ \t]*#endregion", RegexOptions.Multiline | RegexOptions.Singleline, TimeSpan.FromSeconds(1))) {
             var lines = match.Groups[2].Value.Split('\n');
             var indent = lines.Where(l => l.Trim().Length > 0).Min(l => l.Length - l.TrimStart().Length);
             blocks.Add(match.Groups[1].Value, string.Join("\n", lines.Select(l => l.Length >= indent ? l.Substring(indent) : l.TrimStart()).ToArray()).TrimEnd());

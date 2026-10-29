@@ -19,7 +19,7 @@
           "bytes": 31827,
           "logo": false,
           "alt": "Sunset QR code for https://codeglyphx.com: Connected body with an orange-to-pink gradient on warm paper.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Sunset);\n\nQR.Save(\"https://codeglyphx.com\", \"sunset.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Sunset);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"sunset.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -39,7 +39,7 @@
           "bytes": 15879,
           "logo": false,
           "alt": "Minimal Line QR code for https://codeglyphx.com: Round dots, a drawn timing line and ring eyes.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.MinimalLine);\n// Fuller dots than the preset keep a logo readable on long URLs at small sizes.\noptions.ModuleScale = .9;\n\nQR.Save(\"https://codeglyphx.com\", \"minimal-line.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.MinimalLine);\n// Fuller dots than the preset keep a logo readable on long URLs at small sizes.\noptions.ModuleScale = .9;\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"minimal-line.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -59,7 +59,7 @@
           "bytes": 17602,
           "logo": false,
           "alt": "Botanical (light) QR code for https://codeglyphx.com: Leaf modules and mirrored leaf eyes in forest green.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Botanical);\n\nQR.Save(\"https://codeglyphx.com\", \"botanical.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Botanical);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"botanical.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "botanical-dark",
@@ -70,7 +70,7 @@
           "bytes": 42442,
           "logo": false,
           "alt": "Botanical (dark) QR code for https://codeglyphx.com: Leaf modules and mirrored leaf eyes in forest green.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Botanical, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"botanical-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Botanical, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"botanical-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -90,7 +90,7 @@
           "bytes": 61886,
           "logo": false,
           "alt": "Neon (dark) QR code for https://codeglyphx.com: Vertical bars and magenta eyes on a glowing panel.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Neon, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"neon-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Neon, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"neon-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "neon",
@@ -101,7 +101,7 @@
           "bytes": 35807,
           "logo": false,
           "alt": "Neon (light) QR code for https://codeglyphx.com: Vertical bars and magenta eyes on a glowing panel.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Neon);\n\nQR.Save(\"https://codeglyphx.com\", \"neon.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Neon);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"neon.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -121,7 +121,7 @@
           "bytes": 18974,
           "logo": false,
           "alt": "Ink (light) QR code for https://codeglyphx.com: Liquid black body with round eyes.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Ink);\n\nQR.Save(\"https://codeglyphx.com\", \"ink.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Ink);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"ink.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "ink-dark",
@@ -132,7 +132,7 @@
           "bytes": 47499,
           "logo": false,
           "alt": "Ink (dark) QR code for https://codeglyphx.com: Liquid black body with round eyes.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Ink, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"ink-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Ink, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"ink-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -152,7 +152,7 @@
           "bytes": 22131,
           "logo": false,
           "alt": "Gold Sparkle QR code for https://codeglyphx.com: Connected bronze body and sparkle eyes on a black-and-gold canvas.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ConnectedRounded,\n    Foreground = new Rgba32(92, 60, 4),\n    Background = new Rgba32(255, 250, 232),\n    Eyes = QrEyePresets.NeonSparkle(),\n    Canvas = new QrCanvasOptions {\n        PaddingPx = 44,\n        CornerRadiusPx = 28,\n        QrCornerRadiusPx = 16,\n        BackgroundGradient = new QrGradientOptions {\n            Type = QrGradientType.DiagonalDown,\n            StartColor = new Rgba32(14, 12, 8),\n            EndColor = new Rgba32(70, 50, 12),\n        },\n    },\n};\noptions.Eyes.OuterColor = new Rgba32(150, 98, 0);\noptions.Eyes.InnerColor = new Rgba32(60, 38, 0);\noptions.Eyes.SparkleColor = new Rgba32(255, 222, 140, 210);\n\nQR.Save(\"https://codeglyphx.com\", \"gold-sparkle.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ConnectedRounded,\n    Foreground = new Rgba32(92, 60, 4),\n    Background = new Rgba32(255, 250, 232),\n    Eyes = QrEyePresets.NeonSparkle(),\n    Canvas = new QrCanvasOptions {\n        PaddingPx = 44,\n        CornerRadiusPx = 28,\n        QrCornerRadiusPx = 16,\n        BackgroundGradient = new QrGradientOptions {\n            Type = QrGradientType.DiagonalDown,\n            StartColor = new Rgba32(14, 12, 8),\n            EndColor = new Rgba32(70, 50, 12),\n        },\n    },\n};\noptions.Eyes.OuterColor = new Rgba32(150, 98, 0);\noptions.Eyes.InnerColor = new Rgba32(60, 38, 0);\noptions.Eyes.SparkleColor = new Rgba32(255, 222, 140, 210);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"gold-sparkle.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -172,7 +172,7 @@
           "bytes": 5320,
           "logo": false,
           "alt": "Retro Pixel (light) QR code for https://codeglyphx.com: Square pixels and square eyes on mustard.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.RetroPixel);\n\nQR.Save(\"https://codeglyphx.com\", \"retro-pixel.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.RetroPixel);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"retro-pixel.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "retro-pixel-dark",
@@ -183,7 +183,7 @@
           "bytes": 23005,
           "logo": false,
           "alt": "Retro Pixel (dark) QR code for https://codeglyphx.com: Square pixels and square eyes on mustard.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.RetroPixel, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"retro-pixel-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.RetroPixel, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"retro-pixel-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -203,7 +203,7 @@
           "bytes": 19321,
           "logo": false,
           "alt": "Ticket QR code for https://codeglyphx.com: Connected navy body inside a coral ticket stub with a caption.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ConnectedRounded,\n    Foreground = new Rgba32(24, 28, 52),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.TicketStub,\n        Background = new Rgba32(255, 92, 72),\n        Caption = new QrCanvasCaptionOptions { Text = \"ADMIT ONE\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\n\nQR.Save(\"https://codeglyphx.com\", \"ticket.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ConnectedRounded,\n    Foreground = new Rgba32(24, 28, 52),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.TicketStub,\n        Background = new Rgba32(255, 92, 72),\n        Caption = new QrCanvasCaptionOptions { Text = \"ADMIT ONE\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"ticket.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -223,7 +223,7 @@
           "bytes": 24064,
           "logo": false,
           "alt": "Mono Classy (dark) QR code for https://codeglyphx.com: Square body and diagonal-corner eyes on a charcoal panel.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.MonoClassy, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"mono-classy-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.MonoClassy, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"mono-classy-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "mono-classy",
@@ -234,7 +234,7 @@
           "bytes": 6148,
           "logo": false,
           "alt": "Mono Classy (light) QR code for https://codeglyphx.com: Square body and diagonal-corner eyes on a charcoal panel.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.MonoClassy);\n\nQR.Save(\"https://codeglyphx.com\", \"mono-classy.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.MonoClassy);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"mono-classy.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -254,7 +254,7 @@
           "bytes": 65801,
           "logo": false,
           "alt": "Ocean QR code for https://codeglyphx.com: Horizontal bars with a navy-to-teal gradient on pale aqua.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Ocean);\noptions.Background = new Rgba32(226, 247, 245);\n\nQR.Save(\"https://codeglyphx.com\", \"ocean.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Ocean);\noptions.Background = new Rgba32(226, 247, 245);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"ocean.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -274,7 +274,7 @@
           "bytes": 17694,
           "logo": false,
           "alt": "Confetti QR code for https://codeglyphx.com: Rounded modules in a random three-colour palette on cream.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.Rounded,\n    Foreground = new Rgba32(204, 34, 84),\n    Background = new Rgba32(255, 246, 236),\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    ForegroundPalette = new QrPaletteOptions {\n        Mode = QrPaletteMode.Random,\n        Seed = 7,\n        RingSize = 2,\n        ApplyToEyes = false,\n        Colors = new[] { new Rgba32(204, 34, 84), new Rgba32(112, 38, 196), new Rgba32(0, 112, 160) },\n    },\n};\n\nQR.Save(\"https://codeglyphx.com\", \"confetti.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.Rounded,\n    Foreground = new Rgba32(204, 34, 84),\n    Background = new Rgba32(255, 246, 236),\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    ForegroundPalette = new QrPaletteOptions {\n        Mode = QrPaletteMode.Random,\n        Seed = 7,\n        RingSize = 2,\n        ApplyToEyes = false,\n        Colors = new[] { new Rgba32(204, 34, 84), new Rgba32(112, 38, 196), new Rgba32(0, 112, 160) },\n    },\n};\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"confetti.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -294,7 +294,7 @@
           "bytes": 19465,
           "logo": false,
           "alt": "Scan Me QR code for https://codeglyphx.com: Rounded navy body with a SCAN ME pill on yellow.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.Rounded,\n    Foreground = new Rgba32(30, 34, 96),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.ScanMePill,\n        Background = new Rgba32(255, 210, 80),\n        Caption = new QrCanvasCaptionOptions { Text = \"SCAN ME\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\n\nQR.Save(\"https://codeglyphx.com\", \"scan-me.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.Rounded,\n    Foreground = new Rgba32(30, 34, 96),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.ScanMePill,\n        Background = new Rgba32(255, 210, 80),\n        Caption = new QrCanvasCaptionOptions { Text = \"SCAN ME\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"scan-me.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -314,7 +314,7 @@
           "bytes": 42880,
           "logo": false,
           "alt": "Berry (light) QR code for https://codeglyphx.com: Rounded body with a plum-to-raspberry gradient and squircle eyes.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Berry);\n\nQR.Save(\"https://codeglyphx.com\", \"berry.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Berry);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"berry.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "berry-dark",
@@ -325,7 +325,7 @@
           "bytes": 63489,
           "logo": false,
           "alt": "Berry (dark) QR code for https://codeglyphx.com: Rounded body with a plum-to-raspberry gradient and squircle eyes.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Berry, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"berry-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.Berry, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"berry-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -345,7 +345,7 @@
           "bytes": 42077,
           "logo": false,
           "alt": "Glow Frame QR code for https://codeglyphx.com: The ConnectedSquircleGlow art theme in its pastel variant.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    Art = QrArt.Theme(QrArtTheme.ConnectedSquircleGlow, QrArtVariant.Pastel),\n};\n\nQR.Save(\"https://codeglyphx.com\", \"glow-frame.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    Art = QrArt.Theme(QrArtTheme.ConnectedSquircleGlow, QrArtVariant.Pastel),\n};\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"glow-frame.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -365,7 +365,7 @@
           "bytes": 27737,
           "logo": false,
           "alt": "Paper Cutout (light) QR code for https://codeglyphx.com: Liquid cocoa body on a cream card stacked over kraft paper.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.PaperCutout);\n\nQR.Save(\"https://codeglyphx.com\", \"paper-cutout.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.PaperCutout);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"paper-cutout.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "paper-cutout-dark",
@@ -376,7 +376,7 @@
           "bytes": 38410,
           "logo": false,
           "alt": "Paper Cutout (dark) QR code for https://codeglyphx.com: Liquid cocoa body on a cream card stacked over kraft paper.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.PaperCutout, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"paper-cutout-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.PaperCutout, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"paper-cutout-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -395,8 +395,9 @@
           "height": 560,
           "bytes": 12187,
           "logo": true,
+          "sampleLogoSrc": "/assets/gallery/brand-logo-sample-logo.png",
           "alt": "Brand Logo (light) QR code for https://codeglyphx.com: Rounded body, maroon eyes and a centred logo.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = QrArt.Hero(QrHeroPreset.Brand);\n\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\", File.ReadAllBytes(\"logo.png\"),\n    new QrLogoRenderOptions { Appearance = options },\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });\nFile.WriteAllBytes(\"brand-logo.png\", result.GetPng());"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = QrArt.Hero(QrHeroPreset.Brand);\noptions.TargetSizePx = 560;\n\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\", File.ReadAllBytes(\"brand-logo-sample-logo.png\"),\n    new QrLogoRenderOptions { Appearance = options },\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });\nFile.WriteAllBytes(\"brand-logo.png\", result.GetPng());"
         },
         {
           "id": "brand-logo-dark",
@@ -406,8 +407,9 @@
           "height": 757,
           "bytes": 33308,
           "logo": true,
+          "sampleLogoSrc": "/assets/gallery/brand-logo-sample-logo.png",
           "alt": "Brand Logo (dark) QR code for https://codeglyphx.com: Rounded body, maroon eyes and a centred logo.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = QrArt.Hero(QrHeroPreset.Brand, darkPanel: true);\n\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\", File.ReadAllBytes(\"logo.png\"),\n    new QrLogoRenderOptions { Appearance = options },\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });\nFile.WriteAllBytes(\"brand-logo-dark.png\", result.GetPng());"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = QrArt.Hero(QrHeroPreset.Brand, darkPanel: true);\noptions.TargetSizePx = 560;\n\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\", File.ReadAllBytes(\"brand-logo-sample-logo.png\"),\n    new QrLogoRenderOptions { Appearance = options },\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });\nFile.WriteAllBytes(\"brand-logo-dark.png\", result.GetPng());"
         }
       ]
     },
@@ -427,7 +429,7 @@
           "bytes": 19886,
           "logo": false,
           "alt": "Wi-Fi Card QR code for https://codeglyphx.com: Connected squircle body in a blue card with a caption band.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ConnectedSquircle,\n    Foreground = new Rgba32(18, 52, 120),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.RoundedCardHeader,\n        Background = new Rgba32(36, 99, 235),\n        Caption = new QrCanvasCaptionOptions { Text = \"Join the Wi-Fi\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\n\nQR.Save(\"https://codeglyphx.com\", \"wi-fi-card.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ConnectedSquircle,\n    Foreground = new Rgba32(18, 52, 120),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.RoundedCardHeader,\n        Background = new Rgba32(36, 99, 235),\n        Caption = new QrCanvasCaptionOptions { Text = \"Join the Wi-Fi\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"wi-fi-card.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -447,7 +449,7 @@
           "bytes": 26711,
           "logo": false,
           "alt": "Viewfinder QR code for https://codeglyphx.com: Extra-rounded crimson body framed by viewfinder corners.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ExtraRounded,\n    Foreground = new Rgba32(168, 18, 52),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.CornerViewfinder,\n        StrokeColor = new Rgba32(168, 18, 52),\n        Caption = new QrCanvasCaptionOptions { Text = \"Point your camera\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\n\nQR.Save(\"https://codeglyphx.com\", \"viewfinder.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ExtraRounded,\n    Foreground = new Rgba32(168, 18, 52),\n    Background = Rgba32.White,\n    Eyes = new QrEyeOptions { OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle },\n    Canvas = new QrCanvasOptions {\n        Template = QrCanvasTemplate.CornerViewfinder,\n        StrokeColor = new Rgba32(168, 18, 52),\n        Caption = new QrCanvasCaptionOptions { Text = \"Point your camera\", Weight = QrCanvasCaptionWeight.Bold },\n    },\n};\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"viewfinder.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -467,7 +469,7 @@
           "bytes": 15869,
           "logo": false,
           "alt": "Dot Matrix (light) QR code for https://codeglyphx.com: Navy dots with rounded eyes on pale blue.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.DotMatrix);\noptions.Background = new Rgba32(232, 240, 253);\n\nQR.Save(\"https://codeglyphx.com\", \"dot-matrix.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.DotMatrix);\noptions.Background = new Rgba32(232, 240, 253);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"dot-matrix.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         },
         {
           "id": "dot-matrix-dark",
@@ -478,7 +480,7 @@
           "bytes": 39668,
           "logo": false,
           "alt": "Dot Matrix (dark) QR code for https://codeglyphx.com: Navy dots with rounded eyes on pale blue.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.DotMatrix, darkPanel: true);\n\nQR.Save(\"https://codeglyphx.com\", \"dot-matrix-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = QrArt.Hero(QrHeroPreset.DotMatrix, darkPanel: true);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"dot-matrix-dark.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"
         }
       ]
     },
@@ -497,8 +499,9 @@
           "height": 611,
           "bytes": 21449,
           "logo": true,
+          "sampleLogoSrc": "/assets/gallery/mint-logo-sample-logo.png",
           "alt": "Mint Logo QR code for https://codeglyphx.com: Squircle modules in two greens with a logo and a green border.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.Squircle,\n    Foreground = new Rgba32(0, 112, 86),\n    Background = new Rgba32(234, 251, 243),\n    ForegroundPalette = new QrPaletteOptions {\n        Mode = QrPaletteMode.Checker,\n        Seed = 7,\n        RingSize = 2,\n        ApplyToEyes = false,\n        Colors = new[] { new Rgba32(0, 112, 86), new Rgba32(0, 84, 104) },\n    },\n    Eyes = new QrEyeOptions {\n        OuterShape = QrModuleShape.Squircle,\n        InnerShape = QrModuleShape.Squircle,\n        OuterColor = new Rgba32(0, 112, 86),\n        InnerColor = new Rgba32(0, 84, 104),\n    },\n    Canvas = new QrCanvasOptions {\n        PaddingPx = 28,\n        CornerRadiusPx = 28,\n        Background = new Rgba32(234, 251, 243),\n        BorderPx = 6,\n        BorderColor = new Rgba32(0, 112, 86),\n    },\n};\n\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\", File.ReadAllBytes(\"logo.png\"),\n    new QrLogoRenderOptions { Appearance = options },\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });\nFile.WriteAllBytes(\"mint-logo.png\", result.GetPng());"
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.Squircle,\n    Foreground = new Rgba32(0, 112, 86),\n    Background = new Rgba32(234, 251, 243),\n    ForegroundPalette = new QrPaletteOptions {\n        Mode = QrPaletteMode.Checker,\n        Seed = 7,\n        RingSize = 2,\n        ApplyToEyes = false,\n        Colors = new[] { new Rgba32(0, 112, 86), new Rgba32(0, 84, 104) },\n    },\n    Eyes = new QrEyeOptions {\n        OuterShape = QrModuleShape.Squircle,\n        InnerShape = QrModuleShape.Squircle,\n        OuterColor = new Rgba32(0, 112, 86),\n        InnerColor = new Rgba32(0, 84, 104),\n    },\n    Canvas = new QrCanvasOptions {\n        PaddingPx = 28,\n        CornerRadiusPx = 28,\n        Background = new Rgba32(234, 251, 243),\n        BorderPx = 6,\n        BorderColor = new Rgba32(0, 112, 86),\n    },\n};\noptions.TargetSizePx = 560;\n\nvar result = QrArt.RenderLogo(\"https://codeglyphx.com\", File.ReadAllBytes(\"mint-logo-sample-logo.png\"),\n    new QrLogoRenderOptions { Appearance = options },\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });\nFile.WriteAllBytes(\"mint-logo.png\", result.GetPng());"
         }
       ]
     }

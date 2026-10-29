@@ -255,6 +255,16 @@ globalThis.setTheme = setTheme;
         }
         if (!id) return;
         const target = document.getElementById(id);
+        if (target?.classList.contains('cgx-gl-card')) {
+            const filter = document.querySelector('[data-gallery-filter]');
+            const familyButton = Array.from(filter?.querySelectorAll('button[data-family]') || [])
+                .find((button) => button.dataset.family === target.dataset.family);
+            familyButton?.click();
+            const recipe = target.querySelector('details.cgx-gl-recipe');
+            if (recipe) recipe.open = true;
+            target.scrollIntoView({ block: 'start' });
+            return;
+        }
         if (target instanceof HTMLDetailsElement && !target.open) target.open = true;
     }
 
@@ -452,6 +462,13 @@ globalThis.setTheme = setTheme;
                     panel.hidden = panel.dataset.variantPanel !== button.dataset.variant;
                 });
             }));
+        });
+        document.querySelectorAll('[data-gallery-recipe]').forEach((link) => {
+            if (link.dataset.bound === 'true') return;
+            link.dataset.bound = 'true';
+            link.addEventListener('click', () => {
+                if (window.location.hash === link.getAttribute('href')) openTargetedDetails();
+            });
         });
     }
 
@@ -714,11 +731,11 @@ globalThis.setTheme = setTheme;
             renderMermaidDiagrams();
             initCodeBlocks();
             initTables();
-            openTargetedDetails();
             initStyleBoards();
             initDocsNav();
             initShowcaseCarousel();
             initQrGallery();
+            openTargetedDetails();
             linkifyReleaseBodyUrls();
         }, 100);
     }

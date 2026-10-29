@@ -47,8 +47,10 @@ public sealed class QrGalleryScanTests {
         foreach (var variant in variants) {
             var snippet = QrGalleryLooks.Snippet(variant);
             Assert.Contains("var options = ", snippet, StringComparison.Ordinal);
+            Assert.Contains($"options.TargetSizePx = {QrGalleryLooks.GallerySizePx};", snippet, StringComparison.Ordinal);
             Assert.DoesNotMatch(new Regex(@"(?<![\w.])(R|Base|Hero|Theme|Palette|GradientCanvas)\("), snippet);
             Assert.DoesNotContain("QrGallery", snippet, StringComparison.Ordinal);
+            if (variant.ShowsLogo) Assert.Contains($"File.ReadAllBytes(\"{variant.SampleLogoFile}\")", snippet, StringComparison.Ordinal);
         }
     }
 
@@ -65,7 +67,20 @@ public sealed class QrGalleryScanTests {
                 var v = committedVariants.Single(n => (string)n!["id"]! == variant.Id)!;
                 Assert.Equal(QrGalleryLooks.Snippet(variant), (string)v["code"]!);
                 var src = (string)v["src"]!;
-                Assert.True(File.Exists(RepoPath("Website/static" + src)), "Missing gallery image " + src);
+                var publishedPng = File.ReadAllBytes(RepoPath("Website/static" + src));
+                Assert.True(ImageReader.TryDecodeRgba32(publishedPng, out _, out var publishedWidth, out _));
+                foreach (var observation in QrArtWave1ScanTests.ScanImageAt(publishedPng, QrGalleryLooks.ShortPayload, publishedWidth)) {
+                    Assert.True(observation.StrictPassed, $"{variant.Id} published {observation.Transform}: ZXing did not read the expected URL.");
+                    Assert.True(observation.LibraryPassed, $"{variant.Id} published {observation.Transform}: CodeGlyphX did not read the expected URL.");
+                }
+                if (variant.ShowsLogo) {
+                    var logoSrc = (string)v["sampleLogoSrc"]!;
+                    Assert.Equal("/assets/gallery/" + variant.SampleLogoFile, logoSrc);
+                    var expectedLogo = ImageReader.DecodeRgba32(QrGalleryLooks.Logo(variant, variant.Create()), out var expectedWidth, out var expectedHeight);
+                    var publishedLogo = ImageReader.DecodeRgba32(File.ReadAllBytes(RepoPath("Website/static" + logoSrc)), out var logoWidth, out var logoHeight);
+                    Assert.Equal((expectedWidth, expectedHeight), (logoWidth, logoHeight));
+                    Assert.Equal(expectedLogo, publishedLogo);
+                }
             }
         }
     }
