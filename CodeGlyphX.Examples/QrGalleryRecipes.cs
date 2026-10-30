@@ -1,5 +1,6 @@
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Art;
 
 namespace CodeGlyphX.Examples;
 
@@ -323,4 +324,54 @@ internal static class QrGalleryRecipes {
         #endregion
         return options;
     }
+
+    internal static QrImageCompositionOptions PhotoHalftone() {
+        #region recipe photo-halftone
+        var options = new QrImageCompositionOptions {
+            Style = QrImageCompositionStyle.PhotoHalftone,
+            ModuleSize = 25,
+            Halftone = new QrImageHalftoneOptions { SubCells = 5, CenterSize = 0.46 },
+        };
+        #endregion
+        return options;
+    }
+
+    internal static QrImageCompositionOptions PhotoHalftoneBold() {
+        #region recipe photo-halftone-bold
+        var options = new QrImageCompositionOptions {
+            Style = QrImageCompositionStyle.PhotoHalftone,
+            ModuleSize = 24,
+            Halftone = new QrImageHalftoneOptions { SubCells = 3, CenterSize = 0.55, Contrast = 1.3 },
+        };
+        #endregion
+        return options;
+    }
+
+    internal static QrImageCompositionOptions RisoDuotone() {
+        #region recipe riso-duotone
+        var options = new QrImageCompositionOptions {
+            Style = QrImageCompositionStyle.PhotoHalftone,
+            ModuleSize = 25,
+            Duotone = new QrImageDuotoneOptions(),
+            Halftone = new QrImageHalftoneOptions { SubCells = 5 },
+        };
+        #endregion
+        return options;
+    }
+
+    internal static QrImageCompositionOptions RisoNewsprint() {
+        #region recipe riso-newsprint
+        var options = new QrImageCompositionOptions {
+            Style = QrImageCompositionStyle.PhotoHalftone,
+            ModuleSize = 25,
+            Duotone = new QrImageDuotoneOptions {
+                Ink = new Rgba32(28, 26, 24),
+                Paper = new Rgba32(240, 236, 226),
+            },
+            Halftone = new QrImageHalftoneOptions { SubCells = 5 },
+        };
+        #endregion
+        return options;
+    }
+
 }

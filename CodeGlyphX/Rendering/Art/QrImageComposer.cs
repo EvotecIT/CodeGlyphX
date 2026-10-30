@@ -55,9 +55,15 @@ public static partial class QrImageComposer {
         var halftone = options.Style == QrImageCompositionStyle.Halftone3x3 && options.Strength > 0
             ? DitherSubCells(image, qr.Modules, moduleSize, qrOffsetX + border - imageOriginX,
                 qrOffsetY + border - imageOriginY, Math.Min(options.Strength, MaxHalftoneImageWeight), options.Duotone is not null, cancellationToken) : null;
+        var embedded = options.Style == QrImageCompositionStyle.PhotoHalftone && options.Strength > 0
+            ? new HalftonePainter(qr, functions, options, image, qrOffsetX + border - imageOriginX,
+                qrOffsetY + border - imageOriginY, cancellationToken) : null;
         var photo = options.Art is null && options.Strength > 0 && options.Style != QrImageCompositionStyle.Halftone3x3
+            && options.Style != QrImageCompositionStyle.PhotoHalftone
             ? new PhotoPainter(qr, functions, options) : null;
-        var duotone = options.Style == QrImageCompositionStyle.Halftone3x3 ? options.Duotone : null;
+        var duotone = options.Style is QrImageCompositionStyle.Halftone3x3 or QrImageCompositionStyle.PhotoHalftone ? options.Duotone : null;
+        var logo = options.Logo is null ? null : new LogoPainter(qr, options.Logo, moduleSize,
+            options.Logo.Plate ?? duotone?.Paper ?? Rgba32.White);
         for (var y = 0; y < side; y++) {
             cancellationToken.ThrowIfCancellationRequested();
             for (var x = 0; x < side; x++) {
@@ -108,6 +114,10 @@ public static partial class QrImageComposer {
                 var mx = px / moduleSize;
                 var my = py / moduleSize;
                 var dark = qr.Modules[mx, my];
+                if (embedded is not null) {
+                    embedded.Paint(pixels, index, px, py, dark);
+                    continue;
+                }
                 if (photo is not null) {
                     image.Sample(x - imageOriginX, y - imageOriginY, out var pr, out var pg, out var pb);
                     photo.Paint(pixels, index, px, py, dark, pr, pg, pb);
@@ -134,7 +144,56 @@ public static partial class QrImageComposer {
                 art!.Paint(pixels, index, mx, my, px % moduleSize, py % moduleSize, dark, r, g, b, options.Strength);
             }
         }
+        logo?.Paint(pixels, side, qrOffsetX + border, qrOffsetY + border, cancellationToken);
+        if (options.TargetSizePx > 0 && options.TargetSizePx != qrFullSize) {
+            var scale = options.TargetSizePx / (double)qrFullSize;
+            var targetSide = Math.Max(1, (int)Math.Round(side * scale));
+            RenderGuards.EnsureOutputPixels(targetSide, targetSide, limitMessage);
+            RenderGuards.EnsureOutputBytes((long)targetSide * targetSide * 4, limitMessage);
+            pixels = ResampleArea(pixels, side, targetSide, cancellationToken);
+            return new QrImageComposition(pixels, targetSide, (int)Math.Round(qrOffsetX * scale),
+                (int)Math.Round(qrOffsetY * scale), options.TargetSizePx);
+        }
         return new QrImageComposition(pixels, side, qrOffsetX, qrOffsetY, qrFullSize);
+    }
+
+    // Exact area resampling of an opaque square RGBA image: every source pixel contributes by its overlap, so dot screens
+    // average to their tone instead of aliasing into moiré. Upscaling falls back to the covering source pixel.
+    private static byte[] ResampleArea(byte[] source, int side, int target, CancellationToken cancellationToken) {
+        var result = new byte[target * target * 4];
+        var scale = side / (double)target;
+        var row = new double[target * 3];
+        for (var y = 0; y < target; y++) {
+            cancellationToken.ThrowIfCancellationRequested();
+            Array.Clear(row, 0, row.Length);
+            double y0 = y * scale, y1 = (y + 1) * scale;
+            var weightY = 0.0;
+            for (var sy = (int)y0; sy < Math.Min(side, (int)Math.Ceiling(y1)); sy++) {
+                var wy = Math.Min(y1, sy + 1) - Math.Max(y0, sy);
+                if (wy <= 0) continue;
+                weightY += wy;
+                for (var x = 0; x < target; x++) {
+                    double x0 = x * scale, x1 = (x + 1) * scale;
+                    for (var sx = (int)x0; sx < Math.Min(side, (int)Math.Ceiling(x1)); sx++) {
+                        var w = (Math.Min(x1, sx + 1) - Math.Max(x0, sx)) * wy;
+                        if (w <= 0) continue;
+                        var s = (sy * side + sx) * 4;
+                        row[x * 3] += source[s] * w;
+                        row[x * 3 + 1] += source[s + 1] * w;
+                        row[x * 3 + 2] += source[s + 2] * w;
+                    }
+                }
+            }
+            for (var x = 0; x < target; x++) {
+                var area = weightY * (Math.Min(side, (x + 1) * scale) - x * scale);
+                var o = (y * target + x) * 4;
+                result[o] = (byte)Math.Round(row[x * 3] / area);
+                result[o + 1] = (byte)Math.Round(row[x * 3 + 1] / area);
+                result[o + 2] = (byte)Math.Round(row[x * 3 + 2] / area);
+                result[o + 3] = 255;
+            }
+        }
+        return result;
     }
 
     private static void WriteColor(byte[] pixels, int index, CodeGlyphX.Rendering.Rgba32 color) {

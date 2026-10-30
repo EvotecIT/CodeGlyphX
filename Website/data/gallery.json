@@ -44,6 +44,76 @@
       ]
     },
     {
+      "id": "photo-halftone",
+      "name": "Photo Halftone",
+      "summary": "The photo forms the code: colour halftone dots around solid module centres.",
+      "bestFor": "Posters, event screens and photo-led campaigns.",
+      "family": "Photo",
+      "variants": [
+        {
+          "id": "photo-halftone",
+          "label": "Fine",
+          "src": "/assets/gallery/photo-halftone.png",
+          "width": 560,
+          "height": 560,
+          "bytes": 462202,
+          "logo": false,
+          "samplePhotoSrc": "/assets/gallery/apollo17-earth.jpg",
+          "photoCredit": "Photo: NASA, Apollo 17 (AS17-148-22727).",
+          "alt": "Photo Halftone (fine) QR code for https://codeglyphx.com: The photo forms the code: colour halftone dots around solid module centres.",
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = new QrImageCompositionOptions {\n    Style = QrImageCompositionStyle.PhotoHalftone,\n    ModuleSize = 25,\n    Halftone = new QrImageHalftoneOptions { SubCells = 5, CenterSize = 0.46 },\n};\noptions.TargetSizePx = 560;\n\nvar art = QrArt.Compose(\"https://codeglyphx.com\", File.ReadAllBytes(\"apollo17-earth.jpg\"), options);\nart.SavePng(\"photo-halftone.png\");"
+        },
+        {
+          "id": "photo-halftone-bold",
+          "label": "Bold",
+          "src": "/assets/gallery/photo-halftone-bold.png",
+          "width": 560,
+          "height": 560,
+          "bytes": 429871,
+          "logo": false,
+          "samplePhotoSrc": "/assets/gallery/apollo17-earth.jpg",
+          "photoCredit": "Photo: NASA, Apollo 17 (AS17-148-22727).",
+          "alt": "Photo Halftone (bold) QR code for https://codeglyphx.com: The photo forms the code: colour halftone dots around solid module centres.",
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = new QrImageCompositionOptions {\n    Style = QrImageCompositionStyle.PhotoHalftone,\n    ModuleSize = 24,\n    Halftone = new QrImageHalftoneOptions { SubCells = 3, CenterSize = 0.55, Contrast = 1.3 },\n};\noptions.TargetSizePx = 560;\n\nvar art = QrArt.Compose(\"https://codeglyphx.com\", File.ReadAllBytes(\"apollo17-earth.jpg\"), options);\nart.SavePng(\"photo-halftone-bold.png\");"
+        }
+      ]
+    },
+    {
+      "id": "riso-duotone",
+      "name": "Riso Duotone",
+      "summary": "A portrait screened in two inks, like a risograph print.",
+      "bestFor": "Packaging, zines and printed merchandise.",
+      "family": "Photo",
+      "variants": [
+        {
+          "id": "riso-duotone",
+          "label": "Navy",
+          "src": "/assets/gallery/riso-duotone.png",
+          "width": 560,
+          "height": 560,
+          "bytes": 252714,
+          "logo": false,
+          "samplePhotoSrc": "/assets/gallery/samoyed-headphones.jpg",
+          "photoCredit": "Photo: ImagePlayground sample image (MIT).",
+          "alt": "Riso Duotone (navy) QR code for https://codeglyphx.com: A portrait screened in two inks, like a risograph print.",
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = new QrImageCompositionOptions {\n    Style = QrImageCompositionStyle.PhotoHalftone,\n    ModuleSize = 25,\n    Duotone = new QrImageDuotoneOptions(),\n    Halftone = new QrImageHalftoneOptions { SubCells = 5 },\n};\noptions.TargetSizePx = 560;\n\nvar art = QrArt.Compose(\"https://codeglyphx.com\", File.ReadAllBytes(\"samoyed-headphones.jpg\"), options);\nart.SavePng(\"riso-duotone.png\");"
+        },
+        {
+          "id": "riso-newsprint",
+          "label": "Newsprint",
+          "src": "/assets/gallery/riso-newsprint.png",
+          "width": 560,
+          "height": 560,
+          "bytes": 258077,
+          "logo": false,
+          "samplePhotoSrc": "/assets/gallery/samoyed-headphones.jpg",
+          "photoCredit": "Photo: ImagePlayground sample image (MIT).",
+          "alt": "Riso Duotone (newsprint) QR code for https://codeglyphx.com: A portrait screened in two inks, like a risograph print.",
+          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = new QrImageCompositionOptions {\n    Style = QrImageCompositionStyle.PhotoHalftone,\n    ModuleSize = 25,\n    Duotone = new QrImageDuotoneOptions {\n        Ink = new Rgba32(28, 26, 24),\n        Paper = new Rgba32(240, 236, 226),\n    },\n    Halftone = new QrImageHalftoneOptions { SubCells = 5 },\n};\noptions.TargetSizePx = 560;\n\nvar art = QrArt.Compose(\"https://codeglyphx.com\", File.ReadAllBytes(\"samoyed-headphones.jpg\"), options);\nart.SavePng(\"riso-newsprint.png\");"
+        }
+      ]
+    },
+    {
       "id": "botanical",
       "name": "Botanical",
       "summary": "Leaf modules and mirrored leaf eyes in forest green.",

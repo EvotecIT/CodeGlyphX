@@ -32,8 +32,17 @@ internal static class QrGalleryLooks {
         ("long", LongPayload),
     };
 
-    internal sealed record Variant(string Id, string Label, Func<QrRenderOptions> Create, bool ShowsLogo = false,
-        Rgba32? LogoTile = null, Rgba32? LogoMark = null, string? SampleLogoFile = null);
+    /// <summary>
+    /// One gallery image. Styled looks set <paramref name="Create"/> and render through <see cref="QR.Render(string, OutputFormat, QrRenderOptions?, QrEncodingOptions?)"/>;
+    /// photo looks set <paramref name="Compose"/> and <paramref name="PhotoFile"/> (a file in <c>Assets/Art</c>) and render
+    /// through <see cref="QrArt.Compose(string, byte[], QrImageCompositionOptions?, ImageDecodeOptions?)"/>, with their
+    /// logo cases on the composition's own logo plate.
+    /// </summary>
+    internal sealed record Variant(string Id, string Label, Func<QrRenderOptions>? Create, bool ShowsLogo = false,
+        Rgba32? LogoTile = null, Rgba32? LogoMark = null, string? SampleLogoFile = null,
+        Func<QrImageCompositionOptions>? Compose = null, string? PhotoFile = null, string? PhotoCredit = null) {
+        internal bool IsPhoto => Compose is not null;
+    }
 
     internal sealed record Look(string Id, string Name, string Summary, string BestFor, string Family, IReadOnlyList<Variant> Variants) {
         internal Variant Default => Variants[0];
@@ -46,6 +55,15 @@ internal static class QrGalleryLooks {
     private static Variant Light(string id, Func<QrRenderOptions> create) => new(id, "Light", create);
     private static Variant Dark(string id, Func<QrRenderOptions> create) => new(id, "Dark", create);
     private static Variant Single(string id, Func<QrRenderOptions> create) => new(id, "", create);
+    // Photo looks carry the sample logo in their own ink and paper, since a composition has no single foreground colour.
+    private static Variant Photo(string id, string label, Func<QrImageCompositionOptions> compose, string photo, Rgba32 tile, Rgba32 mark) =>
+        new(id, label, null, LogoTile: tile, LogoMark: mark, Compose: compose, PhotoFile: photo, PhotoCredit: PhotoCredits[photo]);
+
+    // Shown with the photo download under the recipe; provenance is in Assets/Art/README.md.
+    private static readonly Dictionary<string, string> PhotoCredits = new(StringComparer.Ordinal) {
+        ["apollo17-earth.jpg"] = "Photo: NASA, Apollo 17 (AS17-148-22727).",
+        ["samoyed-headphones.jpg"] = "Photo: ImagePlayground sample image (MIT).",
+    };
 
     internal static IReadOnlyList<Look> All { get; } = new List<Look> {
         new("sunset", "Sunset", "Connected body with an orange-to-pink gradient on warm paper.",
@@ -55,6 +73,20 @@ internal static class QrGalleryLooks {
         new("minimal-line", "Minimal Line", "Round dots, a drawn timing line and ring eyes.",
             "Quiet labels and minimal layouts.", "Minimal",
             new[] { Single("minimal-line", QrGalleryRecipes.MinimalLine) }),
+
+        new("photo-halftone", "Photo Halftone", "The photo forms the code: colour halftone dots around solid module centres.",
+            "Posters, event screens and photo-led campaigns.", "Photo",
+            new[] {
+                Photo("photo-halftone", "Fine", QrGalleryRecipes.PhotoHalftone, "apollo17-earth.jpg", R(14, 34, 78), R(236, 242, 252)),
+                Photo("photo-halftone-bold", "Bold", QrGalleryRecipes.PhotoHalftoneBold, "apollo17-earth.jpg", R(14, 34, 78), R(236, 242, 252)),
+            }),
+
+        new("riso-duotone", "Riso Duotone", "A portrait screened in two inks, like a risograph print.",
+            "Packaging, zines and printed merchandise.", "Photo",
+            new[] {
+                Photo("riso-duotone", "Navy", QrGalleryRecipes.RisoDuotone, "samoyed-headphones.jpg", R(30, 55, 128), R(246, 238, 221)),
+                Photo("riso-newsprint", "Newsprint", QrGalleryRecipes.RisoNewsprint, "samoyed-headphones.jpg", R(28, 26, 24), R(240, 236, 226)),
+            }),
 
         new("botanical", "Botanical", "Leaf modules and mirrored leaf eyes in forest green.",
             "Natural products and outdoor experiences.", "Colour",
@@ -143,16 +175,40 @@ internal static class QrGalleryLooks {
 
     /// <summary>Renders a variant through the same calls its published recipe makes.</summary>
     internal static byte[] RenderPng(Variant variant, string payload, bool logo, int sizePx) {
-        var options = variant.Create();
+        if (variant.IsPhoto) {
+            var composition = variant.Compose!();
+            composition.TargetSizePx = sizePx;
+            // The logo plate is placed within the correction budget; Compose throws instead of dropping it, and its
+            // native decode check throws when the composed pixels do not read.
+            if (logo) composition.Logo = new QrImageLogoOptions { Image = Logo(variant) };
+            return QrArt.Compose(payload, PhotoBytes(variant), composition).ToPng();
+        }
+        var options = variant.Create!();
         options.TargetSizePx = sizePx;
         if (!logo) return QR.Render(payload, OutputFormat.Png, options, Encoding()).Data.ToArray();
         // RenderLogo places and validates the logo, and throws instead of silently dropping it.
-        return QrArt.RenderLogo(payload, Logo(variant, options), new QrLogoRenderOptions { Appearance = options }, Encoding()).GetPng();
+        return QrArt.RenderLogo(payload, Logo(variant), new QrLogoRenderOptions { Appearance = options }, Encoding()).GetPng();
     }
 
     /// <summary>The sample mark used for the logo cases: the look's own logo colours, or its foreground on its background.</summary>
-    internal static byte[] Logo(Variant variant, QrRenderOptions options) =>
-        QrSampleBrandMark.Render(160, variant.LogoTile ?? options.Foreground, variant.LogoMark ?? options.Background);
+    internal static byte[] Logo(Variant variant) {
+        if (variant.IsPhoto) return QrSampleBrandMark.Render(160, variant.LogoTile!.Value, variant.LogoMark!.Value);
+        var options = variant.Create!();
+        return QrSampleBrandMark.Render(160, variant.LogoTile ?? options.Foreground, variant.LogoMark ?? options.Background);
+    }
+
+    /// <summary>The source photo of a photo look, read from <c>Assets/Art</c> in the repository.</summary>
+    internal static byte[] PhotoBytes(Variant variant) => File.ReadAllBytes(PhotoPath(variant));
+
+    internal static string PhotoPath(Variant variant) {
+        var file = variant.PhotoFile ?? throw new InvalidOperationException($"{variant.Id} is not a photo look.");
+        foreach (var start in new[] { AppContext.BaseDirectory, Environment.CurrentDirectory }) {
+            for (var dir = new DirectoryInfo(start); dir is not null; dir = dir.Parent) {
+                if (File.Exists(Path.Combine(dir.FullName, "CodeGlyphX.sln"))) return Path.Combine(dir.FullName, "Assets", "Art", file);
+            }
+        }
+        throw new DirectoryNotFoundException("Could not locate the repository root for the gallery photos.");
+    }
 
     /// <summary>Every case of the scan matrix for one variant.</summary>
     internal static IEnumerable<MatrixCase> Cases() {
@@ -166,6 +222,14 @@ internal static class QrGalleryLooks {
     internal static string Snippet(Variant variant) {
         var body = RecipeBlock(variant.Id);
         var sb = new StringBuilder();
+        if (variant.IsPhoto) {
+            sb.Append("using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n");
+            sb.Append('\n').Append(body).Append("\noptions.TargetSizePx = ").Append(GallerySizePx).Append(";\n\n");
+            sb.Append("var art = QrArt.Compose(\"").Append(ShortPayload).Append("\", File.ReadAllBytes(\"")
+                .Append(variant.PhotoFile).Append("\"), options);\n");
+            sb.Append("art.SavePng(\"").Append(variant.Id).Append(".png\");");
+            return sb.ToString();
+        }
         sb.Append("using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n");
         if (variant.ShowsLogo) sb.Append("using CodeGlyphX.Rendering.Art;\n");
         sb.Append('\n').Append(body).Append("\noptions.TargetSizePx = ").Append(GallerySizePx).Append(";\n\n");

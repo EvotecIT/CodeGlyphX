@@ -1,5 +1,4 @@
 using System;
-using CodeGlyphX.Qr;
 
 namespace CodeGlyphX.Rendering.Art;
 
@@ -13,7 +12,6 @@ public static partial class QrImageComposer {
     /// and finders and alignment patterns are rounded, image-tinted rings.
     /// </summary>
     private sealed class PhotoPainter {
-        private const byte Data = 0, Finder = 1, Separator = 2, Alignment = 3, OtherFunction = 4;
         // Finder and alignment rings use a narrower dark band (deeper darks) than data modules.
         private const double FunctionBandLimit = 44;
         // Strongest halo, used where the image luminance opposes the module, and the distance where every halo ends.
@@ -64,28 +62,8 @@ public static partial class QrImageComposer {
             // modules meet on the untreated image and no grid lines appear.
             _halo = 0;
             _mark = Math.Max(MinMark, Math.Min(MaxMark, MarkScale * options.CenterSize));
-            _kinds = new byte[_size * _size];
-            _alignmentCenter = new int[_size * _size];
-            var alignment = QrTables.GetAlignmentPatternPositions(qr.Version);
-            for (var y = 0; y < _size; y++) for (var x = 0; x < _size; x++) {
-                if (!functions[x, y]) continue;
-                var i = y * _size + x;
-                if (InFinderZone(x, y)) {
-                    var lx = x < 8 ? x : x - (_size - 7);
-                    var ly = y < 8 ? y : y - (_size - 7);
-                    _kinds[i] = lx is >= 0 and < 7 && ly is >= 0 and < 7 ? Finder : Separator;
-                    continue;
-                }
-                _kinds[i] = OtherFunction;
-                foreach (var ay in alignment) foreach (var ax in alignment) {
-                    if (Math.Abs(x - ax) > 2 || Math.Abs(y - ay) > 2 || InFinderZone(ax, ay)) continue;
-                    _kinds[i] = Alignment;
-                    _alignmentCenter[i] = ay * _size + ax;
-                }
-            }
+            ClassifyPhotoFunctions(qr, functions, out _kinds, out _alignmentCenter);
         }
-
-        private bool InFinderZone(int x, int y) => (x < 8 && y < 8) || (x >= _size - 8 && y < 8) || (x < 8 && y >= _size - 8);
 
         /// <summary>Paints one symbol pixel. px/py are relative to the first module; r/g/b is the image sample.</summary>
         internal void Paint(byte[] pixels, int index, int px, int py, bool dark, double r, double g, double b) {

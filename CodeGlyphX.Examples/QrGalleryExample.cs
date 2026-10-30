@@ -14,7 +14,7 @@ namespace CodeGlyphX.Examples;
 /// Renders the website QR gallery from <see cref="QrGalleryLooks"/> straight into the repository's
 /// <c>Website</c> folder: one PNG per variant under <c>static/assets/gallery/</c> and the page data in
 /// <c>data/gallery.json</c> (looks, published C# recipes and the mockup scenes). Logo looks also write
-/// their downloadable sample marks. Stale gallery PNGs are removed. The scan badges come from
+/// their downloadable sample marks, and photo looks copy their source photo. Stale gallery images are removed. The scan badges come from
 /// <c>data/gallery-scan.json</c>, which QrGalleryScanTests writes and checks.
 /// Run with <c>CODEGLYPHX_GALLERY=1</c>.
 /// </summary>
@@ -87,8 +87,15 @@ internal static class QrGalleryExample {
                     json.WriteBoolean("logo", variant.ShowsLogo);
                     if (variant.ShowsLogo) {
                         var logoFile = variant.SampleLogoFile ?? throw new InvalidOperationException($"No sample logo file for {variant.Id}.");
-                        if (written.Add(logoFile)) File.WriteAllBytes(Path.Combine(imageDir, logoFile), QrGalleryLooks.Logo(variant, variant.Create()));
+                        if (written.Add(logoFile)) File.WriteAllBytes(Path.Combine(imageDir, logoFile), QrGalleryLooks.Logo(variant));
                         json.WriteString("sampleLogoSrc", "/assets/gallery/" + logoFile);
+                    }
+                    if (variant.IsPhoto) {
+                        // The source photo is published unchanged, so the recipe on the card can be run as shown.
+                        var photoFile = variant.PhotoFile!;
+                        if (written.Add(photoFile)) File.Copy(QrGalleryLooks.PhotoPath(variant), Path.Combine(imageDir, photoFile), overwrite: true);
+                        json.WriteString("samplePhotoSrc", "/assets/gallery/" + photoFile);
+                        json.WriteString("photoCredit", variant.PhotoCredit);
                     }
                     var label = variant.Label.Length == 0 ? "" : " (" + variant.Label.ToLowerInvariant() + ")";
                     json.WriteString("alt", $"{look.Name}{label} QR code for {QrGalleryLooks.ShortPayload}: {look.Summary}");
@@ -128,7 +135,7 @@ internal static class QrGalleryExample {
         var data = Encoding.UTF8.GetString(stream.ToArray()).Replace("\r\n", "\n") + "\n";
         File.WriteAllText(Path.Combine(website, "data", "gallery.json"), data, new UTF8Encoding(false));
 
-        foreach (var stale in Directory.GetFiles(imageDir, "*.png").Where(f => !written.Contains(Path.GetFileName(f)))) {
+        foreach (var stale in Directory.GetFiles(imageDir).Where(f => f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)).Where(f => !written.Contains(Path.GetFileName(f)))) {
             File.Delete(stale);
         }
         Console.WriteLine($"Rendered and native-validated {variantSources.Count} gallery QR images for {QrGalleryLooks.All.Count} looks into {imageDir}.");

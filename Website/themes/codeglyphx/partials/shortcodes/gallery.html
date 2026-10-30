@@ -5,7 +5,9 @@
 {{~ variant_total = 0; for l in g.looks; variant_total = variant_total + l.variants.size; end ~}}
 {{~ checks_total = 0; passed_total = 0; for s in scan.variants; checks_total = checks_total + s.checks; passed_total = passed_total + s.passed; end ~}}
 {{~ short = scan.payloads[0]; long = scan.payloads[1] ~}}
-{{~ families = ["Colour", "Minimal", "Framed", "Caption", "Logo"] ~}}
+{{~ # Badge lookup built once: a nested search per variant would exceed Scriban's 1000-iteration loop limit. ~}}
+{{~ scan_by_id = {}; for s in scan.variants; scan_by_id[s.id] = s; end ~}}
+{{~ families = ["Photo", "Colour", "Minimal", "Framed", "Caption", "Logo"] ~}}
 <div class="cgx-gl">
     <section class="cgx-gl-proof" aria-labelledby="gl-proof-title">
         <div class="cgx-gl-proof__copy">
@@ -15,7 +17,7 @@
         </div>
         <dl class="cgx-gl-matrix" aria-label="What every look is checked against">
             <div><dt>Payloads</dt><dd>Short URL <span>version {{ short.version }}</span><br />Long URL <span>version {{ long.version }}, {{ long.text | string.size }} characters</span></dd></div>
-            <div><dt>Logo</dt><dd>Without, and with a centred logo placed by <code>QrArt.RenderLogo</code></dd></div>
+            <div><dt>Logo</dt><dd>Without, and with a centred logo placed by <code>QrArt.RenderLogo</code> or, for photo looks, the composition&rsquo;s logo plate</dd></div>
             <div><dt>Size</dt><dd>{{ for s in scan.sizes }}{{ s }} px{{ if !for.last }} and {{ end }}{{ end }} code width</dd></div>
             <div><dt>Capture</dt><dd>As rendered, rotated 2°, and blurred</dd></div>
             <div><dt>Decoders</dt><dd>ZXing.Net without TryHarder or rotation, and CodeGlyphX</dd></div>
@@ -57,7 +59,7 @@
                         {{~ end ~}}
                     </div>
                     <div class="cgx-gl-card__scan">
-                        {{~ for v in look.variants; vs = null; for s in scan.variants; if s.id == v.id; vs = s; end; end ~}}
+                        {{~ for v in look.variants; vs = scan_by_id[v.id] ~}}
                         <p data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}>{{ if vs }}<span class="cgx-gl-badge{{ if vs.passed != vs.checks }} is-failing{{ end }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>{{ vs.passed }}/{{ vs.checks }}</strong> reads</span><span class="cgx-gl-card__decoders">ZXing {{ vs.zxing }}/{{ vs.checks // 2 }} · CodeGlyphX {{ vs.codeglyphx }}/{{ vs.checks // 2 }}</span>{{ else }}<span class="cgx-gl-badge is-failing">Not measured</span>{{ end }}</p>
                         {{~ end ~}}
                     </div>
@@ -66,7 +68,7 @@
                     <details class="cgx-gl-recipe">
                         <summary>C# recipe</summary>
                         {{~ for v in look.variants ~}}
-                        <div data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}><pre class="code-block"><code class="language-csharp">{{ v.code | html.escape }}</code></pre>{{ if v.logo }}<a class="cgx-link" href="{{ v.sampleLogoSrc }}" download>Download the sample logo used in this image</a>{{ end }}</div>
+                        <div data-variant-panel="{{ v.id }}"{{ if !for.first }} hidden{{ end }}><pre class="code-block"><code class="language-csharp">{{ v.code | html.escape }}</code></pre>{{ if v.logo }}<a class="cgx-link" href="{{ v.sampleLogoSrc }}" download>Download the sample logo used in this image</a>{{ end }}{{ if v.samplePhotoSrc }}<a class="cgx-link" href="{{ v.samplePhotoSrc }}" download>Download the photo used in this image</a> <span class="cgx-gl-card__credit">{{ v.photoCredit }}</span>{{ end }}</div>
                         {{~ end ~}}
                     </details>
                 </div>

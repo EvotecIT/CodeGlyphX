@@ -8,8 +8,9 @@ using CodeGlyphX.Rendering.Art;
 namespace CodeGlyphX.Examples;
 
 /// <summary>
-/// The looks on the home-page style board: the first variant of every look in the website gallery
-/// (<see cref="QrGalleryLooks"/>), so the board only shows looks that passed the gallery's scan matrix.
+/// The looks on the home-page style board: the first variant of every styled look in the website gallery
+/// (<see cref="QrGalleryLooks"/>), so the board only shows looks that passed the gallery's scan matrix. Photo looks,
+/// which are composed from a picture rather than styled render options, stay on the gallery page.
 /// The scan tests render every look through <see cref="RenderPng"/> and decode the exact payload with
 /// two decoders.
 /// </summary>
@@ -23,14 +24,14 @@ internal static class QrStyleBoardLooks {
         internal string Slug => Slugify(Name);
     }
 
-    internal static IReadOnlyList<Look> All { get; } = QrGalleryLooks.All.Select(look => {
+    internal static IReadOnlyList<Look> All { get; } = QrGalleryLooks.All.Where(look => !look.Default.IsPhoto).Select(look => {
         var variant = look.Default;
         QrRenderOptions Create() {
-            var options = variant.Create();
+            var options = variant.Create!();
             options.TargetSizePx = TargetSizePx;
             return options;
         }
-        return new Look(look.Name, look.Summary, Create, variant.ShowsLogo ? () => QrGalleryLooks.Logo(variant, variant.Create()) : null);
+        return new Look(look.Name, look.Summary, Create, variant.ShowsLogo ? () => QrGalleryLooks.Logo(variant) : null);
     }).ToList();
 
     internal static QrEncodingOptions Encoding() => QrGalleryLooks.Encoding();
