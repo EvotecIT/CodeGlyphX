@@ -27,11 +27,14 @@ public sealed class QrPhotoHalftoneTests {
     [MemberData(nameof(Screens))]
     public void SameInput_GivesIdenticalBytes(QrHalftoneScreen screen, bool duotone) {
         var photo = Photo(160);
-        byte[] Render() => QrArt.Compose(Payload, photo, Options(screen, duotone)).ToPng();
+        // Determinism only: decoding is covered by the other tests, and on net472 the slower fallback decoder can exceed
+        // the built-in verification budget.
+        QrImageCompositionOptions Unverified() { var options = Options(screen, duotone); options.VerifyDecode = false; return options; }
+        byte[] Render() => QrArt.Compose(Payload, photo, Unverified()).ToPng();
         var first = Render();
         Assert.Equal(first, Render());
         // A different photo changes the picture, so the screen really follows the image.
-        Assert.NotEqual(first, QrArt.Compose(Payload, Photo(160, mirror: true), Options(screen, duotone)).ToPng());
+        Assert.NotEqual(first, QrArt.Compose(Payload, Photo(160, mirror: true), Unverified()).ToPng());
     }
 
     [Theory]
