@@ -51,6 +51,10 @@ public sealed class QrGalleryScanTests {
             Assert.DoesNotMatch(new Regex(@"(?<![\w.])(R|Base|Hero|Theme|Palette|GradientCanvas)\("), snippet);
             Assert.DoesNotContain("QrGallery", snippet, StringComparison.Ordinal);
             if (variant.ShowsLogo) Assert.Contains($"File.ReadAllBytes(\"{variant.SampleLogoFile}\")", snippet, StringComparison.Ordinal);
+            if (variant.IsPhoto) {
+                Assert.Contains($"QrArt.Compose(\"{QrGalleryLooks.ShortPayload}\", File.ReadAllBytes(\"{variant.PhotoFile}\"), options)", snippet, StringComparison.Ordinal);
+                Assert.True(File.Exists(QrGalleryLooks.PhotoPath(variant)), $"{variant.Id}: missing Assets/Art/{variant.PhotoFile}.");
+            }
         }
     }
 
@@ -76,10 +80,16 @@ public sealed class QrGalleryScanTests {
                 if (variant.ShowsLogo) {
                     var logoSrc = (string)v["sampleLogoSrc"]!;
                     Assert.Equal("/assets/gallery/" + variant.SampleLogoFile, logoSrc);
-                    var expectedLogo = ImageReader.DecodeRgba32(QrGalleryLooks.Logo(variant, variant.Create()), out var expectedWidth, out var expectedHeight);
+                    var expectedLogo = ImageReader.DecodeRgba32(QrGalleryLooks.Logo(variant), out var expectedWidth, out var expectedHeight);
                     var publishedLogo = ImageReader.DecodeRgba32(File.ReadAllBytes(RepoPath("Website/static" + logoSrc)), out var logoWidth, out var logoHeight);
                     Assert.Equal((expectedWidth, expectedHeight), (logoWidth, logoHeight));
                     Assert.Equal(expectedLogo, publishedLogo);
+                }
+                if (variant.IsPhoto) {
+                    // Photo looks publish their unchanged source photo next to the recipe that reads it.
+                    var photoSrc = (string)v["samplePhotoSrc"]!;
+                    Assert.Equal("/assets/gallery/" + variant.PhotoFile, photoSrc);
+                    Assert.Equal(File.ReadAllBytes(QrGalleryLooks.PhotoPath(variant)), File.ReadAllBytes(RepoPath("Website/static" + photoSrc)));
                 }
             }
         }

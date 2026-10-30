@@ -48,6 +48,46 @@
       "failures": []
     },
     {
+      "id": "photo-halftone",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "photo-halftone-bold",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "riso-duotone",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "riso-newsprint",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
+      "id": "pixel-dither",
+      "checks": 48,
+      "passed": 48,
+      "zxing": 24,
+      "codeglyphx": 24,
+      "failures": []
+    },
+    {
       "id": "botanical",
       "checks": 48,
       "passed": 48,

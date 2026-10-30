@@ -469,6 +469,7 @@ details.cgx-bench-study > :is(h3, h4) { margin-top: 28px; }
 .cgx-gl-recipe[open] summary::after { transform: rotate(-135deg); }
 .cgx-gl-recipe summary:hover { color: var(--accent-ink); }
 .cgx-gl-recipe pre.code-block { margin: 6px 0 0; max-width: 100%; overflow-x: auto; font-size: .75rem; }
+.cgx-gl-card__credit { display: block; margin-top: 4px; color: var(--ink-dim); font-size: .75rem; }
 
 .cgx-gl-mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 32px); }
 .cgx-mock { display: grid; gap: 14px; margin: 0; min-width: 0; scroll-margin-top: calc(var(--header-height, 64px) + 24px); }
