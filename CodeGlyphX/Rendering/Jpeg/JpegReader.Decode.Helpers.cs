@@ -579,6 +579,7 @@ public static partial class JpegReader {
             var table = data[offset++];
             var dc = table >> 4;
             var ac = table & 0x0F;
+            if (dc >= 4 || ac >= 4) throw new FormatException("Unsupported JPEG Huffman table selector.");
             var index = FindComponentIndex(frame.Components, id);
             if (index < 0) throw new FormatException("Unknown JPEG component in scan.");
             frame.Components[index].DcTable = (byte)dc;

@@ -119,17 +119,26 @@ public static partial class JpegReader {
         HuffmanTable[] acTables,
         int restartInterval,
         bool allowTruncated) {
+        if (scan.Ss > scan.Se || scan.Se > 63 || (scan.Ss == 0 && scan.Se != 0) ||
+            scan.Al > 13 ||
+            (scan.Ah != 0 && scan.Ah != scan.Al + 1)) {
+            throw new FormatException("Invalid progressive JPEG scan parameters.");
+        }
         EnsureStandardHuffmanTables(dcTables, acTables);
-        // Progressive scans are lenient to match historical behavior.
         var reader = new JpegBitReader(scanData, allowTruncated);
         var mcuIndex = 0;
         var eobRun = 0;
         var isSingle = scan.ComponentIndices.Length == 1;
-        var scanMcuCols = isSingle ? state.Components[scan.ComponentIndices[0]].BlocksPerRow : state.McuCols;
-        var scanMcuRows = isSingle ? state.Components[scan.ComponentIndices[0]].BlocksPerCol : state.McuRows;
+        // A noninterleaved scan contains only real component blocks, not MCU edge padding.
+        var component = frame.Components[scan.ComponentIndices[0]];
+        var scanMcuCols = isSingle ? (frame.Width * component.H + frame.MaxH * 8 - 1) / (frame.MaxH * 8) : state.McuCols;
+        var scanMcuRows = isSingle ? (frame.Height * component.V + frame.MaxV * 8 - 1) / (frame.MaxV * 8) : state.McuRows;
 
         for (var i = 0; i < scan.ComponentIndices.Length; i++) {
-            state.Components[scan.ComponentIndices[i]].PrevDc = 0;
+            var componentIndex = scan.ComponentIndices[i];
+            // SOS table selectors can change between scans, unlike SOF sampling factors.
+            state.Components[componentIndex].Component = frame.Components[componentIndex];
+            state.Components[componentIndex].PrevDc = 0;
         }
 
         for (var my = 0; my < scanMcuRows; my++) {
@@ -216,8 +225,8 @@ public static partial class JpegReader {
                 var bit = reader.ReadBit();
                 if (bit != 0) {
                     var delta = (1 << scan.Al) * quant[0];
-                    var sign = state.Coeffs[baseIndex] >= 0 ? 1 : -1;
-                    state.Coeffs[baseIndex] += sign * delta;
+                    // DC refinement appends a two's-complement bit, also for negative DC values.
+                    state.Coeffs[baseIndex] += delta;
                 }
             }
             return;
@@ -317,22 +326,22 @@ public static partial class JpegReader {
                 break;
             }
 
-            while (r > 0 && k <= scan.Se) {
+            if (s != 1) throw new FormatException("Invalid JPEG AC refinement symbol.");
+            // The new coefficient's sign precedes correction bits for existing coefficients.
+            var ac = reader.ReadBit() == 1 ? 1 : -1;
+            while (k <= scan.Se) {
                 var index = baseIndex + ZigZag[k];
-                RefineCoefficient(ref reader, state.Coeffs, index, scan.Al, quant[ZigZag[k]]);
-                if (state.Coeffs[index] == 0) r--;
+                if (state.Coeffs[index] != 0) {
+                    RefineCoefficient(ref reader, state.Coeffs, index, scan.Al, quant[ZigZag[k]]);
+                } else {
+                    if (r == 0) break;
+                    r--;
+                }
                 k++;
             }
 
-            if (k > scan.Se) break;
+            if (k > scan.Se) throw new FormatException("Invalid JPEG AC refinement run.");
             var zig = ZigZag[k];
-            int ac;
-            if (s == 1) {
-                var signBit = reader.ReadBit();
-                ac = signBit == 1 ? 1 : -1;
-            } else {
-                ac = Extend(reader.ReadBits(s), s);
-            }
             state.Coeffs[baseIndex + zig] = (ac << scan.Al) * quant[zig];
             k++;
         }

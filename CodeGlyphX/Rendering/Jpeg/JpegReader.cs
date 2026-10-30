@@ -96,6 +96,7 @@ public static partial class JpegReader {
         var acTables = new HuffmanTable[4];
         var restartInterval = 0;
         var hasFrame = false;
+        var hasEndMarker = false;
         var progressive = false;
         var orientation = 1;
         int? adobeTransform = null;
@@ -113,7 +114,10 @@ public static partial class JpegReader {
             if (offset >= data.Length) break;
             var marker = data[offset++];
 
-            if (marker == 0xD9) break;
+            if (marker == 0xD9) {
+                hasEndMarker = true;
+                break;
+            }
 
             if (marker == 0xDA) {
                 if (!hasFrame) throw new FormatException("Missing JPEG frame segment.");
@@ -256,6 +260,7 @@ public static partial class JpegReader {
         }
 
         if (progressive && hasFrame && progressiveState is not null) {
+            if (!hasEndMarker && !options.AllowTruncated) throw new FormatException("Missing JPEG end marker.");
             width = frame.Width;
             height = frame.Height;
             var rgba = progressiveState.RenderRgba(frame, adobeTransform, options.HighQualityChroma);

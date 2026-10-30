@@ -83,6 +83,7 @@
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />
     <Compile Include="CodecResourceBoundaryTests.cs" />
+    <Compile Include="JpegProgressiveReferenceTests.cs" />
     <Compile Include="StreamContractTests.cs" />
     <Compile Include="ValueContractTests.cs" />
     <Compile Include="RenderedOutputOwnershipTests.cs" />
@@ -202,6 +203,8 @@
     <EmbeddedResource Include="Fixtures/Fonts/*.gz" />
     <EmbeddedResource Include="Fixtures/Fonts/BidiMirroring-17.0.0.txt" />
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
+    <EmbeddedResource Include="Fixtures/Jpeg/Progressive/*.jpg" />
+    <EmbeddedResource Include="Fixtures/Jpeg/Progressive/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Aztec/*.png" />
     <EmbeddedResource Include="Fixtures/MicroQr/*.png" />
