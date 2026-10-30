@@ -47,6 +47,7 @@ Scanning is no longer the gap. Curation, presentation and integration between ar
 
 - **Polish pass: done in #311.** The hero defects above are fixed, the style board is regenerated from current code, Earth is dropped and the scene images are re-rendered.
 - **Curated gallery: done in #314.** The `/gallery/` page shows 20 looks in 29 variants, generated from current code, with recipes and scan badges recorded from a 48-check matrix per variant. Four mockups show looks on a poster, business card, package and table tent. Sunset dark, Ocean dark, Minimal Line dark and Soft Diamond failed the matrix and were dropped.
+- **Halftone and image-embedded QR: in review.** `QrImageCompositionStyle.PhotoHalftone` lets the picture form the code: solid module centres at decode-safe contrast, the photo screened into sub-cells around them (dots, error diffusion or ordered), in photo colour or duotone, with an optional logo plate. Five variants in three looks (Photo Halftone, Riso Duotone, Pixel Dither) joined the gallery, each passing all 48 checks. Deliver it at about 4.5 px per module or more; a printed proof on real devices is still outstanding.
 - Follow-ups from that work: the legacy theme set has several near-identical looks, the README's colourful gallery image predates the gallery, and the website specimens need regenerating for 3.1.0.
 
 ## Priorities
