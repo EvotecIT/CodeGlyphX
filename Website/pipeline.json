@@ -481,7 +481,7 @@
       "rendered": true,
       "renderedEnsureInstalled": false,
       "renderedMaxPages": 10,
-      "renderedInclude": "index.html,docs/**,benchmarks/**,faq/**,pricing/**,showcase/**,playground/**",
+      "renderedInclude": "index.html,docs/**,benchmarks/**,faq/**,pricing/**,showcase/**,gallery/**,playground/**",
       "renderedExclude": "api/**,docs/api/**,api-docs/**",
       "summary": true,
       "summaryPath": "./_reports/doctor-summary.json",

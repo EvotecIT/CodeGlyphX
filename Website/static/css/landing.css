@@ -176,7 +176,7 @@ main.cgx-landing { padding: var(--header-height) 0 0; overflow-x: clip; }
   .cgx-hero__thumbs li { width: 84px; }
 }
 
-.cgx-art__more { margin-top: 20px; }
+.cgx-art__more { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 20px; }
 .cgx-art .cgx-link { color: #c4b5fd; }
 
 /* ImagePlayground: what the module is and which libraries it bundles. */

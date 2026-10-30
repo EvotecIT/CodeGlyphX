@@ -171,6 +171,7 @@
       { "Match": "/benchmarks/**", "Bundles": ["global", "pages"] },
       { "Match": "/faq/**", "Bundles": ["global", "pages"] },
       { "Match": "/showcase/**", "Bundles": ["global", "pages"] },
+      { "Match": "/gallery/**", "Bundles": ["global", "pages"] },
       { "Match": "/docs/**", "Bundles": ["global", "pages"] },
       { "Match": "/playground/**", "Bundles": ["global"] },
       { "Match": "/pricing/**", "Bundles": ["global", "pages"] },
@@ -240,6 +241,7 @@
             "Description": "What CodeGlyphX draws, and where you can try it.",
             "Items": [
               { "Id": "playground", "Title": "Playground", "Url": "/playground/", "Description": "Generate, style and decode codes in your browser." },
+              { "Id": "gallery", "Title": "QR style gallery", "Url": "/gallery/", "Description": "Twenty looks with their C# and measured scan results." },
               { "Id": "powershell", "Title": "PowerShell", "Url": "/powershell/", "Description": "ImagePlayground scripts beside the files they wrote." },
               { "Id": "showcase", "Title": "Showcase", "Url": "/showcase/", "Description": "Apps that ship CodeGlyphX, and every QR style preset." },
               { "Id": "pricing", "Title": "Pricing", "Url": "/pricing/", "Description": "Free under Apache 2.0; sponsorship keeps it maintained." }
@@ -263,6 +265,7 @@
         "Name": "footer-product",
         "Items": [
           { "Title": "Playground", "Url": "/playground/" },
+          { "Title": "QR style gallery", "Url": "/gallery/" },
           { "Title": "PowerShell", "Url": "/powershell/" },
           { "Title": "Docs", "Url": "/docs/" },
           { "Title": "All supported formats", "Url": "/docs/symbol-capabilities/" },

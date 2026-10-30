@@ -419,3 +419,133 @@ details.cgx-bench-study > :is(h3, h4) { margin-top: 28px; }
 /* Generated API pages have no <main> padding of their own: the band starts below the fixed header. */
 .cgx-stage--api { margin-top: var(--header-height); }
 .cgx-stage--api + .api-layout { padding-top: clamp(28px, 4vw, 44px); }
+
+/* ---------- QR style gallery (/gallery/) ---------- */
+/* Looks with measured scan badges, then mockup scenes drawn around the same PNGs. Scenes are fixed "photographs":
+   their colours do not follow the theme, and every size inside them is in container units so they scale as one image. */
+.cgx-gl [hidden] { display: none !important; }
+.cgx-gl > .cgx-section { margin-top: var(--cgx-section); padding-top: var(--cgx-section); border-top: 1px solid var(--line); }
+.cgx-gl-proof { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 32px clamp(32px, 5vw, 72px); align-items: center; }
+.cgx-gl-proof__title { margin-top: 18px; color: var(--ink); font-family: var(--cgx-display); font-size: clamp(1.375rem, 1rem + 1.2vw, 2rem); font-weight: 800; line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+.cgx-gl-proof__figure { display: block; margin-bottom: 6px; background: linear-gradient(100deg, var(--mark), var(--accent-ink) 70%); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: clamp(3rem, 1.6rem + 5.4vw, 5.5rem); line-height: .95; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.cgx-gl-proof__figure span { color: var(--ink-dim); -webkit-text-fill-color: var(--ink-dim); font-size: .42em; letter-spacing: -.02em; }
+.cgx-gl-proof__lede { max-width: 56ch; margin-top: 16px; color: var(--ink-muted); font-size: 1.0625rem; line-height: 1.6; }
+.cgx-gl-matrix { position: relative; display: grid; margin: 0; padding: clamp(18px, 2.4vw, 26px); border: 1px solid var(--line); border-radius: var(--cgx-radius); background: var(--surface); box-shadow: 0 30px 60px -40px color-mix(in srgb, var(--accent) 45%, transparent); }
+.cgx-gl-matrix > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.cgx-gl-matrix > div:first-child { padding-top: 0; }
+.cgx-gl-matrix > div:last-child { padding-bottom: 0; border-bottom: 0; }
+.cgx-gl-matrix dt { color: var(--ink-dim); font-family: var(--cgx-mono); font-size: .6875rem; font-weight: 600; letter-spacing: .06em; line-height: 1.9; text-transform: uppercase; }
+.cgx-gl-matrix dd { margin: 0; color: var(--ink); font-size: .9063rem; line-height: 1.55; }
+.cgx-gl-matrix dd span { color: var(--ink-dim); font-size: .8125rem; }
+.cgx-gl-matrix code { font-size: .8125rem; }
+
+.cgx-gl-looks__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 32px; margin-bottom: 28px; }
+.cgx-gl-looks__head .cgx-section__head { margin-bottom: 0; }
+.cgx-gl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; }
+.cgx-gl-card { display: grid; grid-template-rows: auto 1fr; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: calc(var(--cgx-radius) + 2px); background: var(--surface); transition: border-color .2s ease, box-shadow .2s ease; scroll-margin-top: calc(var(--header-height, 64px) + 24px); }
+.cgx-gl-card:hover { border-color: var(--line-strong); box-shadow: 0 24px 48px -36px color-mix(in srgb, var(--accent) 55%, transparent); }
+.cgx-gl-card:target { border-color: var(--accent-ink); box-shadow: 0 0 0 1px var(--accent-ink); }
+.cgx-gl-card__stage { position: relative; aspect-ratio: 1; background: radial-gradient(70% 60% at 50% 45%, color-mix(in srgb, var(--surface) 75%, transparent), transparent 75%), radial-gradient(color-mix(in srgb, var(--ink) 10%, transparent) 1px, transparent 1.5px) 0 0 / 14px 14px, var(--surface-2); }
+.cgx-gl-card__sample { position: absolute; inset: 9%; display: grid; place-items: center; margin: 0; }
+.cgx-gl-card__sample img { display: block; width: auto; height: auto; max-width: min(100%, 320px); max-height: 100%; filter: drop-shadow(0 18px 24px rgba(20, 14, 40, .18)) drop-shadow(0 2px 4px rgba(20, 14, 40, .1)); }
+.cgx-gl-card__scan p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.cgx-gl-card__decoders { color: var(--ink-dim); font-family: var(--cgx-mono); font-size: .6875rem; font-variant-numeric: tabular-nums; }
+.cgx-gl-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 7px; border: 1px solid color-mix(in srgb, var(--good) 40%, var(--line)); border-radius: 999px; background: color-mix(in srgb, var(--good) 8%, var(--surface)); color: var(--ink-muted); font-family: var(--cgx-mono); font-size: .6875rem; font-variant-numeric: tabular-nums; line-height: 1.4; }
+.cgx-gl-badge svg { width: 14px; height: 14px; color: var(--good); }
+.cgx-gl-badge strong { color: var(--ink); font-weight: 700; }
+.cgx-gl-badge.is-failing { border-color: var(--bad, #dc2626); }
+.cgx-gl-card__body { display: grid; align-content: start; gap: 8px; padding: 18px 20px 20px; border-top: 1px solid var(--line); }
+.cgx-gl-card__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+.cgx-gl-card__head h3 { margin: 0; color: var(--ink); font-family: var(--cgx-display); font-size: 1.125rem; font-weight: 700; letter-spacing: -.01em; }
+.cgx-gl-variants { padding: 3px; border-radius: 11px; }
+.cgx-gl-variants .cgx-tab { min-height: 26px; padding: 0 10px; font-size: .75rem; }
+.cgx-gl-card__summary { color: var(--ink-muted); font-size: .9063rem; line-height: 1.55; }
+.cgx-gl-card__use { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; color: var(--ink-dim); font-size: .8125rem; }
+.cgx-gl-card__use span { padding: 1px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-muted); font-family: var(--cgx-mono); font-size: .6875rem; letter-spacing: .04em; }
+.cgx-gl-recipe { margin-top: 6px; border-top: 1px solid var(--line); }
+.cgx-gl-recipe summary { display: flex; align-items: center; justify-content: space-between; min-height: 40px; padding-top: 6px; color: var(--ink); font-size: .875rem; font-weight: 600; list-style: none; cursor: pointer; }
+.cgx-gl-recipe summary::-webkit-details-marker { display: none; }
+.cgx-gl-recipe summary::after { content: ""; width: 8px; height: 8px; margin-right: 4px; border-right: 2px solid var(--ink-dim); border-bottom: 2px solid var(--ink-dim); transform: rotate(45deg); transition: transform .2s ease; }
+.cgx-gl-recipe[open] summary::after { transform: rotate(-135deg); }
+.cgx-gl-recipe summary:hover { color: var(--accent-ink); }
+.cgx-gl-recipe pre.code-block { margin: 6px 0 0; max-width: 100%; overflow-x: auto; font-size: .75rem; }
+
+.cgx-gl-mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 32px); }
+.cgx-mock { display: grid; gap: 14px; margin: 0; min-width: 0; scroll-margin-top: calc(var(--header-height, 64px) + 24px); }
+.cgx-mock figcaption { display: grid; gap: 4px; color: var(--ink-muted); font-size: .9063rem; line-height: 1.55; }
+.cgx-mock figcaption strong { color: var(--ink); font-family: var(--cgx-display); font-size: 1rem; font-weight: 700; }
+.cgx-mock figcaption a { justify-self: start; font-size: .875rem; }
+.cgx-mock__scene { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 4 / 5; border: 1px solid var(--line); border-radius: calc(var(--cgx-radius) + 4px); container-type: inline-size; color-scheme: light; }
+.cgx-mock__scene::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.cgx-mock__scene p { margin: 0; }
+.cgx-mock__scene img { display: block; height: auto; }
+
+/* Poster: a night-market bill taped to a dark wall under a warm light. */
+.cgx-mock--poster .cgx-mock__scene { background: radial-gradient(70% 40% at 50% -5%, rgba(255, 210, 160, .28), transparent 70%), linear-gradient(180deg, #3a363f 0%, #26232b 55%, #1a181e 100%); }
+.cgx-mock--poster .cgx-mock__scene::before { background-image: radial-gradient(rgba(255, 255, 255, .045) 1px, transparent 1.6px); background-size: 2.4cqi 2.4cqi; }
+.cgx-mock__poster { position: absolute; top: 15cqi; left: 50%; display: flex; flex-direction: column; width: 66cqi; aspect-ratio: 5 / 7; padding: 7cqi 6cqi 5.5cqi; background: radial-gradient(85% 50% at 10% 0%, rgba(150, 40, 230, .55), transparent 70%), radial-gradient(70% 45% at 100% 100%, rgba(255, 43, 214, .32), transparent 70%), #0c0614; color: #fff; box-shadow: 0 3.4cqi 6cqi -1cqi rgba(0, 0, 0, .6), 0 .4cqi 1cqi rgba(0, 0, 0, .4); transform: translateX(-50%) rotate(-1.2deg); }
+.cgx-mock__tape { position: absolute; top: -1.8cqi; width: 13cqi; height: 3.8cqi; background: rgba(236, 228, 210, .58); box-shadow: 0 .2cqi .5cqi rgba(0, 0, 0, .2); }
+.cgx-mock__tape--l { left: 3cqi; transform: rotate(-9deg); }
+.cgx-mock__tape--r { right: 3cqi; transform: rotate(8deg); }
+.cgx-mock__poster .cgx-mock__eyebrow { color: #ff9be9; font-family: var(--cgx-mono); font-size: 2.2cqi; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.cgx-mock__poster .cgx-mock__title { margin-top: 4cqi; background: linear-gradient(100deg, #fff 15%, #ff8ce8 60%, #a66bff); -webkit-background-clip: text; background-clip: text; color: transparent; font-family: var(--cgx-display); font-size: 9.6cqi; font-weight: 800; line-height: .95; letter-spacing: -.03em; }
+.cgx-mock__poster .cgx-mock__body { max-width: 44cqi; margin-top: 3.4cqi; color: rgba(255, 255, 255, .74); font-size: 2.6cqi; line-height: 1.45; }
+.cgx-mock__foot { display: flex; align-items: flex-end; gap: 3.6cqi; margin-top: auto; }
+.cgx-mock__foot img { flex: none; width: 25cqi; }
+.cgx-mock__foot p { color: rgba(255, 255, 255, .62); font-family: var(--cgx-mono); font-size: 2cqi; line-height: 1.5; }
+.cgx-mock__foot strong { display: block; margin-bottom: 1.2cqi; color: #fff; font-family: var(--cgx-display); font-size: 3.2cqi; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
+
+/* Business card: the printed front and the back with the code, on a stone desk. */
+.cgx-mock--card .cgx-mock__scene { background: radial-gradient(60% 45% at 18% 8%, rgba(255, 255, 255, .55), transparent 70%), linear-gradient(160deg, #ece7de 0%, #ddd5c8 55%, #cbc2b3 100%); }
+.cgx-mock--card .cgx-mock__scene::before { background-image: radial-gradient(rgba(90, 70, 40, .07) 1px, transparent 1.4px); background-size: 1.8cqi 1.8cqi; }
+.cgx-mock__card { position: absolute; width: 66cqi; aspect-ratio: 85 / 55; border-radius: 1.4cqi; box-shadow: 0 2.6cqi 4.4cqi -1cqi rgba(60, 45, 30, .38), 0 .3cqi .7cqi rgba(60, 45, 30, .2); }
+.cgx-mock__card--front { top: 16cqi; left: 7cqi; display: flex; flex-direction: column; justify-content: space-between; padding: 5.4cqi; background: linear-gradient(145deg, #26252a, #141317); color: #f4efe6; transform: rotate(-7deg); }
+.cgx-mock__card--front .cgx-mock__company { color: #cdb88e; font-family: var(--cgx-mono); font-size: 2cqi; letter-spacing: .22em; text-transform: uppercase; }
+.cgx-mock__card--front .cgx-mock__name { font-family: var(--cgx-display); font-size: 5cqi; font-weight: 700; letter-spacing: -.02em; }
+.cgx-mock__card--front .cgx-mock__role { margin-top: 1cqi; color: rgba(244, 239, 230, .62); font-size: 2.3cqi; }
+.cgx-mock__card--back { top: 58cqi; left: 26cqi; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 3cqi; padding: 4.4cqi 3.6cqi 4.4cqi 5cqi; background: #fff; color: #1d1d1f; transform: rotate(4deg); }
+.cgx-mock__contact { display: grid; gap: .8cqi; font-size: 2.1cqi; color: #5d5a55; }
+.cgx-mock__contact .cgx-mock__name { margin-bottom: 1.4cqi; color: #1d1d1f; font-family: var(--cgx-display); font-size: 3cqi; white-space: nowrap; font-weight: 700; letter-spacing: -.01em; }
+.cgx-mock__contact .cgx-mock__cta { margin-top: 2cqi; color: #1d1d1f; font-family: var(--cgx-mono); font-size: 1.8cqi; letter-spacing: .04em; }
+.cgx-mock__card--back img { width: auto; height: 31cqi; }
+
+/* Package: a tea box with the code on its label, on a sage shelf. */
+.cgx-mock--package .cgx-mock__scene { background: radial-gradient(60% 40% at 50% 28%, rgba(255, 255, 255, .45), transparent 70%), linear-gradient(180deg, #e3eadb 0%, #d3dfc9 74%, #bfcdb2 74%, #cad6be 100%); }
+.cgx-mock__box { position: absolute; top: 27cqi; left: 21cqi; width: 43cqi; height: 75cqi; }
+.cgx-mock__box::after { content: ""; position: absolute; right: -20cqi; bottom: -3.4cqi; left: -6cqi; z-index: -1; height: 7cqi; background: radial-gradient(closest-side, rgba(40, 60, 30, .38), transparent); }
+.cgx-mock__box-front { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 4.4cqi 3.6cqi 3.6cqi; background: linear-gradient(180deg, #215539, #173f2b); color: #f3f6ea; box-shadow: inset -.4cqi 0 0 rgba(0, 0, 0, .18); }
+.cgx-mock__box-side { position: absolute; top: 0; left: 100%; display: grid; place-items: center; width: 13cqi; height: 100%; background: linear-gradient(180deg, #163a28, #0f2a1c); transform: skewY(-36deg); transform-origin: left top; }
+.cgx-mock__box-side span { color: rgba(243, 246, 234, .5); font-family: var(--cgx-display); font-size: 2.6cqi; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; writing-mode: vertical-rl; }
+.cgx-mock__box-top { position: absolute; bottom: 100%; left: 0; width: 100%; height: 9.45cqi; background: linear-gradient(90deg, #2c6a49, #357855); transform: skewX(-54deg); transform-origin: left bottom; }
+.cgx-mock__box-front .cgx-mock__brand { font-family: var(--cgx-display); font-size: 4.4cqi; font-weight: 700; letter-spacing: .04em; }
+.cgx-mock__label { display: grid; justify-items: center; width: 100%; margin-top: 3cqi; padding: 3.4cqi 2.6cqi 2.6cqi; border-radius: 1.2cqi; background: #f8faee; color: #134732; text-align: center; }
+.cgx-mock__label .cgx-mock__product { font-family: var(--cgx-display); font-size: 5.6cqi; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.cgx-mock__label .cgx-mock__kind { margin-top: 1.2cqi; color: #4d6c59; font-size: 1.8cqi; letter-spacing: .16em; text-transform: uppercase; }
+.cgx-mock__label img { width: 23cqi; margin: 2.2cqi 0 1.2cqi; }
+.cgx-mock__label .cgx-mock__cta { color: #134732; font-family: var(--cgx-mono); font-size: 1.7cqi; }
+.cgx-mock__weight { margin-top: auto !important; color: rgba(243, 246, 234, .78); font-family: var(--cgx-mono); font-size: 1.9cqi; }
+
+/* Table tent: a folded menu card on a restaurant table in the evening. */
+.cgx-mock--tent .cgx-mock__scene { background: repeating-linear-gradient(90deg, rgba(0, 0, 0, .05) 0 .3cqi, transparent .3cqi 6cqi), linear-gradient(180deg, #2a1f1a 0%, #3b2a21 58%, #a56e48 58%, #7c4e31 100%); }
+.cgx-mock--tent .cgx-mock__scene::before { bottom: 42%; background: radial-gradient(6cqi 6cqi at 14% 30%, rgba(255, 190, 110, .55), transparent), radial-gradient(4cqi 4cqi at 30% 52%, rgba(255, 170, 90, .4), transparent), radial-gradient(7cqi 7cqi at 82% 24%, rgba(255, 200, 120, .45), transparent), radial-gradient(5cqi 5cqi at 66% 60%, rgba(255, 150, 80, .35), transparent), radial-gradient(3.5cqi 3.5cqi at 92% 66%, rgba(255, 210, 140, .4), transparent); filter: blur(1.2cqi); }
+.cgx-mock__tent { position: absolute; top: 17cqi; left: 50%; width: 54cqi; height: 80cqi; transform: translateX(-50%); }
+.cgx-mock__tent-face::before { content: ""; position: absolute; top: -1.6cqi; right: 0; left: 0; height: 1.8cqi; border-radius: .8cqi .8cqi 0 0; background: linear-gradient(180deg, #f1e6d6, #d9c8b0); }
+.cgx-mock__tent::after { content: ""; position: absolute; right: -8cqi; bottom: -3cqi; left: -8cqi; z-index: -1; height: 6cqi; background: radial-gradient(closest-side, rgba(20, 8, 2, .55), transparent); }
+.cgx-mock__tent-face { position: relative; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 6cqi 5cqi 4.4cqi; border-radius: .6cqi; background: #fffaf2; color: #3b1d14; text-align: center; box-shadow: inset 0 .6cqi 0 rgba(255, 255, 255, .7), 0 2.4cqi 3.4cqi -1cqi rgba(0, 0, 0, .5); transform: perspective(160cqi) rotateX(8deg); transform-origin: bottom; }
+.cgx-mock__tent-face .cgx-mock__brand { color: #b4532a; font-family: var(--cgx-mono); font-size: 2cqi; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+.cgx-mock__tent-face .cgx-mock__title { margin: 2cqi 0 2.6cqi; font-family: var(--cgx-display); font-size: 5.8cqi; font-weight: 800; line-height: 1.05; letter-spacing: -.02em; }
+.cgx-mock__tent-face img { width: 36cqi; }
+.cgx-mock__tent-face .cgx-mock__cta { max-width: 36cqi; margin-top: 2.2cqi; font-size: 2.3cqi; line-height: 1.4; }
+.cgx-mock__tent-face .cgx-mock__table { margin-top: auto; color: #9a6a50; font-family: var(--cgx-mono); font-size: 1.9cqi; letter-spacing: .12em; text-transform: uppercase; }
+
+.cgx-gl-method__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px clamp(32px, 5vw, 72px); align-items: start; margin-bottom: 28px; }
+.cgx-gl-method__grid .cgx-section__head { margin-bottom: 0; }
+.cgx-gl-method pre.code-block { margin: 0; font-size: .8125rem; }
+
+@media (max-width: 960px) {
+    .cgx-gl-proof, .cgx-gl-method__grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+    .cgx-gl-mocks { grid-template-columns: minmax(0, 1fr); }
+    .cgx-gl-matrix > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
