@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using CodeGlyphX.Qr;
 
 namespace CodeGlyphX.Rendering.Art;
 
@@ -13,7 +12,6 @@ public static partial class QrImageComposer {
     /// photo through the chosen screen. Finders and alignment patterns are solid rings in the same deep and light tones.
     /// </summary>
     private sealed class HalftonePainter {
-        private const byte Data = 0, Finder = 1, Separator = 2, Alignment = 3, OtherFunction = 4;
         // Surround tones are held inside this luminance band, so a local reader threshold always falls between the darkest
         // and lightest neighbourhoods and every solid centre keeps contrast against it.
         private const double ToneLow = 44, ToneHigh = 224;
@@ -62,9 +60,7 @@ public static partial class QrImageComposer {
             _screen = halftone.Screen;
             _finders = halftone.Finders;
             _duotone = options.Duotone;
-            _kinds = new byte[_size * _size];
-            _alignmentCenter = new int[_size * _size];
-            ClassifyFunctions(qr, functions);
+            ClassifyPhotoFunctions(qr, functions, out _kinds, out _alignmentCenter);
 
             var count = _grid * _grid;
             _red = new double[count];
@@ -107,28 +103,6 @@ public static partial class QrImageComposer {
             }
             FixCentresAndScreen(qr.Modules, cancellationToken);
         }
-
-        private void ClassifyFunctions(QrCode qr, BitMatrix functions) {
-            var alignment = QrTables.GetAlignmentPatternPositions(qr.Version);
-            for (var y = 0; y < _size; y++) for (var x = 0; x < _size; x++) {
-                if (!functions[x, y]) continue;
-                var i = y * _size + x;
-                if (InFinderZone(x, y)) {
-                    var lx = x < 8 ? x : x - (_size - 7);
-                    var ly = y < 8 ? y : y - (_size - 7);
-                    _kinds[i] = lx is >= 0 and < 7 && ly is >= 0 and < 7 ? Finder : Separator;
-                    continue;
-                }
-                _kinds[i] = OtherFunction;
-                foreach (var ay in alignment) foreach (var ax in alignment) {
-                    if (Math.Abs(x - ax) > 2 || Math.Abs(y - ay) > 2 || InFinderZone(ax, ay)) continue;
-                    _kinds[i] = Alignment;
-                    _alignmentCenter[i] = ay * _size + ax;
-                }
-            }
-        }
-
-        private bool InFinderZone(int x, int y) => (x < 8 && y < 8) || (x >= _size - 8 && y < 8) || (x < 8 && y >= _size - 8);
 
         // 1. stretch the 2nd..98th percentile to the full range (nearly flat images are left alone);
         // 2. apply the requested contrast and brightness;
