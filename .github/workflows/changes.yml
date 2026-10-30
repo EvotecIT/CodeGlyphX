@@ -1,0 +1,101 @@
+name: Select CI coverage
+
+on:
+  workflow_call:
+    outputs:
+      build:
+        description: Whether library, test and package validation is needed
+        value: ${{ jobs.changes.outputs.build }}
+      website:
+        description: Whether the website build is needed
+        value: ${{ jobs.changes.outputs.website }}
+      matrix:
+        description: Framework and platform test matrix
+        value: ${{ jobs.changes.outputs.matrix }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 5
+    outputs:
+      build: ${{ steps.plan.outputs.build }}
+      website: ${{ steps.plan.outputs.website }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - name: Checkout complete history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Select coverage
+        id: plan
+        shell: python
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          import json
+          import os
+          import subprocess
+          from pathlib import PurePosixPath
+
+          def docs_only(path):
+              # Generated contracts, packaged Markdown and scan fixtures are inputs,
+              # even when they live alongside documentation or website content.
+              inputs = (
+                  "README.md", "THIRD-PARTY-NOTICES.md", "BENCHMARK.md",
+                  "Website/data/formats.json",
+                  "Website/content/docs/symbol-capabilities.md",
+              )
+              input_dirs = (
+                  "Website/build/", "Website/tools/", "Website/data/", "Website/static/images/",
+                  "Website/static/assets/", "docs/comparisons/", "docs/api/",
+                  "docs/generated/", "docs/schema/", "docs/schemas/",
+              )
+              parts = PurePosixPath(path).parts
+              code_suffixes = (".cs", ".csproj", ".props", ".targets", ".ps1", ".py", ".sh")
+              if (path in inputs or path.startswith(input_dirs)
+                      or "schema" in parts or "schemas" in parts
+                      or path.endswith((".schema.json",) + code_suffixes)):
+                  return False
+              return (path.startswith("Website/")
+                      or path.startswith("docs/") and path.endswith(".md")
+                      or path.endswith(".md") and len(parts) == 1
+                      or path == ".github/workflows/README.md")
+
+          event = os.environ["GITHUB_EVENT_NAME"]
+          paths = []
+          if event == "pull_request":
+              # No rename detection: moving source into docs must include its deletion.
+              diff = subprocess.check_output([
+                  "git", "diff", "--name-only", "--no-renames", "-z",
+                  os.environ["BASE_SHA"] + "..." + os.environ["HEAD_SHA"], "--",
+              ])
+              paths = diff.decode("utf-8").split("\0")
+              paths = [path for path in paths if path]
+          build = event != "pull_request" or not paths or any(not docs_only(path) for path in paths)
+          website = build or any(
+              path.startswith("Website/") or path == "docs/fair-comparisons.md"
+              for path in paths
+          )
+          include = []
+          for platform, label, budget, frameworks in [
+              ("ubuntu-latest", "linux", "4", ["net8.0", "net10.0"]),
+              ("macos-latest", "macOS", "1", ["net8.0", "net10.0"]),
+              ("windows-latest", "windows", "1", ["net8.0", "net10.0", "net472"]),
+          ]:
+              if event == "pull_request" and platform == "macos-latest":
+                  continue
+              for framework in frameworks:
+                  include.append(dict(os=platform, framework=framework,
+                                      selfHostedRunner=json.dumps(["self-hosted", label]),
+                                      testBudgetMultiplier=budget))
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write("build=" + str(build).lower() + "\n")
+              output.write("website=" + str(website).lower() + "\n")
+              output.write("matrix=" + json.dumps(dict(include=include)) + "\n")
+          print("Full library validation required." if build else "Documentation/website-only PR; library validation skipped.")
+          print("Selected " + str(len(include)) + " framework/platform lanes.")

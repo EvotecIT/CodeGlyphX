@@ -7,52 +7,29 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # PRs replace only their own older runs; every other event has a unique group.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    uses: ./.github/workflows/changes.yml
+
   test-framework:
+    needs: changes
+    if: needs.changes.outputs.build == 'true'
     name: Test (${{ matrix.os }}, ${{ matrix.framework }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
     # Every platform runs the .NET 8 and .NET 10 corpora; Windows also runs .NET Framework.
-    # Allow build and shutdown headroom after the macOS corpora finish near twenty minutes.
+    # macOS joins the full matrix on default-branch pushes and manual runs.
     timeout-minutes: ${{ matrix.os == 'macos-latest' && 30 || 45 }}
     env:
       # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
       CODEGLYPHX_TEST_BUDGET_MULTIPLIER: ${{ matrix.testBudgetMultiplier }}
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            framework: net8.0
-            selfHostedRunner: '["self-hosted","linux"]'
-            testBudgetMultiplier: '4'
-          - os: ubuntu-latest
-            framework: net10.0
-            selfHostedRunner: '["self-hosted","linux"]'
-            testBudgetMultiplier: '4'
-          - os: macos-latest
-            framework: net8.0
-            selfHostedRunner: '["self-hosted","macOS"]'
-            testBudgetMultiplier: '1'
-          - os: macos-latest
-            framework: net10.0
-            selfHostedRunner: '["self-hosted","macOS"]'
-            testBudgetMultiplier: '1'
-          - os: windows-latest
-            framework: net8.0
-            selfHostedRunner: '["self-hosted","windows"]'
-            testBudgetMultiplier: '1'
-          - os: windows-latest
-            framework: net10.0
-            selfHostedRunner: '["self-hosted","windows"]'
-            testBudgetMultiplier: '1'
-          - os: windows-latest
-            framework: net472
-            selfHostedRunner: '["self-hosted","windows"]'
-            testBudgetMultiplier: '1'
+      matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -93,7 +70,7 @@ jobs:
 
   build-test:
     name: Build & Test (${{ matrix.os }})
-    needs: test-framework
+    needs: [changes, test-framework]
     if: always()
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     timeout-minutes: 5
@@ -101,13 +78,24 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - name: Require every framework suite
+      - name: Require selected framework suites
         env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          BUILD_REQUIRED: ${{ needs.changes.outputs.build }}
           TEST_RESULT: ${{ needs.test-framework.result }}
-        run: test "$TEST_RESULT" = success
+        run: |
+          test "$CHANGES_RESULT" = success
+          if [ "$BUILD_REQUIRED" = false ] && [ "$TEST_RESULT" = skipped ]; then
+            echo 'Documentation/website-only PR; framework suites are not needed.'
+            exit 0
+          fi
+          test "$BUILD_REQUIRED" = true
+          test "$TEST_RESULT" = success
 
-  release-contracts:
-    name: Package & NativeAOT contracts
+  package-contracts:
+    name: Validate package & NativeAOT
+    needs: changes
+    if: needs.changes.outputs.build == 'true'
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     timeout-minutes: 20
     steps:
@@ -154,7 +142,8 @@ jobs:
 
   website-build:
     name: Website Build (PR)
-    if: github.event_name == 'pull_request'
+    needs: changes
+    if: github.event_name == 'pull_request' && needs.changes.outputs.website == 'true'
     permissions:
       actions: read
       contents: read
@@ -169,3 +158,24 @@ jobs:
       powerforge_repository: EvotecIT/PSPublishModule
       powerforge_ref: 396e00acba04dcaae4c3c95433338f4df65fbc01
       report_artifact_name: powerforge-website-reports
+
+  release-contracts:
+    name: Package & NativeAOT contracts
+    needs: [changes, package-contracts]
+    if: always()
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 5
+    steps:
+      - name: Require selected package contracts
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          BUILD_REQUIRED: ${{ needs.changes.outputs.build }}
+          CONTRACT_RESULT: ${{ needs.package-contracts.result }}
+        run: |
+          test "$CHANGES_RESULT" = success
+          if [ "$BUILD_REQUIRED" = false ] && [ "$CONTRACT_RESULT" = skipped ]; then
+            echo 'Documentation/website-only PR; package contracts are not needed.'
+            exit 0
+          fi
+          test "$BUILD_REQUIRED" = true
+          test "$CONTRACT_RESULT" = success

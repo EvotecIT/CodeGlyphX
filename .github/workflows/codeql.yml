@@ -9,12 +9,18 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: codeql-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # PRs replace only their own older runs; every other event has a unique group.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  analyze:
-    name: Analyze
+  changes:
+    uses: ./.github/workflows/changes.yml
+
+  codeql:
+    name: Run CodeQL analysis
+    needs: changes
+    if: needs.changes.outputs.build == 'true'
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     timeout-minutes: 15
@@ -53,3 +59,24 @@ jobs:
         uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
         with:
           category: '/language:csharp'
+
+  analyze:
+    name: Analyze
+    needs: [changes, codeql]
+    if: always()
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 5
+    steps:
+      - name: Require selected CodeQL analysis
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          BUILD_REQUIRED: ${{ needs.changes.outputs.build }}
+          ANALYSIS_RESULT: ${{ needs.codeql.result }}
+        run: |
+          test "$CHANGES_RESULT" = success
+          if [ "$BUILD_REQUIRED" = false ] && [ "$ANALYSIS_RESULT" = skipped ]; then
+            echo 'Documentation/website-only PR; CodeQL analysis is not needed.'
+            exit 0
+          fi
+          test "$BUILD_REQUIRED" = true
+          test "$ANALYSIS_RESULT" = success

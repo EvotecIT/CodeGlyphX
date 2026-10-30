@@ -3,7 +3,10 @@ updates:
 - package-ecosystem: nuget
   directory: /
   schedule:
-    interval: daily
+    interval: weekly
+    day: monday
+    time: "06:41"
+    timezone: Etc/UTC
   cooldown:
     default-days: 7
     include:
@@ -16,7 +19,10 @@ updates:
 - package-ecosystem: github-actions
   directory: /
   schedule:
-    interval: daily
+    interval: weekly
+    day: monday
+    time: "06:41"
+    timezone: Etc/UTC
   cooldown:
     default-days: 7
     include:
