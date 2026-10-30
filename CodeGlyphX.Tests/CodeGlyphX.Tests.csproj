@@ -102,6 +102,7 @@
     <Compile Include="QrLogoPlacementTests.cs" />
     <Compile Include="QrFallbackFinderTests.cs" />
     <Compile Include="QrPhotoTreatmentTests.cs" />
+    <Compile Include="QrPhotoHalftoneTests.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="EncodingContractRegressionTests.cs" />
