@@ -80,14 +80,6 @@
       "failures": []
     },
     {
-      "id": "pixel-dither",
-      "checks": 48,
-      "passed": 48,
-      "zxing": 24,
-      "codeglyphx": 24,
-      "failures": []
-    },
-    {
       "id": "botanical",
       "checks": 48,
       "passed": 48,

@@ -114,28 +114,6 @@
       ]
     },
     {
-      "id": "pixel-dither",
-      "name": "Pixel Dither",
-      "summary": "Error-diffused square pixels in the photo's own colours.",
-      "bestFor": "Games, retro campaigns and screen graphics.",
-      "family": "Photo",
-      "variants": [
-        {
-          "id": "pixel-dither",
-          "label": "",
-          "src": "/assets/gallery/pixel-dither.png",
-          "width": 560,
-          "height": 560,
-          "bytes": 171886,
-          "logo": false,
-          "samplePhotoSrc": "/assets/gallery/samoyed-headphones.jpg",
-          "photoCredit": "Photo: ImagePlayground sample image (MIT).",
-          "alt": "Pixel Dither QR code for https://codeglyphx.com: Error-diffused square pixels in the photo's own colours.",
-          "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\nusing CodeGlyphX.Rendering.Art;\n\nvar options = new QrImageCompositionOptions {\n    Style = QrImageCompositionStyle.PhotoHalftone,\n    ModuleSize = 24,\n    Halftone = new QrImageHalftoneOptions {\n        SubCells = 4,\n        Screen = QrHalftoneScreen.ErrorDiffusion,\n        DotShape = QrHalftoneDotShape.Square,\n    },\n};\noptions.TargetSizePx = 560;\n\nvar art = QrArt.Compose(\"https://codeglyphx.com\", File.ReadAllBytes(\"samoyed-headphones.jpg\"), options);\nart.SavePng(\"pixel-dither.png\");"
-        }
-      ]
-    },
-    {
       "id": "botanical",
       "name": "Botanical",
       "summary": "Leaf modules and mirrored leaf eyes in forest green.",
@@ -241,7 +219,7 @@
           "src": "/assets/gallery/gold-sparkle.png",
           "width": 643,
           "height": 643,
-          "bytes": 22272,
+          "bytes": 22131,
           "logo": false,
           "alt": "Gold Sparkle QR code for https://codeglyphx.com: Connected bronze body and sparkle eyes on a black-and-gold canvas.",
           "code": "using CodeGlyphX;\nusing CodeGlyphX.Rendering;\n\nvar options = new QrRenderOptions {\n    QuietZone = 4,\n    ModuleShape = QrModuleShape.ConnectedRounded,\n    Foreground = new Rgba32(92, 60, 4),\n    Background = new Rgba32(255, 250, 232),\n    Eyes = QrEyePresets.NeonSparkle(),\n    Canvas = new QrCanvasOptions {\n        PaddingPx = 44,\n        CornerRadiusPx = 28,\n        QrCornerRadiusPx = 16,\n        BackgroundGradient = new QrGradientOptions {\n            Type = QrGradientType.DiagonalDown,\n            StartColor = new Rgba32(14, 12, 8),\n            EndColor = new Rgba32(70, 50, 12),\n        },\n    },\n};\noptions.Eyes.OuterColor = new Rgba32(150, 98, 0);\noptions.Eyes.InnerColor = new Rgba32(60, 38, 0);\noptions.Eyes.SparkleColor = new Rgba32(255, 222, 140, 210);\noptions.TargetSizePx = 560;\n\nQR.Save(\"https://codeglyphx.com\", \"gold-sparkle.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });"

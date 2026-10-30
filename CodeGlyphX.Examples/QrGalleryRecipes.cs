@@ -374,18 +374,4 @@ internal static class QrGalleryRecipes {
         return options;
     }
 
-    internal static QrImageCompositionOptions PixelDither() {
-        #region recipe pixel-dither
-        var options = new QrImageCompositionOptions {
-            Style = QrImageCompositionStyle.PhotoHalftone,
-            ModuleSize = 24,
-            Halftone = new QrImageHalftoneOptions {
-                SubCells = 4,
-                Screen = QrHalftoneScreen.ErrorDiffusion,
-                DotShape = QrHalftoneDotShape.Square,
-            },
-        };
-        #endregion
-        return options;
-    }
 }

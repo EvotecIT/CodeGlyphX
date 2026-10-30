@@ -88,10 +88,6 @@ internal static class QrGalleryLooks {
                 Photo("riso-newsprint", "Newsprint", QrGalleryRecipes.RisoNewsprint, "samoyed-headphones.jpg", R(28, 26, 24), R(240, 236, 226)),
             }),
 
-        new("pixel-dither", "Pixel Dither", "Error-diffused square pixels in the photo's own colours.",
-            "Games, retro campaigns and screen graphics.", "Photo",
-            new[] { Photo("pixel-dither", "", QrGalleryRecipes.PixelDither, "samoyed-headphones.jpg", R(18, 40, 96), R(240, 244, 252)) }),
-
         new("botanical", "Botanical", "Leaf modules and mirrored leaf eyes in forest green.",
             "Natural products and outdoor experiences.", "Colour",
             new[] { Light("botanical", QrGalleryRecipes.Botanical), Dark("botanical-dark", QrGalleryRecipes.BotanicalDark) }),
