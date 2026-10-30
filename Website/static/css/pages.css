@@ -442,7 +442,7 @@ details.cgx-bench-study > :is(h3, h4) { margin-top: 28px; }
 .cgx-gl-looks__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 32px; margin-bottom: 28px; }
 .cgx-gl-looks__head .cgx-section__head { margin-bottom: 0; }
 .cgx-gl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; }
-.cgx-gl-card { display: grid; grid-template-rows: auto 1fr; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: calc(var(--cgx-radius) + 2px); background: var(--surface); transition: border-color .2s ease, box-shadow .2s ease; scroll-margin-top: calc(var(--header-height, 64px) + 24px); }
+.cgx-gl-card { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: calc(var(--cgx-radius) + 2px); background: var(--surface); transition: border-color .2s ease, box-shadow .2s ease; scroll-margin-top: calc(var(--header-height, 64px) + 24px); }
 .cgx-gl-card:hover { border-color: var(--line-strong); box-shadow: 0 24px 48px -36px color-mix(in srgb, var(--accent) 55%, transparent); }
 .cgx-gl-card:target { border-color: var(--accent-ink); box-shadow: 0 0 0 1px var(--accent-ink); }
 .cgx-gl-card__stage { position: relative; aspect-ratio: 1; background: radial-gradient(70% 60% at 50% 45%, color-mix(in srgb, var(--surface) 75%, transparent), transparent 75%), radial-gradient(color-mix(in srgb, var(--ink) 10%, transparent) 1px, transparent 1.5px) 0 0 / 14px 14px, var(--surface-2); }
@@ -454,7 +454,7 @@ details.cgx-bench-study > :is(h3, h4) { margin-top: 28px; }
 .cgx-gl-badge svg { width: 14px; height: 14px; color: var(--good); }
 .cgx-gl-badge strong { color: var(--ink); font-weight: 700; }
 .cgx-gl-badge.is-failing { border-color: var(--bad, #dc2626); }
-.cgx-gl-card__body { display: grid; align-content: start; gap: 8px; padding: 18px 20px 20px; border-top: 1px solid var(--line); }
+.cgx-gl-card__body { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px; padding: 18px 20px 20px; border-top: 1px solid var(--line); }
 .cgx-gl-card__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
 .cgx-gl-card__head h3 { margin: 0; color: var(--ink); font-family: var(--cgx-display); font-size: 1.125rem; font-weight: 700; letter-spacing: -.01em; }
 .cgx-gl-variants { padding: 3px; border-radius: 11px; }
