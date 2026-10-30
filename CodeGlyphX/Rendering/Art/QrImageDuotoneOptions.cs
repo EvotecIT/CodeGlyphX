@@ -3,8 +3,9 @@ using System;
 namespace CodeGlyphX.Rendering.Art;
 
 /// <summary>
-/// Two-colour ink and paper for <see cref="QrImageCompositionStyle.Halftone3x3"/>. Dark sub-cells,
-/// dark functional modules and data centres use the ink; everything light, including the quiet zone, uses the paper.
+/// Two-colour ink and paper for <see cref="QrImageCompositionStyle.Halftone3x3"/> and
+/// <see cref="QrImageCompositionStyle.PhotoHalftone"/>. Dark sub-cells, dark functional modules and data centres use the
+/// ink; everything light, including the quiet zone, uses the paper.
 /// The defaults are a navy ink on warm cream paper, in the spirit of a risograph print.
 /// </summary>
 public sealed class QrImageDuotoneOptions {

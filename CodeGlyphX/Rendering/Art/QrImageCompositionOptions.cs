@@ -28,7 +28,18 @@ public enum QrImageCompositionStyle {
     /// Keep the image across the whole symbol, including the finder, timing and alignment zones, with crisp antialiased
     /// module dots tinted from the image's luminance and no halo around them. Finder and alignment patterns are drawn as rounded, image-tinted rings on top.
     /// </summary>
-    ImageBackground
+    ImageBackground,
+    /// <summary>
+    /// The picture forms the code. Each module is split into sub-cells (<see cref="QrImageHalftoneOptions.SubCells"/>); a
+    /// solid centre carries the module colour at decode-safe contrast, and the surrounding sub-cells reproduce the photo as
+    /// halftone dots, error diffusion or an ordered screen, in the photo's own colours or in two colours when
+    /// <see cref="QrImageCompositionOptions.Duotone"/> is set. The photo's tones are stretched and kept inside a band that
+    /// leaves every centre clear contrast, and <see cref="QrImageCompositionOptions.Strength"/> sets how far the surrounding
+    /// sub-cells follow the photo rather than the module colour. Finders and alignment patterns are solid rings in the
+    /// picture's own deep and light tones. Tune it with <see cref="QrImageCompositionOptions.Halftone"/>. Deliver at about
+    /// 4.5 px per module or more; below that, blurred captures may not read.
+    /// </summary>
+    PhotoHalftone
 }
 
 /// <summary>How a source image fits its square composition area.</summary>
@@ -60,6 +71,8 @@ public sealed class QrImageCompositionOptions {
     /// Image strength (0..1). Zero produces black/white modules; higher values retain more image color.
     /// ImageOverlay keeps the image unaltered outside its centre marks at every strength.
     /// Halftone3x3 caps the image contribution at 0.7 so each module's average tone keeps following its bit.
+    /// PhotoHalftone moves each sub-cell around a module centre towards the module colour by half of (1 - Strength), so 1
+    /// shows the photo unchanged around the solid centres and lower values trade picture for scan margin.
     /// </summary>
     public double Strength { get; set; } = 0.75;
 
@@ -109,20 +122,41 @@ public sealed class QrImageCompositionOptions {
     /// </summary>
     public bool SolidFunctionPatterns { get; set; }
 
-    /// <summary>Optional two-colour ink and paper for <see cref="QrImageCompositionStyle.Halftone3x3"/>; null keeps black and white.</summary>
+    /// <summary>
+    /// Optional two-colour ink and paper for <see cref="QrImageCompositionStyle.Halftone3x3"/> and
+    /// <see cref="QrImageCompositionStyle.PhotoHalftone"/>. Halftone3x3 is black and white without it; PhotoHalftone uses
+    /// the photo's own colours without it. For a black and white PhotoHalftone, set black ink on white paper.
+    /// </summary>
     public QrImageDuotoneOptions? Duotone { get; set; }
+
+    /// <summary>Screen, sub-cell, centre, tone and finder settings for <see cref="QrImageCompositionStyle.PhotoHalftone"/>; null uses the defaults.</summary>
+    public QrImageHalftoneOptions? Halftone { get; set; }
+
+    /// <summary>Optional logo on a plate at the centre of the symbol, placed within the error-correction budget.</summary>
+    public QrImageLogoOptions? Logo { get; set; }
+
+    /// <summary>
+    /// When positive (16..8192), the finished composition is area-resampled so the QR, including its quiet zone, is this
+    /// many pixels wide; a canvas scales with it. The image is first composed at <see cref="ModuleSize"/>, so choose a module
+    /// size that gives fine screens enough pixels. Defaults to 0, which keeps the composed size.
+    /// </summary>
+    public int TargetSizePx { get; set; }
 
     internal QrImageCompositionOptions WithModuleSize(int moduleSize) => new QrImageCompositionOptions {
         ModuleSize = moduleSize, QuietZone = QuietZone, Style = Style, Fit = Fit, Strength = Strength,
         CenterSize = CenterSize, ImagePositionX = ImagePositionX, ImagePositionY = ImagePositionY,
         ImageZoom = ImageZoom, Art = Art, Canvas = Canvas, MinimumVersion = MinimumVersion,
-        VerifyDecode = VerifyDecode, Duotone = Duotone, SolidFunctionPatterns = SolidFunctionPatterns
+        VerifyDecode = VerifyDecode, Duotone = Duotone, SolidFunctionPatterns = SolidFunctionPatterns,
+        Halftone = Halftone, Logo = Logo, TargetSizePx = TargetSizePx
     };
 
     internal void Validate() {
         Art?.Validate();
         Canvas?.Validate();
         Duotone?.Validate();
+        Halftone?.Validate();
+        Logo?.Validate();
+        if (TargetSizePx != 0 && (TargetSizePx < 16 || TargetSizePx > 8192)) throw new ArgumentOutOfRangeException(nameof(TargetSizePx));
         if (MinimumVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(MinimumVersion));
         QrImageCanvasOptions.ValidatePosition(ImagePositionX, nameof(ImagePositionX));
         QrImageCanvasOptions.ValidatePosition(ImagePositionY, nameof(ImagePositionY));
@@ -131,12 +165,15 @@ public sealed class QrImageCompositionOptions {
         if (Style == QrImageCompositionStyle.Halftone3x3 && ModuleSize % 3 != 0)
             throw new ArgumentException("Halftone3x3 needs a module size divisible by three for equal sub-cells.", nameof(ModuleSize));
         if (QuietZone is < 4 or > 16) throw new ArgumentOutOfRangeException(nameof(QuietZone));
-        if (Style is < QrImageCompositionStyle.ColorModules or > QrImageCompositionStyle.ImageBackground)
+        if (Style is < QrImageCompositionStyle.ColorModules or > QrImageCompositionStyle.PhotoHalftone)
             throw new ArgumentOutOfRangeException(nameof(Style));
-        if ((Style == QrImageCompositionStyle.Halftone3x3 || Style == QrImageCompositionStyle.ImageBackground) && Art is not null)
+        if ((Style == QrImageCompositionStyle.Halftone3x3 || Style == QrImageCompositionStyle.ImageBackground
+            || Style == QrImageCompositionStyle.PhotoHalftone) && Art is not null)
             throw new ArgumentException("Image sub-cell and background treatments cannot be combined with module silhouettes.", nameof(Art));
-        if (Duotone is not null && Style != QrImageCompositionStyle.Halftone3x3)
-            throw new ArgumentException("Duotone ink and paper apply to the Halftone3x3 style only.", nameof(Duotone));
+        if (Duotone is not null && Style != QrImageCompositionStyle.Halftone3x3 && Style != QrImageCompositionStyle.PhotoHalftone)
+            throw new ArgumentException("Duotone ink and paper apply to the Halftone3x3 and PhotoHalftone styles only.", nameof(Duotone));
+        if (Halftone is not null && Style != QrImageCompositionStyle.PhotoHalftone)
+            throw new ArgumentException("Halftone settings apply to the PhotoHalftone style only.", nameof(Halftone));
         if (Fit != QrImageFit.Cover && Fit != QrImageFit.Contain) throw new ArgumentOutOfRangeException(nameof(Fit));
         if (double.IsNaN(Strength) || Strength < 0 || Strength > 1) throw new ArgumentOutOfRangeException(nameof(Strength));
         if (double.IsNaN(CenterSize) || CenterSize < 0.5 || CenterSize > 1) throw new ArgumentOutOfRangeException(nameof(CenterSize));

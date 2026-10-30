@@ -23,7 +23,7 @@ public static partial class QrArt {
                 + "Allow a higher correction level or QR version, reduce the minimum logo size, or choose a different placement explicitly.");
     }
 
-    private static QrLogoBudget? FindLogoBudget(QrCode qr, int maximumSideModules,
+    internal static QrLogoBudget? FindLogoBudget(QrCode qr, int maximumSideModules,
         int paddingModules, int reservedErrorsPerBlock, int minimumLogoSideModules, LogoPlacement placement) {
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (maximumSideModules < 0) throw new ArgumentOutOfRangeException(nameof(maximumSideModules));
