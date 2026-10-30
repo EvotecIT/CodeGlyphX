@@ -69,6 +69,22 @@ internal static partial class SiteVisuals {
             art["showcase"] = sb.ToString();
         }
 
+        // Gallery: one styled code and the reads every gallery look passes (data/gallery-scan.json).
+        {
+            var sb = new StringBuilder();
+            var scan = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "data", "gallery-scan.json")))!;
+            var checks = (int)scan["checksPerVariant"]!;
+            var o = new QrRenderOptions {
+                Foreground = Pink, Background = Clear, ModuleSize = 4, QuietZone = 0, ModuleShape = QrModuleShape.ConnectedRounded,
+                Eyes = new QrEyeOptions { UseFrame = true, OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Circle, OuterColor = Violet, InnerColor = Pink }
+            };
+            sb.Append(Nest(Qr("https://codeglyphx.com/gallery/", Pink, o: o), 12, 14, 72, 72));
+            sb.Append($"<rect x=\"94\" y=\"32\" width=\"56\" height=\"20\" rx=\"10\" fill=\"none\" stroke=\"{Hex(Cyan)}\"/>");
+            sb.Append(Mono(122, 45.5, checks + "/" + checks, Hex(Cyan), 8, "middle", "700"));
+            sb.Append(Mono(122, 68, "reads", dim, 7, "middle"));
+            art["gallery"] = sb.ToString();
+        }
+
         // Pricing: the license as a Data Matrix, and what it costs.
         {
             var sb = new StringBuilder();

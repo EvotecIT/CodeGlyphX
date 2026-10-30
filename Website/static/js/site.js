@@ -255,6 +255,16 @@ globalThis.setTheme = setTheme;
         }
         if (!id) return;
         const target = document.getElementById(id);
+        if (target?.classList.contains('cgx-gl-card')) {
+            const filter = document.querySelector('[data-gallery-filter]');
+            const familyButton = Array.from(filter?.querySelectorAll('button[data-family]') || [])
+                .find((button) => button.dataset.family === target.dataset.family);
+            familyButton?.click();
+            const recipe = target.querySelector('details.cgx-gl-recipe');
+            if (recipe) recipe.open = true;
+            target.scrollIntoView({ block: 'start' });
+            return;
+        }
         if (target instanceof HTMLDetailsElement && !target.open) target.open = true;
     }
 
@@ -414,6 +424,51 @@ globalThis.setTheme = setTheme;
             if (!href || href.startsWith('http')) return;
             const linkPath = normalizePath(href);
             link.classList.toggle('active', linkPath === currentPath);
+        });
+    }
+
+    // QR style gallery (/gallery/): family filter and the light/dark panel of each look. Without
+    // script every card shows its first variant and the controls stay hidden.
+    function initQrGallery() {
+        document.querySelectorAll('[data-gallery-filter]').forEach((bar) => {
+            if (bar.dataset.bound === 'true') return;
+            bar.dataset.bound = 'true';
+            bar.hidden = false;
+            const cards = Array.from(document.querySelectorAll('.cgx-gl-card[data-family]'));
+            const buttons = Array.from(bar.querySelectorAll('button[data-family]'));
+            buttons.forEach((button) => button.addEventListener('click', () => {
+                const family = button.dataset.family;
+                buttons.forEach((b) => {
+                    const on = b === button;
+                    b.classList.toggle('active', on);
+                    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                });
+                cards.forEach((card) => { card.hidden = family !== 'all' && card.dataset.family !== family; });
+            }));
+        });
+        document.querySelectorAll('.cgx-gl-card [data-variant-tabs]').forEach((tabs) => {
+            if (tabs.dataset.bound === 'true') return;
+            tabs.dataset.bound = 'true';
+            tabs.hidden = false;
+            const card = tabs.closest('.cgx-gl-card');
+            const buttons = Array.from(tabs.querySelectorAll('button[data-variant]'));
+            buttons.forEach((button) => button.addEventListener('click', () => {
+                buttons.forEach((b) => {
+                    const on = b === button;
+                    b.classList.toggle('active', on);
+                    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                });
+                card.querySelectorAll('[data-variant-panel]').forEach((panel) => {
+                    panel.hidden = panel.dataset.variantPanel !== button.dataset.variant;
+                });
+            }));
+        });
+        document.querySelectorAll('[data-gallery-recipe]').forEach((link) => {
+            if (link.dataset.bound === 'true') return;
+            link.dataset.bound = 'true';
+            link.addEventListener('click', () => {
+                if (window.location.hash === link.getAttribute('href')) openTargetedDetails();
+            });
         });
     }
 
@@ -676,10 +731,11 @@ globalThis.setTheme = setTheme;
             renderMermaidDiagrams();
             initCodeBlocks();
             initTables();
-            openTargetedDetails();
             initStyleBoards();
             initDocsNav();
             initShowcaseCarousel();
+            initQrGallery();
+            openTargetedDetails();
             linkifyReleaseBodyUrls();
         }, 100);
     }

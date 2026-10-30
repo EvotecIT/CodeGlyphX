@@ -183,9 +183,17 @@ QR.Save("https://example.com/menu", "menu.png", appearance,
 
 For Brand, pass the returned options as `QrLogoRenderOptions.Appearance` to `QrArt.RenderLogo` along with your logo. The placement result describes the exported PNG. Check the final output on the phones and printed media you intend to use.
 
+| Sunset | Minimal Line | Botanical |
+| --- | --- | --- |
+| ![Sunset QR style](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Website/static/assets/gallery/sunset.png) | ![Minimal Line QR style](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Website/static/assets/gallery/minimal-line.png) | ![Botanical QR style](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Website/static/assets/gallery/botanical.png) |
+| **Neon** | **Gold Sparkle** | **Ticket** |
+| ![Neon QR style on a dark panel](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Website/static/assets/gallery/neon-dark.png) | ![Gold Sparkle QR style](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Website/static/assets/gallery/gold-sparkle.png) | ![Ticket QR style](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Website/static/assets/gallery/ticket.png) |
+
+The [QR style gallery](https://codeglyphx.com/gallery/) shows twenty looks like these with their C# recipes. Every look is rendered with short and long URLs, with and without a logo, at 320 and 1024 pixels, and must be read by both strict ZXing and CodeGlyphX before it is listed. These are software reads; test your final design on the phones and printed media you intend to use.
+
 ### Colorful QR gallery
 
-![Prism, candy, neon, aurora, tropical and solar QR designs](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-colorful-gallery.png)
+![Prism, candy, neon, aurora, tropical and solar QR designs](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-colorful-gallery.png)
 
 The [colorful-gallery example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrColorfulGalleryExample.cs) renders six designs: three combine module palettes, rounded finder patterns, gradients and confetti; three weave locally drawn illustrations into the QR data area. The designs use high error correction and preserve the functional patterns and a light quiet zone.
 
@@ -263,7 +271,7 @@ The [image-composition example](https://github.com/EvotecIT/CodeGlyphX/blob/mast
 
 | Botanical | Sunset | Waves |
 | --- | --- | --- |
-| ![Botanical QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-image-botanical.png) | ![Sunset QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-image-sunset.png) | ![Wave QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-image-waves.png) |
+| ![Botanical QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-image-botanical.png) | ![Sunset QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-image-sunset.png) | ![Wave QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-image-waves.png) |
 
 
 For rounded, connected, or organic image-aware shapes, set `Art`. This replaces the square treatment selected by `Style`/`CenterSize`. Decorative shapes adapt to local image edges while small scan anchors stay fixed at module centers. `Canvas` extends the same image around the QR, preserving a uniform light quiet zone. Dark ink and light paper colors can be chosen within enforced luminance bounds.
@@ -296,9 +304,9 @@ The [expressive-art example](https://github.com/EvotecIT/CodeGlyphX/blob/master/
 
 | Botanical | Citrus | Landscape |
 | --- | --- | --- |
-| ![Botanical composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-botanical.png) | ![Citrus composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-citrus.png) | ![Landscape composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-landscape.png) |
+| ![Botanical composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-expressive-botanical.png) | ![Citrus composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-expressive-citrus.png) | ![Landscape composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-expressive-landscape.png) |
 | Waves | Geometric | Earth photograph |
-| ![Waves composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-waves.png) | ![Geometric composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-geometric.png) | ![Earth composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-earth.png) |
+| ![Waves composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-expressive-waves.png) | ![Geometric composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-expressive-geometric.png) | ![Earth composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-expressive-earth.png) |
 
 ### Captions and call-to-action frames
 
@@ -328,7 +336,7 @@ Captions contain one line of at most 256 UTF-16 characters. Requested sizes are 
 
 ### Protect a subject and compare artistic alternatives
 
-![Engraving, halftone, contour, mosaic and botanical QR treatments](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-art-studio-styles.png)
+![Engraving, halftone, contour, mosaic and botanical QR treatments](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-art-studio-styles.png)
 
 Set `Art.Style` to `Engraving`, `Halftone`, `Contours`, `Mosaic`, or `Botanical`. Print treatments use the functional ink/paper colors; protected regions retain more of the supplied image. `Art.Subject` selects a focal circle in source-image coordinates, or accepts a copied grayscale `QrImageProtectionMask` where white protects detail. The region follows crop and zoom. It does not identify faces or objects automatically.
 
@@ -357,7 +365,7 @@ The browser playground includes image/mask uploads, focal/crop/placement control
 
 ### Illustrated compositions
 
-![Engraved portrait, botanical badge and geometric poster QR compositions](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-illustrated-compositions.png)
+![Engraved portrait, botanical badge and geometric poster QR compositions](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-illustrated-compositions.png)
 
 `QrIllustratedComposer` provides engraved portrait, botanical badge and geometric poster families. Each combines image artwork, coordinated finder frames and decorative framing outside the QR quiet zone. `Ribbons` and `Weave` connect neighboring data modules while retaining scan anchors. `Art.Finders` selects square, rounded or squircle frames; other functional patterns remain unchanged.
 
@@ -378,7 +386,7 @@ SVG exports are self-contained **hybrid images**: framing is vector geometry and
 
 ### Procedural art
 
-![Six locally drawn QR designs: veined marble, layered waves, sunburst rays, Bauhaus tiles, leaves and circuit traces](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-procedural-art-gallery.png)
+![Six locally drawn QR designs: veined marble, layered waves, sunburst rays, Bauhaus tiles, leaves and circuit traces](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-procedural-art-gallery.png)
 
 `QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns. Every motif is drawn from signed distances, so edges stay antialiased at any size.
 
@@ -430,7 +438,7 @@ The [procedural-art example](https://github.com/EvotecIT/CodeGlyphX/blob/master/
 
 ### Illustrated scenes and editable recipes
 
-![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-scene-gallery.png)
+![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/master/Assets/Examples/qr-scene-gallery.png)
 
 `QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Each scene holds the code in a light backdrop that is part of the illustration (an arch, a billboard, a stage screen, a bubble, a moon or an arcade panel) and follows the QR placement. Placement that clips the QR, or leaves fewer than three pixels per module, is rejected: at the preset scales a short URL needs about 320 pixels and a 130-character URL about 450.
 

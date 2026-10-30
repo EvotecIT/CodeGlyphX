@@ -2,50 +2,18 @@
   {
     "name": "Sunset",
     "file": "sunset.png",
-    "alt": "Sunset QR style: Connected body with an orange-to-pink gradient on cream.",
+    "alt": "Sunset QR style: Connected body with an orange-to-pink gradient on warm paper.",
     "payload": "https://codeglyphx.com",
     "width": 480,
     "height": 480
   },
   {
-    "name": "Neon",
-    "file": "neon.png",
-    "alt": "Neon QR style: Vertical bars and magenta eyes on a glowing panel at night.",
-    "payload": "https://codeglyphx.com",
-    "width": 606,
-    "height": 606
-  },
-  {
-    "name": "Ink",
-    "file": "ink.png",
-    "alt": "Ink QR style: Liquid black body with round eyes on white.",
+    "name": "Minimal Line",
+    "file": "minimal-line.png",
+    "alt": "Minimal Line QR style: Round dots, a drawn timing line and ring eyes.",
     "payload": "https://codeglyphx.com",
     "width": 480,
     "height": 480
-  },
-  {
-    "name": "Retro Pixel",
-    "file": "retro-pixel.png",
-    "alt": "Retro Pixel QR style: Square pixels and square eyes on mustard.",
-    "payload": "https://codeglyphx.com",
-    "width": 508,
-    "height": 508
-  },
-  {
-    "name": "Gold Sparkle",
-    "file": "gold-sparkle.png",
-    "alt": "Gold Sparkle QR style: Connected bronze body and sparkle eyes on a black-and-gold canvas.",
-    "payload": "https://codeglyphx.com",
-    "width": 532,
-    "height": 532
-  },
-  {
-    "name": "Ticket",
-    "file": "ticket.png",
-    "alt": "Ticket QR style: Connected navy body inside a coral ticket stub with a caption.",
-    "payload": "https://codeglyphx.com",
-    "width": 514,
-    "height": 608
   },
   {
     "name": "Botanical",
@@ -56,17 +24,49 @@
     "height": 480
   },
   {
-    "name": "Confetti",
-    "file": "confetti.png",
-    "alt": "Confetti QR style: Rounded modules in a random three-colour palette on cream.",
+    "name": "Neon",
+    "file": "neon.png",
+    "alt": "Neon QR style: Vertical bars and magenta eyes on a glowing panel.",
+    "payload": "https://codeglyphx.com",
+    "width": 606,
+    "height": 606
+  },
+  {
+    "name": "Ink",
+    "file": "ink.png",
+    "alt": "Ink QR style: Liquid black body with round eyes.",
     "payload": "https://codeglyphx.com",
     "width": 480,
     "height": 480
   },
   {
+    "name": "Gold Sparkle",
+    "file": "gold-sparkle.png",
+    "alt": "Gold Sparkle QR style: Connected bronze body and sparkle eyes on a black-and-gold canvas.",
+    "payload": "https://codeglyphx.com",
+    "width": 532,
+    "height": 532
+  },
+  {
+    "name": "Retro Pixel",
+    "file": "retro-pixel.png",
+    "alt": "Retro Pixel QR style: Square pixels and square eyes on mustard.",
+    "payload": "https://codeglyphx.com",
+    "width": 508,
+    "height": 508
+  },
+  {
+    "name": "Ticket",
+    "file": "ticket.png",
+    "alt": "Ticket QR style: Connected navy body inside a coral ticket stub with a caption.",
+    "payload": "https://codeglyphx.com",
+    "width": 514,
+    "height": 608
+  },
+  {
     "name": "Mono Classy",
     "file": "mono-classy.png",
-    "alt": "Mono Classy QR style: Square body and classy eyes on a charcoal panel.",
+    "alt": "Mono Classy QR style: Square body and diagonal-corner eyes on a charcoal panel.",
     "payload": "https://codeglyphx.com",
     "width": 606,
     "height": 606
@@ -75,6 +75,14 @@
     "name": "Ocean",
     "file": "ocean.png",
     "alt": "Ocean QR style: Horizontal bars with a navy-to-teal gradient on pale aqua.",
+    "payload": "https://codeglyphx.com",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Confetti",
+    "file": "confetti.png",
+    "alt": "Confetti QR style: Rounded modules in a random three-colour palette on cream.",
     "payload": "https://codeglyphx.com",
     "width": 480,
     "height": 480
@@ -90,7 +98,7 @@
   {
     "name": "Berry",
     "file": "berry.png",
-    "alt": "Berry QR style: Rounded body with a plum-to-raspberry gradient on blush.",
+    "alt": "Berry QR style: Rounded body with a plum-to-raspberry gradient and squircle eyes.",
     "payload": "https://codeglyphx.com",
     "width": 480,
     "height": 480
@@ -114,18 +122,10 @@
   {
     "name": "Brand Logo",
     "file": "brand-logo.png",
-    "alt": "Brand Logo QR style: Rounded body, maroon eyes and a centred logo on white.",
+    "alt": "Brand Logo QR style: Rounded body, maroon eyes and a centred logo.",
     "payload": "https://codeglyphx.com",
     "width": 480,
     "height": 480
-  },
-  {
-    "name": "Soft Diamond",
-    "file": "soft-diamond.png",
-    "alt": "Soft Diamond QR style: Soft diamond modules in warm rings on a cream panel and an apricot canvas.",
-    "payload": "https://codeglyphx.com",
-    "width": 532,
-    "height": 532
   },
   {
     "name": "Wi-Fi Card",
@@ -138,7 +138,7 @@
   {
     "name": "Viewfinder",
     "file": "viewfinder.png",
-    "alt": "Viewfinder QR style: Extra-rounded crimson body framed by viewfinder corners and a caption.",
+    "alt": "Viewfinder QR style: Extra-rounded crimson body framed by viewfinder corners.",
     "payload": "https://codeglyphx.com",
     "width": 514,
     "height": 616
@@ -154,7 +154,7 @@
   {
     "name": "Mint Logo",
     "file": "mint-logo.png",
-    "alt": "Mint Logo QR style: Squircle modules in two greens with a logo, on mint with a green border.",
+    "alt": "Mint Logo QR style: Squircle modules in two greens with a logo and a green border.",
     "payload": "https://codeglyphx.com",
     "width": 500,
     "height": 500

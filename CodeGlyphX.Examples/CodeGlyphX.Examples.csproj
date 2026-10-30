@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- The gallery publishes each recipe block verbatim; embedding the source keeps page and code identical. -->
+    <EmbeddedResource Include="QrGalleryRecipes.cs" LogicalName="QrGalleryRecipes.cs" />
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
   </ItemGroup>
 
