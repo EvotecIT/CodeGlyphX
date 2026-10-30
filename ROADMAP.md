@@ -2,6 +2,8 @@
 
 The roadmap lists unresolved product work only. Completed implementation history belongs in releases and pull requests.
 
+The [QR artwork plan](docs/qr-artwork-plan.md) defines the direction for styled QR quality, curation, guidance and print colour.
+
 ## API and release quality
 
 - [ ] Keep solution, package, symbol, NativeAOT, docs, and website checks green on each release commit.
@@ -19,6 +21,14 @@ The roadmap lists unresolved product work only. Completed implementation history
 - [ ] Either implement VP8 animation interframes or keep them as an explicit hard failure with fixtures.
 - [ ] Expand JPEG, GIF, TIFF, BMP, ICO, WebP, and Netpbm corpus coverage around malformed and boundary inputs.
 - [ ] Add new formats only with a clear support matrix, bounded decode behavior, and reference-backed tests.
+
+## QR artwork
+
+- [ ] Add new art families (photo/halftone, illustrated, pattern-filled modules, finder styles, logo-derived palettes) only through the gallery quality bar.
+- [ ] Recommend version, error correction and size from payload, logo and print size, and explain plainly when a combination cannot work.
+- [ ] Extend delivery checks to a seeded set of simulated captures with a reported pass rate, presented as simulation rather than proof.
+- [ ] Add K-only and CMYK colour output to PDF and EPS.
+- [ ] Extend saved recipes from scenes to every render style.
 
 ## Industrial and logistics follow-ups
 
@@ -56,3 +66,4 @@ The roadmap lists unresolved product work only. Completed implementation history
 - Reporting success with placeholder, transparent, repeated, or otherwise fabricated decode output.
 - Adding downstream compatibility shims for unpublished or stale packages.
 - Claiming universal codec, symbology, trimming, or platform behavior beyond the validated matrix.
+- Rendering QR codes to video, or proprietary non-QR circular codes.
