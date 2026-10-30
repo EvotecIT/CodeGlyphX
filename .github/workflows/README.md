@@ -16,6 +16,9 @@ catalogs, schemas, packaged Markdown, source files and shipped artwork used by
 scan tests keep library validation enabled. An empty or unreadable diff never
 produces a successful documentation-only result.
 
+Changes to `docs/fair-comparisons.md` also build the website because the site
+copies that file as a static asset; they do not select library validation.
+
 The `Build & Test` platform gates, `Package & NativeAOT contracts` and `Analyze`
 keep their existing check names. They pass an intentional documentation-only
 skip and fail if selection or selected validation fails or is cancelled. The

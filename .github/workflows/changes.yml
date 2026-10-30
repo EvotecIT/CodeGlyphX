@@ -77,7 +77,10 @@ jobs:
               paths = diff.decode("utf-8").split("\0")
               paths = [path for path in paths if path]
           build = event != "pull_request" or not paths or any(not docs_only(path) for path in paths)
-          website = build or any(path.startswith("Website/") for path in paths)
+          website = build or any(
+              path.startswith("Website/") or path == "docs/fair-comparisons.md"
+              for path in paths
+          )
           include = []
           for platform, label, budget, frameworks in [
               ("ubuntu-latest", "linux", "4", ["net8.0", "net10.0"]),
