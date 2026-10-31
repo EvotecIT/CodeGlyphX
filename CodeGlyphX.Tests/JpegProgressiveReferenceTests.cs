@@ -66,6 +66,7 @@ public sealed class JpegProgressiveReferenceTests {
     [Theory]
     [InlineData(0x20)] // A refinement scan must have Al == Ah - 1.
     [InlineData(0x1E)] // Successive approximation exceeds the supported precision.
+    [InlineData(0xED)] // Ah must not exceed 13 even when Al == Ah - 1.
     public void MalformedProgressiveScanFailsCleanly(byte approximation) {
         var data = ReadFixture("refinement.jpg");
         var scan = FindLastScan(data);
