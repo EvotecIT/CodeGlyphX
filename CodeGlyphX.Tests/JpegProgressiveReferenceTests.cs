@@ -77,6 +77,39 @@ public sealed class JpegProgressiveReferenceTests {
         Assert.False(ImageReader.TryDecodeRgba32(data, out _, out _, out _));
     }
 
+    [Fact]
+    public void InterleavedProgressiveAcScanFailsCleanly() {
+        var data = ReadFixture("odd-subsampled.jpg");
+        var firstScan = 0;
+        while (firstScan + 1 < data.Length &&
+            (data[firstScan] != 0xFF || data[firstScan + 1] != 0xDA)) firstScan++;
+        Assert.Equal(3, data[firstScan + 4]);
+
+        // An EOB-only AC table makes the illegal three-component scan complete,
+        // so a later entropy error cannot accidentally satisfy this regression.
+        var table = new byte[22];
+        table[0] = 0xFF;
+        table[1] = 0xC4;
+        table[3] = 20;
+        table[4] = 0x10;
+        table[5] = 1;
+        var scan = new byte[] {
+            0xFF, 0xDA, 0, 12, 3,
+            data[firstScan + 5], 0, data[firstScan + 7], 0, data[firstScan + 9], 0,
+            1, 63, 0,
+            0, 0, 0, // Four 4:2:0 MCUs contain 24 one-bit EOB codes.
+            0xFF, 0xD9
+        };
+        using var output = new MemoryStream();
+        output.Write(data, 0, data.Length - 2);
+        output.Write(table, 0, table.Length);
+        output.Write(scan, 0, scan.Length);
+        var malformed = output.ToArray();
+
+        Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(malformed, out _, out _));
+        Assert.False(ImageReader.TryDecodeRgba32(malformed, out _, out _, out _));
+    }
+
     [Theory]
     [InlineData(0x04)]
     [InlineData(0x40)]

@@ -120,6 +120,7 @@ public static partial class JpegReader {
         int restartInterval,
         bool allowTruncated) {
         if (scan.Ss > scan.Se || scan.Se > 63 || (scan.Ss == 0 && scan.Se != 0) ||
+            (scan.Ss != 0 && scan.ComponentIndices.Length != 1) ||
             scan.Ah > 13 || scan.Al > 13 ||
             (scan.Ah != 0 && scan.Ah != scan.Al + 1)) {
             throw new FormatException("Invalid progressive JPEG scan parameters.");
