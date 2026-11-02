@@ -120,7 +120,7 @@ jobs:
         run: ./Build/Assert-Package.ps1 -PackageDirectory artifacts/packages
 
       - name: Restore isolated package consumer
-        run: dotnet restore Build/PackageConsumer/PackageConsumer.csproj --configfile Build/PackageConsumer/NuGet.config --packages artifacts/package-consumer-cache --nologo
+        run: dotnet restore Build/PackageConsumer/PackageConsumer.csproj --configfile Build/PackageConsumer/candidate.NuGet.config --packages artifacts/package-consumer-cache --nologo
 
       - name: Compile package consumer for supported runtimes
         run: dotnet build Build/PackageConsumer/PackageConsumer.csproj -c Release --no-restore --nologo
