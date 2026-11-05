@@ -35,6 +35,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      # Hosted Windows runners keep the default NuGet cache on the slower C: drive. Moving the SDK too
+      # (DOTNET_INSTALL_DIR) cost more in setup-dotnet downloads than it saved in the build.
+      - name: Use the runner temp drive for NuGet
+        if: runner.os == 'Windows' && runner.environment == 'github-hosted'
+        shell: pwsh
+        run: |
+          "NUGET_PACKAGES=$env:RUNNER_TEMP\nuget\packages" >> $env:GITHUB_ENV
+          "NUGET_HTTP_CACHE_PATH=$env:RUNNER_TEMP\nuget\http-cache" >> $env:GITHUB_ENV
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
