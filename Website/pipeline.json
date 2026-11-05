@@ -1,5 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/schemas/powerforge.web.pipelinespec.schema.json",
+  "maxParallelism": 4,
   "cache": true,
   "cachePath": "./_temp/pipeline-cache.json",
   "profile": true,

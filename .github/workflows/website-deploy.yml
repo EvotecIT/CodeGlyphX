@@ -28,7 +28,7 @@ jobs:
       actions: write
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@396e00acba04dcaae4c3c95433338f4df65fbc01
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@5767e6953d1f9839244c90faa0f8f96934f8ad92
     with:
       website_root: Website
       pipeline_config: Website/pipeline.json
@@ -39,7 +39,7 @@ jobs:
       upload_pages_artifact: true
       pages_artifact_path: Website/_site
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 396e00acba04dcaae4c3c95433338f4df65fbc01
+      powerforge_ref: 5767e6953d1f9839244c90faa0f8f96934f8ad92
       report_artifact_name: codeglyphx-website-deploy-reports
     secrets:
       indexnow_key: ${{ secrets.INDEXNOW_KEY }}
