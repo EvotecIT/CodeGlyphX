@@ -16,6 +16,14 @@ internal static partial class QrRenderer {
         return render;
     }
 
+    // PNG output validates the pixels it encodes instead of rendering the appearance a second time.
+    private static byte[] RenderGuardedPng(QrRenderOptions opts, QrCode qr, OutputOptions? outputOptions) {
+        var render = BuildPngOptions(opts, qr);
+        if (outputOptions is not null) render.PngCompressionLevel = outputOptions.ResolvePngCompression(render.PngCompressionLevel);
+        if (!opts.ArtGuardrailsEnabled || !HasArtHints(render, opts)) return QrPngRenderer.Render(qr.Modules, render);
+        return QrPngRenderer.Render(qr.Modules, render, (pixels, width, height, stride) => VerifyRenderedArt(qr, pixels, width, height, stride));
+    }
+
     /// <summary>Checks canonical appearance pixels with the native decoder's standard profile.
     /// No transforms, stylized sampling or independent-reader dependencies are used.</summary>
     private static void VerifyRenderedArt(QrCode qr, byte[] pixels, int width, int height, int stride) {
