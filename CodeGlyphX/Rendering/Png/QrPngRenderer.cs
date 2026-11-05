@@ -30,6 +30,35 @@ public static partial class QrPngRenderer {
     }
 
     /// <summary>
+    /// Renders the PNG and passes a copy of its exact RGBA pixels to <paramref name="inspectPixels"/> before
+    /// encoding, so a caller that validates the pixels does not render the same image twice.
+    /// </summary>
+    internal static byte[] Render(BitMatrix modules, QrPngRenderOptions opts, Action<byte[], int, int, int> inspectPixels) {
+        if (inspectPixels is null) throw new ArgumentNullException(nameof(inspectPixels));
+        if (CanRenderAsGray1(opts) || CanRenderAsIndexed1(opts) || CanRenderSimpleRgba(opts)) {
+            var direct = RenderPixels(modules, opts, out var directWidth, out var directHeight, out var directStride);
+            inspectPixels(direct, directWidth, directHeight, directStride);
+            return Render(modules, opts);
+        }
+        var length = GetScanlineLength(modules, opts, out var widthPx, out var heightPx, out var stride);
+        var scanlines = ArrayPool<byte>.Shared.Rent(length);
+        try {
+            RenderScanlines(modules, opts, out widthPx, out heightPx, out stride, scanlines);
+            var pixels = new byte[heightPx * stride];
+            for (var y = 0; y < heightPx; y++) {
+                Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, pixels, y * stride, stride);
+            }
+            inspectPixels(pixels, widthPx, heightPx, stride);
+            if (opts.PngCompressionLevel > 0) {
+                PngRenderHelpers.ApplyAdaptiveFilterHeuristic(scanlines, heightPx, stride);
+            }
+            return PngWriter.WriteRgba8(widthPx, heightPx, scanlines, length, opts.PngCompressionLevel);
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
+        }
+    }
+
+    /// <summary>
     /// Renders the QR module matrix to a PNG stream.
     /// </summary>
     /// <param name="modules">QR modules.</param>
