@@ -1,9 +1,21 @@
 # CI coverage
 
-Pull requests run the .NET 8 and .NET 10 suites on Linux and Windows, plus the
-.NET Framework suite on Windows. Pushes to the default branch and manual CI
-runs also run both modern frameworks on macOS. Existing scheduled workflows
-keep their original triggers and coverage.
+| PR changes | Library tests | Package & NativeAOT | Website build |
+| --- | --- | --- | --- |
+| Documentation or website presentation only | Skipped | Skipped | Website changes only |
+| Library, test or tool sources | Linux .NET 8 and .NET 10, Windows .NET 8 and .NET Framework | Run | Skipped |
+| Website, playground, `README.md` or `docs/fair-comparisons.md` with code | As above | Run | Run |
+| Shared build inputs (`.github/**`, `Directory.Build.*`, `global.json`, `NuGet.config`, lock files, solutions) | As above plus Windows .NET 10 | Run | Run |
+
+Pushes to the default branch and manual CI runs run every framework on Linux,
+Windows and macOS. The Windows solution build on PRs still compiles the website
+and playground projects, and library changes rebuild the site on deployment.
+Existing scheduled workflows keep their original triggers and coverage.
+
+The .NET 8 and .NET 10 suites on Linux and Windows run in three shards. Most of
+their time is the serial image-scanner collection, so the first two shards take
+its slowest classes and the third runs everything else, including new tests.
+The .NET Framework and macOS suites run in one job each.
 
 Each PR-triggered workflow cancels only superseded runs for the same PR. Other
 events use a unique run group. Deployment and maintenance workflows keep their
@@ -30,5 +42,5 @@ version-update PR per ecosystem. There are no npm manifests to maintain here.
 
 xUnit already runs independent test collections across the available CPU
 threads. The scanner and global-state collections retain their explicit serial
-execution; increasing their concurrency needs separate timing and stability
-evidence.
+execution inside each shard's process; increasing their concurrency needs
+separate timing and stability evidence.
