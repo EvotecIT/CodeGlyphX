@@ -77,10 +77,31 @@ jobs:
               paths = diff.decode("utf-8").split("\0")
               paths = [path for path in paths if path]
           build = event != "pull_request" or not paths or any(not docs_only(path) for path in paths)
-          website = build or any(
-              path.startswith("Website/") or path == "docs/fair-comparisons.md"
+          # Shared build inputs run everything. PRs build the website for website, playground and shared
+          # changes; library-only PRs leave it to the default-branch deployment, while the Windows solution
+          # build still compiles the website and playground projects.
+          def shared(path):
+              name = PurePosixPath(path).name
+              return (path.startswith(".github/") and path != ".github/workflows/README.md"
+                      or name.startswith("Directory.Build.") or name in ("global.json", "NuGet.config")
+                      or name in ("packages.lock.json", "package-lock.json")
+                      or name.endswith(".sln"))
+          full = event != "pull_request" or not paths or any(shared(path) for path in paths)
+          website = full or any(
+              path.startswith(("Website/", "CodeGlyphX.Website/", "CodeGlyphX.Playground/", "docs/comparisons/"))
+              or path in ("docs/fair-comparisons.md", "README.md")
               for path in paths
           )
+          # The serial image-scanner collection is most of each modern suite's time, so those suites run in three
+          # shards. The first two take the slowest scanner classes; the last takes everything else, so new tests
+          # always run. Collections stay serial inside each shard's process.
+          heavy = [
+              ["QrArtWave1ScanTests", "QrScreenshotDecodeTests", "PlaygroundLivePreviewTests", "QrGalleryScanTests"],
+              ["QrArtPremiumScanTests", "QrDecodingSamplesTests", "QrMultiDecodeTests"],
+          ]
+          prefix = "FullyQualifiedName~CodeGlyphX.Tests."
+          shards = ["|".join(prefix + name + "." for name in group) for group in heavy]
+          shards.append("&".join(prefix.replace("~", "!~") + name + "." for group in heavy for name in group))
           include = []
           for platform, label, budget, frameworks in [
               ("ubuntu-latest", "linux", "4", ["net8.0", "net10.0"]),
@@ -89,13 +110,25 @@ jobs:
           ]:
               if event == "pull_request" and platform == "macos-latest":
                   continue
+              # PRs run both modern frameworks on Linux. Windows keeps .NET 8 (complete solution build)
+              # and .NET Framework; its .NET 10 suite runs for shared build inputs, default-branch pushes and
+              # manual runs.
+              if not full and platform == "windows-latest":
+                  frameworks = ["net8.0", "net472"]
               for framework in frameworks:
-                  include.append(dict(os=platform, framework=framework,
-                                      selfHostedRunner=json.dumps(["self-hosted", label]),
-                                      testBudgetMultiplier=budget))
+                  lane = dict(os=platform, framework=framework,
+                              selfHostedRunner=json.dumps(["self-hosted", label]),
+                              testBudgetMultiplier=budget)
+                  # .NET Framework is quicker, and macOS runs only on full runs, where its job count is kept low.
+                  if framework == "net472" or platform == "macos-latest":
+                      include.append(dict(lane, shard="", testFilter="", primary=True))
+                      continue
+                  for index, test_filter in enumerate(shards):
+                      include.append(dict(lane, shard=str(index + 1) + "/" + str(len(shards)),
+                                          testFilter=test_filter, primary=index == 0))
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
               output.write("build=" + str(build).lower() + "\n")
               output.write("website=" + str(website).lower() + "\n")
               output.write("matrix=" + json.dumps(dict(include=include)) + "\n")
           print("Full library validation required." if build else "Documentation/website-only PR; library validation skipped.")
-          print("Selected " + str(len(include)) + " framework/platform lanes.")
+          print("Selected " + str(len(include)) + " framework/platform/shard lanes.")

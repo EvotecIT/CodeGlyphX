@@ -18,11 +18,12 @@ jobs:
   test-framework:
     needs: changes
     if: needs.changes.outputs.build == 'true'
-    name: Test (${{ matrix.os }}, ${{ matrix.framework }})
+    name: Test (${{ matrix.os }}, ${{ matrix.framework }}${{ matrix.shard && format(', {0}', matrix.shard) || '' }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
     # Every platform runs the .NET 8 and .NET 10 corpora; Windows also runs .NET Framework.
-    # macOS joins the full matrix on default-branch pushes and manual runs.
+    # macOS joins the full matrix on default-branch pushes and manual runs. Modern-framework suites run in three
+    # shards (changes.yml); the first shard of each lane also runs the one-off builds.
     timeout-minutes: ${{ matrix.os == 'macos-latest' && 30 || 45 }}
     env:
       # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
@@ -45,15 +46,15 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Build complete solution
-        if: runner.os == 'Windows' && matrix.framework == 'net8.0'
+        if: runner.os == 'Windows' && matrix.framework == 'net8.0' && matrix.primary
         run: dotnet build CodeGlyphX.sln -c Release --nologo
 
       - name: Build test framework
-        if: runner.os != 'Windows' || matrix.framework != 'net8.0'
+        if: runner.os != 'Windows' || matrix.framework != 'net8.0' || !matrix.primary
         run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f ${{ matrix.framework }} --nologo
 
       - name: Build portable projects
-        if: runner.os != 'Windows' && matrix.framework == 'net8.0'
+        if: runner.os != 'Windows' && matrix.framework == 'net8.0' && matrix.primary
         run: |
           dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f netstandard2.0 --nologo
           dotnet build CodeGlyphX.Examples/CodeGlyphX.Examples.csproj -c Release --nologo
@@ -66,7 +67,13 @@ jobs:
           ./Build/Download-ExternalSamples.ps1 -NoUpdateManifest
 
       - name: Test (${{ matrix.framework }})
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f ${{ matrix.framework }} --no-restore --no-build
+        shell: pwsh
+        env:
+          TEST_FILTER: ${{ matrix.testFilter }}
+        run: |
+          $filter = if ($env:TEST_FILTER) { @('--filter', $env:TEST_FILTER) } else { @() }
+          dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f ${{ matrix.framework }} --no-restore --no-build @filter
+          exit $LASTEXITCODE
 
   build-test:
     name: Build & Test (${{ matrix.os }})
