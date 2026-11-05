@@ -391,21 +391,27 @@ public sealed class QrArtWave1ScanTests {
         var target = new byte[size * targetHeight * 4];
         var scaleX = width / (double)size;
         var scaleY = height / (double)targetHeight;
+        var area = scaleX * scaleY;
         for (var y = 0; y < targetHeight; y++) for (var x = 0; x < size; x++) {
             var x0 = x * scaleX; var x1 = (x + 1) * scaleX;
             var y0 = y * scaleY; var y1 = (y + 1) * scaleY;
-            for (var channel = 0; channel < 3; channel++) {
-                var sum = 0.0;
-                for (var sy = (int)y0; sy < Math.Ceiling(y1) && sy < height; sy++)
-                    for (var sx = (int)x0; sx < Math.Ceiling(x1) && sx < width; sx++) {
-                        var weight = (Math.Min(x1, sx + 1) - Math.Max(x0, sx)) * (Math.Min(y1, sy + 1) - Math.Max(y0, sy));
-                        var p = (sy * width + sx) * 4;
-                        var alpha = source[p + 3] / 255.0;
-                        sum += (source[p + channel] * alpha + 255 * (1 - alpha)) * weight;
-                    }
-                target[(y * size + x) * 4 + channel] = (byte)Math.Clamp((int)Math.Round(sum / (scaleX * scaleY)), 0, 255);
-            }
-            target[(y * size + x) * 4 + 3] = 255;
+            var xEnd = Math.Ceiling(x1); var yEnd = Math.Ceiling(y1);
+            // One pass accumulates all channels; each channel sums the same terms in the same order.
+            double red = 0, green = 0, blue = 0;
+            for (var sy = (int)y0; sy < yEnd && sy < height; sy++)
+                for (var sx = (int)x0; sx < xEnd && sx < width; sx++) {
+                    var weight = (Math.Min(x1, sx + 1) - Math.Max(x0, sx)) * (Math.Min(y1, sy + 1) - Math.Max(y0, sy));
+                    var p = (sy * width + sx) * 4;
+                    var alpha = source[p + 3] / 255.0;
+                    red += (source[p] * alpha + 255 * (1 - alpha)) * weight;
+                    green += (source[p + 1] * alpha + 255 * (1 - alpha)) * weight;
+                    blue += (source[p + 2] * alpha + 255 * (1 - alpha)) * weight;
+                }
+            var t = (y * size + x) * 4;
+            target[t] = (byte)Math.Clamp((int)Math.Round(red / area), 0, 255);
+            target[t + 1] = (byte)Math.Clamp((int)Math.Round(green / area), 0, 255);
+            target[t + 2] = (byte)Math.Clamp((int)Math.Round(blue / area), 0, 255);
+            target[t + 3] = 255;
         }
         return target;
     }
@@ -430,17 +436,27 @@ public sealed class QrArtWave1ScanTests {
         byte Sample(int x, int y, int channel) => x < 0 || y < 0 || x >= size || y >= targetHeight ? (byte)255 : source[(y * size + x) * 4 + channel];
     }
 
+    // The 1-2-1 kernel is separable and the sums are integers, so two passes give the exact 3x3 result.
     private static byte[] Blur(byte[] source, int size, int targetHeight) {
         var target = new byte[source.Length];
-        var weights = new[] { 1, 2, 1 };
+        var rows = new int[size * targetHeight * 3];
         for (var y = 0; y < targetHeight; y++) for (var x = 0; x < size; x++) {
-            for (var c = 0; c < 3; c++) {
-                var sum = 0;
-                for (var yy = -1; yy <= 1; yy++) for (var xx = -1; xx <= 1; xx++)
-                    sum += source[(Math.Clamp(y + yy, 0, targetHeight - 1) * size + Math.Clamp(x + xx, 0, size - 1)) * 4 + c] * weights[yy + 1] * weights[xx + 1];
-                target[(y * size + x) * 4 + c] = (byte)((sum + 8) / 16);
+            var left = (y * size + Math.Max(x - 1, 0)) * 4;
+            var center = (y * size + x) * 4;
+            var right = (y * size + Math.Min(x + 1, size - 1)) * 4;
+            for (var c = 0; c < 3; c++)
+                rows[(y * size + x) * 3 + c] = source[left + c] + 2 * source[center + c] + source[right + c];
+        }
+        for (var y = 0; y < targetHeight; y++) {
+            var above = Math.Max(y - 1, 0) * size;
+            var below = Math.Min(y + 1, targetHeight - 1) * size;
+            for (var x = 0; x < size; x++) {
+                for (var c = 0; c < 3; c++) {
+                    var sum = rows[(above + x) * 3 + c] + 2 * rows[(y * size + x) * 3 + c] + rows[(below + x) * 3 + c];
+                    target[(y * size + x) * 4 + c] = (byte)((sum + 8) / 16);
+                }
+                target[(y * size + x) * 4 + 3] = 255;
             }
-            target[(y * size + x) * 4 + 3] = 255;
         }
         return target;
     }
