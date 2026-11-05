@@ -4,12 +4,13 @@
 | --- | --- | --- | --- |
 | Documentation or website presentation only | Skipped | Skipped | Website changes only |
 | Library, test or tool sources | Linux .NET 8 and .NET 10, Windows .NET 8 and .NET Framework | Run | Skipped |
-| Website, playground, `README.md` or `docs/fair-comparisons.md` with code | As above | Run | Run |
+| Website, playground, `README.md`, `docs/fair-comparisons.md` or `docs/comparisons/**` with code | As above | Run | Run |
 | Shared build inputs (`.github/**`, `Directory.Build.*`, `global.json`, `NuGet.config`, lock files, solutions) | As above plus Windows .NET 10 | Run | Run |
 
-Pushes to the default branch and manual CI runs run every framework on Linux,
-Windows and macOS. The Windows solution build on PRs still compiles the website
-and playground projects, and library changes rebuild the site on deployment.
+Pushes to the default branch and manual CI runs run .NET 8 and .NET 10 on
+Linux, Windows and macOS, and .NET Framework on Windows. The Windows solution
+build on PRs still compiles the website and playground projects, and library
+changes rebuild the site on deployment.
 Existing scheduled workflows keep their original triggers and coverage.
 
 The .NET 8 and .NET 10 suites on Linux and Windows run in three shards. Most of

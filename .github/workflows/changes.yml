@@ -88,7 +88,7 @@ jobs:
                       or name.endswith(".sln"))
           full = event != "pull_request" or not paths or any(shared(path) for path in paths)
           website = full or any(
-              path.startswith(("Website/", "CodeGlyphX.Website/", "CodeGlyphX.Playground/"))
+              path.startswith(("Website/", "CodeGlyphX.Website/", "CodeGlyphX.Playground/", "docs/comparisons/"))
               or path in ("docs/fair-comparisons.md", "README.md")
               for path in paths
           )
@@ -96,7 +96,7 @@ jobs:
           # shards. The first two take the slowest scanner classes; the last takes everything else, so new tests
           # always run. Collections stay serial inside each shard's process.
           heavy = [
-              ["QrArtWave1ScanTests", "QrScreenshotDecodeTests", "PlaygroundLivePreviewTests"],
+              ["QrArtWave1ScanTests", "QrScreenshotDecodeTests", "PlaygroundLivePreviewTests", "QrGalleryScanTests"],
               ["QrArtPremiumScanTests", "QrDecodingSamplesTests", "QrMultiDecodeTests"],
           ]
           prefix = "FullyQualifiedName~CodeGlyphX.Tests."
