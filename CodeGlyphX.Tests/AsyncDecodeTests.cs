@@ -16,7 +16,8 @@ public sealed class AsyncDecodeTests {
         var png = containsSymbol ? QR.Render("ASYNC", OutputFormat.Png).ToArray()
             : MatrixPngRenderer.Render(new BitMatrix(1, 1), new MatrixPngRenderOptions { ModuleSize = 1, QuietZone = 0 });
         var options = new ScanOptions {
-            Formats = new[] { SymbolFormat.QrCode }, MaxSymbols = 1, TimeoutMilliseconds = 5000,
+            // Deadline expiry has separate transport tests below; recognition must not depend on runner load.
+            Formats = new[] { SymbolFormat.QrCode }, MaxSymbols = 1, TimeoutMilliseconds = 0,
             Qr = QrPixelDecodeOptions.Fast()
         };
         using var stream = new MemoryStream(png);
